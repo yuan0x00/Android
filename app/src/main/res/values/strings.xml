@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ReAndroid</string>
+    <string name="splash_doing">启动中</string>
+    <string name="splash_done">启动完成</string>
 </resources>

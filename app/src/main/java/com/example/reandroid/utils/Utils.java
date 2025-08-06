@@ -1,23 +1,24 @@
 package com.example.reandroid.utils;
 
+import android.app.Application;
 import android.content.Context;
 
-public class AppUtils {
-    private static Context sAppContext;
+public class Utils {
+    private static Application sAppContext;
 
     /**
-     * 初始化一次，传入任意 Context（如 Activity），提取 ApplicationContext
+     * 初始化一次，传入任意 Context，提取 Application
      */
     public static void init(Context context) {
         if (sAppContext == null) {
-            sAppContext = context.getApplicationContext();
+            sAppContext = (Application) context.getApplicationContext();
         }
     }
 
     /**
-     * 安全获取 ApplicationContext
+     * 安全获取 Application
      */
-    public static Context getAppContext() {
+    public static Application getApp() {
         if (sAppContext == null) {
             throw new IllegalStateException("AppUtils未初始化，请先调用init(context)");
         }

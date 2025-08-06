@@ -1,4 +1,4 @@
-package com.example.reandroid;
+package com.example.reandroid.ui.page.main;
 
 import com.example.reandroid.base.BaseViewModel;
 

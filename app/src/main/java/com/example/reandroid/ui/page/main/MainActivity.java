@@ -1,6 +1,7 @@
-package com.example.reandroid;
+package com.example.reandroid.ui.page.main;
 
 import android.os.Bundle;
+import com.example.reandroid.R;
 import com.example.reandroid.base.BaseActivity;
 
 public class MainActivity extends BaseActivity {

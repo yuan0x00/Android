@@ -1,10 +1,12 @@
-package com.example.reandroid;
+package com.example.reandroid.ui.page.splash;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import com.example.reandroid.R;
 import com.example.reandroid.base.BaseActivity;
 import com.example.reandroid.databinding.ActivitySplashBinding;
+import com.example.reandroid.ui.page.main.MainActivity;
 import com.example.reandroid.utils.ToastUtils;
 
 @SuppressLint("CustomSplashScreen")

@@ -1,4 +1,4 @@
-package com.example.reandroid;
+package com.example.reandroid.ui.page.splash;
 
 import com.example.reandroid.base.BaseViewModel;
 

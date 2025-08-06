@@ -1,4 +1,4 @@
-package com.example.reandroid.network;
+package com.example.reandroid.utils.network;
 
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;

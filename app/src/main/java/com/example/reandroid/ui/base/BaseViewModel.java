@@ -1,4 +1,4 @@
-package com.example.reandroid.base;
+package com.example.reandroid.ui.base;
 
 import androidx.lifecycle.ViewModel;
 

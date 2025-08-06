@@ -27,6 +27,7 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
     buildFeatures {
+        buildConfig true
         viewBinding true
         dataBinding true
     }
@@ -45,12 +46,12 @@ dependencies {
     implementation libs.material
     debugImplementation libs.leakcanary.android
     implementation libs.okhttp
-    implementation libs.logging.interceptor
-    implementation libs.converter.gson
+    implementation libs.okhttp.logging
     implementation libs.retrofit
+    implementation libs.retrofit.rxjava
+    implementation libs.retrofit.converter.gson
     implementation libs.glide
     implementation libs.gson
     implementation libs.rxandroid
-    implementation libs.rxjava
 
 }

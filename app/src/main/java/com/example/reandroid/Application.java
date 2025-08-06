@@ -1,9 +1,8 @@
 package com.example.reandroid;
 
-import android.app.Application;
 import com.example.reandroid.utils.Utils;
 
-public class MainApplication extends Application {
+public class Application extends android.app.Application {
 
     @Override
     public void onCreate() {

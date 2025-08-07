@@ -1,11 +1,11 @@
-package com.example.reandroid.utils.network;
+package com.example.base.utils.network;
 
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
-import com.example.reandroid.utils.Utils;
+import com.example.base.utils.Utils;
 
 public class NetworkStateManager implements DefaultLifecycleObserver {
 

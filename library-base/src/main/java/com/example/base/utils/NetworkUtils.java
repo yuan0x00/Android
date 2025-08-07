@@ -1,4 +1,4 @@
-package com.example.reandroid.utils;
+package com.example.base.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

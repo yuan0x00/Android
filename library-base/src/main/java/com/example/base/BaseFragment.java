@@ -1,4 +1,4 @@
-package com.example.reandroid.ui.base;
+package com.example.base;
 
 import android.content.Intent;
 import android.net.Uri;

@@ -1,14 +1,16 @@
-package com.example.reandroid.ui.base;
+package com.example.base;
 
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.reandroid.utils.network.NetworkStateManager;
-import com.example.reandroid.utils.AdaptScreenUtils;
-import com.example.reandroid.utils.BarUtils;
-import com.example.reandroid.utils.ScreenUtils;
+
+import com.example.base.utils.AdaptScreenUtils;
+import com.example.base.utils.BarUtils;
+import com.example.base.utils.ScreenUtils;
+import com.example.base.utils.network.NetworkStateManager;
 
 public abstract class BaseActivity extends AppCompatActivity {
 

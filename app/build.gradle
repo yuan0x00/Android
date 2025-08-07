@@ -39,6 +39,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
+    implementation project(':library-base')
     implementation project(':library-network')
     implementation libs.androidx.core.ktx
     implementation libs.androidx.lifecycle.runtime.ktx

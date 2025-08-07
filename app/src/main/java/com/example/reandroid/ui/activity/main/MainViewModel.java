@@ -1,12 +1,12 @@
-package com.example.reandroid.ui.page.main;
+package com.example.reandroid.ui.activity.main;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.base.BaseViewModel;
+import com.example.network.BaseResponse;
 import com.example.network.NetWork;
-import com.example.reandroid.bean.BaseResponse;
+import com.example.reandroid.api.RetrofitApi;
 import com.example.reandroid.bean.LoginBean;
-import com.example.reandroid.network.RetrofitApi;
-import com.example.reandroid.ui.base.BaseViewModel;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;

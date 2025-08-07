@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "ReAndroid"
 include ':app'
+include ':library-base'
 include ':library-network'

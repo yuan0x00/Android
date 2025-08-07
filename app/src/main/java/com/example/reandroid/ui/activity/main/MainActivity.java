@@ -1,13 +1,13 @@
-package com.example.reandroid.ui.page.main;
+package com.example.reandroid.ui.activity.main;
 
 import android.os.Bundle;
 
 import androidx.lifecycle.ViewModelProvider;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.example.base.BaseActivity;
+import com.example.base.utils.ToastUtils;
 import com.example.reandroid.R;
-import com.example.reandroid.ui.base.BaseActivity;
-import com.example.reandroid.utils.ToastUtils;
 
 @Route(path = "/app/main")
 public class MainActivity extends BaseActivity {

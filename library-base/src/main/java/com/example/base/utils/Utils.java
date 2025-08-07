@@ -1,4 +1,4 @@
-package com.example.reandroid.utils;
+package com.example.base.utils;
 
 import android.app.Application;
 import android.content.Context;

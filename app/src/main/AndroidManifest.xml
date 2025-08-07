@@ -18,7 +18,7 @@
             android:usesCleartextTraffic="true"
             android:theme="@style/Theme.ReAndroid">
         <activity
-                android:name=".ui.page.splash.SplashActivity"
+                android:name=".ui.activity.splash.SplashActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".ui.page.main.MainActivity"
+                android:name=".ui.activity.main.MainActivity"
                 android:exported="true"
                 android:launchMode="singleTask"
                 android:theme="@style/Theme.ReAndroid">

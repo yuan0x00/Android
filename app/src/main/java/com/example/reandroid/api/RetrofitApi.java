@@ -1,8 +1,8 @@
-package com.example.reandroid.network;
+package com.example.reandroid.api;
 
+import com.example.network.BaseResponse;
 import com.example.reandroid.bean.ArticleListBean;
 import com.example.reandroid.bean.BannerItemBean;
-import com.example.reandroid.bean.BaseResponse;
 import com.example.reandroid.bean.CoinBean;
 import com.example.reandroid.bean.CollectBean;
 import com.example.reandroid.bean.LoginBean;

@@ -37,13 +37,14 @@ public class MainViewModel extends BaseViewModel {
                     public void onNext(BaseResponse<LoginBean> loginBeanBaseResponse) {
                         if (loginBeanBaseResponse.getData() != null) {
                             loginSuccess.setValue(true);  // 登录成功
+                        } else {
+                            errorMessage.setValue("登陆失败");
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        errorMessage.setValue("网络错误: " + e.getMessage());
-
+                        errorMessage.setValue(e.getMessage());
                     }
 
                     @Override

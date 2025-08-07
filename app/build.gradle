@@ -50,8 +50,6 @@ dependencies {
     implementation libs.androidx.navigation.fragment
     implementation libs.material
     debugImplementation libs.leakcanary.android
-    implementation libs.okhttp
-    implementation libs.okhttp.logging
     implementation libs.retrofit
     implementation libs.retrofit.rxjava
     implementation libs.retrofit.converter.gson

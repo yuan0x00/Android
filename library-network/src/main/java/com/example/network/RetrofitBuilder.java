@@ -14,7 +14,6 @@ import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -28,10 +27,6 @@ public class RetrofitBuilder {
     private final Retrofit retrofit;
 
     private RetrofitBuilder() {
-        // 创建日志拦截器
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .readTimeout(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
@@ -43,7 +38,6 @@ public class RetrofitBuilder {
                 .addInterceptor(new ResponseHeaderInterceptor())
                 .addInterceptor(new RequestHeaderInterceptor())
                 .addInterceptor(new ResponseErrorInterceptor())
-                .addInterceptor(loggingInterceptor) // 添加日志拦截器
                 .build();
 
         retrofit = new Retrofit.Builder()

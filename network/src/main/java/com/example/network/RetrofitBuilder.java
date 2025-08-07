@@ -1,8 +1,7 @@
-package com.example.reandroid.net;
+package com.example.network;
 
 import androidx.annotation.NonNull;
 
-import com.example.reandroid.bean.BaseResponse;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -17,8 +16,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import com.example.reandroid.BuildConfig;
 
 public class RetrofitBuilder {
 
@@ -31,11 +30,7 @@ public class RetrofitBuilder {
     private RetrofitBuilder() {
         // 创建日志拦截器
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        if (BuildConfig.DEBUG) {
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        } else {
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
-        }
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
@@ -55,6 +50,7 @@ public class RetrofitBuilder {
                 .baseUrl(BASE_URL)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
 

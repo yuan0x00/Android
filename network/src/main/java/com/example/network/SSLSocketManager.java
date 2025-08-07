@@ -1,4 +1,4 @@
-package com.example.reandroid.net;
+package com.example.network;
 
 import android.annotation.SuppressLint;
 

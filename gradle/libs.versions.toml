@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.0"
+agp = "8.11.1"
 coreKtx = "1.16.0"
 glide = "4.16.0"
 gson = "2.13.1"
@@ -35,4 +35,5 @@ rxandroid = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxandroi
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 

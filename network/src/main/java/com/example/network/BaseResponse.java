@@ -1,4 +1,4 @@
-package com.example.reandroid.bean;
+package com.example.network;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;

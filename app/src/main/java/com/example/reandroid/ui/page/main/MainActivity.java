@@ -4,10 +4,12 @@ import android.os.Bundle;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.reandroid.R;
 import com.example.reandroid.ui.base.BaseActivity;
 import com.example.reandroid.utils.ToastUtils;
 
+@Route(path = "/app/main")
 public class MainActivity extends BaseActivity {
 
     private MainViewModel viewModel;

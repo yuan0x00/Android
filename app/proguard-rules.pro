@@ -21,3 +21,8 @@
 #-renamesourcefileattribute SourceFile
 -keep class * extends androidx.viewbinding.ViewBinding { *; }
 -keep class * extends androidx.lifecycle.ViewModel { *; }
+#ARouter
+-keep public class com.alibaba.android.arouter.routes.**{*;}
+-keep public class com.alibaba.android.arouter.facade.**{*;}
+-keep class * implements com.alibaba.android.arouter.facade.template.ISyringe{*;}
+-keep interface * implements com.alibaba.android.arouter.facade.template.IProvider

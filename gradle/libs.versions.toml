@@ -1,5 +1,6 @@
 [versions]
 agp = "8.11.1"
+arouterGradlePlugin = "1.0.2"
 coreKtx = "1.16.0"
 glide = "4.16.0"
 gson = "2.13.1"
@@ -22,6 +23,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
+arouter-gradle-plugin = { module = "io.github.JailedBird:arouter-gradle-plugin", version.ref = "arouterGradlePlugin" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanaryAndroid" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }

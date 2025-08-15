@@ -1,9 +1,12 @@
-package com.example.core.utils;
+package com.example.core.network;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+
+import com.example.core.utils.NetworkUtils;
+import com.example.core.utils.ToastUtils;
 
 import java.util.Objects;
 

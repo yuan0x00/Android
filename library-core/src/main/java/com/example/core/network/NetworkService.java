@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import retrofit2.Retrofit;
 
-public class NetWork {
+public class NetworkService {
 
     private static final Retrofit retrofit = RetrofitBuilder.getInstance().getRetrofit();
 

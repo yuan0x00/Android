@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.core.base.BaseViewModel;
 import com.example.core.network.BaseResponse;
-import com.example.core.network.NetWork;
+import com.example.core.network.NetworkService;
 import com.example.reandroid.api.RetrofitApi;
 import com.example.reandroid.bean.LoginBean;
 
@@ -27,7 +27,7 @@ public class MainViewModel extends BaseViewModel {
 
     // 登录方法
     public void login(String username, String password) {
-        Observable<BaseResponse<LoginBean>> observable = NetWork.createService(RetrofitApi.class).login(username, password);
+        Observable<BaseResponse<LoginBean>> observable = NetworkService.createService(RetrofitApi.class).login(username, password);
         autoDispose(observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

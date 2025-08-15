@@ -1,4 +1,4 @@
-package com.example.core.utils;
+package com.example.core.network;
 
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -6,6 +6,8 @@ import android.net.ConnectivityManager;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
+
+import com.example.core.utils.Utils;
 
 public class NetworkStateManager implements DefaultLifecycleObserver {
 

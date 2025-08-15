@@ -7,9 +7,9 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.core.network.NetworkStateManager;
 import com.example.core.utils.AdaptScreenUtils;
 import com.example.core.utils.BarUtils;
-import com.example.core.utils.NetworkStateManager;
 import com.example.core.utils.ScreenUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {

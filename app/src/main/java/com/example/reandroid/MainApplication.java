@@ -1,14 +1,13 @@
 package com.example.reandroid;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.example.core.utils.Utils;
+import com.example.core.base.BaseApplication;
 
-public class Application extends android.app.Application {
+public class MainApplication extends BaseApplication {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Utils.init(this);
-        ARouter.init(this);
+        new Thread(() -> ARouter.init(this)).start();
     }
 }

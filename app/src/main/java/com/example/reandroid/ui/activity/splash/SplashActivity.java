@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.core.base.BaseActivity;
-import com.example.core.utils.ToastUtils;
 import com.example.reandroid.R;
 import com.example.reandroid.databinding.ActivitySplashBinding;
 
@@ -27,10 +26,10 @@ public class SplashActivity extends BaseActivity<SplashViewModel, ActivitySplash
 
     @Override
     protected void initializeViews() {
+        //模拟耗时
         binding.getRoot().postDelayed(() -> {
             binding.tvText.setText(getResources().getString(R.string.splash_done));
             ARouter.getInstance().build("/app/main").navigation();
-            ToastUtils.showShortToast("跳转首页");
             finish();
         }, 1500);
     }

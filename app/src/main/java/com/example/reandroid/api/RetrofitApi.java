@@ -1,6 +1,6 @@
 package com.example.reandroid.api;
 
-import com.example.core.network.BaseResponse;
+import com.example.core.base.BaseResponse;
 import com.example.reandroid.bean.*;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.core.network;
+package com.example.core.base;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;

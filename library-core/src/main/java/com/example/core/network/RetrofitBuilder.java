@@ -2,6 +2,7 @@ package com.example.core.network;
 
 import androidx.annotation.NonNull;
 
+import com.example.core.base.BaseResponse;
 import com.google.gson.Gson;
 
 import java.io.IOException;

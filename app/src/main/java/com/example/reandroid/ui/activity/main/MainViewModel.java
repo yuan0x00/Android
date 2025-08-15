@@ -2,8 +2,8 @@ package com.example.reandroid.ui.activity.main;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.core.base.BaseResponse;
 import com.example.core.base.BaseViewModel;
-import com.example.core.network.BaseResponse;
 import com.example.core.network.NetworkService;
 import com.example.reandroid.api.RetrofitApi;
 import com.example.reandroid.bean.LoginBean;

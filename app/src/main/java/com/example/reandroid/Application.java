@@ -1,7 +1,7 @@
 package com.example.reandroid;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.example.base.utils.Utils;
+import com.example.core.utils.Utils;
 
 public class Application extends android.app.Application {
 

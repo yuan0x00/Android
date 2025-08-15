@@ -5,8 +5,8 @@ import android.os.Bundle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.example.base.BaseActivity;
-import com.example.base.utils.ToastUtils;
+import com.example.core.base.BaseActivity;
+import com.example.core.utils.ToastUtils;
 import com.example.reandroid.R;
 
 @Route(path = "/app/main")

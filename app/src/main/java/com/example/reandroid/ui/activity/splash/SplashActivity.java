@@ -5,8 +5,8 @@ import android.os.Bundle;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.example.base.BaseActivity;
-import com.example.base.utils.ToastUtils;
+import com.example.core.base.BaseActivity;
+import com.example.core.utils.ToastUtils;
 import com.example.reandroid.R;
 import com.example.reandroid.databinding.ActivitySplashBinding;
 

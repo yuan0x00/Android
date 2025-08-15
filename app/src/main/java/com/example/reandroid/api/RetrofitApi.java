@@ -1,23 +1,12 @@
 package com.example.reandroid.api;
 
-import com.example.network.BaseResponse;
-import com.example.reandroid.bean.ArticleListBean;
-import com.example.reandroid.bean.BannerItemBean;
-import com.example.reandroid.bean.CoinBean;
-import com.example.reandroid.bean.CollectBean;
-import com.example.reandroid.bean.LoginBean;
-import com.example.reandroid.bean.RegisterBean;
-import com.example.reandroid.bean.UserArticleBean;
-import com.example.reandroid.bean.UserInfoBean;
+import com.example.core.network.BaseResponse;
+import com.example.reandroid.bean.*;
 
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
+import retrofit2.http.*;
 
 public interface RetrofitApi {
 

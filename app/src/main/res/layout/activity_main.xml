@@ -39,8 +39,7 @@
                 app:tabGravity="fill"
                 app:tabIndicator="@null"
                 app:tabMode="fixed"
-                app:tabRippleColor="@null"
-                app:tabSelectedTextColor="@color/purple_500"/>
+                app:tabRippleColor="@null"/>
 
         </FrameLayout>
 

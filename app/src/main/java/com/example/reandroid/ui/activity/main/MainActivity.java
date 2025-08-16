@@ -9,7 +9,7 @@ import com.example.core.utils.ToastUtils;
 import com.example.core.widget.BottomTabNavigator;
 import com.example.reandroid.R;
 import com.example.reandroid.databinding.ActivityMainBinding;
-import com.example.reandroid.ui.activity.main.fragment.DiscoverFragment;
+import com.example.reandroid.ui.activity.main.fragment.ExploreFragment;
 import com.example.reandroid.ui.activity.main.fragment.HomeFragment;
 import com.example.reandroid.ui.activity.main.fragment.MineFragment;
 
@@ -41,18 +41,18 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         navigator = new BottomTabNavigator(binding.tabLayout, binding.viewPager)
                 .addTab(new BottomTabNavigator.TabItem(
                         "首页",
-                        R.drawable.ic_home,
-                        R.drawable.ic_home,
+                        R.drawable.home_24px,
+                        R.drawable.home_fill_24px,
                         HomeFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
                         "发现",
-                        R.drawable.ic_discover,
-                        R.drawable.ic_discover,
-                        DiscoverFragment.class))
+                        R.drawable.explore_24px,
+                        R.drawable.explore_fill_24px,
+                        ExploreFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
                         "我的",
-                        R.drawable.ic_mine,
-                        R.drawable.ic_mine,
+                        R.drawable.person_24px,
+                        R.drawable.person_fill_24px,
                         MineFragment.class))
                 .setOnTabSelectInterceptor((position) -> {
                     if (position == 2) {

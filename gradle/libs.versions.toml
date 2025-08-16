@@ -5,6 +5,7 @@ arouterGradlePlugin = "1.0.2"
 coreKtx = "1.17.0"
 glide = "4.16.0"
 gson = "2.13.1"
+immersionbar = "3.2.2"
 leakcanaryAndroid = "2.14"
 lifecycleRuntimeKtx = "2.9.2"
 retrofit = "3.0.0"
@@ -29,6 +30,7 @@ androidx-navigation-fragment = { group = "androidx.navigation", name = "navigati
 arouter-api = { module = "com.alibaba:arouter-api", version.ref = "arouterApi" }
 arouter-compiler = { module = "com.alibaba:arouter-compiler", version.ref = "arouterApi" }
 arouter-gradle-plugin = { module = "io.github.JailedBird:arouter-gradle-plugin", version.ref = "arouterGradlePlugin" }
+immersionbar = { module = "com.geyifeng.immersionbar:immersionbar", version.ref = "immersionbar" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanaryAndroid" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }

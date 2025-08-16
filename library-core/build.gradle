@@ -46,4 +46,5 @@ dependencies {
     implementation libs.retrofit
     implementation libs.retrofit.rxjava
     implementation libs.retrofit.converter.gson
+    implementation libs.immersionbar
 }

@@ -1,5 +1,7 @@
 package com.example.reandroid.ui.activity.main;
 
+import android.view.Gravity;
+
 import androidx.lifecycle.ViewModelProvider;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -12,6 +14,7 @@ import com.example.reandroid.databinding.ActivityMainBinding;
 import com.example.reandroid.ui.activity.main.fragment.ExploreFragment;
 import com.example.reandroid.ui.activity.main.fragment.HomeFragment;
 import com.example.reandroid.ui.activity.main.fragment.MineFragment;
+import com.example.reandroid.ui.dialog.TipDialogFragment;
 
 @Route(path = "/app/main")
 public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBinding> implements TabNavigator {
@@ -55,6 +58,12 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         MineFragment.class))
                 .setOnTabSelectInterceptor((position) -> {
                     if (position == 2) {
+                        new TipDialogFragment()
+                                .size(300, 200)
+                                .gravity(Gravity.CENTER)
+                                .cancelable(true)
+                                .cancelableOutside(true)
+                                .show(getSupportFragmentManager());
                         ToastUtils.showLongToast("请先登录");
                         return false; // 拦截
                     }

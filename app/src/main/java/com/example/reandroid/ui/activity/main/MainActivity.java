@@ -36,9 +36,8 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     private void setupTabLayout() {
         // 导航条padding
         SafeAreaUtils.applyBottom(binding.tabContainer);
-        binding.viewPager.setUserInputEnabled(false);
         // TabLayout 与 ViewPager2 关联
-        navigator = new BottomTabNavigator(binding.tabLayout, binding.viewPager)
+        navigator = new BottomTabNavigator(this, binding.tabLayout, binding.fragmentContainer)
                 .addTab(new BottomTabNavigator.TabItem(
                         "首页",
                         R.drawable.home_24px,
@@ -61,7 +60,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                     }
                     return true; // 允许
                 })
-                .build(this);
+                .build();
     }
 
     @Override
@@ -81,7 +80,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
     @Override
     public void navigateTo(int position) {
-        navigator.setCurrentItem(position);
+        navigator.selectTab(position);
     }
 
     @Override

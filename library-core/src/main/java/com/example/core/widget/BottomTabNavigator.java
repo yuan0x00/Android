@@ -1,11 +1,12 @@
 package com.example.core.widget;
 
+import android.widget.FrameLayout;
+
 import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -18,16 +19,20 @@ import java.util.List;
 public class BottomTabNavigator {
 
     private final TabLayout tabLayout;
-    private final ViewPager2 viewPager;
+    private final FrameLayout container;
+    private final FragmentActivity activity;
     private final List<TabItem> tabs = new ArrayList<>();
+    private final FragmentManager fm;
+    private int currentPosition = -1;
     private OnTabSelectInterceptor onTabSelectInterceptor;
 
-    public BottomTabNavigator(TabLayout tabLayout, ViewPager2 viewPager) {
+    public BottomTabNavigator(FragmentActivity activity, TabLayout tabLayout, FrameLayout container) {
+        this.activity = activity;
         this.tabLayout = tabLayout;
-        this.viewPager = viewPager;
+        this.container = container;
+        this.fm = activity.getSupportFragmentManager();
     }
 
-    //---------- 链式调用方法 ----------
     public BottomTabNavigator addTab(TabItem item) {
         tabs.add(item);
         return this;
@@ -38,189 +43,126 @@ public class BottomTabNavigator {
         return this;
     }
 
-    /**
-     * 构建并绑定导航器
-     */
-    public BottomTabNavigator build(FragmentActivity activity) {
-        if (tabs.isEmpty()) {
-            throw new IllegalStateException("至少需要添加一个 Tab");
-        }
+    public BottomTabNavigator build() {
+        if (tabs.isEmpty()) throw new IllegalStateException("至少一个 Tab");
 
-        // 1. 设置 ViewPager2 适配器
-        FragmentStateAdapter adapter = new FragmentStateAdapter(activity) {
-            @NonNull
-            @Override
-            public Fragment createFragment(int position) {
-                try {
-                    return tabs.get(position).fragmentClass.newInstance();
-                } catch (Exception e) {
-                    throw new RuntimeException("无法创建 Fragment: " + tabs.get(position).fragmentClass.getSimpleName(), e);
-                }
-            }
-
-            @Override
-            public int getItemCount() {
-                return tabs.size();
-            }
-        };
-        viewPager.setAdapter(adapter);
-
-        // 2. 手动创建 Tab
+        // 添加 Tab
         tabLayout.removeAllTabs();
         for (int i = 0; i < tabs.size(); i++) {
             TabItem item = tabs.get(i);
-            TabLayout.Tab tab = tabLayout.newTab();
-            tab.setText(item.title);
-            tab.setIcon(item.iconNormal);
+            TabLayout.Tab tab = tabLayout.newTab().setText(item.title).setIcon(item.iconNormal);
             tabLayout.addTab(tab);
-
-            // 初始图标状态
-            updateTabIcon(tab, i, i == 0);
+            updateTabIcon(tab, i, false);
         }
 
-        // 3. 同步 ViewPager2 滑动 → TabLayout 选中状态
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                TabLayout.Tab tab = tabLayout.getTabAt(position);
-                if (tab != null && !tab.isSelected()) {
-                    tab.select(); // 同步 UI
-                }
-                // 更新所有 Tab 图标
-                for (int i = 0; i < tabLayout.getTabCount(); i++) {
-                    TabLayout.Tab t = tabLayout.getTabAt(i);
-                    if (t != null) {
-                        updateTabIcon(t, i, i == position);
-                    }
-                }
-            }
-        });
+        // 初始选中第一页
+        setCurrentItem(0);
 
-        // 4. 拦截 Tab 点击 → 控制是否允许切换
+        // Tab 点击监听
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                boolean allowSelect = onTabSelectInterceptor == null ||
-                        onTabSelectInterceptor.shouldAllowTabSelection(position);
-
-                if (allowSelect) {
-                    // 允许切换
-                    if (viewPager.getCurrentItem() != position) {
-                        viewPager.setCurrentItem(position, true);
-                    }
+                int pos = tab.getPosition();
+                boolean allow = onTabSelectInterceptor == null || onTabSelectInterceptor.shouldAllowTabSelection(pos);
+                if (allow) {
+                    setCurrentItem(pos);
                 } else {
-                    // 拦截：保持当前页面，还原 Tab 状态
-                    int current = viewPager.getCurrentItem();
-                    TabLayout.Tab currentTab = tabLayout.getTabAt(current);
-                    if (currentTab != null) {
-                        currentTab.select(); // 强制还原 UI
-                        updateTabIcon(tab, position, false); // 恢复未选中图标
+                    if (currentPosition != -1) {
+                        TabLayout.Tab currentTab = tabLayout.getTabAt(currentPosition);
+                        if (currentTab != null) currentTab.select();
+                        updateTabIcon(tab, pos, false);
                     }
                 }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                // 不处理，由 onPageSelected 控制
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                // 可选：处理重选
             }
         });
 
-        // 5. 初始选中第一页
-        if (viewPager.getCurrentItem() == 0) {
-            TabLayout.Tab firstTab = tabLayout.getTabAt(0);
-            if (firstTab != null) {
-                firstTab.select();
-            }
-        } else {
-            viewPager.setCurrentItem(0, false);
-        }
-
         return this;
     }
 
-    //---------- 内部方法 ----------
     private void updateTabIcon(TabLayout.Tab tab, int position, boolean isSelected) {
-        @DrawableRes int iconRes = isSelected ? tabs.get(position).iconSelected : tabs.get(position).iconNormal;
-        tab.setIcon(iconRes);
+        @DrawableRes int icon = isSelected ? tabs.get(position).iconSelected : tabs.get(position).iconNormal;
+        tab.setIcon(icon);
     }
 
-    /**
-     * 获取当前选中位置
-     */
     public int getCurrentItem() {
-        return viewPager.getCurrentItem();
+        return currentPosition;
     }
 
-    /**
-     * 跳转到指定页面（受拦截器控制）
-     */
-    public BottomTabNavigator setCurrentItem(int position) {
-        if (position < 0 || position >= tabs.size()) return this;
+    private void setCurrentItem(int position) {
+        if (position == currentPosition) return;
 
-        boolean allowSelect = onTabSelectInterceptor == null ||
-                onTabSelectInterceptor.shouldAllowTabSelection(position);
+        FragmentTransaction ft = fm.beginTransaction();
 
-        if (allowSelect) {
-            viewPager.setCurrentItem(position, true);
+        try {
+            Fragment fragment = fm.findFragmentByTag("tab_" + position);
+            if (fragment == null) {
+                fragment = tabs.get(position).fragmentClass.newInstance();
+                ft.add(container.getId(), fragment, "tab_" + position);
+            } else {
+                ft.show(fragment);
+            }
+
+            if (currentPosition != -1) {
+                Fragment old = fm.findFragmentByTag("tab_" + currentPosition);
+                if (old != null) {
+                    ft.hide(old);
+                }
+            }
+
+            ft.commitNow(); // 立即执行，避免延迟
+
+            currentPosition = position;
+
+            // 更新 Tab 图标
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                if (tab != null) {
+                    updateTabIcon(tab, i, i == position);
+                }
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return this;
     }
 
-    //---------- 外部控制方法 ----------
-
-    /**
-     * 强制跳转（绕过拦截器）
-     */
-    public BottomTabNavigator setCurrentItem(int position, boolean smoothScroll) {
+    public void selectTab(int position) {
         if (position >= 0 && position < tabs.size()) {
-            viewPager.setCurrentItem(position, smoothScroll);
+            TabLayout.Tab tab = tabLayout.getTabAt(position);
+            if (tab != null) {
+                tab.select();
+            }
         }
-        return this;
     }
 
-    /**
-     * 禁用某个 Tab
-     */
-    public BottomTabNavigator disableTab(int position) {
+    public void disableTab(int position) {
         TabLayout.Tab tab = tabLayout.getTabAt(position);
         if (tab != null) {
             tab.view.setEnabled(false);
             tab.view.setAlpha(0.6f);
         }
-        return this;
     }
 
-    /**
-     * 启用某个 Tab
-     */
-    public BottomTabNavigator enableTab(int position) {
+    public void enableTab(int position) {
         TabLayout.Tab tab = tabLayout.getTabAt(position);
         if (tab != null) {
             tab.view.setEnabled(true);
             tab.view.setAlpha(1.0f);
         }
-        return this;
     }
 
-    //---------- 拦截器接口 ----------
     public interface OnTabSelectInterceptor {
-        /**
-         * 是否允许选中指定位置的 Tab
-         *
-         * @param position 即将选中的位置
-         * @return true 允许切换；false 拦截切换
-         */
         boolean shouldAllowTabSelection(int position);
     }
 
-    //---------- Tab 项定义 ----------
     public static class TabItem {
         public final String title;
         @DrawableRes
@@ -229,8 +171,7 @@ public class BottomTabNavigator {
         public final int iconSelected;
         public final Class<? extends Fragment> fragmentClass;
 
-        public TabItem(String title,
-                       @DrawableRes int iconNormal,
+        public TabItem(String title, @DrawableRes int iconNormal,
                        @DrawableRes int iconSelected,
                        Class<? extends Fragment> fragmentClass) {
             this.title = title;

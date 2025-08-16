@@ -4,15 +4,19 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.core.base.BaseActivity;
+import com.example.core.utils.SafeAreaUtils;
 import com.example.core.utils.ToastUtils;
+import com.example.core.widget.BottomTabNavigator;
 import com.example.reandroid.R;
 import com.example.reandroid.databinding.ActivityMainBinding;
-import com.google.android.material.tabs.TabLayoutMediator;
+import com.example.reandroid.ui.activity.main.fragment.DiscoverFragment;
+import com.example.reandroid.ui.activity.main.fragment.HomeFragment;
+import com.example.reandroid.ui.activity.main.fragment.MineFragment;
 
 @Route(path = "/app/main")
 public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBinding> {
 
-    private MainFragmentAdapter fragmentAdapter;
+    private BottomTabNavigator navigator;
 
     @Override
     protected MainViewModel createViewModel() {
@@ -26,33 +30,38 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
     @Override
     protected void initializeViews() {
-        setupViewPager();
         setupTabLayout();
     }
 
-    private void setupViewPager() {
-        fragmentAdapter = new MainFragmentAdapter(this);
-        binding.viewPager.setAdapter(fragmentAdapter);
-    }
-
     private void setupTabLayout() {
+        // 导航条padding
+        SafeAreaUtils.applyBottom(binding.tabContainer);
+        binding.viewPager.setUserInputEnabled(false);
         // TabLayout 与 ViewPager2 关联
-        new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
-            switch (position) {
-                case 0:
-                    tab.setText("首页");
-                    tab.setIcon(R.drawable.ic_home);
-                    break;
-                case 1:
-                    tab.setText("发现");
-                    tab.setIcon(R.drawable.ic_discover);
-                    break;
-                case 2:
-                    tab.setText("我的");
-                    tab.setIcon(R.drawable.ic_mine);
-                    break;
-            }
-        }).attach();
+        navigator = new BottomTabNavigator(binding.tabLayout, binding.viewPager)
+                .addTab(new BottomTabNavigator.TabItem(
+                        "首页",
+                        R.drawable.ic_home,
+                        R.drawable.ic_home,
+                        HomeFragment.class))
+                .addTab(new BottomTabNavigator.TabItem(
+                        "发现",
+                        R.drawable.ic_discover,
+                        R.drawable.ic_discover,
+                        DiscoverFragment.class))
+                .addTab(new BottomTabNavigator.TabItem(
+                        "我的",
+                        R.drawable.ic_mine,
+                        R.drawable.ic_mine,
+                        MineFragment.class))
+                .setOnTabSelectInterceptor((position) -> {
+                    if (position == 2) {
+                        ToastUtils.showLongToast("请先登录");
+                        return false; // 拦截
+                    }
+                    return true; // 允许
+                })
+                .build(this);
     }
 
     @Override

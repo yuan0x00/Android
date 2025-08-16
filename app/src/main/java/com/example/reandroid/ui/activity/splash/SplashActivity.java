@@ -26,11 +26,12 @@ public class SplashActivity extends BaseActivity<SplashViewModel, ActivitySplash
 
     @Override
     protected void initializeViews() {
+        long delayMillis = 1000;
         //模拟耗时
         binding.getRoot().postDelayed(() -> {
             binding.tvText.setText(getResources().getString(R.string.splash_done));
             ARouter.getInstance().build("/app/main").navigation();
             finish();
-        }, 1500);
+        }, delayMillis);
     }
 }

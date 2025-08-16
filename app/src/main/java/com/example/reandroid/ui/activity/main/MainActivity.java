@@ -14,7 +14,7 @@ import com.example.reandroid.ui.activity.main.fragment.HomeFragment;
 import com.example.reandroid.ui.activity.main.fragment.MineFragment;
 
 @Route(path = "/app/main")
-public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBinding> {
+public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBinding> implements TabNavigator {
 
     private BottomTabNavigator navigator;
 
@@ -77,5 +77,20 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 ToastUtils.showLongToast(msg);
             }
         });
+    }
+
+    @Override
+    public void navigateTo(int position) {
+        navigator.setCurrentItem(position);
+    }
+
+    @Override
+    public void disableTab(int position) {
+        navigator.disableTab(position);
+    }
+
+    @Override
+    public void enableTab(int position) {
+        navigator.enableTab(position);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.reandroid.ui.activity.main.fragment;
+package com.example.reandroid.ui.fragment.explore;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;

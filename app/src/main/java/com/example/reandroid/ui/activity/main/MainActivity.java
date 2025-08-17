@@ -10,10 +10,10 @@ import com.example.core.utils.ToastUtils;
 import com.example.core.widget.BottomTabNavigator;
 import com.example.reandroid.R;
 import com.example.reandroid.databinding.ActivityMainBinding;
-import com.example.reandroid.ui.activity.main.fragment.ExploreFragment;
-import com.example.reandroid.ui.activity.main.fragment.HomeFragment;
-import com.example.reandroid.ui.activity.main.fragment.MineFragment;
 import com.example.reandroid.ui.dialog.TipDialogFragment;
+import com.example.reandroid.ui.fragment.explore.ExploreFragment;
+import com.example.reandroid.ui.fragment.home.HomeFragment;
+import com.example.reandroid.ui.fragment.mine.MineFragment;
 
 public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBinding> implements TabNavigator {
 

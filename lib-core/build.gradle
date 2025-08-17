@@ -4,10 +4,10 @@ plugins {
 
 android {
     namespace 'com.example.core'
-    compileSdk 36
+    compileSdk Integer.parseInt(project.compileSdkVersion)
 
     defaultConfig {
-        minSdk 21
+        minSdk Integer.parseInt(project.minSdk)
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"

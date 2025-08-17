@@ -4,14 +4,14 @@ plugins {
 
 android {
     namespace "com.example.reandroid"
-    compileSdkVersion 36
+    compileSdkVersion Integer.parseInt(project.compileSdkVersion)
 
     defaultConfig {
         applicationId "com.example.reandroid"
-        minSdk 21
-        targetSdk 36
-        versionCode 1
-        versionName "1.0"
+        minSdk Integer.parseInt(project.minSdk)
+        targetSdk Integer.parseInt(project.targetSdk)
+        versionCode Integer.parseInt(project.versionCode)
+        versionName project.versionName
     }
 
     buildTypes {

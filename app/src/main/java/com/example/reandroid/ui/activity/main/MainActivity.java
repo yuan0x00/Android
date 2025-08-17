@@ -4,7 +4,6 @@ import android.view.Gravity;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.core.base.BaseActivity;
 import com.example.core.utils.SafeAreaUtils;
 import com.example.core.utils.ToastUtils;
@@ -16,7 +15,6 @@ import com.example.reandroid.ui.activity.main.fragment.HomeFragment;
 import com.example.reandroid.ui.activity.main.fragment.MineFragment;
 import com.example.reandroid.ui.dialog.TipDialogFragment;
 
-@Route(path = "/app/main")
 public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBinding> implements TabNavigator {
 
     private BottomTabNavigator navigator;

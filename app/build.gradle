@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    id "io.github.JailedBird.ARouterPlugin"
 }
 
 android {
@@ -13,11 +12,6 @@ android {
         targetSdk 36
         versionCode 1
         versionName "1.0"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [AROUTER_MODULE_NAME: project.getName()]
-            }
-        }
     }
 
     buildTypes {
@@ -55,6 +49,4 @@ dependencies {
     implementation libs.glide
     implementation libs.gson
     implementation libs.rxandroid
-    implementation libs.arouter.api
-    annotationProcessor libs.arouter.compiler
 }

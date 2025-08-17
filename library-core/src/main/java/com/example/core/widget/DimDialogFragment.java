@@ -1,4 +1,4 @@
-package com.example.core.base;
+package com.example.core.widget;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import com.example.core.R;
 
 /**
  * 全屏遮罩 DialogFragment
- * 用于在其他 Dialog 之上显示一个半透明背景，避免系统 dim 导致状态栏刷新
+ * 用于在其他 Dialog 之上显示一个半透明背景
  */
 public class DimDialogFragment extends DialogFragment {
 

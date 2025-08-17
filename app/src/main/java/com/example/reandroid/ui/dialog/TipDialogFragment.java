@@ -1,10 +1,10 @@
 package com.example.reandroid.ui.dialog;
 
 import android.app.Dialog;
-import android.view.Gravity;
 import android.view.MotionEvent;
 
 import com.example.core.base.BaseDialogFragment;
+import com.example.core.widget.Loading;
 import com.example.reandroid.R;
 
 public class TipDialogFragment extends BaseDialogFragment {
@@ -22,12 +22,9 @@ public class TipDialogFragment extends BaseDialogFragment {
             // 设置点击遮罩关闭
             dialog.findViewById(R.id.tvContent).setOnTouchListener((v, event) -> {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    new TipDialogFragment()
-                            .size(300, 300)
-                            .gravity(Gravity.CENTER)
-                            .cancelable(true)
-                            .cancelableOutside(true)
-                            .show(getParentFragmentManager());
+                    Loading loading = new Loading();
+                    loading.show(getParentFragmentManager());
+                    v.postDelayed(() -> loading.dismissSafely(), 1000);
                 }
                 return false;
             });

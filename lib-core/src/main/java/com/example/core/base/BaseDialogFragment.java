@@ -26,7 +26,6 @@ public abstract class BaseDialogFragment extends DialogFragment {
     private int mHeightPx = WindowManager.LayoutParams.WRAP_CONTENT;
     private int mGravity = Gravity.CENTER;
     private int mAnimStyle = 0;
-    private boolean mCancelableOutside = true;
     private boolean mCancelable = true;
 
     // 是否由 showWithDim 管理（用于 dismiss 时联动）
@@ -107,11 +106,6 @@ public abstract class BaseDialogFragment extends DialogFragment {
         return this;
     }
 
-    public BaseDialogFragment cancelableOutside(boolean cancelable) {
-        this.mCancelableOutside = cancelable;
-        return this;
-    }
-
     public BaseDialogFragment cancelable(boolean cancelable) {
         this.mCancelable = cancelable;
         setCancelable(cancelable);
@@ -147,7 +141,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
         }
 
         window.setAttributes(params);
-        getDialog().setCanceledOnTouchOutside(mCancelableOutside);
+        getDialog().setCanceledOnTouchOutside(mCancelable);
     }
 
     // ============= 显示与关闭 =============
@@ -182,8 +176,8 @@ public abstract class BaseDialogFragment extends DialogFragment {
     }
 
     public void dismissSafely() {
-        if (isAdded()) {
-            dismissAllowingStateLoss();
+        if (isAdded() && getDialog() != null) {
+            onDismiss(getDialog());
         }
     }
 

@@ -60,7 +60,6 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                                 .size(300, 200)
                                 .gravity(Gravity.CENTER)
                                 .cancelable(true)
-                                .cancelableOutside(true)
                                 .show(getSupportFragmentManager());
                         ToastUtils.showLongToast("请先登录");
                         return false; // 拦截

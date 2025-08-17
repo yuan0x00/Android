@@ -12,6 +12,7 @@ public class Loading extends BaseDialogFragment {
     @Override
     public void show(@NonNull FragmentManager fm) {
         this.setSquareWidthOf(0.25F);
+        this.cancelable(false);
         super.show(fm);
     }
 

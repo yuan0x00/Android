@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace "com.example.reandroid"
+    namespace "com.example.android"
     compileSdkVersion Integer.parseInt(project.compileSdkVersion)
 
     defaultConfig {
-        applicationId "com.example.reandroid"
+        applicationId "com.example.android"
         minSdk Integer.parseInt(project.minSdk)
         targetSdk Integer.parseInt(project.targetSdk)
         versionCode Integer.parseInt(project.versionCode)

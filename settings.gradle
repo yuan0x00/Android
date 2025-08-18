@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ReAndroid"
+rootProject.name = "Android"
 include ':app'
 include ':lib-core'
 include ':lib-router'

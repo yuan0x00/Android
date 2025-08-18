@@ -1,0 +1,33 @@
+package com.example.android.ui.dialog;
+
+import android.app.Dialog;
+import android.view.MotionEvent;
+
+import com.example.android.R;
+import com.example.core.base.BaseDialogFragment;
+import com.example.core.widget.Loading;
+
+public class TipDialogFragment extends BaseDialogFragment {
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.dialog_tip;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null && dialog.getWindow() != null) {
+            // 设置点击遮罩关闭
+            dialog.findViewById(R.id.tvContent).setOnTouchListener((v, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    Loading loading = new Loading();
+                    loading.show(getParentFragmentManager());
+                    v.postDelayed(() -> loading.dismissSafely(), 1000);
+                }
+                return false;
+            });
+        }
+    }
+}

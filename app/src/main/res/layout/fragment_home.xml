@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <com.example.reandroid.ui.view.SideFloatView
+    <com.example.android.ui.view.SideFloatView
         android:id="@+id/side_float_view"
         android:layout_width="120dp"
         android:layout_height="60dp"

@@ -40,8 +40,8 @@ public abstract class BaseBanner<T> extends FrameLayout {
 
     // 指示器相关
     private LinearLayout mIndicatorContainer;
-    private int mIndicatorSelectedColor = 0xFF333333;  // 深灰
-    private int mIndicatorNormalColor = 0x88CCCCCC;    // 浅灰
+    private int mIndicatorSelectedColor = 0xFFCCCCCC;  // 深灰
+    private int mIndicatorNormalColor = 0xFF333333;    // 浅灰
     private int mIndicatorRadius = 4;                 // dp
     private int mIndicatorMargin = 6;                 // dp
 

@@ -52,4 +52,7 @@ dependencies {
     implementation libs.glide
     implementation libs.gson
     implementation libs.rxandroid
+    implementation(libs.refresh.layout.kernel)
+    implementation(libs.refresh.header.classics)
+    implementation(libs.refresh.footer.classics)
 }

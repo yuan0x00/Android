@@ -19,6 +19,8 @@ import com.example.android.ui.fragment.home.recycleView.item.EntryItem;
 import com.example.android.ui.fragment.home.recycleView.item.FeedItem;
 import com.example.core.base.BaseFragment;
 import com.example.core.utils.SafeAreaUtils;
+import com.scwang.smart.refresh.footer.ClassicsFooter;
+import com.scwang.smart.refresh.header.ClassicsHeader;
 
 import java.util.Arrays;
 import java.util.List;
@@ -69,8 +71,14 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
 
         List<FeedItem> feeds = Arrays.asList(
                 new FeedItem("欢迎来到首页，这里是你最新的动态..."),
-                new FeedItem("今日推荐商品已更新，请查看。"),
-                new FeedItem("系统通知：版本已升级至 v2.0")
+                new FeedItem("今日推荐商品1已更新，请查看。"),
+                new FeedItem("今日推荐商品2已更新，请查看。"),
+                new FeedItem("今日推荐商品3已更新，请查看。"),
+                new FeedItem("今日推荐商品4已更新，请查看。"),
+                new FeedItem("今日推荐商品5已更新，请查看。"),
+                new FeedItem("今日推荐商品6已更新，请查看。"),
+                new FeedItem("今日推荐商品7已更新，请查看。"),
+                new FeedItem("系统通知：版本已升级至 v2.0。")
         );
 
         // 创建各模块 Adapter
@@ -81,6 +89,19 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
         // 使用 ConcatAdapter 拼接
         ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, entriesAdapter, feedAdapter);
         binding.recyclerView.setAdapter(concatAdapter);
+
+        //设置 Header
+        binding.refreshLayout.setRefreshHeader(new ClassicsHeader(requireContext()));
+        //设置 Footer
+        binding.refreshLayout.setRefreshFooter(new ClassicsFooter(requireContext()));
+
+        binding.refreshLayout.setOnRefreshListener((refreshlayout) -> {
+            refreshlayout.finishRefresh(2000);
+        });
+        binding.refreshLayout.setOnLoadMoreListener(refreshlayout -> {
+            refreshlayout.finishLoadMore(2000);
+        });
+
     }
 
 }

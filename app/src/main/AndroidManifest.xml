@@ -18,6 +18,17 @@
         android:theme="@style/Theme.Android"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.activity.login.LoginActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.Android"/>
+        <activity
+            android:name=".ui.activity.main.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.Android">
+        </activity>
+        <activity
             android:name=".ui.activity.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Splash">
@@ -26,12 +37,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.activity.main.MainActivity"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.Android">
         </activity>
     </application>
 

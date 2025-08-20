@@ -1,12 +1,12 @@
 package com.example.android.ui.activity.main;
 
-import android.view.Gravity;
+import android.content.Intent;
 
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.android.R;
 import com.example.android.databinding.ActivityMainBinding;
-import com.example.android.ui.dialog.TipDialogFragment;
+import com.example.android.ui.activity.login.LoginActivity;
 import com.example.android.ui.fragment.explore.ExploreFragment;
 import com.example.android.ui.fragment.home.HomeFragment;
 import com.example.android.ui.fragment.mine.MineFragment;
@@ -55,16 +55,15 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         R.drawable.person_fill_24px,
                         MineFragment.class))
                 .setOnTabSelectInterceptor((position) -> {
-                    if (position == 2) {
-                        new TipDialogFragment()
-                                .size(300, 200)
-                                .gravity(Gravity.CENTER)
-                                .cancelable(true)
-                                .show(getSupportFragmentManager());
-                        ToastUtils.showLongToast("请先登录");
-                        return false; // 拦截
+                    switch (position) {
+                        case 2:
+                            Intent intent = new Intent(this, LoginActivity.class);
+                            startActivity(intent);
+                            return false;
+                        case 0:
+                        case 1:
                     }
-                    return true; // 允许
+                    return true;
                 })
                 .build();
     }

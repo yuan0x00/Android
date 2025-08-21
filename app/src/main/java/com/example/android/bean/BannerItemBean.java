@@ -2,8 +2,10 @@ package com.example.android.bean;
 
 import androidx.annotation.Keep;
 
+import com.example.android.interfaces.IBannerItem;
+
 @Keep
-public class BannerItemBean {
+public class BannerItemBean implements IBannerItem {
     private String desc;
     private int id;
     private String imagePath;
@@ -100,5 +102,10 @@ public class BannerItemBean {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public String getImageUrl() {
+        return imagePath;
     }
 }

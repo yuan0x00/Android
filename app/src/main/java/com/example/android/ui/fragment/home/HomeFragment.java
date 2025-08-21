@@ -12,12 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.android.R;
 import com.example.android.databinding.FragmentHomeBinding;
 import com.example.android.ui.activity.main.TabNavigator;
-import com.example.android.ui.fragment.home.recycleView.adapter.BannerAdapter;
-import com.example.android.ui.fragment.home.recycleView.adapter.EntriesAdapter;
-import com.example.android.ui.fragment.home.recycleView.adapter.FeedAdapter;
-import com.example.android.ui.fragment.home.recycleView.item.BannerItem;
-import com.example.android.ui.fragment.home.recycleView.item.EntryItem;
-import com.example.android.ui.fragment.home.recycleView.item.FeedItem;
+import com.example.android.ui.fragment.home.adapter.BannerAdapter;
+import com.example.android.ui.fragment.home.adapter.EntriesAdapter;
+import com.example.android.ui.fragment.home.adapter.FeedAdapter;
+import com.example.android.ui.fragment.home.item.BannerItem;
+import com.example.android.ui.fragment.home.item.EntryItem;
+import com.example.android.ui.fragment.home.item.FeedItem;
 import com.example.core.base.BaseFragment;
 import com.example.core.utils.SafeAreaUtils;
 import com.example.core.utils.ToastUtils;
@@ -67,8 +67,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
         });
         viewModel.getBannerList().observe(this, bannerList -> {
             if (bannerList != null && !bannerList.isEmpty()) {
-//                bannerAdapter.setData(bannerList);//fixme
-                bannerAdapter.notifyDataSetChanged(); // 通常 setData 内部已调用
+                bannerAdapter.setData(bannerList);
             }
         });
     }

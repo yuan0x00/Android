@@ -1,4 +1,4 @@
-package com.example.core.base;
+package com.example.android.base;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;

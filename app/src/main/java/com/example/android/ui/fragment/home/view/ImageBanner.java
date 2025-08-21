@@ -1,4 +1,4 @@
-package com.example.android.ui.view;
+package com.example.android.ui.fragment.home.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,10 +7,10 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.android.R;
-import com.example.android.ui.fragment.home.recycleView.item.BannerItem;
-import com.example.core.base.BaseBanner;
+import com.example.android.base.BaseBanner;
+import com.example.android.interfaces.IBannerItem;
 
-public class ImageBanner extends BaseBanner<BannerItem> {
+public class ImageBanner extends BaseBanner<IBannerItem> {
 
     public ImageBanner(Context context) {
         super(context);
@@ -26,11 +26,11 @@ public class ImageBanner extends BaseBanner<BannerItem> {
     }
 
     @Override
-    protected void bindItem(View itemView, BannerItem bannerItem, int position) {
+    protected void bindItem(View itemView, IBannerItem item, int position) {
         ImageView iv = itemView.findViewById(R.id.iv_image);
         // 使用 Glide 加载图片
         Glide.with(itemView)
-                .load(bannerItem.url)
+                .load(item.getImageUrl())
                 .centerCrop()
                 .into(iv);
     }

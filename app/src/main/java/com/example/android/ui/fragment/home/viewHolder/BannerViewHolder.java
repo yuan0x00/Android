@@ -1,4 +1,4 @@
-package com.example.android.ui.fragment.home.recycleView.viewHolder;
+package com.example.android.ui.fragment.home.viewHolder;
 
 import android.view.View;
 
@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.R;
-import com.example.android.ui.fragment.home.recycleView.item.BannerItem;
-import com.example.android.ui.view.ImageBanner;
+import com.example.android.interfaces.IBannerItem;
+import com.example.android.ui.fragment.home.view.ImageBanner;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class BannerViewHolder extends RecyclerView.ViewHolder {
         banner = itemView.findViewById(R.id.banner);
     }
 
-    public void bind(List<BannerItem> banners) {
+    public void bind(List<IBannerItem> banners) {
         banner.setData(banners);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.android.ui.fragment.home.recycleView.viewHolder;
+package com.example.android.ui.fragment.home.viewHolder;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +10,7 @@ import androidx.gridlayout.widget.GridLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.R;
-import com.example.android.ui.fragment.home.recycleView.item.EntryItem;
+import com.example.android.ui.fragment.home.item.EntryItem;
 
 import java.util.List;
 

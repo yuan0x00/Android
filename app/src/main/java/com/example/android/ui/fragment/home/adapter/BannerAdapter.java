@@ -1,4 +1,4 @@
-package com.example.android.ui.fragment.home.recycleView.adapter;
+package com.example.android.ui.fragment.home.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,19 +8,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.R;
-import com.example.android.ui.fragment.home.recycleView.item.BannerItem;
-import com.example.android.ui.fragment.home.recycleView.viewHolder.BannerViewHolder;
+import com.example.android.interfaces.IBannerItem;
+import com.example.android.ui.fragment.home.viewHolder.BannerViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BannerAdapter extends RecyclerView.Adapter<BannerViewHolder> {
-    private final List<BannerItem> banners;
+    private final List<IBannerItem> banners;
 
-    public BannerAdapter(List<BannerItem> banners) {
-        this.banners = banners;
+    public BannerAdapter(List<? extends IBannerItem> banners) {
+        this.banners = new ArrayList<>(banners);
     }
 
-    public void setData(List<BannerItem> newData) {
+    public void setData(List<? extends IBannerItem> newData) {
         this.banners.clear();
         this.banners.addAll(newData);
         notifyDataSetChanged(); // 或使用 DiffUtil 更高效

@@ -1,4 +1,4 @@
-package com.example.android.ui.fragment.home.recycleView.item;
+package com.example.android.ui.fragment.home.item;
 
 public class EntryItem {
     public String name;

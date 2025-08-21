@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.android.R;
 import com.example.android.databinding.FragmentHomeBinding;
 import com.example.android.ui.activity.main.TabNavigator;
 import com.example.android.ui.fragment.home.recycleView.adapter.BannerAdapter;
@@ -19,6 +20,7 @@ import com.example.android.ui.fragment.home.recycleView.item.EntryItem;
 import com.example.android.ui.fragment.home.recycleView.item.FeedItem;
 import com.example.core.base.BaseFragment;
 import com.example.core.utils.SafeAreaUtils;
+import com.example.core.utils.ToastUtils;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 
@@ -27,6 +29,8 @@ import java.util.List;
 
 public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBinding> {
     private TabNavigator navigator;
+    private BannerAdapter bannerAdapter;
+    private ConcatAdapter concatAdapter;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -49,6 +53,27 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
     }
 
     @Override
+    protected void loadData() {
+        super.loadData();
+        viewModel.banner();
+    }
+
+    @Override
+    protected void setupObservers() {
+        viewModel.getErrorMessage().observe(this, msg -> {
+            if (msg != null && !msg.isEmpty()) {
+                ToastUtils.showLongToast(msg);
+            }
+        });
+        viewModel.getBannerList().observe(this, bannerList -> {
+            if (bannerList != null && !bannerList.isEmpty()) {
+//                bannerAdapter.setData(bannerList);//fixme
+                bannerAdapter.notifyDataSetChanged(); // 通常 setData 内部已调用
+            }
+        });
+    }
+
+    @Override
     protected void initializeViews() {
         SafeAreaUtils.applyTop(binding.getRoot());
 
@@ -63,10 +88,10 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
         );
 
         List<EntryItem> entries = Arrays.asList(
-                new EntryItem("商城", android.R.drawable.ic_menu_agenda),
-                new EntryItem("订单", android.R.drawable.ic_menu_camera),
-                new EntryItem("客服", android.R.drawable.ic_menu_call),
-                new EntryItem("我的", android.R.drawable.ic_menu_my_calendar)
+                new EntryItem("商城", R.drawable.explore_24px),
+                new EntryItem("订单", R.drawable.explore_24px),
+                new EntryItem("客服", R.drawable.explore_24px),
+                new EntryItem("我的", R.drawable.explore_24px)
         );
 
         List<FeedItem> feeds = Arrays.asList(
@@ -82,12 +107,12 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
         );
 
         // 创建各模块 Adapter
-        BannerAdapter bannerAdapter = new BannerAdapter(bannerUrls);
+        bannerAdapter = new BannerAdapter(bannerUrls);
         EntriesAdapter entriesAdapter = new EntriesAdapter(entries);
         FeedAdapter feedAdapter = new FeedAdapter(feeds);
 
         // 使用 ConcatAdapter 拼接
-        ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, entriesAdapter, feedAdapter);
+        concatAdapter = new ConcatAdapter(bannerAdapter, entriesAdapter, feedAdapter);
         binding.recyclerView.setAdapter(concatAdapter);
 
         //设置 Header

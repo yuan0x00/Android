@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewbinding.ViewBinding;
 
-import com.example.core.network.NetworkStateManager;
+import com.example.core.network.state.NetworkStateManager;
 import com.example.core.utils.AdaptScreenUtils;
 import com.example.core.utils.ScreenUtils;
 import com.gyf.immersionbar.ImmersionBar;

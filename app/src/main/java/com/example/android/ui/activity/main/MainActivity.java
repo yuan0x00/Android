@@ -30,6 +30,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     @Override
+    protected void loadData() {
+        viewModel.login("123", "123");
+    }
+
+    @Override
     protected void initializeViews() {
         setupTabLayout();
     }

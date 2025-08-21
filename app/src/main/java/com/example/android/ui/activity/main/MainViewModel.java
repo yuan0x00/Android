@@ -2,11 +2,10 @@ package com.example.android.ui.activity.main;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.android.api.RetrofitApi;
+import com.example.android.api.NetApis;
 import com.example.android.bean.LoginBean;
 import com.example.core.base.BaseResponse;
 import com.example.core.base.BaseViewModel;
-import com.example.core.network.NetworkService;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -27,7 +26,7 @@ public class MainViewModel extends BaseViewModel {
 
     // 登录方法
     public void login(String username, String password) {
-        Observable<BaseResponse<LoginBean>> observable = NetworkService.createService(RetrofitApi.class).login(username, password);
+        Observable<BaseResponse<LoginBean>> observable = NetApis.Login().login(username, password);
         autoDispose(observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

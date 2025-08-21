@@ -14,11 +14,7 @@ import javax.net.ssl.X509TrustManager;
  * 信任所有证书（仅用于测试环境）
  * 生产环境请使用正规证书校验
  */
-public class SSLSocketManager {
-
-    private SSLSocketManager() {
-        // 私有构造，防止实例化
-    }
+public class DefaultSSLSocketManager {
 
     @SuppressLint("CustomX509TrustManager")
     private static final X509TrustManager TRUST_ALL_MANAGER = new X509TrustManager() {
@@ -39,8 +35,11 @@ public class SSLSocketManager {
             return new X509Certificate[0];
         }
     };
-
     private static final X509TrustManager[] TRUST_MANAGERS = new X509TrustManager[]{TRUST_ALL_MANAGER};
+
+    private DefaultSSLSocketManager() {
+        // 私有构造，防止实例化
+    }
 
     public static SSLSocketFactory getSSLSocketFactory() {
         try {

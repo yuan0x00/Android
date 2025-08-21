@@ -20,6 +20,12 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerViewHolder> {
         this.banners = banners;
     }
 
+    public void setData(List<BannerItem> newData) {
+        this.banners.clear();
+        this.banners.addAll(newData);
+        notifyDataSetChanged(); // 或使用 DiffUtil 更高效
+    }
+
     @NonNull
     @Override
     public BannerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

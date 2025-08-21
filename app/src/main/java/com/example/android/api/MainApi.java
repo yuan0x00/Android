@@ -8,24 +8,7 @@ import java.util.ArrayList;
 import io.reactivex.Observable;
 import retrofit2.http.*;
 
-public interface RetrofitApi {
-
-    // 登录
-    @FormUrlEncoded
-    @POST("/user/login")
-    Observable<BaseResponse<LoginBean>> login(
-            @Field("username") String username,
-            @Field("password") String password
-    );
-
-    // 注册
-    @FormUrlEncoded
-    @POST("/user/register")
-    Observable<BaseResponse<RegisterBean>> register(
-            @Field("username") String username,
-            @Field("password") String password,
-            @Field("repassword") String rePassword
-    );
+public interface MainApi {
 
     // 获取积分信息
     @GET("/lg/coin/userinfo/json")
@@ -34,10 +17,6 @@ public interface RetrofitApi {
     // 获取用户信息
     @GET("/user/lg/userinfo/json")
     Observable<BaseResponse<UserInfoBean>> userinfo();
-
-    // 退出登录
-    @GET("/user/logout/json")
-    Observable<BaseResponse<String>> logout();
 
     // 获取 Banner 列表
     @GET("/banner/json")

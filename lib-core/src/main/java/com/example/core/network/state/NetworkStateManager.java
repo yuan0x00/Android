@@ -1,4 +1,4 @@
-package com.example.core.network;
+package com.example.core.network.state;
 
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;

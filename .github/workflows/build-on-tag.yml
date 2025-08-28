@@ -1,6 +1,6 @@
 name: Build on Tag
 
-# 触发条件：仅当创建 tag 时触发
+# 触发条件：当推送到 tags 时（如 v1.0.0, release-1.0）
 on:
   push:
     tags:
@@ -27,17 +27,24 @@ jobs:
 
       - name: Build Release APK
         run: ./gradlew assembleRelease
+        env:
+          # 如果你在 build.gradle 中使用环境变量签名，可以在这里传入
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
 
-      # 可选：上传 APK 作为构建产物
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
+      # 可选：上传 APK 作为构建产物（使用 v4，避免 v3 已停用）
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: app-release-apk
-          path: app/build/outputs/apk/release/app-release.apk
+          name: app-release.apk
+          path: |
+            app/build/outputs/apk/release/app-release.apk
+          retention-days: 7
 
-      # 可选：创建 GitHub Release 并上传 APK
+      # 可选：仅对 v* 格式的 tag 创建 GitHub Release 页面
       - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')  # 仅 v* tag 创建 Release
+        if: startsWith(github.ref, 'refs/tags/v')
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -48,7 +55,7 @@ jobs:
           draft: false
           prerelease: false
 
-      # 可选：上传 APK 到 GitHub Release
+      # 可选：将 APK 上传为 Release 附件（使用 v4）
       - name: Upload APK to Release
         if: steps.create_release.outputs.upload_url
         uses: actions/upload-release-asset@v1
@@ -57,5 +64,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: app/build/outputs/apk/release/app-release.apk
-          asset_name: app-${{ github.ref_name }}.apk
+          asset_name: App-${{ github.ref_name }}.apk
           asset_content_type: application/vnd.android.package-archive

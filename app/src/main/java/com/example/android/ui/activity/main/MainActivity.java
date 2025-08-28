@@ -3,6 +3,7 @@ package com.example.android.ui.activity.main;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBinding> implements TabNavigator {
 
     private BottomTabNavigator navigator;
+    private long exitTime = 0L;
 
     @Override
     protected MainViewModel createViewModel() {
@@ -34,9 +36,27 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     @Override
-    protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupTabLayout(savedInstanceState);
+
+        setBackToTask();
+        setTabLayout(savedInstanceState);
+    }
+
+    private void setBackToTask() {
+        //连续两次返回退到桌面
+        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (System.currentTimeMillis() - exitTime > 2000) {
+                    exitTime = System.currentTimeMillis();
+                    String msg = getString(R.string.back_twice_to_launcher);
+                    ToastUtils.showShortToast(msg);
+                } else {
+                    moveTaskToBack(true);
+                }
+            }
+        });
     }
 
     @Override
@@ -52,7 +72,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         viewModel.login("123", "123");
     }
 
-    private void setupTabLayout(Bundle savedInstanceState) {
+    private void setTabLayout(Bundle savedInstanceState) {
         // 导航条padding
         SafeAreaUtils.applyBottom(binding.tabContainer);
         // TabLayout 与 ViewPager2 关联

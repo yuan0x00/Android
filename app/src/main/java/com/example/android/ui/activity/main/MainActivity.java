@@ -1,7 +1,9 @@
 package com.example.android.ui.activity.main;
 
 import android.content.Intent;
+import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.android.R;
@@ -14,6 +16,8 @@ import com.example.core.base.BaseActivity;
 import com.example.core.utils.SafeAreaUtils;
 import com.example.core.utils.ToastUtils;
 import com.example.core.widget.BottomTabNavigator;
+
+import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBinding> implements TabNavigator {
 
@@ -30,16 +34,25 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     @Override
+    protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupTabLayout(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(android.os.@NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (navigator != null) {
+            outState.putInt("CURRENT_TAB", navigator.getCurrentPosition());
+        }
+    }
+
+    @Override
     protected void loadData() {
         viewModel.login("123", "123");
     }
 
-    @Override
-    protected void initializeViews() {
-        setupTabLayout();
-    }
-
-    private void setupTabLayout() {
+    private void setupTabLayout(Bundle savedInstanceState) {
         // 导航条padding
         SafeAreaUtils.applyBottom(binding.tabContainer);
         // TabLayout 与 ViewPager2 关联
@@ -71,6 +84,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                     return true;
                 })
                 .build();
+        // 恢复之前选中的 Tab
+        if (savedInstanceState != null) {
+            int position = savedInstanceState.getInt("CURRENT_TAB", 0);
+            navigator.selectTab(position);
+        }
     }
 
     @Override

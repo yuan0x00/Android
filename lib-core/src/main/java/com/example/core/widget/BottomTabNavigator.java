@@ -92,7 +92,7 @@ public class BottomTabNavigator {
         tab.setIcon(icon);
     }
 
-    public int getCurrentItem() {
+    public int getCurrentPosition() {
         return currentPosition;
     }
 
@@ -117,7 +117,7 @@ public class BottomTabNavigator {
                 }
             }
 
-            ft.commitNow(); // 立即执行，避免延迟
+            ft.commit();
 
             currentPosition = position;
 

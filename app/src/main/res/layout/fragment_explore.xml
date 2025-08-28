@@ -6,16 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.explore.ExploreFragment">
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:drawablePadding="8dp"
-        android:gravity="center"
-        android:padding="16dp"
-        android:textColor="#111"
-        android:textSize="24sp"
-        tools:text="发现"/>
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/player_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>

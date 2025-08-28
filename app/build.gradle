@@ -14,8 +14,18 @@ android {
         versionName project.versionName
     }
 
+    signingConfigs {
+        release {
+            storeFile file('release.jks')
+            storePassword 'android'
+            keyAlias 'key0'
+            keyPassword 'android'
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

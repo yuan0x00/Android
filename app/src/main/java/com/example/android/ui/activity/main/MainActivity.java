@@ -1,6 +1,5 @@
 package com.example.android.ui.activity.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -9,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.android.R;
 import com.example.android.databinding.ActivityMainBinding;
-import com.example.android.ui.activity.login.LoginActivity;
+import com.example.android.ui.dialog.TipDialogFragment;
 import com.example.android.ui.fragment.explore.ExploreFragment;
 import com.example.android.ui.fragment.home.HomeFragment;
 import com.example.android.ui.fragment.mine.MineFragment;
@@ -95,9 +94,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 .setOnTabSelectInterceptor((position) -> {
                     switch (position) {
                         case 2:
-                            Intent intent = new Intent(this, LoginActivity.class);
-                            startActivity(intent);
-                            return false;
+                            return checkLoginState();
                         case 0:
                         case 1:
                     }
@@ -108,6 +105,19 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         if (savedInstanceState != null) {
             int position = savedInstanceState.getInt("CURRENT_TAB", 0);
             navigator.selectTab(position);
+        }
+    }
+
+    private boolean checkLoginState() {
+        boolean isLogin = false;
+        if (isLogin) {
+            return true;
+        } else {
+            new TipDialogFragment()
+                    .setContentText("需要登陆")
+                    .size(300, 200)
+                    .show(getSupportFragmentManager());
+            return false;
         }
     }
 

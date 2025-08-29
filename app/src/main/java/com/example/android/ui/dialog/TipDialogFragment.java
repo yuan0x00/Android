@@ -1,33 +1,35 @@
 package com.example.android.ui.dialog;
 
-import android.app.Dialog;
-import android.view.MotionEvent;
+import android.os.Bundle;
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.android.R;
+import com.example.android.databinding.DialogTipBinding;
 import com.example.core.base.BaseDialogFragment;
-import com.example.core.widget.Loading;
+
+import org.jetbrains.annotations.NotNull;
 
 public class TipDialogFragment extends BaseDialogFragment {
+
+    private String contentText;
 
     @Override
     protected int getLayoutId() {
         return R.layout.dialog_tip;
     }
 
+    public TipDialogFragment setContentText(String text) {
+        this.contentText = text;
+        return this;
+    }
+
     @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (dialog != null && dialog.getWindow() != null) {
-            // 设置点击遮罩关闭
-            dialog.findViewById(R.id.tvContent).setOnTouchListener((v, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    Loading loading = new Loading();
-                    loading.show(getParentFragmentManager());
-                    v.postDelayed(() -> loading.dismissSafely(), 1000);
-                }
-                return false;
-            });
-        }
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        DialogTipBinding binding = DialogTipBinding.bind(view);
+        binding.tvContent.setText(this.contentText);
     }
 }

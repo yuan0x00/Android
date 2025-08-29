@@ -18,6 +18,7 @@ import com.example.android.databinding.ActivitySplashBinding;
 import com.example.android.ui.activity.main.MainActivity;
 import com.example.core.base.BaseActivity;
 import com.example.core.utils.SPUtils;
+import com.example.core.utils.ToastUtils;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -102,10 +103,10 @@ public class SplashActivity extends BaseActivity<SplashViewModel, ActivitySplash
     }
 
     private void simulateInitialization() {
-        int seconds = new Random().nextInt(3) + 1; // 生成 1、2 或 3
-        int delay = seconds * 1000; // 转为毫秒
+        int delay = new Random().nextInt(1000);
 
         new android.os.Handler(getMainLooper()).postDelayed(() -> {
+            ToastUtils.showShortToast("模拟启动耗时" + delay + "ms");
             isInitializationFinished = true;
             // 初始化完成，显示跳过按钮
             if (needPlayVideo) {

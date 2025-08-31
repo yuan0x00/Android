@@ -16,6 +16,7 @@ import com.example.core.base.BaseActivity;
 import com.example.core.utils.SafeAreaUtils;
 import com.example.core.utils.ToastUtils;
 import com.example.core.widget.BottomTabNavigator;
+import com.example.core.widget.Loading;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -113,10 +114,15 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         if (isLogin) {
             return true;
         } else {
-            new TipDialogFragment()
-                    .setContentText("需要登陆")
-                    .size(300, 200)
-                    .show(getSupportFragmentManager());
+            Loading loading = new Loading();
+            loading.show(getSupportFragmentManager());
+            binding.getRoot().postDelayed(() -> {
+                loading.dismissSafely();
+                new TipDialogFragment()
+                        .setContentText("需要登陆")
+                        .size(300, 200)
+                        .show(getSupportFragmentManager());
+            }, 2000);
             return false;
         }
     }

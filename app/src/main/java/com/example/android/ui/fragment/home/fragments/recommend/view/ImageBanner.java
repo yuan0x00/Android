@@ -1,4 +1,4 @@
-package com.example.android.ui.fragment.home.view;
+package com.example.android.ui.fragment.home.fragments.recommend.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

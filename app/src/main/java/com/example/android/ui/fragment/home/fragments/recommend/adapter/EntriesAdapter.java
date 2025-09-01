@@ -1,4 +1,4 @@
-package com.example.android.ui.fragment.home.adapter;
+package com.example.android.ui.fragment.home.fragments.recommend.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.R;
-import com.example.android.ui.fragment.home.item.EntryItem;
-import com.example.android.ui.fragment.home.viewHolder.EntriesViewHolder;
+import com.example.android.ui.fragment.home.fragments.recommend.item.EntryItem;
+import com.example.android.ui.fragment.home.fragments.recommend.viewHolder.EntriesViewHolder;
 
 import java.util.List;
 

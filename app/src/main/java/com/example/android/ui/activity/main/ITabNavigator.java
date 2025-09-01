@@ -1,6 +1,6 @@
 package com.example.android.ui.activity.main;
 
-public interface TabNavigator {
+public interface ITabNavigator {
     void navigateTo(int position);
 
     void disableTab(int position);

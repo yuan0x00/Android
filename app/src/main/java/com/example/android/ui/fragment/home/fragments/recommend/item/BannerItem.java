@@ -1,4 +1,4 @@
-package com.example.android.ui.fragment.home.item;
+package com.example.android.ui.fragment.home.fragments.recommend.item;
 
 import com.example.android.interfaces.IBannerItem;
 

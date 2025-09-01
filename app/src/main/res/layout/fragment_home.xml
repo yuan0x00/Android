@@ -7,46 +7,64 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.home.HomeFragment">
 
-    <LinearLayout
-        android:id="@+id/search_area"
+    <!-- 搜索栏 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topSearchLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
-        android:orientation="vertical"
+        android:layout_height="60dp"
+        android:background="@color/teal_200"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSearchLayoutBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/searchBar"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/topSearch"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/teal_200"
-            android:text="搜索栏"/>
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
-            android:id="@+id/tabBar"
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSearchLayoutBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="60dp"/>
+
+    <!-- TabLayout 容器 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/teal_700"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineSearchLayoutBottom">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/topTab"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/teal_700"
-            android:text="选项栏"/>
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.scwang.smart.refresh.layout.SmartRefreshLayout
-        android:id="@+id/refreshLayout"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:background="@color/purple_500"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_area">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+        app:layout_constraintTop_toBottomOf="@id/topTabLayout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

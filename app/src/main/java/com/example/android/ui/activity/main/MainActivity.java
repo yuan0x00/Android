@@ -20,7 +20,7 @@ import com.example.core.widget.Loading;
 
 import org.jetbrains.annotations.NotNull;
 
-public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBinding> implements TabNavigator {
+public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBinding> implements ITabNavigator {
 
     private BottomTabNavigator navigator;
     private long exitTime = 0L;

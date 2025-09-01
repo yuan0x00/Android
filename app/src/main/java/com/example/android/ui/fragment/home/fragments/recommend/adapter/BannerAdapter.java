@@ -1,4 +1,4 @@
-package com.example.android.ui.fragment.home.adapter;
+package com.example.android.ui.fragment.home.fragments.recommend.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.R;
 import com.example.android.interfaces.IBannerItem;
-import com.example.android.ui.fragment.home.viewHolder.BannerViewHolder;
+import com.example.android.ui.fragment.home.fragments.recommend.viewHolder.BannerViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,20 +8,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.R;
-import com.example.android.interfaces.IBannerItem;
-import com.example.android.ui.fragment.home.fragments.recommend.viewHolder.BannerViewHolder;
+import com.example.android.bean.BannerItemBean;
+import com.example.android.ui.fragment.home.fragments.recommend.view.ImageBanner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BannerAdapter extends RecyclerView.Adapter<BannerViewHolder> {
-    private final List<IBannerItem> banners;
+public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerViewHolder> {
+    private final List<BannerItemBean> banners;
 
-    public BannerAdapter(List<? extends IBannerItem> banners) {
+    public BannerAdapter(List<BannerItemBean> banners) {
         this.banners = new ArrayList<>(banners);
     }
 
-    public void setData(List<? extends IBannerItem> newData) {
+    public void setData(List<BannerItemBean> newData) {
         this.banners.clear();
         this.banners.addAll(newData);
         notifyDataSetChanged(); // 或使用 DiffUtil 更高效
@@ -42,5 +42,18 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerViewHolder> {
     @Override
     public int getItemCount() {
         return 1; // 只有一个 banner
+    }
+
+    public static class BannerViewHolder extends RecyclerView.ViewHolder {
+        private final ImageBanner banner;
+
+        public BannerViewHolder(@NonNull View itemView) {
+            super(itemView);
+            banner = itemView.findViewById(R.id.banner);
+        }
+
+        public void bind(List<BannerItemBean> banners) {
+            banner.setData(banners);
+        }
     }
 }

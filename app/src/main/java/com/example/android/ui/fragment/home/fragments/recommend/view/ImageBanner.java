@@ -8,9 +8,9 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.android.R;
 import com.example.android.base.BaseBanner;
-import com.example.android.interfaces.IBannerItem;
+import com.example.android.bean.BannerItemBean;
 
-public class ImageBanner extends BaseBanner<IBannerItem> {
+public class ImageBanner extends BaseBanner<BannerItemBean> {
 
     public ImageBanner(Context context) {
         super(context);
@@ -26,11 +26,11 @@ public class ImageBanner extends BaseBanner<IBannerItem> {
     }
 
     @Override
-    protected void bindItem(View itemView, IBannerItem item, int position) {
+    protected void bindItem(View itemView, BannerItemBean item, int position) {
         ImageView iv = itemView.findViewById(R.id.iv_image);
         // 使用 Glide 加载图片
         Glide.with(itemView)
-                .load(item.getImageUrl())
+                .load(item.getImagePath())
                 .centerCrop()
                 .into(iv);
     }

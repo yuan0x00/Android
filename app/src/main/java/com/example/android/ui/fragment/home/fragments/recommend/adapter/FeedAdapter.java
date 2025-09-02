@@ -3,21 +3,24 @@ package com.example.android.ui.fragment.home.fragments.recommend.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.R;
-import com.example.android.ui.fragment.home.fragments.recommend.item.FeedItem;
-import com.example.android.ui.fragment.home.fragments.recommend.viewHolder.FeedViewHolder;
+import com.example.android.bean.ArticleListBean;
 
-import java.util.List;
+public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder> {
+    private ArticleListBean feeds;
 
-public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
-    private final List<FeedItem> feeds;
-
-    public FeedAdapter(List<FeedItem> feeds) {
+    public FeedAdapter(ArticleListBean feeds) {
         this.feeds = feeds;
+    }
+
+    public void setData(ArticleListBean newData) {
+        this.feeds = newData;
+        notifyDataSetChanged(); // 或使用 DiffUtil 更高效
     }
 
     @NonNull
@@ -29,11 +32,24 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull FeedViewHolder holder, int position) {
-        holder.bind(feeds.get(position));
+        holder.bind(feeds.getDatas().get(position));
     }
 
     @Override
     public int getItemCount() {
-        return feeds.size();
+        return feeds.getDatas().size();
+    }
+
+    public static class FeedViewHolder extends RecyclerView.ViewHolder {
+        private final TextView content;
+
+        public FeedViewHolder(@NonNull View itemView) {
+            super(itemView);
+            content = itemView.findViewById(R.id.feed_text);
+        }
+
+        public void bind(ArticleListBean.Data feedItem) {
+            content.setText(feedItem.getTitle());
+        }
     }
 }

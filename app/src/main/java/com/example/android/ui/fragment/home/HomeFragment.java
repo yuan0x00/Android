@@ -74,7 +74,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
         binding.guidelineSearchLayoutBottom.setGuidelineBegin(0);
 
         // 搜索栏淡出 + 上移
-        ObjectAnimator searchAlpha = ObjectAnimator.ofFloat(binding.topSearchLayout, "alpha", 1f, 0f);
+        ObjectAnimator searchAlpha = ObjectAnimator.ofFloat(binding.topSearchLayout, "alpha", 0.9f, 0f);
         ObjectAnimator searchTrans = ObjectAnimator.ofFloat(binding.topSearchLayout, "translationY", 0f, -topSearchHeight);
 
         AnimatorSet animSet = new AnimatorSet();

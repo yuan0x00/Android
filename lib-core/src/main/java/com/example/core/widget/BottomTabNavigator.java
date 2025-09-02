@@ -108,6 +108,12 @@ public class BottomTabNavigator {
                 ft.add(container.getId(), fragment, "tab_" + position);
             } else {
                 ft.show(fragment);
+                if (fragment.getView() != null) {
+                    fragment.getView().setAlpha(0.5f);
+                    fragment.getView().setTranslationY(4);
+                    fragment.getView().animate().alpha(1f).setDuration(100).start();
+                    fragment.getView().animate().translationY(0).setDuration(100).start();
+                }
             }
 
             if (currentPosition != -1) {

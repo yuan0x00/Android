@@ -13,10 +13,16 @@
         android:layout_height="match_parent"
         app:srlEnableAutoLoadMore="false">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <com.example.android.ui.view.NestedScrollableHost
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </com.example.android.ui.view.NestedScrollableHost>
 
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 

@@ -10,22 +10,11 @@ import android.widget.FrameLayout;
 
 import androidx.viewpager2.widget.ViewPager2;
 
-/**
- * Layout to wrap a scrollable component inside a ViewPager2. Provided as a solution to the problem
- * where pages of ViewPager2 have nested scrollable elements that scroll in the same direction as
- * ViewPager2. The scrollable element needs to be the immediate and only child of this host layout.
- * <p>
- * This solution has limitations when using multiple levels of nested scrollable elements
- * (e.g. a horizontal RecyclerView in a vertical RecyclerView in a horizontal ViewPager2).
- */
 public class NestedScrollableHost extends FrameLayout {
 
     private int touchSlop;
     private float initialX;
     private float initialY;
-
-    private ViewPager2 parentViewPager;
-    private View child;
 
     public NestedScrollableHost(Context context) {
         super(context);
@@ -46,16 +35,13 @@ public class NestedScrollableHost extends FrameLayout {
         while (v != null && !(v instanceof ViewPager2)) {
             v = (View) v.getParent();
         }
-        return (v instanceof ViewPager2) ? (ViewPager2) v : null;
+        return (v != null) ? (ViewPager2) v : null;
     }
 
     private View getChild() {
         return getChildCount() > 0 ? getChildAt(0) : null;
     }
 
-    /**
-     * Recursively check if any nested child can scroll in the given orientation and direction.
-     */
     private boolean canChildScroll(int orientation, float delta, View view) {
         if (view == null) return false;
 
@@ -66,7 +52,6 @@ public class NestedScrollableHost extends FrameLayout {
             return true;
         }
 
-        // Check nested views (e.g., RecyclerView items)
         if (view instanceof ViewGroup) {
             ViewGroup viewGroup = (ViewGroup) view;
             for (int i = 0; i < viewGroup.getChildCount(); i++) {
@@ -93,15 +78,10 @@ public class NestedScrollableHost extends FrameLayout {
         View child = getChild();
         if (child == null) return;
 
-        // Early return if child can't scroll in same direction as parent
-        if (!canChildScroll(orientation, -1f, child) && !canChildScroll(orientation, 1f, child)) {
-            return;
-        }
-
         if (e.getAction() == MotionEvent.ACTION_DOWN) {
             initialX = e.getX();
             initialY = e.getY();
-            getParent().requestDisallowInterceptTouchEvent(true);
+            getParent().requestDisallowInterceptTouchEvent(true); // 初始允许子视图处理
         } else if (e.getAction() == MotionEvent.ACTION_MOVE) {
             float dx = e.getX() - initialX;
             float dy = e.getY() - initialY;
@@ -111,19 +91,16 @@ public class NestedScrollableHost extends FrameLayout {
 
             if (scaledDx > touchSlop || scaledDy > touchSlop) {
                 if (isVpHorizontal == (scaledDy > scaledDx)) {
-                    // Gesture is perpendicular, allow all parents to intercept
+                    // 垂直手势，允许父视图拦截
                     getParent().requestDisallowInterceptTouchEvent(false);
                 } else {
-                    // Gesture is parallel, query child if movement in that direction is possible
-                    if (canChildScroll(orientation, isVpHorizontal ? dx : dy, child)) {
-                        // Child can scroll, disallow all parents to intercept
-                        getParent().requestDisallowInterceptTouchEvent(true);
-                    } else {
-                        // Child cannot scroll, allow all parents to intercept
-                        getParent().requestDisallowInterceptTouchEvent(false);
-                    }
+                    // 水平手势，检查子视图是否可滚动
+                    getParent().requestDisallowInterceptTouchEvent(canChildScroll(orientation, isVpHorizontal ? dx : dy, child));
                 }
             }
+        } else if (e.getAction() == MotionEvent.ACTION_UP || e.getAction() == MotionEvent.ACTION_CANCEL) {
+            // 触摸结束时释放拦截状态
+            getParent().requestDisallowInterceptTouchEvent(false);
         }
     }
 }

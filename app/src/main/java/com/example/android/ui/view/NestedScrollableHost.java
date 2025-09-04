@@ -13,9 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
 
 /**
- * 用于包裹 ViewPager2 内部可滚动组件的布局。解决 ViewPager2 页面中嵌套与 ViewPager2 滑动方向相同的可滚动元素的问题。
- * 可滚动元素需为此布局的直接且唯一子视图。
- * 此方案支持多层嵌套的可滚动元素（例如，水平 RecyclerView 嵌套在垂直 RecyclerView 内，再嵌套在水平 ViewPager2 中）。
+ * 用于包裹 ViewPager2 布局。
+ * 解决 ViewPager2 页面中嵌套与 ViewPager2 滑动方向相同的可滚动元素的问题。
  */
 public class NestedScrollableHost extends FrameLayout {
 

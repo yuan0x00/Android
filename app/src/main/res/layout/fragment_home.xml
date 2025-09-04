@@ -1,121 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".ui.fragment.home.HomeFragment">
+    android:layout_height="match_parent">
 
-    <!-- 搜索栏 -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/topSearchLayout"
+    <!-- AppBarLayout: 可折叠区域 -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:padding="8dp"
-        android:paddingHorizontal="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineSearchLayoutBottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/avatar"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="0dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/CircleImageView"/>
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:contentScrim="@android:color/transparent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filledTextField"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="12dp"
-            app:boxStrokeWidth="1dp"
-            app:boxStrokeWidthFocused="2dp"
-            app:endIconContentDescription="清除"
-            app:endIconMode="clear_text"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/avatar"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
-            app:startIconContentDescription="搜索"
-            app:startIconDrawable="@drawable/search_24px">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/topSearch"
+            <!-- 搜索栏（随滚动视差折叠） -->
+            <FrameLayout
+                android:id="@+id/topSearchLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:maxLines="1"
-                android:paddingStart="16dp"
-                android:paddingTop="12dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="12dp"
-                android:selectAllOnFocus="true"/>
+                android:layout_height="60dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp">
 
-        </com.google.android.material.textfield.TextInputLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/filledTextField"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="52dp"
+                    app:boxStrokeWidth="1dp"
+                    app:boxStrokeWidthFocused="2dp"
+                    app:endIconMode="clear_text"
+                    app:hintEnabled="false"
+                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+                    app:startIconDrawable="@drawable/search_24px">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineSearchLayoutBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="60dp"/>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/topSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="12dp"/>
 
-    <!-- TabLayout 容器 -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/topTabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:paddingBottom="1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineSearchLayoutBottom">
+                </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_launcher"
+                    app:shapeAppearanceOverlay="@style/CircleImageView"/>
+            </FrameLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <!-- TabLayout 固定在顶部 -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/topTab"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@android:color/transparent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom"
             app:tabGravity="center"
             app:tabIndicator="@drawable/tab_layout_indicator"
             app:tabIndicatorAnimationMode="linear"
             app:tabMode="fixed"
             app:tabRippleColor="@null"/>
 
+        <!-- 分割线 -->
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
+            android:layout_gravity="bottom"
             android:background="#f5f5f5"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#f5f5f5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topTabLayout"/>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

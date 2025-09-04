@@ -5,22 +5,18 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
 
-
 /**
- * Layout to wrap a scrollable component inside a ViewPager2. Provided as a solution to the problem
- * where pages of ViewPager2 have nested scrollable elements that scroll in the same direction as
- * ViewPager2. The scrollable element needs to be the immediate and only child of this host layout.
- *
- * This solution has limitations when using multiple levels of nested scrollable elements
- * (e.g. a horizontal RecyclerView in a vertical RecyclerView in a horizontal ViewPager2).
+ * 用于包裹 ViewPager2 内部可滚动组件的布局。解决 ViewPager2 页面中嵌套与 ViewPager2 滑动方向相同的可滚动元素的问题。
+ * 可滚动元素需为此布局的直接且唯一子视图。
+ * 此方案支持多层嵌套的可滚动元素（例如，水平 RecyclerView 嵌套在垂直 RecyclerView 内，再嵌套在水平 ViewPager2 中）。
  */
-
 public class NestedScrollableHost extends FrameLayout {
 
     private int touchSlop = 0;
@@ -48,98 +44,142 @@ public class NestedScrollableHost extends FrameLayout {
     }
 
     private ViewPager2 parentViewPager() {
-        View v = (View)this.getParent();
-        while( v != null && !(v instanceof ViewPager2) )
-            v = (View)v.getParent();
-        return (ViewPager2)v;
+        View v = (View) this.getParent();
+        while (v != null && !(v instanceof ViewPager2)) {
+            v = (View) v.getParent();
+        }
+        return (ViewPager2) v;
     }
-
-    private View child() { return (this.getChildCount() > 0 ? this.getChildAt(0) : null); }
 
     private void init() {
         this.touchSlop = ViewConfiguration.get(this.getContext()).getScaledTouchSlop();
     }
 
-    private boolean canChildScroll(int orientation, Float delta) {
-        int direction = (int)(Math.signum(-delta));
-        View child = this.child();
+    /**
+     * 在指定坐标 (x, y) 处查找最深层的视图。
+     */
+    private View findViewAt(float x, float y, ViewGroup parent) {
+        if (!isPointInsideView(x, y, parent)) {
+            return null;
+        }
 
-        if( child == null )
+        // 从上到下遍历子视图，优先选择最顶层的视图
+        for (int i = parent.getChildCount() - 1; i >= 0; i--) {
+            View child = parent.getChildAt(i);
+            if (child.getVisibility() != View.VISIBLE) {
+                continue;
+            }
+
+            // 将坐标转换为子视图的相对坐标
+            float translatedX = x - child.getX();
+            float translatedY = y - child.getY();
+
+            if (isPointInsideView(translatedX, translatedY, child)) {
+                if (child instanceof ViewGroup) {
+                    // 递归查找更深层的视图
+                    View deeperView = findViewAt(translatedX, translatedY, (ViewGroup) child);
+                    if (deeperView != null) {
+                        return deeperView;
+                    }
+                }
+                return child; // 如果没有更深层的视图，返回当前子视图
+            }
+        }
+        return parent; // 如果没有子视图包含该点，返回父视图
+    }
+
+    /**
+     * 检查坐标 (x, y) 是否在视图的范围内。
+     */
+    private boolean isPointInsideView(float x, float y, View view) {
+        return x >= 0 && x < view.getWidth() && y >= 0 && y < view.getHeight();
+    }
+
+    /**
+     * 检查触摸点下的视图及其父视图（直到本布局）是否可以沿指定方向滚动。
+     */
+    private boolean canAnyViewScroll(int orientation, float delta, float x, float y) {
+        View targetView = findViewAt(x, y, this);
+        if (targetView == null) {
             return false;
+        }
 
-        if( orientation == 0 )
-            return child.canScrollHorizontally(direction);
-        if( orientation == 1 )
-            return child.canScrollVertically(direction);
+        // 从触摸点视图向上遍历到本布局
+        View current = targetView;
+        int direction = (int) (Math.signum(-delta));
+
+        while (current != this && current != null) {
+            if (orientation == ViewPager2.ORIENTATION_HORIZONTAL) {
+                if (current.canScrollHorizontally(direction)) {
+                    return true;
+                }
+            } else if (orientation == ViewPager2.ORIENTATION_VERTICAL) {
+                if (current.canScrollVertically(direction)) {
+                    return true;
+                }
+            }
+            current = (View) current.getParent();
+        }
 
         return false;
     }
 
-
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        this.handleInterceptTouchEvent(ev);
+        handleInterceptTouchEvent(ev);
         return super.onInterceptTouchEvent(ev);
     }
 
     private void handleInterceptTouchEvent(MotionEvent ev) {
-        ViewPager2 vp = this.parentViewPager();
-        if( vp == null )
+        ViewPager2 vp = parentViewPager();
+        if (vp == null) {
             return;
+        }
 
         int orientation = vp.getOrientation();
 
-        // Early return if child can't scroll in same direction as parent
-        if( !this.canChildScroll(orientation, -1.0f) && !this.canChildScroll(orientation, 1.0f) )
+        // 如果没有视图可以沿父 ViewPager2 的方向滚动，提前返回
+        if (!canAnyViewScroll(orientation, -1.0f, ev.getX(), ev.getY()) &&
+                !canAnyViewScroll(orientation, 1.0f, ev.getX(), ev.getY())) {
             return;
+        }
 
-        if( ev.getAction() == MotionEvent.ACTION_DOWN ) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             this.initialX = ev.getX();
             this.initialY = ev.getY();
-            // 默认先让子视图处理，等待手势明确后再决定
-            this.getParent().requestDisallowInterceptTouchEvent(true);
-        }
-        else if( ev.getAction() == MotionEvent.ACTION_MOVE ) {
+            // 默认让子视图处理触摸，直到手势方向明确
+            getParent().requestDisallowInterceptTouchEvent(true);
+        } else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
             float dx = ev.getX() - this.initialX;
             float dy = ev.getY() - this.initialY;
             boolean isVpHorizontal = (orientation == ViewPager2.ORIENTATION_HORIZONTAL);
 
-            // assuming ViewPager2 touch-slop is 2x touch-slop of child
+            // 缩放位移以匹配 ViewPager2 的触摸阈值（假设为子视图的 2 倍）
             float scaleDx = Math.abs(dx) * (isVpHorizontal ? 0.5f : 1.0f);
             float scaleDy = Math.abs(dy) * (isVpHorizontal ? 1.0f : 0.5f);
 
-            if( scaleDx > this.touchSlop || scaleDy > this.touchSlop ) {
-                // 基于手势趋势判断：只有明确的水平滑动才交给ViewPager2
-                if( isVpHorizontal ) {
-                    // ViewPager2是水平的
-                    if( scaleDx > scaleDy * 1.5f ) {
-                        // 明确的水平滑动手势，检查子视图是否可以处理
-                        if( this.canChildScroll(orientation, dx) ) {
-                            // 子视图可以水平滑动，继续让子视图处理
-                            this.getParent().requestDisallowInterceptTouchEvent(true);
-                        } else {
-                            // 子视图不能水平滑动，交给ViewPager2处理
-                            this.getParent().requestDisallowInterceptTouchEvent(false);
-                        }
+            if (scaleDx > this.touchSlop || scaleDy > this.touchSlop) {
+                if (isVpHorizontal) {
+                    // ViewPager2 为水平方向
+                    if (scaleDx > scaleDy * 1.5f) {
+                        // 明确的水平手势
+                        // 有视图可以水平滚动，交给子视图处理
+                        // 无视图可以水平滚动，交给 ViewPager2 处理
+                        getParent().requestDisallowInterceptTouchEvent(canAnyViewScroll(orientation, dx, ev.getX(), ev.getY()));
                     } else {
-                        // 非明确的水平滑动（垂直滑动或模糊方向），让子视图处理
-                        this.getParent().requestDisallowInterceptTouchEvent(true);
+                        // 非明确水平手势（垂直或模糊方向），交给子视图处理
+                        getParent().requestDisallowInterceptTouchEvent(true);
                     }
                 } else {
-                    // ViewPager2是垂直的
-                    if( scaleDy > scaleDx * 1.5f ) {
-                        // 明确的垂直滑动手势，检查子视图是否可以处理
-                        if( this.canChildScroll(orientation, dy) ) {
-                            // 子视图可以垂直滑动，继续让子视图处理
-                            this.getParent().requestDisallowInterceptTouchEvent(true);
-                        } else {
-                            // 子视图不能垂直滑动，交给ViewPager2处理
-                            this.getParent().requestDisallowInterceptTouchEvent(false);
-                        }
+                    // ViewPager2 为垂直方向
+                    if (scaleDy > scaleDx * 1.5f) {
+                        // 明确的垂直手势
+                        // 有视图可以垂直滚动，交给子视图处理
+                        // 无视图可以垂直滚动，交给 ViewPager2 处理
+                        getParent().requestDisallowInterceptTouchEvent(canAnyViewScroll(orientation, dy, ev.getX(), ev.getY()));
                     } else {
-                        // 非明确的垂直滑动（水平滑动或模糊方向），让子视图处理
-                        this.getParent().requestDisallowInterceptTouchEvent(true);
+                        // 非明确垂直手势（水平或模糊方向），交给子视图处理
+                        getParent().requestDisallowInterceptTouchEvent(true);
                     }
                 }
             }

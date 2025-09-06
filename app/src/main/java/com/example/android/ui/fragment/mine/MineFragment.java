@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.android.databinding.FragmentMineBinding;
-import com.example.core.base.BaseFragment;
+import com.example.core.base.ui.BaseFragment;
 
 public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBinding> {
     @Override

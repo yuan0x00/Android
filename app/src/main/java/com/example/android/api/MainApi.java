@@ -1,11 +1,11 @@
 package com.example.android.api;
 
 import com.example.android.bean.*;
-import com.example.core.base.BaseResponse;
+import com.example.core.net.base.BaseResponse;
 
 import java.util.ArrayList;
 
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.*;
 
 public interface MainApi {

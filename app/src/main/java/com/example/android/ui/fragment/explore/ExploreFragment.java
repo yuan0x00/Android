@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.android.databinding.FragmentExploreBinding;
-import com.example.core.base.BaseFragment;
+import com.example.core.base.ui.BaseFragment;
 
 public class ExploreFragment extends BaseFragment<ExploreViewModel, FragmentExploreBinding> {
 

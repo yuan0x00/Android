@@ -12,8 +12,8 @@ import com.example.android.bean.BannerItemBean;
 import com.example.android.databinding.FragmentRecommandBinding;
 import com.example.android.ui.fragment.home.fragments.recommend.adapter.BannerAdapter;
 import com.example.android.ui.fragment.home.fragments.recommend.adapter.FeedAdapter;
-import com.example.core.base.BaseFragment;
-import com.example.core.utils.ToastUtils;
+import com.example.core.base.ui.BaseFragment;
+import com.example.core.utils.ui.ToastUtils;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 

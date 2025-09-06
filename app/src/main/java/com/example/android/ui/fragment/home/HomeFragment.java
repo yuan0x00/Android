@@ -8,8 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.android.databinding.FragmentHomeBinding;
 import com.example.android.ui.fragment.home.fragments.recommend.RecommendFragment;
 import com.example.android.ui.fragment.home.fragments.topic.TopicFragment;
-import com.example.core.base.BaseFragment;
-import com.example.core.utils.SafeAreaUtils;
+import com.example.core.base.ui.BaseFragment;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBinding> {
@@ -31,7 +30,6 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
 
     @Override
     protected void initializeViews() {
-        SafeAreaUtils.applyTop(binding.getRoot());
         setupViewPager();
     }
 

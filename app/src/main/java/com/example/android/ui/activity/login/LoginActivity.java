@@ -3,8 +3,8 @@ package com.example.android.ui.activity.login;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.android.databinding.ActivityLoginBinding;
-import com.example.core.base.BaseActivity;
-import com.example.core.utils.ToastUtils;
+import com.example.core.base.ui.BaseActivity;
+import com.example.core.utils.ui.ToastUtils;
 
 public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBinding> {
 

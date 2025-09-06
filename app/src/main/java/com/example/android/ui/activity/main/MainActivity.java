@@ -12,11 +12,11 @@ import com.example.android.ui.dialog.TipDialogFragment;
 import com.example.android.ui.fragment.explore.ExploreFragment;
 import com.example.android.ui.fragment.home.HomeFragment;
 import com.example.android.ui.fragment.mine.MineFragment;
-import com.example.core.base.BaseActivity;
-import com.example.core.utils.SafeAreaUtils;
-import com.example.core.utils.ToastUtils;
-import com.example.core.widget.BottomTabNavigator;
-import com.example.core.widget.Loading;
+import com.example.core.base.ui.BaseActivity;
+import com.example.core.utils.ui.ToastUtils;
+import com.example.core.utils.ui.WindowInsetsUtils;
+import com.example.core.widget.loading.LoadingDialog;
+import com.example.core.widget.navigation.BottomTabNavigator;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -73,8 +73,10 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     private void setTabLayout(Bundle savedInstanceState) {
-        // 导航条padding
-        SafeAreaUtils.applyBottom(binding.tabContainer);
+        // TabLayout 下沉到导航栏
+        WindowInsetsUtils.removeOnApplyWindowInsetsListener(binding.getRoot());
+        WindowInsetsUtils.applyTopSystemWindowInsets(binding.getRoot());
+        WindowInsetsUtils.applyBottomSystemWindowInsets(binding.tabContainer);
         // TabLayout 与 ViewPager2 关联
         navigator = new BottomTabNavigator(this, binding.tabLayout, binding.fragmentContainer)
                 .addTab(new BottomTabNavigator.TabItem(
@@ -114,10 +116,10 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         if (isLogin) {
             return true;
         } else {
-            Loading loading = new Loading();
-            loading.show(getSupportFragmentManager());
+            LoadingDialog loadingDialog = new LoadingDialog();
+            loadingDialog.show(getSupportFragmentManager());
             binding.getRoot().postDelayed(() -> {
-                loading.dismissSafely();
+                loadingDialog.dismissSafely();
                 new TipDialogFragment()
                         .setContentText("需要登陆")
                         .size(300, 200)

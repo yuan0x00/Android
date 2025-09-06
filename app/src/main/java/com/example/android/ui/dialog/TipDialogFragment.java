@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.example.android.R;
 import com.example.android.databinding.DialogTipBinding;
-import com.example.core.base.BaseDialogFragment;
+import com.example.core.base.ui.BaseDialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 

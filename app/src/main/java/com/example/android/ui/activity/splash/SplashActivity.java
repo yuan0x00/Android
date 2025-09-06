@@ -16,9 +16,9 @@ import androidx.media3.ui.AspectRatioFrameLayout;
 import com.example.android.R;
 import com.example.android.databinding.ActivitySplashBinding;
 import com.example.android.ui.activity.main.MainActivity;
-import com.example.core.base.BaseActivity;
-import com.example.core.utils.SPUtils;
-import com.example.core.utils.ToastUtils;
+import com.example.core.base.ui.BaseActivity;
+import com.example.core.utils.storage.MMKVManager;
+import com.example.core.utils.ui.ToastUtils;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -44,7 +44,7 @@ public class SplashActivity extends BaseActivity<SplashViewModel, ActivitySplash
 
     @Override
     protected void initializeViews() {
-        needPlayVideo = SPUtils.getInstance().getBoolean(NEED_PLAY_VIDEO, true);
+        needPlayVideo = MMKVManager.getBoolean(NEED_PLAY_VIDEO, true);
 
         if (needPlayVideo) {
             binding.loadingIndicator.setVisibility(View.GONE);
@@ -129,7 +129,7 @@ public class SplashActivity extends BaseActivity<SplashViewModel, ActivitySplash
     }
 
     private void performSkip() {
-        SPUtils.getInstance().putBoolean(NEED_PLAY_VIDEO, false);
+        MMKVManager.putBoolean(NEED_PLAY_VIDEO, false);
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

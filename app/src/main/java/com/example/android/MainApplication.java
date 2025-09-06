@@ -3,11 +3,9 @@ package com.example.android;
 import android.os.StrictMode;
 
 import com.example.android.api.NetApis;
-import com.example.android.router.LoginServiceImpl;
-import com.example.core.base.BaseApplication;
-import com.example.router.RouterService;
+import com.example.core.CoreApp;
 
-public class MainApplication extends BaseApplication {
+public class MainApplication extends CoreApp {
 
     @Override
     public void onCreate() {
@@ -15,7 +13,6 @@ public class MainApplication extends BaseApplication {
 
         enableStrictMode();
         initNetWork();
-        initRouter();
     }
 
     private void enableStrictMode() {
@@ -45,10 +42,4 @@ public class MainApplication extends BaseApplication {
         NetApis.init();
     }
 
-    private void initRouter() {
-        // 注册服务实现
-        RouterService.loginService = new LoginServiceImpl();
-        // 检查是否都注册了
-        RouterService.init();
-    }
 }

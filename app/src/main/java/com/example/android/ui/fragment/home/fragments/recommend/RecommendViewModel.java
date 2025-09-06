@@ -5,14 +5,15 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.android.api.NetApis;
 import com.example.android.bean.ArticleListBean;
 import com.example.android.bean.BannerItemBean;
-import com.example.core.base.BaseResponse;
-import com.example.core.base.BaseViewModel;
+import com.example.core.base.vm.BaseViewModel;
+import com.example.core.net.base.BaseResponse;
 
 import java.util.ArrayList;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.observers.DisposableObserver;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 
 public class RecommendViewModel extends BaseViewModel {
 

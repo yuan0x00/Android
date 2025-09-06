@@ -1,6 +1,6 @@
 package com.example.android.api;
 
-import com.example.core.network.NetApiManager;
+import com.example.core.net.NetManager;
 
 public final class NetApis {
 
@@ -10,10 +10,10 @@ public final class NetApis {
     }
 
     public static MainApi Main() {
-        return NetApiManager.createNetApi(MainApi.class);
+        return NetManager.createNetApi(MainApi.class);
     }
 
     public static LoginApi Login() {
-        return NetApiManager.createNetApi(LoginApi.class);
+        return NetManager.createNetApi(LoginApi.class);
     }
 }

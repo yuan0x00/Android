@@ -47,7 +47,6 @@ dependencies {
     implementation libs.retrofit
     implementation libs.retrofit.rxjava3
     implementation libs.retrofit.converter.gson
-    implementation libs.immersionbar
     implementation libs.mmkv
     implementation libs.timber
 

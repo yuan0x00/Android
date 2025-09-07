@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.activity.login.LoginActivity">
+    tools:context="com.rapid.android.ui.activity.login.LoginActivity">
 
     <TextView
         android:layout_width="wrap_content"

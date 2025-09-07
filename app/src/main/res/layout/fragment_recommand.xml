@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.home.fragments.recommend.RecommendFragment">
+    tools:context="com.rapid.android.ui.fragment.home.fragments.recommend.RecommendFragment">
 
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         app:srlEnableAutoLoadMore="false">
 
-        <com.example.android.ui.view.NestedScrollableHost
+        <com.rapid.android.ui.view.NestedScrollableHost
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-        </com.example.android.ui.view.NestedScrollableHost>
+        </com.rapid.android.ui.view.NestedScrollableHost>
 
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 

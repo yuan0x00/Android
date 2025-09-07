@@ -1,0 +1,12 @@
+plugins {
+    alias(libs.plugins.android.library)
+}
+
+android {
+    namespace 'com.example.lint'
+    compileSdkVersion Integer.parseInt(project.compileSdkVersion)
+}
+
+dependencies {
+    lintPublish project(':lint')
+}

@@ -83,28 +83,28 @@ public final class ResUtils {
 
     // —————— 尺寸 ——————
 
-    /**
-     * 获取尺寸（返回 px）
-     */
-    @Dimension
-    public static int getDimensionPixelSize(@Dimension int resId) {
-        try {
-            return getResources().getDimensionPixelSize(resId);
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    /**
-     * 获取尺寸（返回 float px）
-     */
-    public static float getDimension(@Dimension int resId) {
-        try {
-            return getResources().getDimension(resId);
-        } catch (Exception e) {
-            return 0f;
-        }
-    }
+//    /**
+//     * 获取尺寸（返回 px）
+//     */
+//    @Dimension
+//    public static int getDimensionPixelSize(@Dimension int resId) {
+//        try {
+//            return getResources().getDimensionPixelSize(resId);
+//        } catch (Exception e) {
+//            return 0;
+//        }
+//    }
+//
+//    /**
+//     * 获取尺寸（返回 float px）
+//     */
+//    public static float getDimension(@Dimension int resId) {
+//        try {
+//            return getResources().getDimension(resId);
+//        } catch (Exception e) {
+//            return 0f;
+//        }
+//    }
 
     /**
      * 获取 dp 值转 px

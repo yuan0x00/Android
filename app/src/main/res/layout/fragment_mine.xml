@@ -3,7 +3,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.rapid.android.ui.fragment.mine.MineFragment">
+             tools:context="com.rapid.android.ui.fragment.MineFragment">
 
     <TextView
         android:id="@+id/tvTitle"

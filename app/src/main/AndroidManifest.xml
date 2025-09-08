@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
-        android:name="com.rapid.android.MainApplication"
+        android:name="com.rapid.android.app.MainApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -17,18 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Android">
         <activity
-            android:name="com.rapid.android.ui.activity.login.LoginActivity"
+            android:name="com.rapid.android.ui.activity.LoginActivity"
             android:exported="false"
             android:launchMode="singleTask"
             android:theme="@style/Theme.Android"/>
         <activity
-            android:name="com.rapid.android.ui.activity.main.MainActivity"
+            android:name="com.rapid.android.ui.activity.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme.Android">
         </activity>
         <activity
-            android:name="com.rapid.android.ui.activity.splash.SplashActivity"
+            android:name="com.rapid.android.ui.activity.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Splash">
             <intent-filter>

@@ -2,7 +2,6 @@
 .gradle
 .idea
 !.idea/icon.png
-/local.properties
 .DS_Store
 /build
 /captures

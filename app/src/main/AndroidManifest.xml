@@ -17,9 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Android">
         <activity
+            android:name="com.rapid.android.ui.activity.SearchActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Android"/>
+        <activity
             android:name="com.rapid.android.ui.activity.LoginActivity"
             android:exported="false"
-            android:launchMode="singleTask"
+            android:launchMode="singleInstance"
             android:theme="@style/Theme.Android"/>
         <activity
             android:name="com.rapid.android.ui.activity.MainActivity"

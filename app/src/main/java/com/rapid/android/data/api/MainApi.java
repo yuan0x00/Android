@@ -22,9 +22,13 @@ public interface MainApi {
     @GET("/banner/json")
     Observable<BaseResponse<ArrayList<BannerItemBean>>> banner();
 
-    // 获取文章列表
+    // 获取首页tab-1-文章列表
     @GET("/article/list/{page}/json")
     Observable<BaseResponse<ArticleListBean>> articleList(@Path("page") int page);
+
+    // 获取首页tab-2-最新项目列表
+    @GET("/article/listproject/{page}/json")
+    Observable<BaseResponse<ArticleListBean>> listProjectList(@Path("page") int page);
 
     // 获取收藏列表
     @GET("/lg/collect/list/{page}/json")

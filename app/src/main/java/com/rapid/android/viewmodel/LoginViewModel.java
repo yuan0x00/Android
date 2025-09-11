@@ -3,10 +3,10 @@ package com.rapid.android.viewmodel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.core.base.vm.BaseViewModel;
+import com.core.net.base.BaseResponse;
 import com.rapid.android.auth.AuthManager;
 import com.rapid.android.data.model.LoginBean;
-import com.rapid.core.base.vm.BaseViewModel;
-import com.rapid.core.net.base.BaseResponse;
 
 import io.reactivex.rxjava3.observers.DisposableObserver;
 
@@ -20,7 +20,7 @@ public class LoginViewModel extends BaseViewModel {
     }
 
     public void login(String username, String password) {
-        authManager.login(username, password, new DisposableObserver<BaseResponse<LoginBean>>() {
+        authManager.login(username, password, new DisposableObserver<>() {
             @Override
             public void onNext(BaseResponse<LoginBean> response) {
                 loginSuccess.setValue(response.getData() != null);
@@ -38,8 +38,8 @@ public class LoginViewModel extends BaseViewModel {
         });
     }
 
-    public void relogin() {
-        authManager.relogin(new DisposableObserver<BaseResponse<LoginBean>>() {
+    public void reLogin() {
+        authManager.reLogin(new DisposableObserver<>() {
             @Override
             public void onNext(BaseResponse<LoginBean> response) {
                 loginSuccess.setValue(response.getData() != null);

@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.core.base.ui.BaseFragment;
+import com.core.utils.ui.ToastUtils;
 import com.rapid.android.data.model.ArticleListBean;
 import com.rapid.android.data.model.BannerItemBean;
 import com.rapid.android.databinding.FragmentRecommandBinding;
 import com.rapid.android.ui.adapter.BannerAdapter;
 import com.rapid.android.ui.adapter.FeedAdapter;
 import com.rapid.android.viewmodel.RecommendViewModel;
-import com.rapid.core.base.ui.BaseFragment;
-import com.rapid.core.utils.ui.ToastUtils;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 

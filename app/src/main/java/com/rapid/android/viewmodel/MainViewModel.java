@@ -2,7 +2,7 @@ package com.rapid.android.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.rapid.core.base.vm.BaseViewModel;
+import com.core.base.vm.BaseViewModel;
 
 
 public class MainViewModel extends BaseViewModel {

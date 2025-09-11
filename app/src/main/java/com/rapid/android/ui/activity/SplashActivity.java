@@ -13,13 +13,13 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.AspectRatioFrameLayout;
 
+import com.core.base.ui.BaseActivity;
+import com.core.utils.storage.MMKVManager;
+import com.core.utils.ui.ToastUtils;
 import com.rapid.android.R;
 import com.rapid.android.databinding.ActivitySplashBinding;
 import com.rapid.android.ui.base.SplashLifecycleObserver;
 import com.rapid.android.viewmodel.SplashViewModel;
-import com.rapid.core.base.ui.BaseActivity;
-import com.rapid.core.utils.storage.MMKVManager;
-import com.rapid.core.utils.ui.ToastUtils;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;

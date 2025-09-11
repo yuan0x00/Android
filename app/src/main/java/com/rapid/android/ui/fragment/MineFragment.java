@@ -5,9 +5,9 @@ import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import com.core.base.ui.BaseFragment;
 import com.rapid.android.databinding.FragmentMineBinding;
 import com.rapid.android.viewmodel.MineViewModel;
-import com.rapid.core.base.ui.BaseFragment;
 
 public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBinding> {
     @Override
@@ -22,6 +22,5 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
 
     @Override
     protected void initializeViews() {
-        binding.tvTitle.setText("我的");
     }
 }

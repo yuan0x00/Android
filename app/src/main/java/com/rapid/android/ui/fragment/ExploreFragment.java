@@ -5,9 +5,10 @@ import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import com.core.base.ui.BaseFragment;
 import com.rapid.android.databinding.FragmentExploreBinding;
 import com.rapid.android.viewmodel.ExploreViewModel;
-import com.rapid.core.base.ui.BaseFragment;
+import com.webview.WebViewFragment;
 
 public class ExploreFragment extends BaseFragment<ExploreViewModel, FragmentExploreBinding> {
 
@@ -23,7 +24,18 @@ public class ExploreFragment extends BaseFragment<ExploreViewModel, FragmentExpl
 
     @Override
     protected void initializeViews() {
+        setupWebViewFragment();
+    }
 
+    private void setupWebViewFragment() {
+        // 创建WebViewFragment实例，加载百度
+        WebViewFragment webViewFragment = WebViewFragment.newInstance("https://www.wanandroid.com");
+
+        // 将WebViewFragment添加到容器中
+        getChildFragmentManager()
+                .beginTransaction()
+                .replace(binding.webviewContainer.getId(), webViewFragment)
+                .commit();
     }
 
 }

@@ -30,6 +30,7 @@ media3Exoplayer = "1.8.0"
 leakcanaryAndroid = "2.14"
 #小众库
 refreshLayoutKernel = "3.0.0-alpha"
+webkit = "1.14.0"
 
 
 [libraries]
@@ -46,6 +47,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref = "gridlayout" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
+androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 #测试库
 junit = { group = "junit", name = "junit", version.ref = "junit" }

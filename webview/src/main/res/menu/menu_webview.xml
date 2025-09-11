@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- 返回 -->
+    <item
+        android:id="@+id/action_back"
+        android:enabled="false"
+        android:icon="@drawable/arrow_back_ios_24px"
+        android:title="@string/action_back"
+        app:showAsAction="ifRoom" />
+
+    <!-- 前进 -->
+    <item
+        android:id="@+id/action_forward"
+        android:enabled="false"
+        android:icon="@drawable/arrow_forward_ios_24px"
+        android:title="@string/action_forward"
+        app:showAsAction="ifRoom" />
+
+    <!-- 刷新 -->
+    <item
+        android:id="@+id/action_reload"
+        android:icon="@drawable/refresh_24px"
+        android:title="@string/action_reload"
+        app:showAsAction="ifRoom" />
+
+</menu>

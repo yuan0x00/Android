@@ -1,8 +1,8 @@
 package com.rapid.android.data.network;
 
+import com.core.net.NetManager;
 import com.rapid.android.data.api.LoginApi;
 import com.rapid.android.data.api.MainApi;
-import com.rapid.core.net.NetManager;
 
 public final class NetApis {
 

@@ -2,11 +2,11 @@ package com.rapid.android.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.core.base.vm.BaseViewModel;
+import com.core.net.base.BaseResponse;
 import com.rapid.android.data.model.ArticleListBean;
 import com.rapid.android.data.model.BannerItemBean;
 import com.rapid.android.data.network.NetApis;
-import com.rapid.core.base.vm.BaseViewModel;
-import com.rapid.core.net.base.BaseResponse;
 
 import java.util.ArrayList;
 

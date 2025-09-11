@@ -7,13 +7,14 @@
     android:layout_height="match_parent"
     tools:context="com.rapid.android.ui.fragment.ExploreFragment">
 
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/materialSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!-- WebView容器 -->
+    <FrameLayout
+        android:id="@+id/webview_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

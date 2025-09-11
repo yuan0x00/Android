@@ -7,6 +7,11 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.core.base.ui.BaseActivity;
+import com.core.net.base.BaseResponse;
+import com.core.utils.ui.ToastUtils;
+import com.core.utils.ui.WindowInsetsUtils;
+import com.core.widget.navigation.BottomTabNavigator;
 import com.rapid.android.R;
 import com.rapid.android.auth.AuthManager;
 import com.rapid.android.data.model.LoginBean;
@@ -16,11 +21,6 @@ import com.rapid.android.ui.fragment.ExploreFragment;
 import com.rapid.android.ui.fragment.HomeFragment;
 import com.rapid.android.ui.fragment.MineFragment;
 import com.rapid.android.viewmodel.MainViewModel;
-import com.rapid.core.base.ui.BaseActivity;
-import com.rapid.core.net.base.BaseResponse;
-import com.rapid.core.utils.ui.ToastUtils;
-import com.rapid.core.utils.ui.WindowInsetsUtils;
-import com.rapid.core.widget.navigation.BottomTabNavigator;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
     @Override
     protected void loadData() {
-        AuthManager.getInstance().relogin(new DisposableObserver<BaseResponse<LoginBean>>() {
+        AuthManager.getInstance().reLogin(new DisposableObserver<>() {
             @Override
             public void onNext(@NonNull BaseResponse<LoginBean> loginBeanBaseResponse) {
                 if (loginBeanBaseResponse != null && loginBeanBaseResponse.getData() != null) {
@@ -140,15 +140,6 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         if (AuthManager.getInstance().isLoggedIn()) {
             return true;
         } else {
-//            LoadingDialog loadingDialog = new LoadingDialog();
-//            loadingDialog.show(getSupportFragmentManager());
-//            binding.getRoot().postDelayed(() -> {
-//                loadingDialog.dismissSafely();
-//                new TipDialogFragment()
-//                        .setContentText("需要登陆")
-//                        .size(300, 200)
-//                        .show(getSupportFragmentManager());
-//            }, 2000);
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             return false;

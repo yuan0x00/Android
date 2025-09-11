@@ -3,13 +3,12 @@ plugins {
 }
 
 android {
-    namespace 'com.rapid.core'
+    namespace 'com.core'
     compileSdkVersion Integer.parseInt(project.compileSdkVersion)
 
     defaultConfig {
         minSdkVersion Integer.parseInt(project.minSdk)
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 

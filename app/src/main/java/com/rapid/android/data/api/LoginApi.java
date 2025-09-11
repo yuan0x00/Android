@@ -1,8 +1,8 @@
 package com.rapid.android.data.api;
 
+import com.core.net.base.BaseResponse;
 import com.rapid.android.data.model.LoginBean;
 import com.rapid.android.data.model.RegisterBean;
-import com.rapid.core.net.base.BaseResponse;
 
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.Field;

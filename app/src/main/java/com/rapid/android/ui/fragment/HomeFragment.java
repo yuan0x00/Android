@@ -5,11 +5,11 @@ import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import com.core.base.ui.BaseFragment;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.rapid.android.databinding.FragmentHomeBinding;
 import com.rapid.android.ui.adapter.HomeViewPagerAdapter;
 import com.rapid.android.viewmodel.HomeViewModel;
-import com.rapid.core.base.ui.BaseFragment;
 
 public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBinding> {
 

@@ -1,6 +1,6 @@
 package com.rapid.android.viewmodel;
 
-import com.rapid.core.base.vm.BaseViewModel;
+import com.core.base.vm.BaseViewModel;
 
 public class TopicViewModel extends BaseViewModel {
 }

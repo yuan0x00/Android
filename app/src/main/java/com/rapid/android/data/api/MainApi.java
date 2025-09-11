@@ -1,7 +1,7 @@
 package com.rapid.android.data.api;
 
+import com.core.net.base.BaseResponse;
 import com.rapid.android.data.model.*;
-import com.rapid.core.net.base.BaseResponse;
 
 import java.util.ArrayList;
 

@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.lint'
+    namespace 'com.lint'
     compileSdkVersion Integer.parseInt(project.compileSdkVersion)
 }
 

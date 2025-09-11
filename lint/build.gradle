@@ -7,6 +7,6 @@ dependencies {
 }
 jar {
     manifest {
-        attributes("Lint-Registry": "com.example.lint.LogIssueRegistry")
+        attributes("Lint-Registry": "com.lint.LogIssueRegistry")
     }
 }

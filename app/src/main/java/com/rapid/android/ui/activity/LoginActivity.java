@@ -5,10 +5,10 @@ import android.text.TextUtils;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import com.core.base.ui.BaseActivity;
+import com.core.utils.ui.ToastUtils;
 import com.rapid.android.databinding.ActivityLoginBinding;
 import com.rapid.android.viewmodel.LoginViewModel;
-import com.rapid.core.base.ui.BaseActivity;
-import com.rapid.core.utils.ui.ToastUtils;
 
 public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBinding> {
 

@@ -2,9 +2,9 @@ package com.rapid.android.app;
 
 import android.os.StrictMode;
 
+import com.core.CoreApp;
 import com.rapid.android.BuildConfig;
 import com.rapid.android.data.network.NetApis;
-import com.rapid.core.CoreApp;
 
 public class MainApplication extends CoreApp {
 

@@ -7,10 +7,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 
+import com.core.CoreApp;
+import com.core.net.base.BaseResponse;
 import com.rapid.android.data.model.LoginBean;
 import com.rapid.android.data.network.NetApis;
-import com.rapid.core.CoreApp;
-import com.rapid.core.net.base.BaseResponse;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -94,7 +94,7 @@ public class AuthManager {
                 });
     }
 
-    public void relogin(DisposableObserver<BaseResponse<LoginBean>> observer) {
+    public void reLogin(DisposableObserver<BaseResponse<LoginBean>> observer) {
         String username = prefs.getString(KEY_USERNAME, null);
         String password = prefs.getString(KEY_PASSWORD, null);
         if (username != null && password != null) {

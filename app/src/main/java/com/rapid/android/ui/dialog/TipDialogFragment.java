@@ -6,9 +6,9 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.core.base.ui.BaseDialogFragment;
 import com.rapid.android.R;
 import com.rapid.android.databinding.DialogTipBinding;
-import com.rapid.core.base.ui.BaseDialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 

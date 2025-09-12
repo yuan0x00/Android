@@ -101,9 +101,9 @@ public class AuthManager {
             login(username, password, observer);
         } else {
             loginState.setValue(false);
-            loginError.setValue("No credentials available for relogin");
+//            loginError.setValue("No credentials available for relogin");
             if (observer != null) {
-                observer.onError(new IllegalStateException("No credentials available"));
+//                observer.onError(new IllegalStateException("No credentials available"));
             }
         }
     }

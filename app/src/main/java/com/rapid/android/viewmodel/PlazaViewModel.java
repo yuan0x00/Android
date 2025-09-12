@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class TopicViewModel extends BaseViewModel {
+public class PlazaViewModel extends BaseViewModel {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<ArticleListBean> articleListBean = new MutableLiveData<>();
 
@@ -23,8 +23,8 @@ public class TopicViewModel extends BaseViewModel {
         return articleListBean;
     }
 
-    public void articleList() {
-        autoDispose(NetApis.Main().listProjectList(0)
+    public void userArticleList() {
+        autoDispose(NetApis.Main().userArticleList(0)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<>() {

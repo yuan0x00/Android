@@ -1,5 +1,6 @@
 package com.rapid.android.ui.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -43,11 +44,16 @@ public class NestedScrollableHost extends FrameLayout {
     }
 
     private ViewPager2 parentViewPager() {
+        View decorView = null;
+        Context context = getContext();
+        if (context instanceof Activity) {
+            decorView = ((Activity) context).getWindow().getDecorView();
+        }
         View v = (View) this.getParent();
-        while (v != null && !(v instanceof ViewPager2)) {
+        while (v != null && !(v instanceof ViewPager2) && v != decorView) {
             v = (View) v.getParent();
         }
-        return (ViewPager2) v;
+        return (v instanceof ViewPager2) ? (ViewPager2) v : null;
     }
 
     private void init() {

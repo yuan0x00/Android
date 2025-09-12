@@ -42,6 +42,21 @@ public class WebViewFactory {
     }
 
     /**
+     * 预热WebView池：提前创建指定数量的WebView以降低首次创建开销。
+     * 必须在主线程调用。
+     * @param count 预热数量
+     */
+    public void prewarm(int count) {
+        if (count <= 0) return;
+        int toCreate = Math.min(count, Math.max(0, webViewPool.getMaxPoolSize() - webViewPool.getAvailableCount()));
+        for (int i = 0; i < toCreate; i++) {
+            // 提前创建并放回池中
+            WebView webView = webViewPool.acquireWebView();
+            webViewPool.releaseWebView(webView);
+        }
+    }
+
+    /**
      * 创建WebView控制器
      * @param configuration WebView配置
      * @param lifecycle 生命周期对象

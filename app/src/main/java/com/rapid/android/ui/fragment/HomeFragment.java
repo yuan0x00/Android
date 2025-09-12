@@ -41,7 +41,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
     private void setupViewPager() {
         HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(requireActivity());
         adapter.addFragment(new RecommendFragment(), "首页");
-        adapter.addFragment(new TopicFragment(), "最新项目");
+        adapter.addFragment(new LastProjectFragment(), "最新项目");
         binding.viewPager.setAdapter(adapter);
 
         // 将 TabLayout 与 ViewPager2 绑定

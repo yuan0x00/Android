@@ -15,13 +15,11 @@ import androidx.media3.ui.AspectRatioFrameLayout;
 
 import com.core.base.ui.BaseActivity;
 import com.core.utils.storage.MMKVManager;
-import com.core.utils.ui.ToastUtils;
 import com.rapid.android.R;
 import com.rapid.android.databinding.ActivitySplashBinding;
 import com.rapid.android.ui.base.SplashLifecycleObserver;
 import com.rapid.android.viewmodel.SplashViewModel;
 
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @SuppressLint("CustomSplashScreen")
@@ -104,10 +102,11 @@ public class SplashActivity extends BaseActivity<SplashViewModel, ActivitySplash
     }
 
     private void simulateInitialization() {
-        int delay = new Random().nextInt(1000);
+//        int delay = new Random().nextInt(1000);
+        int delay = 0;
 
         new android.os.Handler(getMainLooper()).postDelayed(() -> {
-            ToastUtils.showShortToast("模拟启动耗时" + delay + "ms");
+//            ToastUtils.showShortToast("模拟启动耗时" + delay + "ms");
             isInitializationFinished = true;
             // 初始化完成，显示跳过按钮
             if (needPlayVideo) {

@@ -10,31 +10,31 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.core.base.ui.BaseFragment;
 import com.core.utils.ui.ToastUtils;
 import com.rapid.android.data.model.ArticleListBean;
-import com.rapid.android.databinding.FragmentTopicBinding;
+import com.rapid.android.databinding.FragmentLastProjectBinding;
 import com.rapid.android.ui.adapter.FeedAdapter;
-import com.rapid.android.viewmodel.TopicViewModel;
+import com.rapid.android.viewmodel.LastProjectViewModel;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 
 
-public class TopicFragment extends BaseFragment<TopicViewModel, FragmentTopicBinding> {
+public class LastProjectFragment extends BaseFragment<LastProjectViewModel, FragmentLastProjectBinding> {
 
     private FeedAdapter feedAdapter;
 
     @Override
-    protected TopicViewModel createViewModel() {
-        return new ViewModelProvider(this).get(TopicViewModel.class);
+    protected LastProjectViewModel createViewModel() {
+        return new ViewModelProvider(this).get(LastProjectViewModel.class);
     }
 
     @Override
-    protected FragmentTopicBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
-        return FragmentTopicBinding.inflate(inflater, container, false);
+    protected FragmentLastProjectBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
+        return FragmentLastProjectBinding.inflate(inflater, container, false);
     }
 
     @Override
     protected void loadData() {
         super.loadData();
-        viewModel.articleList();
+        viewModel.listProjectList();
     }
 
     @Override

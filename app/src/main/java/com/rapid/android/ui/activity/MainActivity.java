@@ -20,7 +20,9 @@ import com.rapid.android.ui.base.ITabNavigator;
 import com.rapid.android.ui.fragment.ExploreFragment;
 import com.rapid.android.ui.fragment.HomeFragment;
 import com.rapid.android.ui.fragment.MineFragment;
+import com.rapid.android.ui.fragment.PlazaFragment;
 import com.rapid.android.viewmodel.MainViewModel;
+import com.webview.core.WebViewPrewarmer;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -48,6 +50,9 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
         setBackToTask();
         setTabLayout(savedInstanceState);
+
+        // 主页空闲时预热WebView池，提升后续Web页面首开速度
+        WebViewPrewarmer.prewarmInIdle(this, 1);
     }
 
     private void setBackToTask() {
@@ -110,6 +115,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         R.drawable.home_fill_24px,
                         HomeFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
+                        "广场",
+                        R.drawable.article_24px,
+                        R.drawable.article_fill_24px,
+                        PlazaFragment.class))
+                .addTab(new BottomTabNavigator.TabItem(
                         "发现",
                         R.drawable.explore_24px,
                         R.drawable.explore_fill_24px,
@@ -121,10 +131,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         MineFragment.class))
                 .setOnTabSelectInterceptor((position) -> {
                     switch (position) {
-                        case 2:
+                        case 3:
                             return checkLoginState();
                         case 0:
                         case 1:
+                        case 2:
                     }
                     return true;
                 })

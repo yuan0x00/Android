@@ -58,13 +58,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             binding.tvTitle.setText(feedItem.getTitle());
             String author;
             if (StringUtils.isEmpty(feedItem.getAuthor())) {
-                author = "分享人：" + feedItem.getShareUser();
+                author = feedItem.getShareUser();
             } else {
-                author = "作者：" + feedItem.getAuthor();
+                author = feedItem.getAuthor();
             }
             binding.tvAuthor.setText(author);
-            binding.tvTime.setText(String.valueOf(feedItem.getNiceShareDate()));
-            String chapter = "分类：" + feedItem.getSuperChapterName() + "/" + feedItem.getChapterName();
+            binding.tvTime.setText(" · " + feedItem.getNiceShareDate());
+            String chapter = feedItem.getSuperChapterName() + "/" + feedItem.getChapterName();
             binding.tvClass.setText(chapter);
         }
     }

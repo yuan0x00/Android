@@ -30,6 +30,11 @@ public interface MainApi {
     @GET("/article/listproject/{page}/json")
     Observable<BaseResponse<ArticleListBean>> listProjectList(@Path("page") int page);
 
+    // 获取首页tab-3-近期分享列表
+    @GET("/user_article/list/{page}/json")
+    Observable<BaseResponse<ArticleListBean>> userArticleList(@Path("page") int page);
+
+
     // 获取收藏列表
     @GET("/lg/collect/list/{page}/json")
     Observable<BaseResponse<CollectBean>> collectList(@Path("page") int page);
@@ -50,7 +55,4 @@ public interface MainApi {
     @POST("/lg/collect/{id}/json")
     Observable<BaseResponse<String>> collect(@Path("id") int id);
 
-    // 获取用户发布的文章
-    @GET("/user_article/list/{page}/json")
-    Observable<BaseResponse<UserArticleBean>> userArticleList(@Path("page") int page);
 }

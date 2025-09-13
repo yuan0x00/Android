@@ -158,6 +158,16 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (!AuthManager.getInstance().isLoggedIn()) {
+            if (navigator.getCurrentPosition() == 3) {
+                navigator.selectTab(0);
+            }
+        }
+    }
+
+    @Override
     protected void setupObservers() {
         viewModel.getErrorMessage().observe(this, msg -> {
             if (msg != null && !msg.isEmpty()) {

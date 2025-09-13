@@ -5,4 +5,24 @@
     <string name="splash_done">启动完成</string>
     <string name="network_not_good">网络不给力</string>
     <string name="back_twice_to_launcher">再返回一次回到桌面</string>
+    
+    <!-- 设置页面相关字符串 -->
+    <string name="settings">设置</string>
+
+    <!-- 通用设置 -->
+    <string name="dark_mode">深色模式</string>
+    <string name="dark_mode_description">切换到深色主题，减少眼部疲劳</string>
+    <string name="auto_update">自动更新</string>
+    <string name="auto_update_description">自动检查并下载应用更新</string>
+    <string name="notifications">通知</string>
+    <string name="notifications_description">接收应用推送通知和提醒</string>
+
+    <!-- 通用字符串 -->
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="ok">好的</string>
+    <string name="loading">加载中...</string>
+    <string name="error">错误</string>
+    <string name="success">成功</string>
+    <string name="failed">失败</string>
 </resources>

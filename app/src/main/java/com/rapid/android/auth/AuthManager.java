@@ -65,12 +65,42 @@ public class AuthManager {
                         if (response.getData() != null) {
                             LoginBean data = response.getData();
                             saveAuthData(data.getToken(), String.valueOf(data.getId()), username, password);
-                            loginState.setValue(true);
-                            loginError.setValue(null);
                         } else {
                             loginState.setValue(false);
                             loginError.setValue("登录失败");
                         }
+                        if (observer != null) {
+                            observer.onNext(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        loginState.setValue(false);
+                        loginError.setValue(e.getMessage());
+                        if (observer != null) {
+                            observer.onError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (observer != null) {
+                            observer.onComplete();
+                        }
+                    }
+                });
+    }
+
+    public void logout(DisposableObserver<BaseResponse<String>> observer) {
+        Observable<BaseResponse<String>> observable = NetApis.Login().logout();
+        observable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<BaseResponse<String>>() {
+                    @Override
+                    public void onNext(BaseResponse<String> response) {
+                        clearAuthData();
                         if (observer != null) {
                             observer.onNext(response);
                         }

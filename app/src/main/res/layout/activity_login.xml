@@ -9,12 +9,14 @@
     tools:context="com.rapid.android.ui.activity.LoginActivity">
 
     <!-- 工具栏 -->
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        android:background="?attr/colorSurfaceDim"
+        app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
+        app:titleTextColor="?attr/colorOnSurface"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"

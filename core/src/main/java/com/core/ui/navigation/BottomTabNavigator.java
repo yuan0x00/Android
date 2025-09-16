@@ -1,4 +1,4 @@
-package com.core.widget.navigation;
+package com.core.ui.navigation;
 
 import android.widget.FrameLayout;
 

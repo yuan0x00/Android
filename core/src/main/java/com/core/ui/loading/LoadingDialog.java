@@ -1,4 +1,4 @@
-package com.core.widget.loading;
+package com.core.ui.loading;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;

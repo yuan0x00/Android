@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.core.base.ui.BaseActivity;
 import com.core.net.base.BaseResponse;
+import com.core.ui.navigation.BottomTabNavigator;
 import com.core.utils.ui.ToastUtils;
 import com.core.utils.ui.WindowInsetsUtils;
-import com.core.widget.navigation.BottomTabNavigator;
 import com.rapid.android.R;
 import com.rapid.android.auth.AuthManager;
 import com.rapid.android.data.model.LoginBean;

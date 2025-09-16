@@ -1,11 +1,14 @@
 package com.rapid.android.ui.adapter;
 
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.core.ui.popup.BasePopupWindow;
 import com.core.utils.lang.StringUtils;
 import com.rapid.android.data.model.ArticleListBean;
 import com.rapid.android.databinding.ItemFeedBinding;
@@ -54,6 +57,30 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         }
 
         public void bind(ArticleListBean.Data feedItem) {
+
+            GestureDetector gestureDetector = new GestureDetector(itemView.getContext(), new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    // Get touch coordinates from MotionEvent
+                    float touchX = e.getRawX();
+                    float touchY = e.getRawY();
+
+                    // Create and configure BasePopupWindow
+                    BasePopupWindow popup = new BasePopupWindow.Builder(itemView.getContext())
+                            .setFocusable(true)
+                            .build();
+
+                    // Show popup at touch position
+                    popup.showAtTouchPosition(binding.getRoot(), touchX, touchY);
+                }
+            });
+
+            // Set OnTouchListener to pass events to GestureDetector
+            binding.getRoot().setOnTouchListener((v, event) -> {
+                gestureDetector.onTouchEvent(event);
+                return false;
+            });
+
             binding.getRoot().setOnClickListener(v -> WebViewActivity.start(binding.getRoot().getContext(), feedItem.getLink(), feedItem.getTitle()));
             binding.tvTitle.setText(feedItem.getTitle());
             String author;

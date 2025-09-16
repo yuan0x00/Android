@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.core.R;
-import com.core.widget.DimDialogFragment;
+import com.core.ui.dialog.DimDialogFragment;
 
 /**
  * BaseDialogFragment - 支持链式调用，并可带遮罩显示

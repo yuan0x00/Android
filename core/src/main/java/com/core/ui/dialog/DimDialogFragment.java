@@ -1,4 +1,4 @@
-package com.core.widget;
+package com.core.ui.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;

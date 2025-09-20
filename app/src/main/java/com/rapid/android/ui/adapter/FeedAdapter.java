@@ -1,5 +1,7 @@
 package com.rapid.android.ui.adapter;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -10,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.core.ui.popup.BasePopupWindow;
 import com.core.utils.lang.StringUtils;
+import com.core.utils.ui.ResUtils;
+import com.rapid.android.R;
 import com.rapid.android.data.model.ArticleListBean;
 import com.rapid.android.databinding.ItemFeedBinding;
 import com.webview.WebViewActivity;
@@ -57,6 +61,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         }
 
         public void bind(ArticleListBean.Data feedItem) {
+            String author;
+            if (StringUtils.isEmpty(feedItem.getAuthor())) {
+                author = feedItem.getShareUser();
+            } else {
+                author = feedItem.getAuthor();
+            }
+            binding.tvAuthor.setText(author);
+            binding.tvTitle.setText(feedItem.getTitle());
+            binding.tvTime.setText(" · " + feedItem.getNiceShareDate());
+            binding.tvClass.setText(feedItem.getSuperChapterName());
 
             GestureDetector gestureDetector = new GestureDetector(itemView.getContext(), new GestureDetector.SimpleOnGestureListener() {
                 @Override
@@ -82,17 +96,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             });
 
             binding.getRoot().setOnClickListener(v -> WebViewActivity.start(binding.getRoot().getContext(), feedItem.getLink(), feedItem.getTitle()));
-            binding.tvTitle.setText(feedItem.getTitle());
-            String author;
-            if (StringUtils.isEmpty(feedItem.getAuthor())) {
-                author = feedItem.getShareUser();
-            } else {
-                author = feedItem.getAuthor();
-            }
-            binding.tvAuthor.setText(author);
-            binding.tvTime.setText(" · " + feedItem.getNiceShareDate());
-            String chapter = feedItem.getSuperChapterName() + "/" + feedItem.getChapterName();
-            binding.tvClass.setText(chapter);
+
+            binding.ivFavorite.setOnClickListener(v -> {
+                Drawable drawable = ResUtils.getDrawable(R.drawable.favorite_fill_24px);
+                if (drawable != null) {
+                    drawable.setTint(Color.RED);
+                }
+                binding.ivFavorite.setImageDrawable(drawable);
+            });
         }
     }
 }

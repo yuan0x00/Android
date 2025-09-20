@@ -1,8 +1,10 @@
 package com.core.base.ui;
 
-import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.*;
+import android.widget.FrameLayout;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -11,11 +13,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.core.R;
-import com.core.ui.dialog.DimDialogFragment;
 
-/**
- * BaseDialogFragment - 支持链式调用，并可带遮罩显示
- */
 public abstract class BaseDialogFragment extends DialogFragment {
 
     protected View mContentView;
@@ -28,25 +26,54 @@ public abstract class BaseDialogFragment extends DialogFragment {
     private int mAnimStyle = 0;
     private boolean mCancelable = true;
 
-    // 是否由 showWithDim 管理（用于 dismiss 时联动）
-    private boolean mManagedByDim = false;
+    private boolean mAutoDim = true;   // 是否自动添加 dim 层
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setCancelable(mCancelable);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.BaseDialogTheme);
+        setStyle(STYLE_NO_FRAME, R.style.BaseDialogTheme);
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
         int layoutId = getLayoutId();
         if (layoutId == 0) {
             throw new IllegalArgumentException("getLayoutId() must return a valid layout resource ID.");
         }
-        mContentView = inflater.inflate(layoutId, container, false);
-        return mContentView;
+
+        // 包一层根容器，内部含 dim 背景和内容
+        // 内部容器（含 dim 层 + 内容）
+        FrameLayout mRootContainer = new FrameLayout(requireContext());
+
+        if (mAutoDim) {
+            View dimView = new View(requireContext());
+            dimView.setBackgroundColor(Color.parseColor("#99000000"));
+            FrameLayout.LayoutParams dimParams = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+            );
+            if (mCancelable) {
+                dimView.setOnClickListener(v -> dismissAllowingStateLoss());
+            }
+            mRootContainer.addView(dimView, dimParams);
+        }
+
+        mContentView = inflater.inflate(layoutId, mRootContainer, false);
+        FrameLayout.LayoutParams contentParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+        );
+        contentParams.gravity = Gravity.CENTER;
+        mRootContainer.addView(mContentView, contentParams);
+
+        return mRootContainer;
     }
 
     @Override
@@ -112,89 +139,47 @@ public abstract class BaseDialogFragment extends DialogFragment {
         return this;
     }
 
+    public BaseDialogFragment autoDim(boolean enable) {
+        this.mAutoDim = enable;
+        return this;
+    }
+
     // ============= 内部方法 =============
 
     private void applyWindowAttributes() {
         if (getDialog() == null || getDialog().getWindow() == null) return;
 
         Window window = getDialog().getWindow();
-        window.setGravity(mGravity);
 
         if (mAnimStyle != 0) {
             window.setWindowAnimations(mAnimStyle);
         }
 
-        WindowManager.LayoutParams params = window.getAttributes();
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        window.setWindowAnimations(R.style.FadeWindowAnimation);
 
-        final float density = requireContext().getResources().getDisplayMetrics().density;
-
-        if (mWidthDp >= 0) {
-            params.width = (int) (mWidthDp * density + 0.5f);
-        } else {
-            params.width = mWidthPx;
-        }
-
-        if (mHeightDp >= 0) {
-            params.height = (int) (mHeightDp * density + 0.5f);
-        } else {
-            params.height = mHeightPx;
-        }
-
-        window.setAttributes(params);
         getDialog().setCanceledOnTouchOutside(mCancelable);
     }
 
     // ============= 显示与关闭 =============
 
-    /**
-     * 显示 Dialog 并自动添加遮罩层
-     * 遮罩点击可关闭当前 Dialog
-     */
-    public void show(@NonNull FragmentManager fm) {
-        if (fm.isDestroyed() || fm.isStateSaved()) return;
-
-        // 先显示遮罩
-        DimDialogFragment dimDialog = new DimDialogFragment();
-        dimDialog.show(fm, DimDialogFragment.TAG);
-
-        // 标记由 dim 管理
-        mManagedByDim = true;
-
-        // 显示内容
-        showWithDim(fm);
-    }
-
-    public void showWithDim(@NonNull FragmentManager fm) {
+    public void showSafely(@NonNull FragmentManager fm) {
         if (fm.isDestroyed() || fm.isStateSaved()) return;
         if (!isAdded()) {
             try {
                 show(fm, getClass().getSimpleName());
-            } catch (IllegalStateException e) {
-                // ignore
+            } catch (IllegalStateException ignored) {
             }
         }
     }
 
     public void dismissSafely() {
-        if (isAdded() && getDialog() != null) {
-            onDismiss(getDialog());
-        }
-    }
-
-    @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        super.onDismiss(dialog);
-        // 如果是由 showWithDim 显示的，尝试关闭遮罩
-        if (mManagedByDim) {
-            try {
-                DimDialogFragment dimDialog = (DimDialogFragment) getFragmentManager()
-                        .findFragmentByTag(DimDialogFragment.TAG);
-                if (dimDialog != null && !dimDialog.isRemoving()) {
-                    dimDialog.dismissAllowingStateLoss();
-                }
-            } catch (Exception e) {
-                // ignore
-            }
+        try {
+            dismissAllowingStateLoss();
+        } catch (Exception ignored) {
         }
     }
 }

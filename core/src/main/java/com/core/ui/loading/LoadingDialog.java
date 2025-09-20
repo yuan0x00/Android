@@ -10,10 +10,10 @@ import com.core.base.ui.BaseDialogFragment;
 public class LoadingDialog extends BaseDialogFragment {
 
     @Override
-    public void show(@NonNull FragmentManager fm) {
+    public void showSafely(@NonNull FragmentManager fm) {
         this.setSquareWidthOf(0.25F);
         this.cancelable(false);
-        super.show(fm);
+        super.showSafely(fm);
     }
 
     @Override

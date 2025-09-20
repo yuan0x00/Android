@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="CircleImageView" parent="">
+
+    <style name="Theme.App" parent="Theme.Material3.DayNight.NoActionBar">
+    </style>
+
+    <style name="Theme.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+    </style>
+
+    <style name="TransparentDialogTheme" parent="Theme.AppCompat">
+        <!-- 透明背景 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 不覆盖状态栏 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 无边框 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 不 dim 整个 Window -->
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="FadeWindowAnimation">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
+    <style name="CircleImageView">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
 </resources>

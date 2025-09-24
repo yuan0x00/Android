@@ -11,6 +11,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.rapid.android.databinding.FragmentHomeBinding;
 import com.rapid.android.ui.activity.SearchActivity;
 import com.rapid.android.ui.adapter.HomeViewPagerAdapter;
+import com.rapid.android.ui.dialog.TipDialogFragment;
 import com.rapid.android.viewmodel.HomeViewModel;
 
 public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBinding> {
@@ -35,6 +36,10 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
         setupViewPager();
         binding.topSearch.setOnClickListener(v -> {
             startActivity(new Intent(this.getActivity(), SearchActivity.class));
+        });
+        binding.avatar.setOnClickListener(v -> {
+            TipDialogFragment dialogFragment = new TipDialogFragment();
+            dialogFragment.showSafely(getParentFragmentManager());
         });
     }
 

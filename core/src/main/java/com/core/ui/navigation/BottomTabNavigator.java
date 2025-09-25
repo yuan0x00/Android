@@ -109,8 +109,8 @@ public class BottomTabNavigator {
             } else {
                 ft.show(fragment);
                 if (fragment.getView() != null) {
-                    fragment.getView().setAlpha(0.5f);
-                    fragment.getView().setTranslationY(4);
+                    fragment.getView().setAlpha(0.9f);
+                    fragment.getView().setTranslationY(2);
                     fragment.getView().animate().alpha(1f).setDuration(100).start();
                     fragment.getView().animate().translationY(0).setDuration(100).start();
                 }

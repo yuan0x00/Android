@@ -4,13 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <!-- AppBarLayout: 可折叠区域 -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
@@ -65,25 +67,16 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-        <!-- TabLayout 固定在顶部 -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/topTab"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_gravity="bottom"
+            android:background="@android:color/white"
             app:tabGravity="center"
             app:tabIndicator="@drawable/tab_layout_indicator"
             app:tabIndicatorAnimationMode="linear"
             app:tabMode="fixed"
             app:tabRippleColor="@null"/>
-
-        <!-- 分割线 -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_gravity="bottom"
-            android:background="#f5f5f5"
-            />
 
     </com.google.android.material.appbar.AppBarLayout>
 

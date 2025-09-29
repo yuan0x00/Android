@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.rapid.android.ui.activity.LoginActivity">
+    tools:context="com.rapid.android.presentation.ui.activity.LoginActivity">
 
     <!-- 工具栏 -->
     <com.google.android.material.appbar.MaterialToolbar

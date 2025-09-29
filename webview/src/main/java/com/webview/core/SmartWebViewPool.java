@@ -19,6 +19,7 @@ public class SmartWebViewPool {
     private final WebViewProvider provider;
     private final Deque<WebViewEntry> pool = new ConcurrentLinkedDeque<>();
     private final AtomicInteger currentSize = new AtomicInteger(0);
+    private final WebViewPoolMonitor monitor = WebViewPoolMonitor.getInstance();
 
     private final int maxPoolSize;
     private final int minPoolSize;
@@ -49,6 +50,7 @@ public class SmartWebViewPool {
             WebViewEntry entry = pool.pollFirst();
             if (entry != null) {
                 Log.d(TAG, "Reusing WebView from pool, remaining: " + pool.size());
+                monitor.onAcquire(true, pool.size(), maxPoolSize);
                 return entry.webView;
             }
 
@@ -56,6 +58,7 @@ public class SmartWebViewPool {
             Log.d(TAG, "Creating new WebView, pool size: " + currentSize.get());
             WebView webView = provider.createWebView();
             currentSize.incrementAndGet();
+            monitor.onAcquire(false, pool.size(), maxPoolSize);
             return webView;
         }
     }
@@ -76,6 +79,7 @@ public class SmartWebViewPool {
                     provider.destroyWebView(oldestEntry.webView);
                     currentSize.decrementAndGet();
                     Log.d(TAG, "Destroyed oldest WebView, pool size: " + currentSize.get());
+                    monitor.onRelease(false, pool.size(), maxPoolSize);
                 }
             }
 
@@ -85,6 +89,7 @@ public class SmartWebViewPool {
             pool.addFirst(entry);
 
             Log.d(TAG, "WebView returned to pool, pool size: " + pool.size());
+            monitor.onRelease(true, pool.size(), maxPoolSize);
         }
     }
 
@@ -109,6 +114,7 @@ public class SmartWebViewPool {
 
         if (cleanedCount > 0) {
             Log.d(TAG, "Cleaned " + cleanedCount + " expired WebView instances");
+            monitor.onClear(cleanedCount);
         }
     }
 
@@ -143,6 +149,7 @@ public class SmartWebViewPool {
             if (entry != null) {
                 provider.destroyWebView(entry.webView);
                 currentSize.decrementAndGet();
+                monitor.onRelease(false, pool.size(), maxPoolSize);
             }
         }
 
@@ -154,14 +161,17 @@ public class SmartWebViewPool {
      */
     public void clear() {
         synchronized (this) {
+            int cleared = 0;
             while (!pool.isEmpty()) {
                 WebViewEntry entry = pool.poll();
                 if (entry != null) {
                     provider.destroyWebView(entry.webView);
+                    cleared++;
                 }
             }
             currentSize.set(0);
             Log.d(TAG, "WebView pool cleared");
+            monitor.onClear(cleared);
         }
     }
 

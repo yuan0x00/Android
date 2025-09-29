@@ -2,10 +2,12 @@ package com.core.net.client;
 
 import androidx.annotation.NonNull;
 
-import com.core.net.base.BaseResponse;
-import com.google.gson.Gson;
+import com.core.log.CoreLogger;
+import com.core.net.interceptor.AuthInterceptor;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.*;
@@ -15,28 +17,37 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CoreRetrofitBuilder {
 
-    private static final String BASE_URL = "https://www.wanandroid.com/";
-    private static final long CONNECT_TIMEOUT_SECONDS = 10L;
-    private static final long READ_TIMEOUT_SECONDS = 10L;
+    private static volatile CoreRetrofitConfig config = CoreRetrofitConfig.defaultConfig();
     private static CoreRetrofitBuilder instance;
     private final Retrofit retrofit;
 
-    private CoreRetrofitBuilder() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .sslSocketFactory(
-                        SSLTrustManager.getSSLSocketFactory(),
-                        SSLTrustManager.getTrustManager()[0]
-                )
-                .hostnameVerifier(SSLTrustManager.getHostnameVerifier())
-                .addInterceptor(new ResponseHeaderInterceptor())
-                .addInterceptor(new RequestHeaderInterceptor())
-                .addInterceptor(new ResponseErrorInterceptor())
-                .build();
+    private CoreRetrofitBuilder(CoreRetrofitConfig activeConfig) {
+        OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder()
+                .connectTimeout(activeConfig.getConnectTimeoutSeconds(), TimeUnit.SECONDS)
+                .readTimeout(activeConfig.getReadTimeoutSeconds(), TimeUnit.SECONDS)
+                .writeTimeout(activeConfig.getWriteTimeoutSeconds(), TimeUnit.SECONDS);
+
+        if (activeConfig.isAllowInsecureSsl()) {
+            okHttpBuilder.sslSocketFactory(
+                    SSLTrustManager.getSSLSocketFactory(),
+                    SSLTrustManager.getTrustManager()[0]
+            );
+            okHttpBuilder.hostnameVerifier(SSLTrustManager.getHostnameVerifier());
+        }
+
+        okHttpBuilder.addInterceptor(new RequestHeaderInterceptor(activeConfig));
+        okHttpBuilder.addInterceptor(new ResponseHeaderInterceptor(activeConfig));
+        okHttpBuilder.addInterceptor(new AuthInterceptor(activeConfig.getAuthFailureListener()));
+//        okHttpBuilder.addInterceptor(new ResponseErrorInterceptor());
+
+        if (activeConfig.isLoggingEnabled()) {
+            okHttpBuilder.addInterceptor(new LoggingInterceptor());
+        }
+
+        OkHttpClient okHttpClient = okHttpBuilder.build();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(activeConfig.getBaseUrl())
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
@@ -45,32 +56,19 @@ public class CoreRetrofitBuilder {
 
     public static synchronized CoreRetrofitBuilder getInstance() {
         if (instance == null) {
-            instance = new CoreRetrofitBuilder();
+            instance = new CoreRetrofitBuilder(config);
         }
         return instance;
     }
 
-    /**
-     * 构造错误响应（返回 200 状态码，但 body 中包含错误信息）
-     */
-    private static Response buildErrorResponse(Request request, int errorCode, String errorMsg) {
-        BaseResponse<?> errorResponse = new BaseResponse<>();
-        errorResponse.setErrorCode(errorCode);
-        errorResponse.setErrorMsg(errorMsg);
-        errorResponse.setData(null);
+    public static synchronized void configure(@NonNull CoreRetrofitConfig newConfig) {
+        config = newConfig;
+        instance = null; // 配置更新后重新构建 Retrofit
+    }
 
-        Gson gson = new Gson();
-        String json = gson.toJson(errorResponse);
-        MediaType mediaType = MediaType.get("application/json; charset=UTF-8");
-        ResponseBody body = ResponseBody.create(json, mediaType);
-
-        return new Response.Builder()
-                .request(request)
-                .protocol(Protocol.HTTP_1_1)
-                .code(200)
-                .message("OK")
-                .body(body)
-                .build();
+    @NonNull
+    public static CoreRetrofitConfig getActiveConfig() {
+        return config;
     }
 
     public Retrofit getRetrofit() {
@@ -78,47 +76,111 @@ public class CoreRetrofitBuilder {
     }
 
     /**
-     * 请求头拦截器：添加 Cookie
+     * 请求头拦截器：动态注入业务 Header 及 Cookie
      */
     public static class RequestHeaderInterceptor implements Interceptor {
+        private final CoreRetrofitConfig config;
+
+        public RequestHeaderInterceptor(CoreRetrofitConfig config) {
+            this.config = config;
+        }
+
         @NonNull
         @Override
         public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-            return chain.proceed(request.newBuilder().build());
+            Request original = chain.request();
+            Request.Builder builder = original.newBuilder();
+
+            Map<String, String> headers = config.getHeaderProvider().provideHeaders();
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                if (entry.getKey() != null && entry.getValue() != null) {
+                    builder.header(entry.getKey(), entry.getValue());
+                }
+            }
+
+            List<String> cookies = config.getCookieStore().loadForRequest(original.url());
+            if (!cookies.isEmpty()) {
+                builder.header("Cookie", mergeCookies(cookies));
+            }
+
+            return chain.proceed(builder.build());
+        }
+
+        @NonNull
+        private String mergeCookies(@NonNull List<String> cookies) {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < cookies.size(); i++) {
+                if (i > 0) {
+                    builder.append("; ");
+                }
+                builder.append(cookies.get(i));
+            }
+            return builder.toString();
         }
     }
 
     /**
-     * 响应头拦截器：持久化 Set-Cookie
+     * 响应头拦截器：持久化 Cookie
      */
     public static class ResponseHeaderInterceptor implements Interceptor {
+        private final CoreRetrofitConfig config;
+
+        public ResponseHeaderInterceptor(CoreRetrofitConfig config) {
+            this.config = config;
+        }
+
         @NonNull
         @Override
         public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-            return chain.proceed(request);
+            Response response = chain.proceed(chain.request());
+            List<String> cookies = response.headers("Set-Cookie");
+            if (!cookies.isEmpty()) {
+                HttpUrl url = response.request().url();
+                config.getCookieStore().saveFromResponse(url, cookies);
+            }
+            return response;
         }
     }
 
     /**
-     * 响应错误拦截器：统一错误处理
+     * 响应错误拦截器：记录异常，保留原始状态码
      */
     public static class ResponseErrorInterceptor implements Interceptor {
         @NonNull
         @Override
-        public Response intercept(Chain chain) {
+        public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
             try {
                 Response response = chain.proceed(request);
-                if (response.isSuccessful()) {
-                    return response;
-                } else {
-                    return buildErrorResponse(request, -100, "请求失败");
+                if (!response.isSuccessful()) {
+                    CoreLogger.w("HTTP %d %s", response.code(), response.request().url());
                 }
+                return response;
+            } catch (IOException e) {
+                CoreLogger.e(e, "Network error: %s", request.url());
+                throw e;
             } catch (Exception e) {
-                return buildErrorResponse(request, -200, "请求异常: " + e.getMessage());
+                CoreLogger.e(e, "Unexpected network error: %s", request.url());
+                throw new IOException("Unexpected network error", e);
             }
+        }
+    }
+
+    private static class LoggingInterceptor implements Interceptor {
+        @NonNull
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            long startNs = System.nanoTime();
+            CoreLogger.d("➡️ %s %s", request.method(), request.url());
+            Response response = chain.proceed(request);
+            long costMs = (System.nanoTime() - startNs) / 1_000_000L;
+            CoreLogger.d("⬅️ %s %s code=%d (%dms)",
+                    request.method(),
+                    response.request().url(),
+                    response.code(),
+                    costMs);
+            return response;
         }
     }
 }

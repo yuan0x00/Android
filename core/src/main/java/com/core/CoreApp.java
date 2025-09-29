@@ -6,7 +6,6 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
-import com.core.crash.GlobalCrashHandler;
 import com.core.lifecycle.AppLifecycleObserver;
 import com.core.log.CoreLogger;
 import com.core.utils.device.ScreenAdaptUtils;
@@ -49,7 +48,7 @@ public class CoreApp extends Application {
         CoreLogger.init(BuildConfig.DEBUG);
 
         // 初始化崩溃监控
-        GlobalCrashHandler.install();
+//        GlobalCrashHandler.install();
 
         // 初始化 MMKV
         MMKV.initialize(this); // MMKV 自己的初始化

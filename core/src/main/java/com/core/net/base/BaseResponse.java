@@ -46,6 +46,18 @@ public class BaseResponse<T> {
         this.data = data;
     }
 
+    public boolean isSuccess() {
+        return errorCode == 0;
+    }
+
+    @NonNull
+    public T requireData() {
+        if (isSuccess()) {
+            return data;
+        }
+        throw new ApiException(errorCode, errorMsg != null ? errorMsg : "");
+    }
+
     @NonNull
     @Override
     public String toString() {

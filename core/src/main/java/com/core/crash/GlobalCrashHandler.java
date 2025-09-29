@@ -51,19 +51,19 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
     public void uncaughtException(@NonNull Thread thread, @NonNull Throwable ex) {
         try {
             // 1. 保存崩溃日志到文件（核心）
-            String crashFileName = saveCrashInfoToFile(ex);
-            if (crashFileName != null) {
-                safeLog("App crashed, log saved to: " + crashFileName);
+            File crashFile = saveCrashInfoToFile(ex);
+            if (crashFile != null) {
+                safeLog("App crashed, log saved to: " + crashFile.getAbsolutePath());
             } else {
                 safeLog("App crashed, save log failed");
             }
 
             // 2. 异步上传日志（子线程，避免阻塞）
-            uploadCrashLog(crashFileName, ex);
+            uploadCrashLog(crashFile, ex);
 
             // 3. 仅在主进程显示错误页
             if (isMainProcess()) {
-                showCrashDialog(crashFileName);
+                showCrashDialog(crashFile);
             }
 
             // 4. 延迟 1 秒后杀死进程（给日志写入/上传留时间）
@@ -88,7 +88,7 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
     /**
      * 保存错误信息到文件中
      */
-    private @Nullable String saveCrashInfoToFile(@NonNull Throwable ex) {
+    private @Nullable File saveCrashInfoToFile(@NonNull Throwable ex) {
         Writer writer = null;
         BufferedWriter bufferedWriter = null;
 
@@ -109,7 +109,7 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
             bufferedWriter.write(sb.toString());
             bufferedWriter.flush();
 
-            return fileName;
+            return file;
 
         } catch (IOException e) {
             safeLog("write crash log failed: " + e.getMessage());
@@ -240,29 +240,26 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
     /**
      * 上传崩溃日志（异步，子线程执行）
      */
-    private void uploadCrashLog(final String fileName, final Throwable ex) {
-        new Thread(() -> {
-            try {
-                // 实现上传逻辑
-                safeLog("Upload crash log: " + fileName + " (stub)");
-            } catch (Exception e) {
-                safeLog("upload crash log failed: " + e.getMessage());
-            }
-        }).start();
+    private void uploadCrashLog(@Nullable final File crashFile, @NonNull final Throwable ex) {
+        try {
+            CrashReportUploader.uploadAsync(crashFile, ex);
+        } catch (Exception e) {
+            safeLog("upload crash log failed: " + e.getMessage());
+        }
     }
 
     /**
      * 显示崩溃对话框（仅在主进程 UI 线程）
      */
-    private void showCrashDialog(final String fileName) {
+    private void showCrashDialog(@Nullable final File crashFile) {
         try {
             Context context = CoreApp.getAppContext(); //  使用 CoreApp
             new android.os.Handler(context.getMainLooper()).post(() -> {
                 try {
 //                    Intent intent = new Intent(context, ErrorActivity.class);
 //                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    if (fileName != null) {
-//                        intent.putExtra("crash_file", fileName);
+//                    if (crashFile != null) {
+//                        intent.putExtra("crash_file", crashFile.getAbsolutePath());
 //                    }
 //                    context.startActivity(intent);
                 } catch (Exception e) {

@@ -22,6 +22,7 @@ public class WebViewPool {
     private final WebViewProvider provider;
     private final int maxPoolSize;
     private final Object lock = new Object();
+    private final WebViewPoolMonitor monitor = WebViewPoolMonitor.getInstance();
 
     public WebViewPool(@NonNull WebViewProvider provider, int maxPoolSize) {
         this.provider = provider;
@@ -40,6 +41,7 @@ public class WebViewPool {
                 WebView webView = availableWebViews.poll();
                 if (webView != null && Boolean.TRUE.equals(webViewStates.get(webView))) {
                     Log.d(TAG, "Reusing WebView from pool");
+                    monitor.onAcquire(true, availableWebViews.size(), maxPoolSize);
                     return webView;
                 } else if (webView != null) {
                     // WebView无效，从状态映射中移除并销毁
@@ -53,6 +55,7 @@ public class WebViewPool {
             WebView newWebView = provider.createWebView();
             webViewStates.put(newWebView, true); // 标记为有效
             Log.d(TAG, "Creating new WebView");
+            monitor.onAcquire(false, availableWebViews.size(), maxPoolSize);
             return newWebView;
         }
     }
@@ -70,10 +73,12 @@ public class WebViewPool {
                     provider.recycleWebView(webView);
                     availableWebViews.offer(webView);
                     Log.d(TAG, "WebView returned to pool, pool size: " + availableWebViews.size());
+                    monitor.onRelease(true, availableWebViews.size(), maxPoolSize);
                 } else {
                     webViewStates.remove(webView); // 从状态映射中移除
                     provider.destroyWebView(webView);
                     Log.d(TAG, "WebView destroyed (invalid or pool full)");
+                    monitor.onRelease(false, availableWebViews.size(), maxPoolSize);
                 }
             }
         }
@@ -84,15 +89,18 @@ public class WebViewPool {
      */
     public void clear() {
         synchronized (lock) {
+            int cleared = 0;
             while (!availableWebViews.isEmpty()) {
                 WebView webView = availableWebViews.poll();
                 if (webView != null) {
                     webViewStates.remove(webView); // 从状态映射中移除
                     provider.destroyWebView(webView);
+                    cleared++;
                 }
             }
             webViewStates.clear(); // 清空所有状态
             Log.d(TAG, "WebView pool cleared");
+            monitor.onClear(cleared);
         }
     }
 

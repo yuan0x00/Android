@@ -78,6 +78,10 @@
             app:tabMode="fixed"
             app:tabRippleColor="@null"/>
 
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2

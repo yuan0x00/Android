@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context="com.rapid.android.ui.fragment.ExploreFragment">
+    tools:context="com.rapid.android.presentation.ui.fragment.ExploreFragment">
 
     <!-- WebView容器 -->
     <FrameLayout

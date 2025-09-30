@@ -28,7 +28,7 @@ jobs:
       - name: Build Release APK
         run: ./gradlew assembleRelease
         env:
-          # 如果你在 build.gradle 中使用环境变量签名，可以在这里传入
+          # 如果你在 build.gradle.kts 中使用环境变量签名，可以在这里传入
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
           RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
           RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}

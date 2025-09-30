@@ -1,0 +1,32 @@
+plugins {
+    id 'java-gradle-plugin'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+    compileOnly(libs.android.gradle.plugin)
+    compileOnly(libs.android.tools.common)
+}
+
+tasks.named("validatePlugins", ValidatePlugins).configure {
+    enableStricterValidation = true
+    failOnWarning = true
+}
+
+gradlePlugin {
+    plugins {
+        def prefix = "local"
+        register("androidApplication") {
+            id = "${prefix}.android.application"
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
+        register("androidLibrary") {
+            id = "${prefix}.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
+    }
+}

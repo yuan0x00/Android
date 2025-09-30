@@ -1,14 +1,11 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.local.android.application)
 }
 
 android {
-    namespace project.namespace
-    compileSdkVersion Integer.parseInt(project.compileSdkVersion)
-
-    defaultConfig {
+    namespace = project.namespace
+    defaultConfig{
         applicationId project.namespace
-        minSdkVersion Integer.parseInt(project.minSdk)
         targetSdkVersion Integer.parseInt(project.targetSdk)
         versionCode Integer.parseInt(project.versionCode)
         versionName project.versionName
@@ -29,14 +26,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-    }
-    buildFeatures {
-        buildConfig true
-        viewBinding true
     }
 }
 

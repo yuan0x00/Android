@@ -19,7 +19,6 @@ import com.rapid.android.ui.base.ITabNavigator;
 import com.rapid.android.ui.fragment.ExploreFragment;
 import com.rapid.android.ui.fragment.HomeFragment;
 import com.rapid.android.ui.fragment.MineFragment;
-import com.rapid.android.ui.fragment.PlazaFragment;
 import com.rapid.android.viewmodel.MainViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -92,14 +91,19 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         R.drawable.home_fill_24px,
                         HomeFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
-                        "广场",
-                        R.drawable.article_24px,
-                        R.drawable.article_fill_24px,
-                        PlazaFragment.class))
+                        "体系",
+                        R.drawable.family_history_24px,
+                        R.drawable.family_history_fill_24px,
+                        ExploreFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
-                        "发现",
-                        R.drawable.explore_24px,
-                        R.drawable.explore_fill_24px,
+                        "导航",
+                        R.drawable.signpost_24px,
+                        R.drawable.signpost_fill_24px,
+                        ExploreFragment.class))
+                .addTab(new BottomTabNavigator.TabItem(
+                        "项目",
+                        R.drawable.folder_code_24px,
+                        R.drawable.folder_code_fill_24px,
                         ExploreFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
                         "我的",

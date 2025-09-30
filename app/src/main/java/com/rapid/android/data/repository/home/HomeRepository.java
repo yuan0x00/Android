@@ -1,6 +1,6 @@
 package com.rapid.android.data.repository.home;
 
-import com.core.net.base.BaseResponse;
+import com.core.network.base.BaseResponse;
 import com.rapid.android.data.api.HomeApi;
 import com.rapid.android.data.model.ArticleListBean;
 import com.rapid.android.data.model.BannerItemBean;

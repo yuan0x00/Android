@@ -3,9 +3,8 @@ package com.rapid.android.data.session;
 import androidx.annotation.Nullable;
 
 import com.rapid.android.data.model.UserInfoBean;
-import com.rapid.android.domain.usecase.CheckLoginStatusUseCase;
-import com.rapid.android.domain.usecase.GetUserProfileUseCase;
-import com.rapid.android.domain.usecase.UseCaseProvider;
+import com.rapid.android.data.repository.RepositoryProvider;
+import com.rapid.android.data.repository.user.UserRepository;
 
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -14,13 +13,11 @@ public final class SessionStateRepository {
 
     private static final SessionStateRepository INSTANCE = new SessionStateRepository();
 
-    private final CheckLoginStatusUseCase checkLoginStatusUseCase;
-    private final GetUserProfileUseCase getUserProfileUseCase;
+    private final UserRepository userRepository;
     private UserInfoBean cachedUserInfo;
 
     private SessionStateRepository() {
-        this.checkLoginStatusUseCase = UseCaseProvider.getCheckLoginStatusUseCase();
-        this.getUserProfileUseCase = UseCaseProvider.getUserProfileUseCase();
+        this.userRepository = RepositoryProvider.getUserRepository();
     }
 
     public static SessionStateRepository getInstance() {
@@ -28,7 +25,7 @@ public final class SessionStateRepository {
     }
 
     public Single<UserInfoBean> getCachedUserInfo() {
-        return checkLoginStatusUseCase.execute()
+        return userRepository.isLoggedIn()
                 .subscribeOn(Schedulers.io())
                 .flatMap(isLoggedIn -> {
                     if (!Boolean.TRUE.equals(isLoggedIn)) {
@@ -48,8 +45,10 @@ public final class SessionStateRepository {
     }
 
     public Single<UserInfoBean> refreshUserInfo() {
-        return getUserProfileUseCase.execute()
+        return userRepository.fetchUserProfile()
+                .map(response -> response.requireData())
                 .subscribeOn(Schedulers.io())
+                .firstOrError()
                 .doOnSuccess(this::cacheUserInfo)
                 .doOnError(throwable -> cacheUserInfo(null));
     }

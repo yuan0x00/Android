@@ -2,14 +2,13 @@ package com.rapid.android.data.repository;
 
 import com.rapid.android.data.repository.content.ContentRepository;
 import com.rapid.android.data.repository.home.HomeRepository;
+import com.rapid.android.data.repository.user.UserRepository;
 
 public final class RepositoryProvider {
 
     private static volatile HomeRepository homeRepository;
     private static volatile ContentRepository contentRepository;
-    private static volatile UserRepositoryImpl userRepository;
-    private static volatile UserRemoteDataSourceImpl userRemote;
-    private static volatile UserLocalDataSourceImpl userLocal;
+    private static volatile UserRepository userRepository;
 
     private RepositoryProvider() {
     }
@@ -36,36 +35,14 @@ public final class RepositoryProvider {
         return contentRepository;
     }
 
-    public static UserRepositoryImpl getUserRepository() {
+    public static UserRepository getUserRepository() {
         if (userRepository == null) {
             synchronized (RepositoryProvider.class) {
                 if (userRepository == null) {
-                    userRepository = new UserRepositoryImpl(getUserRemote(), getUserLocal());
+                    userRepository = new UserRepository();
                 }
             }
         }
         return userRepository;
-    }
-
-    private static UserRemoteDataSourceImpl getUserRemote() {
-        if (userRemote == null) {
-            synchronized (RepositoryProvider.class) {
-                if (userRemote == null) {
-                    userRemote = new UserRemoteDataSourceImpl();
-                }
-            }
-        }
-        return userRemote;
-    }
-
-    private static UserLocalDataSourceImpl getUserLocal() {
-        if (userLocal == null) {
-            synchronized (RepositoryProvider.class) {
-                if (userLocal == null) {
-                    userLocal = new UserLocalDataSourceImpl();
-                }
-            }
-        }
-        return userLocal;
     }
 }

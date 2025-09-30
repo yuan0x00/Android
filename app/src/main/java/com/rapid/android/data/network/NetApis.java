@@ -1,6 +1,6 @@
 package com.rapid.android.data.network;
 
-import com.core.net.NetManager;
+import com.core.network.NetManager;
 import com.rapid.android.data.api.ContentApi;
 import com.rapid.android.data.api.HomeApi;
 import com.rapid.android.data.api.LoginApi;

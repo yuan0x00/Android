@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface"
-    tools:context="com.rapid.android.presentation.ui.fragment.MineFragment">
+    tools:context="com.rapid.android.ui.fragment.MineFragment">
 
     <!-- Top Bar -->
     <com.google.android.material.appbar.MaterialToolbar

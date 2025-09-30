@@ -1,6 +1,6 @@
 package com.rapid.android.data.api;
 
-import com.core.net.base.BaseResponse;
+import com.core.network.base.BaseResponse;
 import com.rapid.android.data.model.LoginBean;
 import com.rapid.android.data.model.RegisterBean;
 

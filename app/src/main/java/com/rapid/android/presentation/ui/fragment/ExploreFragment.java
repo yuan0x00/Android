@@ -6,9 +6,9 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.core.base.ui.BaseFragment;
+import com.core.webview.WebViewFragment;
 import com.rapid.android.databinding.FragmentExploreBinding;
 import com.rapid.android.presentation.viewmodel.ExploreViewModel;
-import com.webview.WebViewFragment;
 
 public class ExploreFragment extends BaseFragment<ExploreViewModel, FragmentExploreBinding> {
 

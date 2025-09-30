@@ -49,4 +49,6 @@ dependencies {
     implementation libs.mmkv
     implementation libs.timber
 
+    implementation libs.androidx.webkit
+
 }

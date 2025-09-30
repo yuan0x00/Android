@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.core.base.ui.BaseActivity;
 import com.core.utils.ui.ToastUtils;
+import com.rapid.android.R;
 import com.rapid.android.data.session.AuthSessionManager;
 import com.rapid.android.databinding.ActivityLoginBinding;
 import com.rapid.android.presentation.viewmodel.LoginViewModel;
@@ -75,7 +76,7 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
     }
 
     private void setupToolbar() {
-        toolbar = findViewById(com.webview.R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();

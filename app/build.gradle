@@ -43,7 +43,6 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
     implementation project(':core')
-    implementation project(':webview')
     implementation libs.androidx.core.ktx
     implementation libs.androidx.lifecycle.runtime.ktx
     implementation libs.androidx.lifecycle.livedata.ktx

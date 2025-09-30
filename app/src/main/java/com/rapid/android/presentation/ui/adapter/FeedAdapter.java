@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.core.ui.popup.BasePopupWindow;
 import com.core.utils.lang.StringUtils;
 import com.core.utils.ui.ResUtils;
+import com.core.webview.WebViewActivity;
 import com.rapid.android.R;
 import com.rapid.android.data.model.ArticleListBean;
 import com.rapid.android.databinding.ItemFeedBinding;
-import com.webview.WebViewActivity;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder> {
     private ArticleListBean feeds;

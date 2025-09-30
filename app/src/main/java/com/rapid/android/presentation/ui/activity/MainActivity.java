@@ -11,6 +11,7 @@ import com.core.base.ui.BaseActivity;
 import com.core.ui.navigation.BottomTabNavigator;
 import com.core.utils.ui.ToastUtils;
 import com.core.utils.ui.WindowInsetsUtils;
+import com.core.webview.core.WebViewPrewarmer;
 import com.rapid.android.R;
 import com.rapid.android.data.session.AuthSessionManager;
 import com.rapid.android.databinding.ActivityMainBinding;
@@ -20,7 +21,6 @@ import com.rapid.android.presentation.ui.fragment.HomeFragment;
 import com.rapid.android.presentation.ui.fragment.MineFragment;
 import com.rapid.android.presentation.ui.fragment.PlazaFragment;
 import com.rapid.android.presentation.viewmodel.MainViewModel;
-import com.webview.core.WebViewPrewarmer;
 
 import org.jetbrains.annotations.NotNull;
 

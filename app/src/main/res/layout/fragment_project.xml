@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:padding="16dp" />
+            android:padding="16dp"/>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -23,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/emptyView"
@@ -32,6 +33,6 @@
         android:layout_gravity="center"
         android:text="暂无项目分类"
         android:textColor="@android:color/darker_gray"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </FrameLayout>

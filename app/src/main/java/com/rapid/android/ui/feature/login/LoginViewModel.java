@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.core.ui.presentation.BaseViewModel;
 import com.lib.data.repository.RepositoryProvider;
-import com.lib.data.session.AuthSessionManager;
+import com.lib.data.session.SessionManager;
 import com.lib.domain.model.LoginBean;
 import com.lib.domain.repository.UserRepository;
 
@@ -49,7 +49,7 @@ public class LoginViewModel extends BaseViewModel {
                                     boolean success = response != null && response.getData() != null;
                                     loginSuccess.setValue(success);
                                     if (success) {
-                                        AuthSessionManager.notifyLogin();
+                                        SessionManager.getInstance().onLoginSuccess(response.getData());
                                         errorMessage.setValue(null);
                                     } else {
                                         errorMessage.setValue("登录失败");

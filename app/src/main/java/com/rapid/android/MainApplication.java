@@ -11,7 +11,7 @@ import com.lib.data.network.NetApis;
 public class MainApplication extends BaseApplication {
 
     private final com.core.network.client.NetworkConfig.AuthFailureListener authFailureHandler =
-            () -> com.lib.data.session.SimpleSessionManager.getInstance().forceLogout();
+            () -> com.lib.data.session.SessionManager.getInstance().forceLogout();
 
     @Override
     public void onCreate() {
@@ -58,8 +58,8 @@ public class MainApplication extends BaseApplication {
         NetworkClient.configure(config);
         NetApis.init();
 
-        // 初始化简化的会话管理器
-        com.lib.data.session.SimpleSessionManager.getInstance().initialize();
+        // 初始化统一的会话管理器
+        com.lib.data.session.SessionManager.getInstance().initialize();
     }
 
 }

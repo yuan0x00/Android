@@ -93,20 +93,11 @@ public class SettingViewModel extends BaseViewModel {
         // ... 其他设置
     }
     
-    public void logout() {
-        isLoading.setValue(true);
-        operationMessage.setValue(null);
-        // 使用简化的会话管理器来处理登出
-        com.lib.data.session.SimpleSessionManager.getInstance().logout();
-        operationMessage.setValue("登出成功");
-        isLoading.setValue(false);
-    }
-    
     public void logoutWithCallback(LogoutCallback callback) {
         isLoading.setValue(true);
         operationMessage.setValue(null);
-        // 使用简化的会话管理器来处理登出
-        com.lib.data.session.SimpleSessionManager.getInstance().logout();
+        // 使用统一的会话管理器来处理登出
+        com.lib.data.session.SessionManager.getInstance().logout();
         operationMessage.setValue("登出成功");
         isLoading.setValue(false);
         if (callback != null) {

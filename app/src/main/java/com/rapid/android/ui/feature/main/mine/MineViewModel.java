@@ -7,8 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.core.ui.presentation.BaseViewModel;
 import com.lib.data.repository.RepositoryProvider;
-import com.lib.data.session.AuthSessionManager;
-import com.lib.data.session.SimpleSessionManager;
+import com.lib.data.session.SessionManager;
 import com.lib.domain.model.CoinBean;
 import com.lib.domain.model.LoginBean;
 import com.lib.domain.model.UserInfoBean;
@@ -20,7 +19,7 @@ public class MineViewModel extends BaseViewModel {
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
     private final MutableLiveData<String> toastMessage = new MutableLiveData<>();
     private final UserRepository userRepository = RepositoryProvider.getUserRepository();
-    private final SimpleSessionManager sessionManager = SimpleSessionManager.getInstance();
+    private final SessionManager sessionManager = SessionManager.getInstance();
 
     public LiveData<MineUiState> getUiState() {
         return uiState;
@@ -37,9 +36,9 @@ public class MineViewModel extends BaseViewModel {
     public void refresh() {
         loading.setValue(true);
         sessionManager.refreshUserInfo();
-        // 由于SimpleSessionManager会自动更新状态，我们主要依赖状态监听器来更新UI
+        // 由于SessionManager会自动更新状态，我们主要依赖状态监听器来更新UI
         // 但也可以在这里直接获取当前状态
-        com.lib.data.session.SimpleSessionManager.SessionState currentState = sessionManager.getCurrentState();
+        com.lib.data.session.SessionManager.SessionState currentState = sessionManager.getCurrentState();
         if (currentState != null && currentState.isLoggedIn()) {
             loading.setValue(false);
             UserInfoBean userInfo = currentState.getUserInfo();
@@ -76,7 +75,7 @@ public class MineViewModel extends BaseViewModel {
         loading.setValue(false);
         if (userInfo != null) {
             uiState.setValue(MineUiState.from(userInfo));
-            AuthSessionManager.updateUserInfo(userInfo);
+            SessionManager.getInstance().updateUserInfo(userInfo);
         } else {
             uiState.setValue(MineUiState.guest());
         }

@@ -12,7 +12,7 @@ import com.core.common.utils.WindowInsetsUtils;
 import com.core.ui.components.navigation.BottomTabNavigator;
 import com.core.ui.presentation.BaseActivity;
 import com.core.webview.core.WebViewPrewarmer;
-import com.lib.data.session.AuthSessionManager;
+import com.lib.data.session.SessionManager;
 import com.rapid.android.R;
 import com.rapid.android.databinding.ActivityMainBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
@@ -131,7 +131,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     private boolean checkLoginState() {
-        Boolean isLoggedIn = AuthSessionManager.loginState().getValue();
+        Boolean isLoggedIn = SessionManager.getInstance().loginState().getValue();
         if (Boolean.TRUE.equals(isLoggedIn)) {
             return true;
         }
@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
             }
         });
 
-        AuthSessionManager.loginState().observe(this, loggedIn -> {
+        SessionManager.getInstance().loginState().observe(this, loggedIn -> {
 //            if (navigator == null) {
 //                return;
 //            }
@@ -164,7 +164,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 //            }
         });
 
-        AuthSessionManager.authEvents().observe(this, event -> {
+        SessionManager.getInstance().authEvents().observe(this, event -> {
 //            if (event == null || navigator == null) return;
 //            if (event.getType() == AuthSessionManager.EventType.LOGOUT
 //                    || event.getType() == AuthSessionManager.EventType.UNAUTHORIZED) {

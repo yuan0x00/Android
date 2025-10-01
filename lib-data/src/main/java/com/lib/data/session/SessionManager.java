@@ -1,16 +1,16 @@
 package com.lib.data.session;
 
-import androidx.annotation.NonNull;
+import android.text.TextUtils;
+
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.lib.data.repository.RepositoryProvider;
+import com.lib.domain.model.LoginBean;
 import com.lib.domain.model.UserInfoBean;
 import com.lib.domain.repository.UserRepository;
-import com.lib.domain.result.DomainError;
-import com.lib.domain.result.DomainResult;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -18,7 +18,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * 统一的会话管理器
- * 解决原AuthSessionManager和SessionStateRepository分离导致的状态不一致问题
+ * 整合了原SimpleSessionManager和AuthSessionManager的功能
+ * 提供单一的状态源和统一的API
  */
 public class SessionManager {
     
@@ -26,19 +27,31 @@ public class SessionManager {
     private final UserRepository userRepository;
     private final CompositeDisposable disposables = new CompositeDisposable();
     
-    // 单一状态源 - 会话状态
-    private final MutableLiveData<SessionState> sessionState = new MutableLiveData<>(SessionState.guest());
+    // 简单的状态管理
+    private final MutableLiveData<SessionState> sessionState = new MutableLiveData<>(SessionState.GUEST);
+    // 公开的LiveData接口
+    public final LiveData<SessionState> state = sessionState;
     
-    // 组合状态 - 从单一状态源派生
+    // 桥接原AuthSessionManager的接口
     private final MediatorLiveData<Boolean> loginState = new MediatorLiveData<>();
     private final MediatorLiveData<UserInfoBean> userInfo = new MediatorLiveData<>();
+    private final MediatorLiveData<AuthEvent> authEvents = new MediatorLiveData<>();
     
     private SessionManager() {
         this.userRepository = RepositoryProvider.getUserRepository();
         
-        // 从sessionState派生loginState和userInfo
-        loginState.addSource(sessionState, state -> loginState.setValue(state.isLoggedIn()));
-        userInfo.addSource(sessionState, state -> userInfo.setValue(state.getUserInfo()));
+        // 监听SimpleSessionManager的状态变化并适配到旧的API
+        loginState.addSource(sessionState, sessionState -> {
+            if (sessionState != null) {
+                loginState.setValue(sessionState.isLoggedIn());
+            }
+        });
+        
+        userInfo.addSource(sessionState, sessionState -> {
+            if (sessionState != null) {
+                userInfo.setValue(sessionState.getUserInfo());
+            }
+        });
     }
     
     public static SessionManager getInstance() {
@@ -52,9 +65,24 @@ public class SessionManager {
         return instance;
     }
     
-    /**
-     * 初始化会话管理器 - 应用启动时调用
-     */
+    // 获取当前会话状态
+    public SessionState getCurrentState() {
+        return sessionState.getValue();
+    }
+    
+    // 检查是否已登录
+    public boolean isLoggedIn() {
+        SessionState state = sessionState.getValue();
+        return state != null && state.isLoggedIn();
+    }
+    
+    // 获取当前用户信息
+    public @Nullable UserInfoBean getCurrentUserInfo() {
+        SessionState state = sessionState.getValue();
+        return state != null ? state.getUserInfo() : null;
+    }
+    
+    // 初始化 - 应用启动时调用
     public void initialize() {
         disposables.add(
             userRepository.isLoggedIn()
@@ -63,60 +91,33 @@ public class SessionManager {
                 .subscribe(
                     isLoggedIn -> {
                         if (Boolean.TRUE.equals(isLoggedIn)) {
-                            // 用户已登录，尝试获取用户信息
+                            // 已登录，获取用户信息
                             refreshUserInfoInternal();
                         } else {
-                            // 用户未登录，设置为访客状态
-                            setSessionState(SessionState.guest());
+                            // 未登录，设置为访客状态
+                            sessionState.postValue(SessionState.GUEST);
                         }
                     },
                     throwable -> {
-                        // 检查登录状态失败，设置为访客状态
-                        setSessionState(SessionState.guest());
+                        sessionState.postValue(SessionState.GUEST);
                     }
                 )
         );
     }
     
-    /**
-     * 获取登录状态
-     */
-    public LiveData<Boolean> getLoginState() {
-        return loginState;
+    // 登录成功后调用
+    public void onLoginSuccess(@Nullable LoginBean loginData) {
+        UserInfoBean userInfo = null;
+        if (loginData != null) {
+            userInfo = new UserInfoBean(loginData, null);
+        }
+        SessionState newState = userInfo != null ? 
+            SessionState.loggedIn(userInfo) : 
+            SessionState.loggedIn(null);
+        sessionState.postValue(newState);
     }
     
-    /**
-     * 获取用户信息
-     */
-    public LiveData<UserInfoBean> getUserInfo() {
-        return userInfo;
-    }
-    
-    /**
-     * 获取完整的会话状态
-     */
-    public LiveData<SessionState> getSessionState() {
-        return this.sessionState;
-    }
-    
-    /**
-     * 设置会话状态
-     */
-    private void setSessionState(@NonNull SessionState state) {
-        this.sessionState.postValue(state);
-    }
-    
-    /**
-     * 用户登录成功后调用
-     */
-    public void onLoginSuccess() {
-        setSessionState(SessionState.loggedIn(null)); // 登录成功，但用户信息待获取
-        refreshUserInfoInternal(); // 自动获取用户信息
-    }
-    
-    /**
-     * 用户登出
-     */
+    // 登出
     public void logout() {
         disposables.add(
             userRepository.logout()
@@ -124,117 +125,157 @@ public class SessionManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     result -> {
-                        // 无论网络登出是否成功，都清除本地状态
-                        setSessionState(SessionState.guest());
+                        sessionState.postValue(SessionState.GUEST);
                     },
                     throwable -> {
-                        // 即使登出失败，也清除本地状态
-                        setSessionState(SessionState.guest());
+                        sessionState.postValue(SessionState.GUEST);
                     }
                 )
         );
     }
     
-    /**
-     * 用户被强制登出（如token过期）
-     */
+    // 强制登出（如token过期）
     public void forceLogout() {
-        setSessionState(SessionState.guest());
+        sessionState.postValue(SessionState.GUEST);
     }
     
-    /**
-     * 刷新用户信息
-     */
+    // 刷新用户信息
     public void refreshUserInfo() {
-        refreshUserInfoInternal();
+        if (isLoggedIn()) {
+            refreshUserInfoInternal();
+        }
     }
     
-    /**
-     * 内部方法：刷新用户信息
-     */
+    // 内部方法：刷新用户信息
     private void refreshUserInfoInternal() {
         disposables.add(
             userRepository.fetchUserProfile()
-                .map(this::extractUserInfo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .firstOrError()
                 .subscribe(
-                    userInfoBean -> {
-                        // 更新会话状态
-                        SessionState currentState = this.sessionState.getValue();
-                        if (currentState != null && currentState.isLoggedIn()) {
-                            setSessionState(SessionState.loggedIn(userInfoBean));
+                    result -> {
+                        if (result != null && result.isSuccess() && result.getData() != null) {
+                            SessionState currentState = sessionState.getValue();
+                            if (currentState != null && currentState.isLoggedIn()) {
+                                sessionState.postValue(SessionState.loggedIn(result.getData()));
+                            }
                         }
+                        // 如果获取失败，保持当前状态，不改变登录状态
                     },
                     throwable -> {
-                        // 获取用户信息失败，但保持登录状态
-                        // 仅更新用户信息为null，不改变登录状态
-                        SessionState currentState = this.sessionState.getValue();
+                        // 保持当前状态，不改变登录状态，只用户信息为null
+                        SessionState currentState = sessionState.getValue();
                         if (currentState != null && currentState.isLoggedIn()) {
-                            setSessionState(SessionState.loggedIn(null));
+                            sessionState.postValue(SessionState.loggedIn(null));
                         }
                     }
                 )
         );
     }
     
-    /**
-     * 更新用户信息（例如在更新个人资料后）
-     */
-    public void updateUserInfo(@Nullable UserInfoBean userInfoBean) {
-        SessionState currentState = this.sessionState.getValue();
-        if (currentState != null && currentState.isLoggedIn()) {
-            setSessionState(SessionState.loggedIn(userInfoBean));
-        }
-    }
-    
-    /**
-     * 清理资源
-     */
+    // 清理资源
     public void dispose() {
         disposables.clear();
     }
-    
-    /**
-     * 提取用户信息辅助方法
-     */
-    private @Nullable UserInfoBean extractUserInfo(DomainResult<UserInfoBean> result) {
-        if (result != null && result.isSuccess() && result.getData() != null) {
-            return result.getData();
-        }
-        DomainError error = result != null ? result.getError() : null;
-        String message = error != null ? error.getMessage() : "获取用户信息失败";
-        // 不抛出异常，返回null让用户信息为null，但保持登录状态
-        return null;
+
+    // 以下是桥接原AuthSessionManager的API
+    public LiveData<AuthEvent> authEvents() {
+        return authEvents;
     }
-    
-    /**
-     * 会话状态类 - 包含登录状态和用户信息
-     */
+
+    public LiveData<Boolean> loginState() {
+        return loginState;
+    }
+
+    public LiveData<UserInfoBean> userInfo() {
+        return userInfo;
+    }
+
+    // 通知登录 - 兼容旧API
+    public void notifyLogin() {
+        // 从当前状态中获取用户信息，如果有的话
+        UserInfoBean currentUserInfo = getCurrentUserInfo();
+        if (currentUserInfo != null) {
+            onLoginSuccess(currentUserInfo.getUserInfo());
+        } else {
+            onLoginSuccess(null);
+        }
+    }
+
+    // 通知登出 - 兼容旧API  
+    public void notifyLogout() {
+        forceLogout();
+    }
+
+    // 更新用户信息
+    public void updateUserInfo(@Nullable UserInfoBean userInfo) {
+        SessionState currentState = sessionState.getValue();
+        if (currentState != null && currentState.isLoggedIn()) {
+            sessionState.postValue(SessionState.loggedIn(userInfo));
+        }
+    }
+
+    public enum EventType {
+        LOGIN,
+        LOGOUT,
+        UNAUTHORIZED
+    }
+
+    public static final class AuthEvent {
+        private final EventType type;
+
+        public AuthEvent(EventType type) {
+            this.type = type;
+        }
+
+        public EventType getType() {
+            return type;
+        }
+    }
+
+    // 会话状态类
     public static class SessionState {
+        public static final SessionState GUEST = new SessionState(false, null);
+        
         private final boolean isLoggedIn;
         private final @Nullable UserInfoBean userInfo;
-
+        
         private SessionState(boolean isLoggedIn, @Nullable UserInfoBean userInfo) {
             this.isLoggedIn = isLoggedIn;
             this.userInfo = userInfo;
         }
-
-        public static SessionState guest() {
-            return new SessionState(false, null);
-        }
-
+        
         public static SessionState loggedIn(@Nullable UserInfoBean userInfo) {
             return new SessionState(true, userInfo);
         }
-
+        
         public boolean isLoggedIn() {
             return isLoggedIn;
         }
-
+        
         public @Nullable UserInfoBean getUserInfo() {
             return userInfo;
+        }
+        
+        public String getDisplayName() {
+            if (!isLoggedIn || userInfo == null) {
+                return "未登录用户";
+            }
+            
+            // 从用户信息中提取显示名称
+            String nickname = userInfo.getUserInfo() != null ? 
+                userInfo.getUserInfo().getNickname() : null;
+            if (TextUtils.isEmpty(nickname)) {
+                nickname = userInfo.getUserInfo() != null ? 
+                    userInfo.getUserInfo().getPublicName() : null;
+            }
+            if (TextUtils.isEmpty(nickname)) {
+                nickname = userInfo.getUserInfo() != null ? 
+                    userInfo.getUserInfo().getUsername() : null;
+            }
+            
+            return TextUtils.isEmpty(nickname) ? "锤友" : nickname;
         }
     }
 }

@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.core.common.utils.ToastUtils;
 import com.core.ui.presentation.BaseActivity;
-import com.lib.data.session.AuthSessionManager;
+import com.lib.data.session.SessionManager;
 import com.rapid.android.R;
 import com.rapid.android.databinding.ActivityLoginBinding;
 
@@ -62,7 +62,7 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
             }
         });
 
-        AuthSessionManager.loginState().observe(this, loggedIn -> {
+        SessionManager.getInstance().loginState().observe(this, loggedIn -> {
             if (Boolean.TRUE.equals(loggedIn)) {
                 finish();
             }
@@ -100,7 +100,7 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
 
     @Override
     protected void loadData() {
-        if (Boolean.TRUE.equals(AuthSessionManager.loginState().getValue())) {
+        if (Boolean.TRUE.equals(SessionManager.getInstance().loginState().getValue())) {
             finish();
         }
     }

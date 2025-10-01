@@ -36,8 +36,8 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         // 用户信息区域点击事件
         binding.cardProfile.setOnClickListener(v -> {
             // 检查当前登录状态，如果未登录则跳转到登录页面，否则无响应
-            com.lib.data.session.SimpleSessionManager.SessionState state =
-                    com.lib.data.session.SimpleSessionManager.getInstance().getCurrentState();
+            com.lib.data.session.SessionManager.SessionState state =
+                    com.lib.data.session.SessionManager.getInstance().getCurrentState();
             if (state == null || !state.isLoggedIn()) {
                 navigateToLogin();
             }
@@ -46,8 +46,8 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
 
         // 主要操作按钮（登录/查看资料）
         binding.btnPrimaryAction.setOnClickListener(v -> {
-            com.lib.data.session.SimpleSessionManager.SessionState state =
-                    com.lib.data.session.SimpleSessionManager.getInstance().getCurrentState();
+            com.lib.data.session.SessionManager.SessionState state =
+                    com.lib.data.session.SessionManager.getInstance().getCurrentState();
             if (state != null && state.isLoggedIn()) {
                 ToastUtils.showShortToast("个人中心建设中");
             } else {
@@ -58,8 +58,8 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         // 签到按钮
         binding.btnDailyAction.setOnClickListener(v -> {
             // 检查登录状态，只有登录用户才能签到
-            com.lib.data.session.SimpleSessionManager.SessionState state =
-                    com.lib.data.session.SimpleSessionManager.getInstance().getCurrentState();
+            com.lib.data.session.SessionManager.SessionState state =
+                    com.lib.data.session.SessionManager.getInstance().getCurrentState();
             if (state != null && state.isLoggedIn()) {
                 viewModel.signIn();
             } else {
@@ -89,8 +89,8 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
             binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         });
 
-        // 使用简化的会话管理器
-        com.lib.data.session.SimpleSessionManager.getInstance().state.observe(
+        // 使用统一的会话管理器
+        com.lib.data.session.SessionManager.getInstance().state.observe(
                 getViewLifecycleOwner(),
                 sessionState -> {
                     if (sessionState != null) {
@@ -138,8 +138,8 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         }
 
         // 根据登录状态设置用户信息卡片的可点击状态和样式
-        com.lib.data.session.SimpleSessionManager.SessionState sessionState =
-                com.lib.data.session.SimpleSessionManager.getInstance().getCurrentState();
+        com.lib.data.session.SessionManager.SessionState sessionState =
+                com.lib.data.session.SessionManager.getInstance().getCurrentState();
         if (sessionState == null || !sessionState.isLoggedIn()) {
             // 未登录时，用户信息卡片需要有点击反馈
             binding.cardProfile.setClickable(true);
@@ -162,8 +162,8 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
     }
 
     private void handleProtectedAction(String message) {
-        com.lib.data.session.SimpleSessionManager.SessionState state =
-                com.lib.data.session.SimpleSessionManager.getInstance().getCurrentState();
+        com.lib.data.session.SessionManager.SessionState state =
+                com.lib.data.session.SessionManager.getInstance().getCurrentState();
         if (state != null && state.isLoggedIn()) {
             ToastUtils.showShortToast(message);
         } else {

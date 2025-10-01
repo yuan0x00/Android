@@ -1,8 +1,5 @@
 package com.lib.domain.model;
 
-import androidx.annotation.Keep;
-
-@Keep
 public class CoinBean {
     private int coinCount;
     private int level;

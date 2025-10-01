@@ -14,7 +14,10 @@ public final class AndroidJava {
     private static final String CONFIG_FILE = "gradle.properties";
     private static final String PROPERTY_COMPILE_SDK = "compileSdk";
     private static final String PROPERTY_MIN_SDK = "minSdk";
-    private static final String PROPERTY_TARGET_SDK = "targetSdk";
+
+    //    private static final String PROPERTY_TARGET_SDK = "targetSdk";
+
+    private static final String PROPERTY_JAVA_VERSION = "javaVersion";
 
     private AndroidJava() {
     }
@@ -24,15 +27,34 @@ public final class AndroidJava {
 
         int compileSdk = Integer.parseInt(getRequiredProperty(properties, PROPERTY_COMPILE_SDK));
         int minSdk = Integer.parseInt(getRequiredProperty(properties, PROPERTY_MIN_SDK));
-        int targetSdk = Integer.parseInt(getRequiredProperty(properties, PROPERTY_TARGET_SDK));
+//        int targetSdk = Integer.parseInt(getRequiredProperty(properties, PROPERTY_TARGET_SDK));
+        String javaVersion = getRequiredProperty(properties, PROPERTY_JAVA_VERSION);
 
         commonExtension.setCompileSdk(compileSdk);
         commonExtension.getDefaultConfig().setMinSdk(minSdk);
 //        commonExtension.getDefaultConfig().setTargetSdk(targetSdk);
-        commonExtension.getCompileOptions().setSourceCompatibility(JavaVersion.VERSION_11);
-        commonExtension.getCompileOptions().setTargetCompatibility(JavaVersion.VERSION_11);
+
+        JavaVersion javaVer = getJavaVersion(javaVersion);
+        commonExtension.getCompileOptions().setSourceCompatibility(javaVer);
+        commonExtension.getCompileOptions().setTargetCompatibility(javaVer);
+
         commonExtension.getBuildFeatures().setBuildConfig(true);
         commonExtension.getBuildFeatures().setViewBinding(true);
+    }
+
+    private static JavaVersion getJavaVersion(String javaVersionStr) {
+        switch (javaVersionStr) {
+            case "8":
+                return JavaVersion.VERSION_1_8;
+            case "11":
+                return JavaVersion.VERSION_11;
+            case "17":
+                return JavaVersion.VERSION_17;
+            case "19":
+                return JavaVersion.VERSION_19;
+            default:
+                return JavaVersion.VERSION_11; // 默认值
+        }
     }
 
     private static Properties loadProperties(Project project) {

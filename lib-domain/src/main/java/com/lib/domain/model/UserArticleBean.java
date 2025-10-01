@@ -1,11 +1,8 @@
 package com.lib.domain.model;
 
-import androidx.annotation.Keep;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Keep
 public class UserArticleBean {
     private int curPage;
     private List<Data> datas;
@@ -94,7 +91,7 @@ public class UserArticleBean {
         this.total = total;
     }
 
-    @Keep
+
     public static class Data {
         private boolean adminAdd;
         private String apkLink;

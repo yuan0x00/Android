@@ -1,11 +1,8 @@
 package com.lib.domain.model;
 
-import androidx.annotation.Keep;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Keep
 public class CollectBean {
     private int curPage;
     private List<Data> datas;
@@ -94,7 +91,7 @@ public class CollectBean {
         this.total = total;
     }
 
-    @Keep
+    
     public static class Data {
         private String author;
         private int chapterId;

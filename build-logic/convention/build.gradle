@@ -28,5 +28,9 @@ gradlePlugin {
             id = "${prefix}.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
+        register("javaLibrary") {
+            id = "${prefix}.java.library"
+            implementationClass = "JavaLibraryConventionPlugin"
+        }
     }
 }

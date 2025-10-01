@@ -1,8 +1,4 @@
 package com.lib.domain.model;
-
-import androidx.annotation.Keep;
-
-@Keep
 public class BannerItemBean {
     private String desc;
     private int id;

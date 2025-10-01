@@ -1,11 +1,8 @@
 package com.lib.domain.model;
 
-import androidx.annotation.Keep;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Keep
 public class ArticleListBean {
     private int curPage;
     private List<Data> datas;
@@ -94,7 +91,7 @@ public class ArticleListBean {
         this.total = total;
     }
 
-    @Keep
+
     public static class Data {
         private boolean adminAdd;
         private String apkLink;
@@ -443,7 +440,7 @@ public class ArticleListBean {
             this.zan = zan;
         }
 
-        @Keep
+
         public static class Tag {
             private String name;
             private String url;

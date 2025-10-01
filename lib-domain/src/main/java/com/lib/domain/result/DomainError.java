@@ -1,8 +1,5 @@
 package com.lib.domain.result;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 /**
  * 领域层统一错误描述，避免直接暴露基础设施异常。
  */
@@ -13,27 +10,23 @@ public final class DomainError {
 
     private final int code;
     private final String message;
-    @Nullable
     private final Throwable cause;
 
-    private DomainError(int code, @Nullable String message, @Nullable Throwable cause) {
+    private DomainError(int code, String message, Throwable cause) {
         this.code = code;
         this.message = message;
         this.cause = cause;
     }
 
-    @NonNull
-    public static DomainError of(int code, @Nullable String message) {
+    public static DomainError of(int code, String message) {
         return new DomainError(code, message, null);
     }
 
-    @NonNull
-    public static DomainError of(int code, @Nullable String message, @Nullable Throwable cause) {
+    public static DomainError of(int code, String message, Throwable cause) {
         return new DomainError(code, message, cause);
     }
 
-    @NonNull
-    public static DomainError from(@NonNull Throwable throwable) {
+    public static DomainError from(Throwable throwable) {
         return new DomainError(UNKNOWN_CODE, throwable.getMessage(), throwable);
     }
 
@@ -41,12 +34,10 @@ public final class DomainError {
         return code;
     }
 
-    @Nullable
     public String getMessage() {
         return message;
     }
 
-    @Nullable
     public Throwable getCause() {
         return cause;
     }

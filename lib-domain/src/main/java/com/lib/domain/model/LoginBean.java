@@ -1,11 +1,8 @@
 package com.lib.domain.model;
 
-import androidx.annotation.Keep;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Keep
 public class LoginBean {
     private boolean admin;
     private List<String> chapterTops;

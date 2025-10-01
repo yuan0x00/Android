@@ -1,12 +1,8 @@
 plugins {
-    alias(libs.plugins.local.android.library)
-}
-
-android {
-    namespace 'com.lib.domain'
+    alias(libs.plugins.local.java.library)
 }
 
 dependencies {
-    implementation libs.androidx.annotation
     implementation libs.rxjava3
+    implementation libs.gson
 }

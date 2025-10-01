@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.core.ui.presentation.BaseViewModel;
-import com.rapid.android.data.repository.RepositoryProvider;
-import com.rapid.android.domain.repository.UserRepository;
+import com.lib.data.repository.RepositoryProvider;
+import com.lib.domain.repository.UserRepository;
 
 public class SettingViewModel extends BaseViewModel {
 
@@ -97,7 +97,7 @@ public class SettingViewModel extends BaseViewModel {
         isLoading.setValue(true);
         operationMessage.setValue(null);
         // 使用简化的会话管理器来处理登出
-        com.rapid.android.data.session.SimpleSessionManager.getInstance().logout();
+        com.lib.data.session.SimpleSessionManager.getInstance().logout();
         operationMessage.setValue("登出成功");
         isLoading.setValue(false);
     }
@@ -106,7 +106,7 @@ public class SettingViewModel extends BaseViewModel {
         isLoading.setValue(true);
         operationMessage.setValue(null);
         // 使用简化的会话管理器来处理登出
-        com.rapid.android.data.session.SimpleSessionManager.getInstance().logout();
+        com.lib.data.session.SimpleSessionManager.getInstance().logout();
         operationMessage.setValue("登出成功");
         isLoading.setValue(false);
         if (callback != null) {

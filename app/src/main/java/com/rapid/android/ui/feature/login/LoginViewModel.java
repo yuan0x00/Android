@@ -5,10 +5,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.core.ui.presentation.BaseViewModel;
-import com.rapid.android.data.repository.RepositoryProvider;
-import com.rapid.android.data.session.AuthSessionManager;
-import com.rapid.android.domain.model.LoginBean;
-import com.rapid.android.domain.repository.UserRepository;
+import com.lib.data.repository.RepositoryProvider;
+import com.lib.data.session.AuthSessionManager;
+import com.lib.domain.model.LoginBean;
+import com.lib.domain.repository.UserRepository;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;

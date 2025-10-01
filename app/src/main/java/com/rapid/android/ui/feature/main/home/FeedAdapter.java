@@ -14,9 +14,9 @@ import com.core.common.text.StringUtils;
 import com.core.ui.common.ResUtils;
 import com.core.ui.components.popup.BasePopupWindow;
 import com.core.webview.WebViewActivity;
+import com.lib.domain.model.ArticleListBean;
 import com.rapid.android.R;
 import com.rapid.android.databinding.ItemFeedBinding;
-import com.rapid.android.domain.model.ArticleListBean;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder> {
     private ArticleListBean feeds;

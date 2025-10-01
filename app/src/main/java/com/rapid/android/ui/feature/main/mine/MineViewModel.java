@@ -6,13 +6,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.core.ui.presentation.BaseViewModel;
-import com.rapid.android.data.repository.RepositoryProvider;
-import com.rapid.android.data.session.AuthSessionManager;
-import com.rapid.android.data.session.SimpleSessionManager;
-import com.rapid.android.domain.model.CoinBean;
-import com.rapid.android.domain.model.LoginBean;
-import com.rapid.android.domain.model.UserInfoBean;
-import com.rapid.android.domain.repository.UserRepository;
+import com.lib.data.repository.RepositoryProvider;
+import com.lib.data.session.AuthSessionManager;
+import com.lib.data.session.SimpleSessionManager;
+import com.lib.domain.model.CoinBean;
+import com.lib.domain.model.LoginBean;
+import com.lib.domain.model.UserInfoBean;
+import com.lib.domain.repository.UserRepository;
 
 public class MineViewModel extends BaseViewModel {
 
@@ -39,10 +39,10 @@ public class MineViewModel extends BaseViewModel {
         sessionManager.refreshUserInfo();
         // 由于SimpleSessionManager会自动更新状态，我们主要依赖状态监听器来更新UI
         // 但也可以在这里直接获取当前状态
-        com.rapid.android.data.session.SimpleSessionManager.SessionState currentState = sessionManager.getCurrentState();
+        com.lib.data.session.SimpleSessionManager.SessionState currentState = sessionManager.getCurrentState();
         if (currentState != null && currentState.isLoggedIn()) {
             loading.setValue(false);
-            com.rapid.android.domain.model.UserInfoBean userInfo = currentState.getUserInfo();
+            UserInfoBean userInfo = currentState.getUserInfo();
             if (userInfo != null) {
                 uiState.setValue(MineUiState.from(userInfo));
             } else {

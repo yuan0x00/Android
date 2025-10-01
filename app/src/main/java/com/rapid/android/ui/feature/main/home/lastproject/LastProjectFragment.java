@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.core.ui.common.ToastUtils;
 import com.core.ui.presentation.BaseFragment;
+import com.lib.domain.model.ArticleListBean;
 import com.rapid.android.databinding.FragmentLastProjectBinding;
-import com.rapid.android.domain.model.ArticleListBean;
 import com.rapid.android.ui.feature.main.home.FeedAdapter;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;

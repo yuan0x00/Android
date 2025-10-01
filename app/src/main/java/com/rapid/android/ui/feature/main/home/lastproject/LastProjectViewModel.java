@@ -3,11 +3,11 @@ package com.rapid.android.ui.feature.main.home.lastproject;
 import androidx.lifecycle.MutableLiveData;
 
 import com.core.ui.presentation.BaseViewModel;
-import com.rapid.android.data.repository.RepositoryProvider;
-import com.rapid.android.domain.model.ArticleListBean;
-import com.rapid.android.domain.repository.HomeRepository;
-import com.rapid.android.domain.result.DomainError;
-import com.rapid.android.domain.result.DomainResult;
+import com.lib.data.repository.RepositoryProvider;
+import com.lib.domain.model.ArticleListBean;
+import com.lib.domain.repository.HomeRepository;
+import com.lib.domain.result.DomainError;
+import com.lib.domain.result.DomainResult;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.observers.DisposableObserver;

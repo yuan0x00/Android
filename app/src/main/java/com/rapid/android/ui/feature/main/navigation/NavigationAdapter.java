@@ -9,9 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lib.domain.model.ArticleListBean;
+import com.lib.domain.model.NavigationBean;
 import com.rapid.android.R;
-import com.rapid.android.domain.model.ArticleListBean;
-import com.rapid.android.domain.model.NavigationBean;
 
 import java.util.ArrayList;
 import java.util.List;

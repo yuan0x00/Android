@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.rapid.android.domain'
+    namespace 'com.lib.domain'
 }
 
 dependencies {

@@ -3,12 +3,12 @@ package com.rapid.android.ui.feature.main;
 import androidx.lifecycle.MutableLiveData;
 
 import com.core.ui.presentation.BaseViewModel;
-import com.rapid.android.data.repository.RepositoryProvider;
-import com.rapid.android.data.session.AuthSessionManager;
-import com.rapid.android.domain.model.LoginBean;
-import com.rapid.android.domain.repository.UserRepository;
-import com.rapid.android.domain.result.DomainError;
-import com.rapid.android.domain.result.DomainResult;
+import com.lib.data.repository.RepositoryProvider;
+import com.lib.data.session.AuthSessionManager;
+import com.lib.domain.model.LoginBean;
+import com.lib.domain.repository.UserRepository;
+import com.lib.domain.result.DomainError;
+import com.lib.domain.result.DomainResult;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -34,12 +34,12 @@ public class MainViewModel extends BaseViewModel {
                         .subscribe(isLogged -> {
                                     if (isLogged != null && isLogged) {
                                         // 使用简化的会话管理器
-                                        com.rapid.android.data.session.SimpleSessionManager.getInstance().refreshUserInfo();
+                                        com.lib.data.session.SimpleSessionManager.getInstance().refreshUserInfo();
                                     } else {
                                         attemptReLogin();
                                     }
                                 }, throwable -> {
-                                    com.rapid.android.data.session.SimpleSessionManager.getInstance().forceLogout();
+                                    com.lib.data.session.SimpleSessionManager.getInstance().forceLogout();
                                     errorMessage.setValue(throwable.getMessage());
                                 }
                         )

@@ -3,11 +3,11 @@ package com.rapid.android.ui.feature.main.system;
 import androidx.lifecycle.MutableLiveData;
 
 import com.core.ui.presentation.BaseViewModel;
-import com.rapid.android.data.repository.RepositoryProvider;
-import com.rapid.android.domain.model.CategoryNodeBean;
-import com.rapid.android.domain.repository.ContentRepository;
-import com.rapid.android.domain.result.DomainError;
-import com.rapid.android.domain.result.DomainResult;
+import com.lib.data.repository.RepositoryProvider;
+import com.lib.domain.model.CategoryNodeBean;
+import com.lib.domain.repository.ContentRepository;
+import com.lib.domain.result.DomainError;
+import com.lib.domain.result.DomainResult;
 
 import java.util.Collections;
 import java.util.List;

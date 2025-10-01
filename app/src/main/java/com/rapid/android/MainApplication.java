@@ -5,13 +5,13 @@ import android.os.StrictMode;
 import com.core.common.app.BaseApplication;
 import com.core.network.client.NetworkClient;
 import com.core.network.client.NetworkConfig;
-import com.rapid.android.data.DataInitializer;
-import com.rapid.android.data.network.NetApis;
+import com.lib.data.DataInitializer;
+import com.lib.data.network.NetApis;
 
 public class MainApplication extends BaseApplication {
 
     private final com.core.network.client.NetworkConfig.AuthFailureListener authFailureHandler =
-            () -> com.rapid.android.data.session.SimpleSessionManager.getInstance().forceLogout();
+            () -> com.lib.data.session.SimpleSessionManager.getInstance().forceLogout();
 
     @Override
     public void onCreate() {
@@ -52,14 +52,14 @@ public class MainApplication extends BaseApplication {
                 .allowInsecureSsl(BuildConfig.DEBUG)
                 .crashReportEndpointProvider(() -> "https://www.wanandroid.com/app/crash/upload")
                 .authFailureListener(authFailureHandler)
-                .headerProvider(new com.rapid.android.data.network.AuthHeaderProvider())
-                .cookieStore(new com.rapid.android.data.network.PersistentCookieStore(getApplicationContext()))
+                .headerProvider(new com.lib.data.network.AuthHeaderProvider())
+                .cookieStore(new com.lib.data.network.PersistentCookieStore(getApplicationContext()))
                 .build();
         NetworkClient.configure(config);
         NetApis.init();
 
         // 初始化简化的会话管理器
-        com.rapid.android.data.session.SimpleSessionManager.getInstance().initialize();
+        com.lib.data.session.SimpleSessionManager.getInstance().initialize();
     }
 
 }

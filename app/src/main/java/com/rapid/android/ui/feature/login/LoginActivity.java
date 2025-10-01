@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.core.ui.common.ToastUtils;
 import com.core.ui.presentation.BaseActivity;
+import com.lib.data.session.AuthSessionManager;
 import com.rapid.android.R;
-import com.rapid.android.data.session.AuthSessionManager;
 import com.rapid.android.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBinding> {

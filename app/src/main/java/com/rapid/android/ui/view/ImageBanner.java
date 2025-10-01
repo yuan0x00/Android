@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.rapid.android.R;
-import com.rapid.android.data.model.BannerItemBean;
+import com.rapid.android.domain.model.BannerItemBean;
 
 public class ImageBanner extends BaseBanner<BannerItemBean> {
 

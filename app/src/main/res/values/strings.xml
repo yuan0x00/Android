@@ -25,4 +25,5 @@
     <string name="error">错误</string>
     <string name="success">成功</string>
     <string name="failed">失败</string>
+    <string name="no_navigation_articles">暂无导航文章</string>
 </resources>

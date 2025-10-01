@@ -1,0 +1,12 @@
+plugins {
+    alias(libs.plugins.local.android.library)
+}
+
+android {
+    namespace 'com.rapid.android.domain'
+}
+
+dependencies {
+    implementation libs.androidx.annotation
+    implementation libs.rxjava3
+}

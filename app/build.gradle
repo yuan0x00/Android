@@ -31,11 +31,17 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
-    implementation project(':core')
-    implementation libs.androidx.core.ktx
-    implementation libs.androidx.lifecycle.runtime.ktx
-    implementation libs.androidx.lifecycle.livedata.ktx
-    implementation libs.androidx.lifecycle.viewmodel.ktx
+    implementation project(':core-common')
+    implementation project(':core-ui')
+    implementation project(':core-network')
+    implementation project(':core-webview')
+    implementation project(':core-datastore')
+    implementation project(':lib-data')
+    implementation project(':lib-domain')
+    implementation libs.androidx.core
+    implementation libs.androidx.lifecycle.runtime
+    implementation libs.androidx.lifecycle.livedata
+    implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.appcompat
     implementation libs.androidx.activity
     implementation libs.androidx.fragment
@@ -45,6 +51,7 @@ dependencies {
     implementation libs.material
     implementation libs.androidx.recyclerview
     implementation libs.androidx.gridlayout
+    implementation libs.androidx.swiperefreshlayout
     debugImplementation libs.leakcanary.android
     implementation libs.retrofit
     implementation libs.retrofit.rxjava3
@@ -62,7 +69,6 @@ dependencies {
     
     // Room
     implementation libs.androidx.room.runtime
-    implementation libs.androidx.room.ktx
     implementation libs.androidx.room.rxjava3
     annotationProcessor libs.androidx.room.compiler
 }

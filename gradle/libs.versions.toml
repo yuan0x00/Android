@@ -1,8 +1,9 @@
 [versions]
+annotation = "1.9.1"
 #核心库
 #agp = "8.12.2"
 agp = "8.12.0-alpha07"
-coreKtx = "1.17.0"
+core = "1.17.0"
 appcompat = "1.7.1"
 activity = "1.11.0"
 fragment = "1.8.9"
@@ -12,7 +13,7 @@ constraintlayout = "2.2.1"
 recyclerview = "1.4.0"
 gridlayout = "1.1.0"
 material = "1.14.0-alpha05"
-android-tools = "31.11.1"
+android-tools = "31.13.0"
 #Room
 room = "2.8.1"
 #测试库
@@ -32,31 +33,33 @@ media3Exoplayer = "1.8.0"
 leakcanaryAndroid = "2.14"
 #小众库
 refreshLayoutKernel = "3.0.0-alpha"
+swiperefresh = "1.1.0"
 webkit = "1.14.0"
 
 
 [libraries]
 #核心库
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
-androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
-androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime", version.ref = "lifecycle" }
+androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycle" }
 androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycle" }
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 androidx-navigation-runtime = { module = "androidx.navigation:navigation-runtime", version.ref = "navigationFragment" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref = "gridlayout" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefresh" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 #Room
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", version.ref = "room" }
 #测试库
 junit = { group = "junit", name = "junit", version.ref = "junit" }

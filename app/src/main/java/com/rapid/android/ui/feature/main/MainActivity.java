@@ -7,8 +7,8 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.core.ui.common.ToastUtils;
-import com.core.ui.common.WindowInsetsUtils;
+import com.core.common.utils.ToastUtils;
+import com.core.common.utils.WindowInsetsUtils;
 import com.core.ui.components.navigation.BottomTabNavigator;
 import com.core.ui.presentation.BaseActivity;
 import com.core.webview.core.WebViewPrewarmer;

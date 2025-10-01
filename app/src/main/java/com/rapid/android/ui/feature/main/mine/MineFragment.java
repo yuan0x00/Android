@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.core.ui.common.ToastUtils;
+import com.core.common.utils.ToastUtils;
 import com.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentMineBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;

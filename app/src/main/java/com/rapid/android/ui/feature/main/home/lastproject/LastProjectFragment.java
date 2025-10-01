@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.core.ui.common.ToastUtils;
+import com.core.common.utils.ToastUtils;
 import com.core.ui.presentation.BaseFragment;
 import com.lib.domain.model.ArticleListBean;
 import com.rapid.android.databinding.FragmentLastProjectBinding;

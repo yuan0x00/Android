@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewbinding.ViewBinding;
 
 import com.core.common.device.StatusBarUtils;
+import com.core.common.utils.WindowInsetsUtils;
 import com.core.network.state.NetworkStateManager;
-import com.core.ui.common.WindowInsetsUtils;
 
 public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBinding> extends AppCompatActivity {
 

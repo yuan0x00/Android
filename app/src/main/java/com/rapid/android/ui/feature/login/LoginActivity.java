@@ -9,7 +9,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.core.ui.common.ToastUtils;
+import com.core.common.utils.ToastUtils;
 import com.core.ui.presentation.BaseActivity;
 import com.lib.data.session.AuthSessionManager;
 import com.rapid.android.R;

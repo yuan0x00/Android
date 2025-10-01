@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.core.ui.common.ToastUtils;
+import com.core.common.utils.ToastUtils;
 import com.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentProjectBinding;
 

@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.core.common.text.StringUtils;
-import com.core.ui.common.ResUtils;
+import com.core.common.utils.ResUtils;
 import com.core.ui.components.popup.BasePopupWindow;
 import com.core.webview.WebViewActivity;
 import com.lib.domain.model.ArticleListBean;

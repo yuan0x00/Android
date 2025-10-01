@@ -1,4 +1,4 @@
-package com.core.ui.common;
+package com.core.common.utils;
 
 import android.view.View;
 

@@ -7,18 +7,23 @@ import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import com.core.common.utils.ToastUtils;
+import com.core.ui.dialog.DialogController;
+import com.core.ui.dialog.DialogEffect;
 import com.core.ui.presentation.BaseActivity;
-import com.google.android.material.snackbar.Snackbar;
 import com.rapid.android.R;
 import com.rapid.android.databinding.ActivitySettingBinding;
 import com.rapid.android.utils.ThemeManager;
 
 public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySettingBinding> {
 
+    private DialogController dialogController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupToolbar();
+        dialogController = DialogController.from(this, binding.getRoot());
         setupObservers();
         setupClickListeners();
         viewModel.loadSettings();
@@ -94,7 +99,7 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
         // 观察操作消息
         viewModel.getOperationMessageRes().observe(this, messageRes -> {
             if (messageRes != null) {
-                showMessage(messageRes);
+                ToastUtils.showShortToast(getString(messageRes));
             }
         });
 
@@ -153,32 +158,21 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
         binding.itemOpenSource.setOnClickListener(v ->
                 openWebPage(getString(R.string.settings_open_source_url)));
 
-        binding.btnLogout.setOnClickListener(v -> {
-            showConfirmDialog(
-                    R.string.setting_dialog_logout_title,
-                    R.string.setting_dialog_logout_message,
-                    (dialog, which) -> viewModel.logoutWithCallback((success, messageRes) -> {
-                        showMessage(messageRes);
-                        if (success) {
-                            binding.getRoot().postDelayed(this::finish, 500L);
-                        }
-                    }));
-        });
-    }
-
-    private void showMessage(@androidx.annotation.StringRes int messageRes) {
-        Snackbar.make(binding.getRoot(), getString(messageRes), Snackbar.LENGTH_SHORT).show();
-    }
-
-    private void showConfirmDialog(@androidx.annotation.StringRes int titleRes,
-                                   @androidx.annotation.StringRes int messageRes,
-                                   android.content.DialogInterface.OnClickListener positiveListener) {
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle(titleRes)
-                .setMessage(messageRes)
-                .setPositiveButton(R.string.confirm, positiveListener)
-                .setNegativeButton(R.string.cancel, null)
-                .show();
+        binding.btnLogout.setOnClickListener(v -> dialogController.show(
+                new DialogEffect.Confirm(
+                        "logout_confirm",
+                        getString(R.string.setting_dialog_logout_title),
+                        getString(R.string.setting_dialog_logout_message),
+                        getString(R.string.confirm),
+                        getString(R.string.cancel),
+                        () -> viewModel.logoutWithCallback((success, messageRes) -> {
+                            ToastUtils.showShortToast(getString(messageRes));
+                            if (success) {
+                                binding.getRoot().postDelayed(this::finish, 500L);
+                            }
+                        }),
+                        null
+                )));
     }
 
     private void openWebPage(String url) {

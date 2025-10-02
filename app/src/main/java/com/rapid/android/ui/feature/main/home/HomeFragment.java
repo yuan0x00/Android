@@ -6,13 +6,18 @@ import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import com.core.ui.dialog.DialogController;
+import com.core.ui.dialog.DialogEffect;
 import com.core.ui.presentation.BaseFragment;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.rapid.android.R;
 import com.rapid.android.databinding.FragmentHomeBinding;
-import com.rapid.android.ui.dialog.TipDialogFragment;
 import com.rapid.android.ui.feature.main.home.search.SearchActivity;
 
 public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBinding> {
+
+    private DialogController dialogController;
 
     @Override
     protected HomeViewModel createViewModel() {
@@ -31,13 +36,16 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
 
     @Override
     protected void initializeViews() {
+        dialogController = DialogController.from(this, binding.getRoot());
         setupViewPager();
         binding.topSearch.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), SearchActivity.class));
         });
         binding.avatar.setOnClickListener(v -> {
-            TipDialogFragment dialogFragment = new TipDialogFragment();
-            dialogFragment.showSafely(getParentFragmentManager());
+            dialogController.show(new DialogEffect.Snackbar(
+                    "home_avatar_tip",
+                    getString(R.string.home_avatar_placeholder_tip),
+                    Snackbar.LENGTH_SHORT));
         });
     }
 

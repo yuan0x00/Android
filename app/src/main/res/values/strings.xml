@@ -105,6 +105,7 @@
     <string name="main_tab_profile">我的</string>
     <string name="home_page_recommend">首页</string>
     <string name="home_page_latest">最新项目</string>
+    <string name="home_avatar_placeholder_tip">个人中心建设中，敬请期待</string>
 
     <!-- 通用字符串 -->
     <string name="confirm">确定</string>

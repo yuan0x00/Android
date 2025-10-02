@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.core.common.utils.ToastUtils;
 import com.core.ui.presentation.BaseFragment;
+import com.rapid.android.R;
 import com.rapid.android.databinding.FragmentMineBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.setting.SettingActivity;
@@ -50,7 +51,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
             com.lib.data.session.SessionManager.SessionState state =
                     com.lib.data.session.SessionManager.getInstance().getCurrentState();
             if (state != null && state.isLoggedIn()) {
-                ToastUtils.showShortToast("个人中心建设中");
+                ToastUtils.showShortToast(getString(R.string.mine_toast_profile_building));
             } else {
                 navigateToLogin();
             }
@@ -64,16 +65,16 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
             if (state != null && state.isLoggedIn()) {
                 viewModel.signIn();
             } else {
-                ToastUtils.showShortToast("请先登录");
+                ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
                 navigateToLogin();
             }
         });
 
         binding.itemSettings.setOnClickListener(v -> openSettings());
-        binding.itemFavorites.setOnClickListener(v -> handleProtectedAction("打开收藏"));
-        binding.layoutCoin.setOnClickListener(v -> handleProtectedAction("查看积分"));
-        binding.layoutFavorite.setOnClickListener(v -> handleProtectedAction("查看收藏"));
-        binding.layoutAchievements.setOnClickListener(v -> handleProtectedAction("查看成就"));
+        binding.itemFavorites.setOnClickListener(v -> handleProtectedAction(R.string.mine_action_open_favorites));
+        binding.layoutCoin.setOnClickListener(v -> handleProtectedAction(R.string.mine_action_view_points));
+        binding.layoutFavorite.setOnClickListener(v -> handleProtectedAction(R.string.mine_action_view_collection));
+        binding.layoutAchievements.setOnClickListener(v -> handleProtectedAction(R.string.mine_action_view_achievements));
     }
 
     @Override
@@ -125,11 +126,11 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         binding.btnDailyAction.setEnabled(state.isDailyActionEnabled());
 
         if (state.isLoggedIn()) {
-            binding.btnPrimaryAction.setText("查看资料");
+            binding.btnPrimaryAction.setText(R.string.mine_action_view_profile);
             binding.btnPrimaryAction.setVisibility(View.VISIBLE);
             binding.btnDailyAction.setVisibility(View.VISIBLE); // 签到按钮显示
         } else {
-            binding.btnPrimaryAction.setText("立即登录");
+            binding.btnPrimaryAction.setText(R.string.mine_action_login);
             binding.btnPrimaryAction.setVisibility(View.VISIBLE);
             binding.btnDailyAction.setVisibility(View.GONE); // 签到按钮隐藏
         }
@@ -152,13 +153,13 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         startActivity(new Intent(getContext(), SettingActivity.class));
     }
 
-    private void handleProtectedAction(String message) {
+    private void handleProtectedAction(int messageRes) {
         com.lib.data.session.SessionManager.SessionState state =
                 com.lib.data.session.SessionManager.getInstance().getCurrentState();
         if (state != null && state.isLoggedIn()) {
-            ToastUtils.showShortToast(message);
+            ToastUtils.showShortToast(getString(messageRes));
         } else {
-            ToastUtils.showShortToast("请先登录");
+            ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
             navigateToLogin();
         }
     }

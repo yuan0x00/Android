@@ -16,9 +16,11 @@ import java.util.List;
 public class HomeViewPagerAdapter extends FragmentStateAdapter {
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> titles = new ArrayList<>();
+    private final FragmentActivity host;
 
     public HomeViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
+        this.host = fragmentActivity;
     }
 
     public void addFragment(Fragment fragment, String title) {
@@ -27,8 +29,8 @@ public class HomeViewPagerAdapter extends FragmentStateAdapter {
     }
 
     public void addFragments() {
-        addFragment(new RecommendFragment(), "首页");
-        addFragment(new LastProjectFragment(), "最新项目");
+        addFragment(new RecommendFragment(), host.getString(com.rapid.android.R.string.home_page_recommend));
+        addFragment(new LastProjectFragment(), host.getString(com.rapid.android.R.string.home_page_latest));
     }
 
     @NonNull

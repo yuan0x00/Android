@@ -1,21 +1,21 @@
 package com.rapid.android.ui.feature.setting;
 
+import androidx.annotation.StringRes;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.core.ui.presentation.BaseViewModel;
-import com.lib.data.repository.RepositoryProvider;
-import com.lib.domain.repository.UserRepository;
+import com.rapid.android.R;
+import com.rapid.android.utils.AppPreferences;
 import com.rapid.android.utils.ThemeManager;
 
 public class SettingViewModel extends BaseViewModel {
 
-    private final UserRepository userRepository = RepositoryProvider.getUserRepository();
-
     private final MutableLiveData<ThemeManager.ThemeMode> themeMode = new MutableLiveData<>(ThemeManager.ThemeMode.SYSTEM);
-    private final MutableLiveData<Boolean> autoUpdate = new MutableLiveData<>(true);
-    private final MutableLiveData<Boolean> notifications = new MutableLiveData<>(true);
-    private final MutableLiveData<String> operationMessage = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> dataSaver = new MutableLiveData<>(AppPreferences.isDataSaverEnabled());
+    private final MutableLiveData<Boolean> wifiOnlyMedia = new MutableLiveData<>(AppPreferences.isWifiOnlyMediaEnabled());
+    private final MutableLiveData<Boolean> notifications = new MutableLiveData<>(AppPreferences.isNotificationsEnabled());
+    private final MutableLiveData<Integer> operationMessageRes = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
     public LiveData<ThemeManager.ThemeMode> getThemeMode() {
@@ -27,12 +27,28 @@ public class SettingViewModel extends BaseViewModel {
         ThemeManager.applyThemeMode(mode);
     }
 
-    public LiveData<Boolean> getAutoUpdate() {
-        return autoUpdate;
+    public LiveData<Boolean> getDataSaver() {
+        return dataSaver;
     }
 
-    public void setAutoUpdate(boolean enabled) {
-        autoUpdate.setValue(enabled);
+    public void setDataSaver(boolean enabled) {
+        dataSaver.setValue(enabled);
+        AppPreferences.setDataSaverEnabled(enabled);
+        operationMessageRes.setValue(enabled
+                ? R.string.setting_data_saver_on
+                : R.string.setting_data_saver_off);
+    }
+
+    public LiveData<Boolean> getWifiOnlyMedia() {
+        return wifiOnlyMedia;
+    }
+
+    public void setWifiOnlyMedia(boolean enabled) {
+        wifiOnlyMedia.setValue(enabled);
+        AppPreferences.setWifiOnlyMediaEnabled(enabled);
+        operationMessageRes.setValue(enabled
+                ? R.string.setting_wifi_only_on
+                : R.string.setting_wifi_only_off);
     }
 
     public LiveData<Boolean> getNotifications() {
@@ -41,10 +57,14 @@ public class SettingViewModel extends BaseViewModel {
 
     public void setNotifications(boolean enabled) {
         notifications.setValue(enabled);
+        AppPreferences.setNotificationsEnabled(enabled);
+        operationMessageRes.setValue(enabled
+                ? R.string.setting_notifications_on
+                : R.string.setting_notifications_off);
     }
 
-    public LiveData<String> getOperationMessage() {
-        return operationMessage;
+    public LiveData<Integer> getOperationMessageRes() {
+        return operationMessageRes;
     }
 
     public LiveData<Boolean> getIsLoading() {
@@ -56,10 +76,10 @@ public class SettingViewModel extends BaseViewModel {
         // 模拟清除缓存操作
         new Thread(() -> {
             try {
-                Thread.sleep(1000); // 模拟网络请求
-                operationMessage.postValue("缓存清除成功");
+                Thread.sleep(1000);
+                operationMessageRes.postValue(R.string.setting_clear_cache_success);
             } catch (InterruptedException e) {
-                operationMessage.postValue("缓存清除失败");
+                operationMessageRes.postValue(R.string.setting_clear_cache_failed);
             } finally {
                 isLoading.postValue(false);
             }
@@ -71,21 +91,23 @@ public class SettingViewModel extends BaseViewModel {
         ThemeManager.ThemeMode saved = ThemeManager.getSavedThemeMode();
         themeMode.setValue(saved);
         ThemeManager.applyThemeMode(saved);
+        dataSaver.setValue(AppPreferences.isDataSaverEnabled());
+        wifiOnlyMedia.setValue(AppPreferences.isWifiOnlyMediaEnabled());
+        notifications.setValue(AppPreferences.isNotificationsEnabled());
     }
     
     public void logoutWithCallback(LogoutCallback callback) {
         isLoading.setValue(true);
-        operationMessage.setValue(null);
+        operationMessageRes.setValue(null);
         // 使用统一的会话管理器来处理登出
         com.lib.data.session.SessionManager.getInstance().logout();
-        operationMessage.setValue("登出成功");
         isLoading.setValue(false);
         if (callback != null) {
-            callback.onLogoutComplete(true, "登出成功");
+            callback.onLogoutComplete(true, R.string.setting_logout_success);
         }
     }
-    
+
     public interface LogoutCallback {
-        void onLogoutComplete(boolean success, String message);
+        void onLogoutComplete(boolean success, @StringRes int messageRes);
     }
 }

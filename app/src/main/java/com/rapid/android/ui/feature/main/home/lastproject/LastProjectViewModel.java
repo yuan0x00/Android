@@ -2,12 +2,14 @@ package com.rapid.android.ui.feature.main.home.lastproject;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.core.common.app.BaseApplication;
 import com.core.ui.presentation.BaseViewModel;
 import com.lib.data.repository.RepositoryProvider;
 import com.lib.domain.model.ArticleListBean;
 import com.lib.domain.repository.HomeRepository;
 import com.lib.domain.result.DomainError;
 import com.lib.domain.result.DomainResult;
+import com.rapid.android.R;
 import com.rapid.android.ui.common.paging.PagingController;
 import com.rapid.android.ui.common.paging.PagingPayload;
 
@@ -67,10 +69,14 @@ public class LastProjectViewModel extends BaseViewModel {
                         return DomainResult.success(new PagingPayload<>(bean.getDatas(), next, more));
                     }
                     DomainError error = result.getError();
-                    if (error != null) {
+                    if (error != null && error.getMessage() != null) {
                         errorMessage.setValue(error.getMessage());
+                        return DomainResult.failure(error);
                     }
-                    return DomainResult.failure(error != null ? error : DomainError.of(DomainError.UNKNOWN_CODE, "获取项目失败"));
+                    errorMessage.setValue(BaseApplication.getAppContext()
+                            .getString(R.string.project_list_load_failed));
+                    return DomainResult.failure(error != null ? error : DomainError.of(DomainError.UNKNOWN_CODE,
+                            BaseApplication.getAppContext().getString(R.string.project_list_load_failed)));
                 });
     }
 }

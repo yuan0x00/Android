@@ -88,27 +88,27 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         // TabLayout 与 ViewPager2 关联
         navigator = new BottomTabNavigator(this, binding.tabLayout, binding.fragmentContainer)
                 .addTab(new BottomTabNavigator.TabItem(
-                        "首页",
+                        getString(R.string.main_tab_home),
                         R.drawable.home_24px,
                         R.drawable.home_fill_24px,
                         HomeFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
-                        "体系",
+                        getString(R.string.main_tab_system),
                         R.drawable.family_history_24px,
                         R.drawable.family_history_fill_24px,
                         SystemFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
-                        "导航",
+                        getString(R.string.main_tab_navigation),
                         R.drawable.signpost_24px,
                         R.drawable.signpost_fill_24px,
                         NavigationFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
-                        "项目",
+                        getString(R.string.main_tab_project),
                         R.drawable.folder_code_24px,
                         R.drawable.folder_code_fill_24px,
                         ProjectFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
-                        "我的",
+                        getString(R.string.main_tab_profile),
                         R.drawable.person_24px,
                         R.drawable.person_fill_24px,
                         MineFragment.class))

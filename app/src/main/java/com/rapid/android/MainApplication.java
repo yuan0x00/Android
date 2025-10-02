@@ -5,19 +5,25 @@ import android.os.StrictMode;
 import com.core.common.app.BaseApplication;
 import com.core.network.client.NetworkClient;
 import com.core.network.client.NetworkConfig;
+import com.google.android.material.color.DynamicColors;
 import com.lib.data.DataInitializer;
+import com.lib.data.network.AuthHeaderProvider;
 import com.lib.data.network.NetApis;
+import com.lib.data.network.PersistentCookieStore;
+import com.lib.data.session.SessionManager;
+import com.rapid.android.utils.ThemeManager;
 
 public class MainApplication extends BaseApplication {
 
-    private final com.core.network.client.NetworkConfig.AuthFailureListener authFailureHandler =
-            () -> com.lib.data.session.SessionManager.getInstance().forceLogout();
+    private final NetworkConfig.AuthFailureListener authFailureHandler =
+            () -> SessionManager.getInstance().forceLogout();
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        com.rapid.android.utils.ThemeManager.applySavedTheme();
+        ThemeManager.applySavedTheme();
+        DynamicColors.applyToActivitiesIfAvailable(this);
 
         enableStrictMode();
         // 初始化数据层
@@ -54,14 +60,14 @@ public class MainApplication extends BaseApplication {
                 .allowInsecureSsl(BuildConfig.DEBUG)
                 .crashReportEndpointProvider(() -> "https://www.wanandroid.com/app/crash/upload")
                 .authFailureListener(authFailureHandler)
-                .headerProvider(new com.lib.data.network.AuthHeaderProvider())
-                .cookieStore(new com.lib.data.network.PersistentCookieStore(getApplicationContext()))
+                .headerProvider(new AuthHeaderProvider())
+                .cookieStore(new PersistentCookieStore(getApplicationContext()))
                 .build();
         NetworkClient.configure(config);
         NetApis.init();
 
         // 初始化统一的会话管理器
-        com.lib.data.session.SessionManager.getInstance().initialize();
+        SessionManager.getInstance().initialize();
     }
 
 }

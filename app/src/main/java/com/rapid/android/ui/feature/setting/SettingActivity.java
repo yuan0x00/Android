@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.core.ui.presentation.BaseActivity;
 import com.google.android.material.snackbar.Snackbar;
+import com.rapid.android.R;
 import com.rapid.android.databinding.ActivitySettingBinding;
 import com.rapid.android.utils.ThemeManager;
 
@@ -69,16 +70,31 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
             }
         });
 
-        viewModel.getAutoUpdate().observe(this, isChecked ->
-                binding.switchAutoUpdate.setChecked(isChecked != null ? isChecked : false));
+        viewModel.getDataSaver().observe(this, enabled -> {
+            boolean target = Boolean.TRUE.equals(enabled);
+            if (binding.switchDataSaver.isChecked() != target) {
+                binding.switchDataSaver.setChecked(target);
+            }
+        });
 
-        viewModel.getNotifications().observe(this, isChecked ->
-                binding.switchNotifications.setChecked(isChecked != null ? isChecked : false));
+        viewModel.getWifiOnlyMedia().observe(this, enabled -> {
+            boolean target = Boolean.TRUE.equals(enabled);
+            if (binding.switchWifiOnly.isChecked() != target) {
+                binding.switchWifiOnly.setChecked(target);
+            }
+        });
+
+        viewModel.getNotifications().observe(this, isChecked -> {
+            boolean target = Boolean.TRUE.equals(isChecked);
+            if (binding.switchNotifications.isChecked() != target) {
+                binding.switchNotifications.setChecked(target);
+            }
+        });
 
         // 观察操作消息
-        viewModel.getOperationMessage().observe(this, message -> {
-            if (message != null && !message.isEmpty()) {
-                showMessage(message);
+        viewModel.getOperationMessageRes().observe(this, messageRes -> {
+            if (messageRes != null) {
+                showMessage(messageRes);
             }
         });
 
@@ -108,40 +124,60 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
             }
         });
 
-        binding.switchAutoUpdate.setOnCheckedChangeListener((buttonView, isChecked) ->
-                viewModel.setAutoUpdate(isChecked));
+        binding.switchDataSaver.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!buttonView.isPressed()) {
+                return;
+            }
+            viewModel.setDataSaver(isChecked);
+        });
 
-        binding.switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) ->
-                viewModel.setNotifications(isChecked));
+        binding.switchWifiOnly.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!buttonView.isPressed()) {
+                return;
+            }
+            viewModel.setWifiOnlyMedia(isChecked);
+        });
+
+        binding.switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!buttonView.isPressed()) {
+                return;
+            }
+            viewModel.setNotifications(isChecked);
+        });
+
+        binding.itemClearCache.setOnClickListener(v -> viewModel.clearCache());
+
+        binding.itemPrivacy.setOnClickListener(v ->
+                openWebPage(getString(R.string.settings_privacy_url)));
+
+        binding.itemOpenSource.setOnClickListener(v ->
+                openWebPage(getString(R.string.settings_open_source_url)));
 
         binding.btnLogout.setOnClickListener(v -> {
-            showConfirmDialog("确认登出", "确定要登出当前账户吗？", (dialog, which) -> {
-                viewModel.logoutWithCallback(new SettingViewModel.LogoutCallback() {
-                    @Override
-                    public void onLogoutComplete(boolean success, String message) {
-                        showMessage(message);
+            showConfirmDialog(
+                    R.string.setting_dialog_logout_title,
+                    R.string.setting_dialog_logout_message,
+                    (dialog, which) -> viewModel.logoutWithCallback((success, messageRes) -> {
+                        showMessage(messageRes);
                         if (success) {
-                            // 登出成功后，延迟一小段时间以确保状态传播完成
-                            // 然后结束当前Activity，返回到MainActivity
-                            binding.getRoot().postDelayed(() -> finish(), 500); // 延迟500ms
+                            binding.getRoot().postDelayed(this::finish, 500L);
                         }
-                    }
-                });
-            });
+                    }));
         });
     }
 
-    private void showMessage(String message) {
-        Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_SHORT).show();
+    private void showMessage(@androidx.annotation.StringRes int messageRes) {
+        Snackbar.make(binding.getRoot(), getString(messageRes), Snackbar.LENGTH_SHORT).show();
     }
 
-    private void showConfirmDialog(String title, String message,
+    private void showConfirmDialog(@androidx.annotation.StringRes int titleRes,
+                                   @androidx.annotation.StringRes int messageRes,
                                    android.content.DialogInterface.OnClickListener positiveListener) {
         new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("确定", positiveListener)
-                .setNegativeButton("取消", null)
+                .setTitle(titleRes)
+                .setMessage(messageRes)
+                .setPositiveButton(R.string.confirm, positiveListener)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
@@ -150,7 +186,7 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(this, "无法打开链接", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.setting_open_link_failed), Toast.LENGTH_SHORT).show();
         }
     }
 }

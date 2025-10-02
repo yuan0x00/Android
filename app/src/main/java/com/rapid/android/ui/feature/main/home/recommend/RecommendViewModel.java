@@ -2,6 +2,7 @@ package com.rapid.android.ui.feature.main.home.recommend;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.core.common.app.BaseApplication;
 import com.core.ui.presentation.BaseViewModel;
 import com.lib.data.repository.RepositoryProvider;
 import com.lib.domain.model.ArticleListBean;
@@ -9,6 +10,7 @@ import com.lib.domain.model.BannerItemBean;
 import com.lib.domain.repository.HomeRepository;
 import com.lib.domain.result.DomainError;
 import com.lib.domain.result.DomainResult;
+import com.rapid.android.R;
 import com.rapid.android.ui.common.paging.PagingController;
 import com.rapid.android.ui.common.paging.PagingPayload;
 
@@ -74,9 +76,16 @@ public class RecommendViewModel extends BaseViewModel {
                         bannerList.setValue(result.getData());
                     } else {
                         DomainError error = result.getError();
-                        errorMessage.setValue(error != null ? error.getMessage() : "获取 Banner 失败");
+                        if (error != null && error.getMessage() != null) {
+                            errorMessage.setValue(error.getMessage());
+                        } else {
+                            errorMessage.setValue(BaseApplication.getAppContext()
+                                    .getString(R.string.home_banner_load_failed));
+                        }
                     }
-                }, throwable -> errorMessage.setValue(throwable.getMessage())));
+                }, throwable -> errorMessage.setValue(throwable != null && throwable.getMessage() != null
+                        ? throwable.getMessage()
+                        : BaseApplication.getAppContext().getString(R.string.home_banner_load_failed))));
     }
 
     private io.reactivex.rxjava3.core.Observable<DomainResult<PagingPayload<ArticleListBean.Data>>> fetchArticlePage(int page) {
@@ -91,7 +100,11 @@ public class RecommendViewModel extends BaseViewModel {
                         return DomainResult.success(new PagingPayload<>(bean.getDatas(), next, more));
                     }
                     DomainError error = result.getError();
-                    return DomainResult.failure(error != null ? error : DomainError.of(DomainError.UNKNOWN_CODE, "获取文章失败"));
+                    if (error != null) {
+                        return DomainResult.failure(error);
+                    }
+                    return DomainResult.failure(DomainError.of(DomainError.UNKNOWN_CODE,
+                            BaseApplication.getAppContext().getString(R.string.home_article_load_failed)));
                 });
     }
 }

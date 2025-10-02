@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.core.ui.presentation.BaseActivity;
+import com.rapid.android.R;
 import com.rapid.android.databinding.ActivityProjectListBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
@@ -46,12 +47,12 @@ public class ProjectListActivity extends BaseActivity<ProjectListViewModel, Acti
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         String title = getIntent().getStringExtra(EXTRA_CATEGORY_NAME);
-        binding.toolbar.setTitle(title != null ? title : "项目列表");
+        binding.toolbar.setTitle(title != null ? title : getString(R.string.project_title_list_default));
 
         adapter = new ProjectListAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
-        binding.swipeRefresh.setOnRefreshListener(() -> viewModel.refresh());
+        binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 
@@ -85,13 +86,12 @@ public class ProjectListActivity extends BaseActivity<ProjectListViewModel, Acti
             stateController.setEmpty(items == null || items.isEmpty());
         });
 
-        viewModel.getLoading().observe(this, isLoading -> {
-            stateController.setLoading(Boolean.TRUE.equals(isLoading));
-        });
+        viewModel.getLoading().observe(this, isLoading ->
+                stateController.setLoading(Boolean.TRUE.equals(isLoading)));
 
-        viewModel.getLoadingMore().observe(this, isLoadingMore -> {
-            binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(isLoadingMore) ? android.view.View.VISIBLE : android.view.View.GONE);
-        });
+        viewModel.getLoadingMore().observe(this, isLoadingMore ->
+                binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(isLoadingMore)
+                        ? android.view.View.VISIBLE : android.view.View.GONE));
 
         UiFeedback.observeError(this, viewModel.getErrorMessage());
         UiFeedback.observeError(this, viewModel.getPagingError());

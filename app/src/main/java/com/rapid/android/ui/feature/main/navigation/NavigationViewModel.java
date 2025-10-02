@@ -2,12 +2,14 @@ package com.rapid.android.ui.feature.main.navigation;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.core.common.app.BaseApplication;
 import com.core.ui.presentation.BaseViewModel;
 import com.lib.data.repository.RepositoryProvider;
 import com.lib.domain.model.NavigationBean;
 import com.lib.domain.repository.ContentRepository;
 import com.lib.domain.result.DomainError;
 import com.lib.domain.result.DomainResult;
+import com.rapid.android.R;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,14 +49,21 @@ public class NavigationViewModel extends BaseViewModel {
                             navigationItems.setValue(result.getData());
                         } else {
                             DomainError error = result.getError();
-                            errorMessage.setValue(error != null ? error.getMessage() : "加载导航数据失败");
+                            if (error != null && error.getMessage() != null) {
+                                errorMessage.setValue(error.getMessage());
+                            } else {
+                                errorMessage.setValue(BaseApplication.getAppContext()
+                                        .getString(R.string.navigation_error_load_failed));
+                            }
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         loading.setValue(false);
-                        errorMessage.setValue(e.getMessage());
+                        errorMessage.setValue(e != null && e.getMessage() != null
+                                ? e.getMessage()
+                                : BaseApplication.getAppContext().getString(R.string.navigation_error_load_failed));
                     }
 
                     @Override

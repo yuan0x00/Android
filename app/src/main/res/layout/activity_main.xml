@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="?attr/colorSurface">
 
     <FrameLayout
         android:id="@+id/fragmentContainer"
@@ -15,11 +15,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/tabCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@android:color/white"
+        app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="6dp"
+        app:strokeColor="?attr/colorOutlineVariant"
+        app:strokeWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -31,17 +35,19 @@
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
+                style="@style/Widget.Material3.TabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:textColor="#666"
                 app:tabGravity="fill"
-                app:tabIndicator="@null"
+                app:tabIconTint="@color/tab_icon_selector"
                 app:tabMode="fixed"
-                app:tabRippleColor="@null"/>
+                app:tabIndicator="@null"
+                app:tabRippleColor="@android:color/transparent"
+                app:tabTextAppearance="@style/TextAppearance.Material3.LabelLarge"/>
 
         </FrameLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

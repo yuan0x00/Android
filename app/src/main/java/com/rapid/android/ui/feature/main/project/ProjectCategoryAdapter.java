@@ -19,6 +19,7 @@ public class ProjectCategoryAdapter extends RecyclerView.Adapter<ProjectCategory
 
     private final List<CategoryNodeBean> items = new ArrayList<>();
     private final OnCategoryClickListener clickListener;
+
     public ProjectCategoryAdapter(OnCategoryClickListener clickListener) {
         this.clickListener = clickListener;
     }
@@ -34,7 +35,8 @@ public class ProjectCategoryAdapter extends RecyclerView.Adapter<ProjectCategory
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_project_category, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.project_item_category, parent, false);
         return new CategoryViewHolder(view);
     }
 

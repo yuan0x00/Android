@@ -33,15 +33,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="24dp">
 
-            <!-- 深色模式设置 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="?attr/colorSurfaceContainer"
-                app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
                 app:strokeColor="?attr/colorOutlineVariant"
                 app:strokeWidth="1dp">
@@ -55,15 +55,15 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/dark_mode"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                        android:text="@string/settings_section_appearance"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:textColor="?attr/colorOnSurface"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="@string/dark_mode_description"
+                        android:text="@string/settings_theme_mode_description"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                         android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -71,7 +71,7 @@
                         android:id="@+id/group_theme_mode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="16dp"
                         app:singleSelection="true">
 
                         <com.google.android.material.button.MaterialButton
@@ -106,13 +106,11 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 自动更新设置 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="?attr/colorSurfaceContainer"
-                app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
                 app:strokeColor="?attr/colorOutlineVariant"
                 app:strokeWidth="1dp">
@@ -126,36 +124,158 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/auto_update"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                        android:text="@string/settings_section_content"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:textColor="?attr/colorOnSurface"/>
 
-                    <TextView
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/auto_update_description"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:textColor="?attr/colorOnSurfaceVariant"/>
+                        android:layout_marginTop="16dp"
+                        android:minHeight="56dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
 
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/switch_auto_update"
+                        <TextView
+                            android:id="@+id/text_data_saver"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/setting_data_saver"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@+id/switch_data_saver"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/text_data_saver_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/setting_data_saver_desc"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@id/switch_data_saver"
+                            app:layout_constraintStart_toStartOf="@id/text_data_saver"
+                            app:layout_constraintTop_toBottomOf="@id/text_data_saver"/>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_data_saver"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:checked="true"/>
+                        android:minHeight="56dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/text_wifi_only"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/setting_wifi_only"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@+id/switch_wifi_only"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/text_wifi_only_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/setting_wifi_only_desc"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@id/switch_wifi_only"
+                            app:layout_constraintStart_toStartOf="@id/text_wifi_only"
+                            app:layout_constraintTop_toBottomOf="@id/text_wifi_only"/>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_wifi_only"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:minHeight="56dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/text_notifications"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/notifications"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@+id/switch_notifications"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/text_notifications_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/notifications_description"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@id/switch_notifications"
+                            app:layout_constraintStart_toStartOf="@id/text_notifications"
+                            app:layout_constraintTop_toBottomOf="@id/text_notifications"/>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_notifications"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 通知设置 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="?attr/colorSurfaceContainer"
-                app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
                 app:strokeColor="?attr/colorOutlineVariant"
                 app:strokeWidth="1dp">
@@ -169,24 +289,166 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/notifications"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                        android:text="@string/settings_section_about"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:textColor="?attr/colorOnSurface"/>
 
-                    <TextView
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/item_clear_cache"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/notifications_description"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:textColor="?attr/colorOnSurfaceVariant"/>
+                        android:layout_marginTop="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:minHeight="56dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
 
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/switch_notifications"
+                        <TextView
+                            android:id="@+id/text_clear_cache"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/setting_clear_cache"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@+id/icon_clear_cache"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/setting_clear_cache_desc"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@id/icon_clear_cache"
+                            app:layout_constraintStart_toStartOf="@id/text_clear_cache"
+                            app:layout_constraintTop_toBottomOf="@id/text_clear_cache"/>
+
+                        <ImageView
+                            android:id="@+id/icon_clear_cache"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/arrow_forward_ios_24px"
+                            android:tint="?attr/colorOnSurfaceVariant"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/item_privacy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:checked="true"/>
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:minHeight="56dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/text_privacy"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/setting_privacy"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@+id/icon_privacy"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/setting_privacy_desc"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@id/icon_privacy"
+                            app:layout_constraintStart_toStartOf="@id/text_privacy"
+                            app:layout_constraintTop_toBottomOf="@id/text_privacy"/>
+
+                        <ImageView
+                            android:id="@+id/icon_privacy"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/arrow_forward_ios_24px"
+                            android:tint="?attr/colorOnSurfaceVariant"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/item_open_source"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:minHeight="56dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/text_open_source"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/setting_open_source"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@+id/icon_open_source"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/setting_open_source_desc"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@id/icon_open_source"
+                            app:layout_constraintStart_toStartOf="@id/text_open_source"
+                            app:layout_constraintTop_toBottomOf="@id/text_open_source"/>
+
+                        <ImageView
+                            android:id="@+id/icon_open_source"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/arrow_forward_ios_24px"
+                            android:tint="?attr/colorOnSurfaceVariant"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
 
@@ -194,11 +456,11 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogout"
+                style="@style/Widget.Material3.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="退出登录"
-                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"/>
+                android:layout_marginBottom="8dp"
+                android:text="@string/setting_logout"/>
 
         </LinearLayout>
 

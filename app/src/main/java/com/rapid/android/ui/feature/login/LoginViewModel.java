@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.core.common.app.BaseApplication;
 import com.core.ui.presentation.BaseViewModel;
 import com.lib.data.repository.RepositoryProvider;
 import com.lib.data.session.SessionManager;
 import com.lib.domain.model.LoginBean;
 import com.lib.domain.repository.UserRepository;
+import com.rapid.android.R;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -52,10 +54,15 @@ public class LoginViewModel extends BaseViewModel {
                                         SessionManager.getInstance().onLoginSuccess(response.getData());
                                         errorMessage.setValue(null);
                                     } else {
-                                        errorMessage.setValue("登录失败");
+                                        errorMessage.setValue(BaseApplication.getAppContext()
+                                                .getString(R.string.login_error));
                                     }
                                 },
-                                throwable -> errorMessage.setValue(throwable.getMessage())
+                                throwable -> errorMessage.setValue(
+                                        throwable != null && throwable.getMessage() != null
+                                                ? throwable.getMessage()
+                                                : BaseApplication.getAppContext()
+                                                .getString(R.string.login_error))
                         )
         );
     }

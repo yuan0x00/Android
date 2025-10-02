@@ -12,7 +12,6 @@ import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.main.project.list.ProjectListActivity;
 
-
 public class ProjectFragment extends BaseFragment<ProjectViewModel, FragmentProjectBinding> {
 
     private ProjectCategoryAdapter adapter;
@@ -30,9 +29,8 @@ public class ProjectFragment extends BaseFragment<ProjectViewModel, FragmentProj
 
     @Override
     protected void initializeViews() {
-        adapter = new ProjectCategoryAdapter(category -> {
-            ProjectListActivity.start(requireContext(), category.getId(), category.getName());
-        });
+        adapter = new ProjectCategoryAdapter(category ->
+                ProjectListActivity.start(requireContext(), category.getId(), category.getName()));
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.loadProjects(true));
@@ -52,9 +50,8 @@ public class ProjectFragment extends BaseFragment<ProjectViewModel, FragmentProj
             stateController.setEmpty(list == null || list.isEmpty());
         });
 
-        viewModel.getLoading().observe(this, loading -> {
-            stateController.setLoading(Boolean.TRUE.equals(loading));
-        });
+        viewModel.getLoading().observe(this, loading ->
+                stateController.setLoading(Boolean.TRUE.equals(loading)));
 
         UiFeedback.observeError(this, viewModel.getErrorMessage());
     }

@@ -31,13 +31,13 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
-    implementation project(':core-common')
-    implementation project(':core-ui')
-    implementation project(':core-network')
-    implementation project(':core-webview')
-    implementation project(':core-datastore')
-    implementation project(':lib-data')
-    implementation project(':lib-domain')
+    implementation project(':core:common')
+    implementation project(':core:ui')
+    implementation project(':core:network')
+    implementation project(':core:webview')
+    implementation project(':core:datastore')
+    implementation project(':data:repository')
+    implementation project(':domain:model')
     implementation libs.androidx.core
     implementation libs.androidx.lifecycle.runtime
     implementation libs.androidx.lifecycle.livedata

@@ -2,18 +2,21 @@ package com.rapid.android.ui.feature.main.project.list;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.core.common.app.BaseApplication;
 import com.core.ui.presentation.BaseViewModel;
 import com.lib.data.repository.RepositoryProvider;
 import com.lib.domain.model.ProjectPageBean;
 import com.lib.domain.repository.ContentRepository;
 import com.lib.domain.result.DomainError;
 import com.lib.domain.result.DomainResult;
+import com.rapid.android.R;
 import com.rapid.android.ui.common.paging.PagingController;
 import com.rapid.android.ui.common.paging.PagingPayload;
 
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ProjectListViewModel extends BaseViewModel {
@@ -72,11 +75,13 @@ public class ProjectListViewModel extends BaseViewModel {
         pagingController.loadMore();
     }
 
-    private io.reactivex.rxjava3.core.Observable<DomainResult<PagingPayload<ProjectPageBean.ProjectItemBean>>> fetchProjectPage(int page) {
+    private Observable<DomainResult<PagingPayload<ProjectPageBean.ProjectItemBean>>> fetchProjectPage(int page) {
         if (categoryId <= 0) {
-            errorMessage.setValue("无效的分类");
-            return io.reactivex.rxjava3.core.Observable.just(
-                    DomainResult.failure(DomainError.of(DomainError.UNKNOWN_CODE, "无效的分类"))
+            errorMessage.setValue(BaseApplication.getAppContext()
+                    .getString(R.string.project_error_invalid_category));
+            return Observable.just(
+                    DomainResult.failure(DomainError.of(DomainError.UNKNOWN_CODE,
+                            BaseApplication.getAppContext().getString(R.string.project_error_invalid_category)))
             );
         }
 
@@ -91,10 +96,15 @@ public class ProjectListViewModel extends BaseViewModel {
                         return DomainResult.success(new PagingPayload<>(pageBean.getDatas(), next, more));
                     }
                     DomainError error = result.getError();
-                    if (error != null) {
+                    if (error != null && error.getMessage() != null) {
                         errorMessage.setValue(error.getMessage());
+                        return DomainResult.failure(error);
                     }
-                    return DomainResult.failure(error != null ? error : DomainError.of(DomainError.UNKNOWN_CODE, "加载项目失败"));
+                    errorMessage.setValue(BaseApplication.getAppContext()
+                            .getString(R.string.project_error_load_failed));
+                    return DomainResult.failure(error != null ? error
+                            : DomainError.of(DomainError.UNKNOWN_CODE,
+                            BaseApplication.getAppContext().getString(R.string.project_error_load_failed)));
                 });
     }
 }

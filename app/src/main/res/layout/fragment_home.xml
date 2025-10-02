@@ -5,82 +5,83 @@
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="?attr/colorSurface">
 
     <!-- AppBarLayout: 可折叠区域 -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white">
+        android:background="?attr/colorSurface">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:background="?attr/colorSurface"
             app:contentScrim="@android:color/transparent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways">
 
-            <!-- 搜索栏（随滚动视差折叠） -->
-            <FrameLayout
+            <!-- 搜索栏（M3 Docked Search Bar） -->
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/topSearchLayout"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:background="?attr/colorSurface"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="8dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/filledTextField"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="52dp"
-                    android:focusable="false"
-                    app:boxStrokeWidth="1dp"
-                    app:endIconMode="clear_text"
-                    app:hintEnabled="false"
-                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
-                    app:startIconDrawable="@drawable/search_24px">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/topSearch"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:focusable="false"
-                        android:imeOptions="actionSearch"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="12dp"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/avatar"
                     android:layout_width="44dp"
                     android:layout_height="44dp"
-                    android:layout_gravity="start|center_vertical"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_avatar_placeholder"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:shapeAppearanceOverlay="@style/CircleImageView"/>
-            </FrameLayout>
+
+                <com.google.android.material.search.SearchBar
+                    android:id="@+id/topSearch"
+                    style="@style/Widget.Material3.SearchBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/colorSurfaceContainerHigh"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:hint="@string/home_search_placeholder"
+                    android:imeOptions="actionSearch"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    app:layout_constraintBottom_toBottomOf="@id/avatar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/avatar"
+                    app:layout_constraintTop_toTopOf="@id/avatar"
+                    app:navigationIcon="@drawable/search_24px"
+                    app:navigationIconTint="?attr/colorOnSurfaceVariant"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/topTab"
+            style="@style/Widget.Material3.TabLayout.Secondary"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@android:color/white"
+            android:background="?attr/colorSurface"
             app:tabGravity="center"
             app:tabIndicator="@drawable/tab_layout_indicator"
-            app:tabIndicatorAnimationMode="linear"
+            app:tabIndicatorAnimationMode="elastic"
             app:tabMode="fixed"
-            app:tabRippleColor="@null"/>
+            app:tabRippleColor="?attr/colorSecondaryContainer"
+            app:tabTextAppearance="@style/TextAppearance.Material3.BodyLarge"/>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="1dp"
+            android:background="?attr/colorOutlineVariant"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

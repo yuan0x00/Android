@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="8dp">
+    app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+    app:cardElevation="0dp"
+    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Small">
 
-    <ImageView
-        android:id="@+id/iv_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/explore_24px"/>
-
-    <TextView
-        android:id="@+id/tv_name"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="入口"
-        android:textSize="14sp"/>
-</LinearLayout>
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="icon"
+            android:src="@drawable/explore_24px"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/home_entry_label"
+            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+            android:textColor="?attr/colorOnSurface"/>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

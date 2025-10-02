@@ -1,10 +1,12 @@
 package com.rapid.android.ui.feature.main.mine;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.core.common.app.BaseApplication;
 import com.core.ui.presentation.BaseViewModel;
 import com.lib.data.repository.RepositoryProvider;
 import com.lib.data.session.SessionManager;
@@ -12,6 +14,7 @@ import com.lib.domain.model.CoinBean;
 import com.lib.domain.model.LoginBean;
 import com.lib.domain.model.UserInfoBean;
 import com.lib.domain.repository.UserRepository;
+import com.rapid.android.R;
 
 public class MineViewModel extends BaseViewModel {
 
@@ -120,20 +123,29 @@ public class MineViewModel extends BaseViewModel {
                         if (result != null && result.isSuccess()) {
                             CoinBean coinInfo = result.getData();
                             if (coinInfo != null) {
-                                toastMessage.setValue("签到成功！获得积分: " + coinInfo.getCoinCount());
-                                // 刷新用户信息以获取最新的积分
+                                toastMessage.setValue(BaseApplication.getAppContext()
+                                        .getString(R.string.mine_checkin_success_points, coinInfo.getCoinCount()));
                                 refresh();
                             } else {
-                                toastMessage.setValue("签到成功，但未获取到积分信息");
+                                toastMessage.setValue(BaseApplication.getAppContext()
+                                        .getString(R.string.mine_checkin_success_no_points));
                             }
                         } else {
-                            String errorMsg = result != null ? result.getError().getMessage() : "签到失败";
-                            toastMessage.setValue(errorMsg);
+                            String errorMsg = result != null && result.getError() != null
+                                    ? result.getError().getMessage()
+                                    : null;
+                            toastMessage.setValue(errorMsg != null
+                                    ? BaseApplication.getAppContext().getString(
+                                            R.string.mine_checkin_failed_with_reason, errorMsg)
+                                    : BaseApplication.getAppContext().getString(R.string.mine_checkin_failed));
                         }
                     },
                     throwable -> {
                         loading.setValue(false);
-                        toastMessage.setValue("签到失败: " + throwable.getMessage());
+                        toastMessage.setValue(throwable != null && throwable.getMessage() != null
+                                ? BaseApplication.getAppContext().getString(
+                                        R.string.mine_checkin_failed_with_reason, throwable.getMessage())
+                                : BaseApplication.getAppContext().getString(R.string.mine_checkin_failed));
                     }
                 )
         );
@@ -183,17 +195,18 @@ public class MineViewModel extends BaseViewModel {
         }
 
         public static MineUiState guest() {
+            Context context = BaseApplication.getAppContext();
             return new MineUiState(
                     false,
-                    "未登录用户",
-                    "登录",
+                    context.getString(R.string.mine_guest_display_name),
+                    context.getString(R.string.mine_guest_tagline),
                     "",
                     false,
-                    "立即登录",
+                    context.getString(R.string.mine_guest_action),
                     true,
-                    "--",
-                    "--",
-                    "--"
+                    context.getString(R.string.mine_placeholder_dash),
+                    context.getString(R.string.mine_placeholder_dash),
+                    context.getString(R.string.mine_placeholder_dash)
             );
         }
 
@@ -206,16 +219,23 @@ public class MineViewModel extends BaseViewModel {
                 nickname = user.getUsername();
             }
 
+            Context context = BaseApplication.getAppContext();
+
             String tagline = !TextUtils.isEmpty(user.getUsername())
-                    ? "ID: " + user.getUsername()
-                    : "保持优雅的生产力";
+                    ? context.getString(R.string.mine_tagline_id_format, user.getUsername())
+                    : context.getString(R.string.mine_tagline_default);
 
             String membershipLabel;
             if (coin.getLevel() > 0) {
-                String rankText = !TextUtils.isEmpty(coin.getRank()) ? " · 排名" + coin.getRank() : "";
-                membershipLabel = "Lv." + coin.getLevel() + rankText;
+                String rank = !TextUtils.isEmpty(coin.getRank()) ? coin.getRank() : "";
+                if (!TextUtils.isEmpty(rank)) {
+                    membershipLabel = context.getString(R.string.mine_membership_level_with_rank,
+                            coin.getLevel(), rank);
+                } else {
+                    membershipLabel = context.getString(R.string.mine_membership_level_format, coin.getLevel());
+                }
             } else {
-                membershipLabel = "新手成长中";
+                membershipLabel = context.getString(R.string.mine_membership_newbie);
             }
 
             int favoriteCount = user.getCollectIds() != null ? user.getCollectIds().size() : 0;
@@ -223,11 +243,11 @@ public class MineViewModel extends BaseViewModel {
 
             return new MineUiState(
                     true,
-                    TextUtils.isEmpty(nickname) ? "用户" : nickname,
+                    TextUtils.isEmpty(nickname) ? context.getString(R.string.mine_guest_display_name) : nickname,
                     tagline,
                     membershipLabel,
                     true,
-                    "签到 +5",
+                    context.getString(R.string.mine_action_check_in),
                     true,
                     String.valueOf(coin.getCoinCount()),
                     String.valueOf(favoriteCount),

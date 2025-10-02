@@ -2,12 +2,14 @@ package com.rapid.android.ui.feature.main.project;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.core.common.app.BaseApplication;
 import com.core.ui.presentation.BaseViewModel;
 import com.lib.data.repository.RepositoryProvider;
 import com.lib.domain.model.CategoryNodeBean;
 import com.lib.domain.repository.ContentRepository;
 import com.lib.domain.result.DomainError;
 import com.lib.domain.result.DomainResult;
+import com.rapid.android.R;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,14 +49,24 @@ public class ProjectViewModel extends BaseViewModel {
                             projectCategories.setValue(result.getData());
                         } else {
                             DomainError error = result.getError();
-                            errorMessage.setValue(error != null ? error.getMessage() : "加载项目分类失败");
+                            if (error != null && error.getMessage() != null) {
+                                errorMessage.setValue(error.getMessage());
+                            } else {
+                                errorMessage.setValue(BaseApplication.getAppContext()
+                                        .getString(R.string.project_error_load_failed));
+                            }
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         loading.setValue(false);
-                        errorMessage.setValue(e.getMessage());
+                        if (e.getMessage() != null) {
+                            errorMessage.setValue(e.getMessage());
+                        } else {
+                            errorMessage.setValue(BaseApplication.getAppContext()
+                                    .getString(R.string.project_error_load_failed));
+                        }
                     }
 
                     @Override

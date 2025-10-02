@@ -37,7 +37,7 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
             String username = binding.inputAccount.getText().toString().trim();
             String password = binding.inputPassword.getText().toString().trim();
             if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-                ToastUtils.showLongToast("请输入用户名和密码");
+                ToastUtils.showLongToast(getString(R.string.login_prompt_credentials));
                 return;
             }
             binding.btnLogin.setEnabled(false);
@@ -50,7 +50,7 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
         viewModel.getLoginSuccess().observe(this, success -> {
             binding.btnLogin.setEnabled(true);
             if (Boolean.TRUE.equals(success)) {
-                ToastUtils.showLongToast("登录成功");
+                ToastUtils.showLongToast(getString(R.string.login_success));
                 finish();
             }
         });
@@ -82,7 +82,7 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setTitle("登录或注册");
+            actionBar.setTitle(R.string.login_title);
         }
     }
 

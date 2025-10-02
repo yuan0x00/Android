@@ -2,10 +2,12 @@ package com.rapid.android.ui.feature.main;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.core.common.app.BaseApplication;
 import com.core.ui.presentation.BaseViewModel;
 import com.lib.data.repository.RepositoryProvider;
 import com.lib.domain.repository.UserRepository;
 import com.lib.domain.result.DomainError;
+import com.rapid.android.R;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -40,7 +42,9 @@ public class MainViewModel extends BaseViewModel {
                                     }
                                 }, throwable -> {
                                     com.lib.data.session.SessionManager.getInstance().forceLogout();
-                                    errorMessage.setValue(throwable.getMessage());
+                                    errorMessage.setValue(throwable != null && throwable.getMessage() != null
+                                            ? throwable.getMessage()
+                                            : BaseApplication.getAppContext().getString(R.string.main_auto_login_failed));
                                 }
                         )
         );
@@ -59,12 +63,19 @@ public class MainViewModel extends BaseViewModel {
                                     } else {
                                         com.lib.data.session.SessionManager.getInstance().forceLogout();
                                         DomainError error = result != null ? result.getError() : null;
-                                        errorMessage.setValue(error != null ? error.getMessage() : "自动登录失败");
+                                        if (error != null && error.getMessage() != null) {
+                                            errorMessage.setValue(error.getMessage());
+                                        } else {
+                                            errorMessage.setValue(BaseApplication.getAppContext()
+                                                    .getString(R.string.main_auto_login_failed));
+                                        }
                                     }
                                 },
                                 throwable -> {
                                     com.lib.data.session.SessionManager.getInstance().forceLogout();
-                                    errorMessage.setValue(throwable.getMessage());
+                                    errorMessage.setValue(throwable != null && throwable.getMessage() != null
+                                            ? throwable.getMessage()
+                                            : BaseApplication.getAppContext().getString(R.string.main_auto_login_failed));
                                 }
                         )
         );

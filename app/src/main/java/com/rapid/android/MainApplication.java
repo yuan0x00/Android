@@ -17,6 +17,8 @@ public class MainApplication extends BaseApplication {
     public void onCreate() {
         super.onCreate();
 
+        com.rapid.android.utils.ThemeManager.applySavedTheme();
+
         enableStrictMode();
         // 初始化数据层
         DataInitializer.init();

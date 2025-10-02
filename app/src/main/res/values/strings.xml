@@ -12,6 +12,9 @@
     <!-- 通用设置 -->
     <string name="dark_mode">深色模式</string>
     <string name="dark_mode_description">切换到深色主题，减少眼部疲劳</string>
+    <string name="theme_follow_system">跟随系统</string>
+    <string name="theme_light">浅色</string>
+    <string name="theme_dark">深色</string>
     <string name="auto_update">自动更新</string>
     <string name="auto_update_description">自动检查并下载应用更新</string>
     <string name="notifications">通知</string>

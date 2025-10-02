@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.core.ui.presentation.BaseActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.rapid.android.databinding.ActivitySettingBinding;
+import com.rapid.android.utils.ThemeManager;
 
 public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySettingBinding> {
 
@@ -44,8 +45,29 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
 
     protected void setupObservers() {
 
-        viewModel.getDarkMode().observe(this, isChecked ->
-                binding.switchDarkMode.setChecked(isChecked != null ? isChecked : false));
+        viewModel.getThemeMode().observe(this, mode -> {
+            if (mode == null) {
+                return;
+            }
+            switch (mode) {
+                case LIGHT:
+                    if (binding.groupThemeMode.getCheckedButtonId() != binding.btnThemeLight.getId()) {
+                        binding.groupThemeMode.check(binding.btnThemeLight.getId());
+                    }
+                    break;
+                case DARK:
+                    if (binding.groupThemeMode.getCheckedButtonId() != binding.btnThemeDark.getId()) {
+                        binding.groupThemeMode.check(binding.btnThemeDark.getId());
+                    }
+                    break;
+                case SYSTEM:
+                default:
+                    if (binding.groupThemeMode.getCheckedButtonId() != binding.btnThemeSystem.getId()) {
+                        binding.groupThemeMode.check(binding.btnThemeSystem.getId());
+                    }
+                    break;
+            }
+        });
 
         viewModel.getAutoUpdate().observe(this, isChecked ->
                 binding.switchAutoUpdate.setChecked(isChecked != null ? isChecked : false));
@@ -73,8 +95,18 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
 
     private void setupClickListeners() {
 
-        binding.switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) ->
-                viewModel.setDarkMode(isChecked));
+        binding.groupThemeMode.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (!isChecked) {
+                return;
+            }
+            if (checkedId == binding.btnThemeSystem.getId()) {
+                viewModel.setThemeMode(ThemeManager.ThemeMode.SYSTEM);
+            } else if (checkedId == binding.btnThemeLight.getId()) {
+                viewModel.setThemeMode(ThemeManager.ThemeMode.LIGHT);
+            } else if (checkedId == binding.btnThemeDark.getId()) {
+                viewModel.setThemeMode(ThemeManager.ThemeMode.DARK);
+            }
+        });
 
         binding.switchAutoUpdate.setOnCheckedChangeListener((buttonView, isChecked) ->
                 viewModel.setAutoUpdate(isChecked));

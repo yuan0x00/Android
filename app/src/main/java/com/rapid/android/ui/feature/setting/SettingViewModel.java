@@ -6,26 +6,25 @@ import androidx.lifecycle.MutableLiveData;
 import com.core.ui.presentation.BaseViewModel;
 import com.lib.data.repository.RepositoryProvider;
 import com.lib.domain.repository.UserRepository;
+import com.rapid.android.utils.ThemeManager;
 
 public class SettingViewModel extends BaseViewModel {
 
     private final UserRepository userRepository = RepositoryProvider.getUserRepository();
 
-    private final MutableLiveData<Boolean> darkMode = new MutableLiveData<>(false);
+    private final MutableLiveData<ThemeManager.ThemeMode> themeMode = new MutableLiveData<>(ThemeManager.ThemeMode.SYSTEM);
     private final MutableLiveData<Boolean> autoUpdate = new MutableLiveData<>(true);
     private final MutableLiveData<Boolean> notifications = new MutableLiveData<>(true);
     private final MutableLiveData<String> operationMessage = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
-    public LiveData<Boolean> getDarkMode() {
-        return darkMode;
+    public LiveData<ThemeManager.ThemeMode> getThemeMode() {
+        return themeMode;
     }
 
-    public void setDarkMode(boolean enabled) {
-        darkMode.setValue(enabled);
-        saveSetting("dark_mode", enabled);
-        // 这里可以触发主题切换
-        applyTheme(enabled);
+    public void setThemeMode(ThemeManager.ThemeMode mode) {
+        themeMode.setValue(mode);
+        ThemeManager.applyThemeMode(mode);
     }
 
     public LiveData<Boolean> getAutoUpdate() {
@@ -34,7 +33,6 @@ public class SettingViewModel extends BaseViewModel {
 
     public void setAutoUpdate(boolean enabled) {
         autoUpdate.setValue(enabled);
-        saveSetting("auto_update", enabled);
     }
 
     public LiveData<Boolean> getNotifications() {
@@ -43,7 +41,6 @@ public class SettingViewModel extends BaseViewModel {
 
     public void setNotifications(boolean enabled) {
         notifications.setValue(enabled);
-        saveSetting("notifications", enabled);
     }
 
     public LiveData<String> getOperationMessage() {
@@ -69,28 +66,11 @@ public class SettingViewModel extends BaseViewModel {
         }).start();
     }
 
-    // 私有方法
-    private void saveSetting(String key, boolean value) {
-        // 这里应该保存到SharedPreferences或其他存储方式
-        // 示例：SharedPreferences.Editor editor = preferences.edit();
-        // editor.putBoolean(key, value);
-        // editor.apply();
-    }
-
-    private void applyTheme(boolean isDarkMode) {
-        // 这里可以应用主题切换逻辑
-        // 例如：AppCompatDelegate.setDefaultNightMode(isDarkMode ? 
-        //       AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-    }
-
     // 初始化设置
     public void loadSettings() {
-        // 从SharedPreferences加载设置
-        // 示例：
-        // SharedPreferences preferences = getSharedPreferences("app_settings", Context.MODE_PRIVATE);
-        // autoLogin.setValue(preferences.getBoolean("auto_login", false));
-        // biometricLogin.setValue(preferences.getBoolean("biometric_login", false));
-        // ... 其他设置
+        ThemeManager.ThemeMode saved = ThemeManager.getSavedThemeMode();
+        themeMode.setValue(saved);
+        ThemeManager.applyThemeMode(saved);
     }
     
     public void logoutWithCallback(LogoutCallback callback) {

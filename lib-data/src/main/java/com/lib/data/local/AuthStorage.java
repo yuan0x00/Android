@@ -78,4 +78,16 @@ public final class AuthStorage {
     public Single<String> getPassword() {
         return Single.fromCallable(() -> dataStore.getString(KEY_PASSWORD, null));
     }
+
+    public String peekToken() {
+        return dataStore.getString(KEY_TOKEN, null);
+    }
+
+    public String peekUserId() {
+        return dataStore.getString(KEY_USER_ID, null);
+    }
+
+    public String peekUsername() {
+        return dataStore.getString(KEY_USERNAME, null);
+    }
 }

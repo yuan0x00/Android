@@ -7,10 +7,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.lib.data.local.AuthStorage;
 import com.lib.data.repository.RepositoryProvider;
 import com.lib.domain.model.LoginBean;
 import com.lib.domain.model.UserInfoBean;
 import com.lib.domain.repository.UserRepository;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -26,6 +29,7 @@ public class SessionManager {
     private static volatile SessionManager instance;
     private final UserRepository userRepository;
     private final CompositeDisposable disposables = new CompositeDisposable();
+    private final AtomicBoolean fetchingProfile = new AtomicBoolean(false);
     
     // 简单的状态管理
     private final MutableLiveData<SessionState> sessionState = new MutableLiveData<>(SessionState.GUEST);
@@ -92,6 +96,7 @@ public class SessionManager {
                     isLoggedIn -> {
                         if (Boolean.TRUE.equals(isLoggedIn)) {
                             // 已登录，获取用户信息
+                            sessionState.postValue(createCachedSessionState());
                             refreshUserInfoInternal();
                         } else {
                             // 未登录，设置为访客状态
@@ -125,17 +130,20 @@ public class SessionManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     result -> {
+                        clearActiveRequests();
                         sessionState.postValue(SessionState.GUEST);
                     },
                     throwable -> {
+                        clearActiveRequests();
                         sessionState.postValue(SessionState.GUEST);
                     }
                 )
         );
     }
-    
+
     // 强制登出（如token过期）
     public void forceLogout() {
+        clearActiveRequests();
         sessionState.postValue(SessionState.GUEST);
     }
     
@@ -148,6 +156,9 @@ public class SessionManager {
     
     // 内部方法：刷新用户信息
     private void refreshUserInfoInternal() {
+        if (!fetchingProfile.compareAndSet(false, true)) {
+            return;
+        }
         disposables.add(
             userRepository.fetchUserProfile()
                 .subscribeOn(Schedulers.io())
@@ -155,6 +166,7 @@ public class SessionManager {
                 .firstOrError()
                 .subscribe(
                     result -> {
+                        fetchingProfile.set(false);
                         if (result != null && result.isSuccess() && result.getData() != null) {
                             SessionState currentState = sessionState.getValue();
                             if (currentState != null && currentState.isLoggedIn()) {
@@ -164,6 +176,7 @@ public class SessionManager {
                         // 如果获取失败，保持当前状态，不改变登录状态
                     },
                     throwable -> {
+                        fetchingProfile.set(false);
                         // 保持当前状态，不改变登录状态，只用户信息为null
                         SessionState currentState = sessionState.getValue();
                         if (currentState != null && currentState.isLoggedIn()) {
@@ -176,7 +189,32 @@ public class SessionManager {
     
     // 清理资源
     public void dispose() {
+        clearActiveRequests();
+    }
+
+    private void clearActiveRequests() {
         disposables.clear();
+        fetchingProfile.set(false);
+    }
+
+    private SessionState createCachedSessionState() {
+        AuthStorage authStorage = AuthStorage.getInstance();
+        String username = authStorage.peekUsername();
+        String userId = authStorage.peekUserId();
+        String token = authStorage.peekToken();
+
+        LoginBean cachedLogin = new LoginBean();
+        cachedLogin.setUsername(username != null ? username : "");
+        if (userId != null) {
+            try {
+                cachedLogin.setId(Integer.parseInt(userId));
+            } catch (NumberFormatException ignored) {
+                cachedLogin.setId(0);
+            }
+        }
+        cachedLogin.setToken(token != null ? token : "");
+
+        return SessionState.loggedIn(new UserInfoBean(cachedLogin, null));
     }
 
     // 以下是桥接原AuthSessionManager的API
@@ -275,7 +313,7 @@ public class SessionManager {
                     userInfo.getUserInfo().getUsername() : null;
             }
             
-            return TextUtils.isEmpty(nickname) ? "锤友" : nickname;
+            return TextUtils.isEmpty(nickname) ? "用户" : nickname;
         }
     }
 }

@@ -37,8 +37,10 @@ public class ContentRepositoryImpl implements ContentRepository {
     }
 
     @Override
-    public Observable<DomainResult<ArticleListBean>> projectArticles(int page, int categoryId) {
-        return map(api.projectArticles(page, categoryId));
+    public Observable<DomainResult<ProjectPageBean>> projectArticles(int page, int categoryId) {
+        return api.projectArticles(page, categoryId)
+                .map(DomainResultMapper::map)
+                .onErrorReturn(DomainResultMapper::mapError);
     }
 
     @Override

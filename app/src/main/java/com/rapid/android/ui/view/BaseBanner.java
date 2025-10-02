@@ -6,10 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -31,6 +28,10 @@ public abstract class BaseBanner<T> extends FrameLayout {
     protected ViewPager2 mViewPager;
     protected List<T> mDataList = new ArrayList<>();
     private Runnable mAutoScrollRunnable;
+    private int touchSlop;
+    private float initialX;
+    private float initialY;
+    private boolean isParentInterceptDisabled;
 
     // 轮播间隔
     private long mInterval = 3000;
@@ -71,6 +72,8 @@ public abstract class BaseBanner<T> extends FrameLayout {
         // 设置适配器
         mViewPager.setAdapter(new BannerAdapter());
 
+        setupTouchConflictHandler();
+
         // 触摸暂停 + 滑动后重置轮播 + 更新指示器
         setupPageChangeCallback();
 
@@ -85,6 +88,58 @@ public abstract class BaseBanner<T> extends FrameLayout {
             }
             mHandler.postDelayed(mAutoScrollRunnable, mInterval);
         };
+    }
+
+    private void setupTouchConflictHandler() {
+        touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+        mViewPager.setOnTouchListener((v, event) -> false);
+
+        View child = mViewPager.getChildAt(0);
+        if (child instanceof RecyclerView) {
+            child.setOnTouchListener((v, event) -> {
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        initialX = event.getX();
+                        initialY = event.getY();
+                        isParentInterceptDisabled = false;
+                        stopAutoScroll();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float dx = event.getX() - initialX;
+                        float dy = event.getY() - initialY;
+                        if (Math.abs(dx) > touchSlop || Math.abs(dy) > touchSlop) {
+                            boolean horizontal = Math.abs(dx) > Math.abs(dy);
+                            if (horizontal && !isParentInterceptDisabled) {
+                                requestParentsDisallowIntercept(true);
+                                isParentInterceptDisabled = true;
+                            } else if (!horizontal && isParentInterceptDisabled) {
+                                requestParentsDisallowIntercept(false);
+                                isParentInterceptDisabled = false;
+                            }
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        if (isParentInterceptDisabled) {
+                            requestParentsDisallowIntercept(false);
+                            isParentInterceptDisabled = false;
+                        }
+                        startAutoScroll();
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            });
+        }
+    }
+
+    private void requestParentsDisallowIntercept(boolean disallow) {
+        ViewParent parent = getParent();
+        while (parent != null) {
+            parent.requestDisallowInterceptTouchEvent(disallow);
+            parent = parent.getParent();
+        }
     }
 
     private void setupPageChangeCallback() {

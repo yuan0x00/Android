@@ -1,30 +1,32 @@
 package com.rapid.android.ui.feature.main.home.recommend;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.core.common.utils.ToastUtils;
 import com.core.ui.presentation.BaseFragment;
 import com.lib.domain.model.ArticleListBean;
-import com.lib.domain.model.BannerItemBean;
 import com.rapid.android.databinding.FragmentRecommandBinding;
+import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.main.home.BannerAdapter;
 import com.rapid.android.ui.feature.main.home.FeedAdapter;
-import com.scwang.smart.refresh.footer.ClassicsFooter;
-import com.scwang.smart.refresh.header.ClassicsHeader;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 
 public class RecommendFragment extends BaseFragment<RecommendViewModel, FragmentRecommandBinding> {
 
     private BannerAdapter bannerAdapter;
     private FeedAdapter feedAdapter;
+    private LinearLayoutManager layoutManager;
+    private ContentStateController stateController;
 
     @Override
     protected RecommendViewModel createViewModel() {
@@ -39,57 +41,67 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
     @Override
     protected void loadData() {
         super.loadData();
-        viewModel.banner();
-        viewModel.articleList();
+        viewModel.refreshAll();
     }
 
     @Override
     protected void setupObservers() {
-        viewModel.getErrorMessage().observe(this, msg -> {
-            if (msg != null && !msg.isEmpty()) {
-                ToastUtils.showLongToast(msg);
-            }
-        });
+        UiFeedback.observeError(this, viewModel.getErrorMessage());
+        UiFeedback.observeError(this, viewModel.getPagingError());
         viewModel.getBannerList().observe(this, bannerList -> {
-            if (bannerList != null && !bannerList.isEmpty()) {
+            if (bannerList != null) {
                 bannerAdapter.setData(bannerList);
             }
         });
-        viewModel.getArticleListBean().observe(this, bean -> {
-            if (bean != null) {
-                feedAdapter.setData(bean);
-            }
+        viewModel.getArticleItems().observe(this, items -> {
+            feedAdapter.submitList(items);
+            boolean empty = items == null || items.isEmpty();
+            stateController.setEmpty(empty);
         });
+        viewModel.getLoading().observe(this, isLoading -> {
+            stateController.setLoading(Boolean.TRUE.equals(isLoading));
+        });
+        viewModel.getLoadingMore().observe(this, isLoadingMore ->
+                binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(isLoadingMore) ? View.VISIBLE : View.GONE));
     }
 
     @Override
     protected void initializeViews() {
 
-        // 初始化 RecyclerView
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        layoutManager = new LinearLayoutManager(requireContext());
+        binding.recyclerView.setLayoutManager(layoutManager);
 
-        // 模拟数据
-        List<BannerItemBean> bannerUrls = Arrays.asList(
-                new BannerItemBean("https://public.ysjf.com/content/title-image/Y7IoA2mGtho.jpg"),
-                new BannerItemBean("https://public.ysjf.com/product/preview/Y9s2dgnGrU.jpg"),
-                new BannerItemBean("https://public.ysjf.com/product/preview/cT9mqPVWS6.jpg")
-        );
+        stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 
         ArticleListBean feeds = new ArticleListBean();
 
-        // 创建各模块 Adapter
-        bannerAdapter = new BannerAdapter(bannerUrls);
+        bannerAdapter = new BannerAdapter(new ArrayList<>());
         feedAdapter = new FeedAdapter(feeds);
 
-        // 使用 ConcatAdapter 拼接
         ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, feedAdapter);
         binding.recyclerView.setAdapter(concatAdapter);
 
-        //设置 Header / Footer / Listener
-        binding.refreshLayout.setRefreshHeader(new ClassicsHeader(requireContext()));
-        binding.refreshLayout.setRefreshFooter(new ClassicsFooter(requireContext()));
-        binding.refreshLayout.setOnRefreshListener((refreshlayout) -> refreshlayout.finishRefresh(2000));
-        binding.refreshLayout.setOnLoadMoreListener(refreshlayout -> refreshlayout.finishLoadMore(2000));
+        binding.swipeRefresh.setOnRefreshListener(() -> viewModel.refreshAll());
 
+        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy <= 0) {
+                    return;
+                }
+                if (layoutManager == null) {
+                    return;
+                }
+                int totalItemCount = layoutManager.getItemCount();
+                if (totalItemCount == 0) {
+                    return;
+                }
+                int lastVisible = layoutManager.findLastVisibleItemPosition();
+                if (lastVisible >= totalItemCount - 3) {
+                    viewModel.loadMoreArticles();
+                }
+            }
+        });
     }
 }

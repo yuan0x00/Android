@@ -20,6 +20,7 @@ public class MineViewModel extends BaseViewModel {
     private final MutableLiveData<String> toastMessage = new MutableLiveData<>();
     private final UserRepository userRepository = RepositoryProvider.getUserRepository();
     private final SessionManager sessionManager = SessionManager.getInstance();
+    private boolean profileLoading = false;
 
     public LiveData<MineUiState> getUiState() {
         return uiState;
@@ -34,29 +35,38 @@ public class MineViewModel extends BaseViewModel {
     }
 
     public void refresh() {
-        loading.setValue(true);
-        sessionManager.refreshUserInfo();
-        // 由于SessionManager会自动更新状态，我们主要依赖状态监听器来更新UI
-        // 但也可以在这里直接获取当前状态
-        com.lib.data.session.SessionManager.SessionState currentState = sessionManager.getCurrentState();
-        if (currentState != null && currentState.isLoggedIn()) {
-            loading.setValue(false);
-            UserInfoBean userInfo = currentState.getUserInfo();
-            if (userInfo != null) {
-                uiState.setValue(MineUiState.from(userInfo));
-            } else {
-                // 如果没有用户信息，尝试从API获取
-                sessionManager.refreshUserInfo();
-            }
-        } else {
-            loading.setValue(false);
-            uiState.setValue(MineUiState.guest());
+        if (profileLoading) {
+            return;
         }
+        startLoading();
+        sessionManager.refreshUserInfo();
     }
 
     public void resetToGuest() {
+        stopLoading();
         loading.setValue(false);
         uiState.setValue(MineUiState.guest());
+    }
+
+    public void applySessionState(SessionManager.SessionState sessionState) {
+        if (sessionState == null || !sessionState.isLoggedIn()) {
+            resetToGuest();
+            return;
+        }
+
+        UserInfoBean userInfo = sessionState.getUserInfo();
+        if (userInfo != null) {
+            stopLoading();
+            loading.setValue(false);
+            uiState.setValue(MineUiState.from(userInfo));
+        } else {
+            if (!profileLoading) {
+                startLoading();
+                sessionManager.refreshUserInfo();
+            } else {
+                loading.setValue(true);
+            }
+        }
     }
 
     private void fetchProfile() {
@@ -72,6 +82,7 @@ public class MineViewModel extends BaseViewModel {
     }
 
     private void handleUserInfo(UserInfoBean userInfo) {
+        stopLoading();
         loading.setValue(false);
         if (userInfo != null) {
             uiState.setValue(MineUiState.from(userInfo));
@@ -128,6 +139,15 @@ public class MineViewModel extends BaseViewModel {
         );
     }
 
+    private void startLoading() {
+        profileLoading = true;
+        loading.setValue(true);
+    }
+
+    private void stopLoading() {
+        profileLoading = false;
+    }
+
     public static class MineUiState {
         private final boolean loggedIn;
         private final String displayName;
@@ -166,7 +186,7 @@ public class MineViewModel extends BaseViewModel {
             return new MineUiState(
                     false,
                     "未登录用户",
-                    "登录解锁云同步与个性化",
+                    "登录",
                     "",
                     false,
                     "立即登录",
@@ -203,7 +223,7 @@ public class MineViewModel extends BaseViewModel {
 
             return new MineUiState(
                     true,
-                    TextUtils.isEmpty(nickname) ? "锤友" : nickname,
+                    TextUtils.isEmpty(nickname) ? "用户" : nickname,
                     tagline,
                     membershipLabel,
                     true,

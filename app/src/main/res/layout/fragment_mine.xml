@@ -82,7 +82,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/ivAvatar"
                         app:layout_constraintTop_toBottomOf="@id/tvUsername"
-                        tools:text="登录解锁云同步"/>
+                        tools:text="登录"/>
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipMembership"
@@ -307,12 +307,14 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressBar"
-        style="@android:style/Widget.ProgressBar.Large"
+        style="@style/Widget.Material3.CircularProgressIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:indeterminate="true"
+        app:indicatorSize="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

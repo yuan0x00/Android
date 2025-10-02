@@ -17,7 +17,7 @@ public interface ContentRepository {
 
     Observable<DomainResult<List<CategoryNodeBean>>> projectTree();
 
-    Observable<DomainResult<ArticleListBean>> projectArticles(int page, int categoryId);
+    Observable<DomainResult<ProjectPageBean>> projectArticles(int page, int categoryId);
 
     Observable<DomainResult<List<WxChapterBean>>> wechatChapters();
 

@@ -18,17 +18,36 @@ import com.lib.domain.model.ArticleListBean;
 import com.rapid.android.R;
 import com.rapid.android.databinding.ItemFeedBinding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder> {
-    private ArticleListBean feeds;
+    private final List<ArticleListBean.Data> items = new ArrayList<>();
 
 
     public FeedAdapter(ArticleListBean feeds) {
-        this.feeds = feeds;
+        setData(feeds);
     }
 
     public void setData(ArticleListBean newData) {
-        this.feeds = newData;
-        notifyDataSetChanged(); // 或使用 DiffUtil 更高效
+        submitList(newData != null ? newData.getDatas() : null);
+    }
+
+    public void submitList(List<ArticleListBean.Data> data) {
+        items.clear();
+        if (data != null) {
+            items.addAll(data);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void appendList(List<ArticleListBean.Data> more) {
+        if (more == null || more.isEmpty()) {
+            return;
+        }
+        int start = items.size();
+        items.addAll(more);
+        notifyItemRangeInserted(start, more.size());
     }
 
     @NonNull
@@ -44,12 +63,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FeedViewHolder holder, int position) {
-        holder.bind(feeds.getDatas().get(position));
+        holder.bind(items.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return feeds != null ? feeds.getDatas().size() : 0;
+        return items.size();
     }
 
     public static class FeedViewHolder extends RecyclerView.ViewHolder {

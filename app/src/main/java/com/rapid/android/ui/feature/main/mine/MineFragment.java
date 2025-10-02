@@ -12,6 +12,7 @@ import com.core.common.utils.ToastUtils;
 import com.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentMineBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
+import com.rapid.android.ui.feature.setting.SettingActivity;
 
 public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBinding> {
 
@@ -94,13 +95,9 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
                 getViewLifecycleOwner(),
                 sessionState -> {
                     if (sessionState != null) {
-                        if (sessionState.isLoggedIn()) {
-                            // 已登录，刷新用户信息
-                            viewModel.refresh();
-                        } else {
-                            // 未登录，重置为访客状态
-                            viewModel.resetToGuest();
-                        }
+                        viewModel.applySessionState(sessionState);
+                    } else {
+                        viewModel.resetToGuest();
                     }
                 }
         );
@@ -152,13 +149,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
     }
 
     private void openSettings() {
-        // 通过宿主Activity执行导航
-        if (getActivity() instanceof ISettingsNavigator) {
-            ((ISettingsNavigator) getActivity()).navigateToSettings();
-        } else {
-            // Fallback: 提示用户功能不可用
-            ToastUtils.showShortToast("功能暂不可用");
-        }
+        startActivity(new Intent(getContext(), SettingActivity.class));
     }
 
     private void handleProtectedAction(String message) {

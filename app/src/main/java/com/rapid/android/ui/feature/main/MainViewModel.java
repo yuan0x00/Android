@@ -30,8 +30,11 @@ public class MainViewModel extends BaseViewModel {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(isLogged -> {
                                     if (isLogged != null && isLogged) {
-                                        // 使用统一的会话管理器
-                                        com.lib.data.session.SessionManager.getInstance().refreshUserInfo();
+                                        com.lib.data.session.SessionManager sessionManager = com.lib.data.session.SessionManager.getInstance();
+                                        com.lib.data.session.SessionManager.SessionState currentState = sessionManager.getCurrentState();
+                                        if (currentState == null || !currentState.isLoggedIn() || currentState.getUserInfo() == null) {
+                                            sessionManager.refreshUserInfo();
+                                        }
                                     } else {
                                         attemptReLogin();
                                     }

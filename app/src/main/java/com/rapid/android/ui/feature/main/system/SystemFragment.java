@@ -1,19 +1,21 @@
 package com.rapid.android.ui.feature.main.system;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.core.common.utils.ToastUtils;
 import com.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentSystemBinding;
+import com.rapid.android.ui.common.CategoryTreeAdapter;
+import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.UiFeedback;
 
 public class SystemFragment extends BaseFragment<SystemViewModel, FragmentSystemBinding> {
 
-    private SystemCategoryTreeAdapter adapter;
+    private CategoryTreeAdapter adapter;
+    private ContentStateController stateController;
 
     @Override
     protected SystemViewModel createViewModel() {
@@ -27,11 +29,13 @@ public class SystemFragment extends BaseFragment<SystemViewModel, FragmentSystem
 
     @Override
     protected void initializeViews() {
-        adapter = new SystemCategoryTreeAdapter();
+        adapter = new CategoryTreeAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
 
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.loadSystem(true));
+
+        stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
     }
 
     @Override
@@ -43,27 +47,13 @@ public class SystemFragment extends BaseFragment<SystemViewModel, FragmentSystem
     protected void setupObservers() {
         viewModel.getCategories().observe(this, list -> {
             adapter.submitList(list);
-            binding.emptyView.setVisibility(list == null || list.isEmpty() ? View.VISIBLE : View.GONE);
+            stateController.setEmpty(list == null || list.isEmpty());
         });
 
         viewModel.getLoading().observe(this, loading -> {
-            boolean isLoading = Boolean.TRUE.equals(loading);
-            if (!isLoading) {
-                if (binding.swipeRefresh.isRefreshing()) {
-                    binding.swipeRefresh.setRefreshing(false);
-                }
-                binding.progressBar.setVisibility(View.GONE);
-            } else {
-                if (!binding.swipeRefresh.isRefreshing()) {
-                    binding.progressBar.setVisibility(View.VISIBLE);
-                }
-            }
+            stateController.setLoading(Boolean.TRUE.equals(loading));
         });
 
-        viewModel.getErrorMessage().observe(this, msg -> {
-            if (msg != null && !msg.isEmpty()) {
-                ToastUtils.showLongToast(msg);
-            }
-        });
+        UiFeedback.observeError(this, viewModel.getErrorMessage());
     }
 }

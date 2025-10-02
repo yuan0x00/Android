@@ -5,30 +5,26 @@ import com.android.build.api.dsl.CommonExtension;
 import org.gradle.api.JavaVersion;
 import org.gradle.api.Project;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
+import java.io.File;
 
 public final class AndroidJava {
 
-    private static final String CONFIG_FILE = "gradle.properties";
     private static final String PROPERTY_COMPILE_SDK = "compileSdk";
     private static final String PROPERTY_MIN_SDK = "minSdk";
 
     //    private static final String PROPERTY_TARGET_SDK = "targetSdk";
 
     private static final String PROPERTY_JAVA_VERSION = "javaVersion";
+    private static final String PROPERTY_ENABLE_VIEW_BINDING = "enableViewBinding";
 
     private AndroidJava() {
     }
 
     public static void configureAndroidProject(Project project, CommonExtension<?, ?, ?, ?, ?, ?> commonExtension) {
-        Properties properties = loadProperties(project);
-
-        int compileSdk = Integer.parseInt(getRequiredProperty(properties, PROPERTY_COMPILE_SDK));
-        int minSdk = Integer.parseInt(getRequiredProperty(properties, PROPERTY_MIN_SDK));
-//        int targetSdk = Integer.parseInt(getRequiredProperty(properties, PROPERTY_TARGET_SDK));
-        String javaVersion = getRequiredProperty(properties, PROPERTY_JAVA_VERSION);
+        int compileSdk = Integer.parseInt(getRequiredProperty(project, PROPERTY_COMPILE_SDK));
+        int minSdk = Integer.parseInt(getRequiredProperty(project, PROPERTY_MIN_SDK));
+//        int targetSdk = Integer.parseInt(getRequiredProperty(project, PROPERTY_TARGET_SDK));
+        String javaVersion = getRequiredProperty(project, PROPERTY_JAVA_VERSION);
 
         commonExtension.setCompileSdk(compileSdk);
         commonExtension.getDefaultConfig().setMinSdk(minSdk);
@@ -39,7 +35,7 @@ public final class AndroidJava {
         commonExtension.getCompileOptions().setTargetCompatibility(javaVer);
 
         commonExtension.getBuildFeatures().setBuildConfig(true);
-        commonExtension.getBuildFeatures().setViewBinding(true);
+        commonExtension.getBuildFeatures().setViewBinding(shouldEnableViewBinding(project));
     }
 
     private static JavaVersion getJavaVersion(String javaVersionStr) {
@@ -57,21 +53,24 @@ public final class AndroidJava {
         }
     }
 
-    private static Properties loadProperties(Project project) {
-        Properties properties = new Properties();
-        try (FileInputStream inputStream = new FileInputStream(project.getRootProject().file(CONFIG_FILE))) {
-            properties.load(inputStream);
-        } catch (IOException exception) {
-            throw new IllegalStateException("Failed to read gradle.properties", exception);
-        }
-        return properties;
-    }
-
-    private static String getRequiredProperty(Properties properties, String key) {
-        String value = properties.getProperty(key);
+    private static String getRequiredProperty(Project project, String key) {
+        String value = project.getProviders().gradleProperty(key).getOrNull();
         if (value == null || value.isBlank()) {
             throw new IllegalStateException("Missing in gradle.properties: " + key);
         }
         return value;
+    }
+
+    private static boolean shouldEnableViewBinding(Project project) {
+        String override = project.getProviders().gradleProperty(PROPERTY_ENABLE_VIEW_BINDING).getOrNull();
+        if (override != null && !override.isBlank()) {
+            return Boolean.parseBoolean(override);
+        }
+        File layoutDir = project.getLayout().getProjectDirectory().file("src/main/res/layout").getAsFile();
+        if (layoutDir.isDirectory()) {
+            String[] layoutFiles = layoutDir.list((dir, name) -> name.endsWith(".xml"));
+            return layoutFiles != null && layoutFiles.length > 0;
+        }
+        return false;
     }
 }

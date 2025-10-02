@@ -29,7 +29,7 @@ public interface ContentApi {
     Observable<BaseResponse<List<CategoryNodeBean>>> projectTree();
 
     @GET("/project/list/{page}/json")
-    Observable<BaseResponse<ArticleListBean>> projectArticles(@Path("page") int page, @Query("cid") int categoryId);
+    Observable<BaseResponse<ProjectPageBean>> projectArticles(@Path("page") int page, @Query("cid") int categoryId);
 
     // 公众号
     @GET("/wxarticle/chapters/json")

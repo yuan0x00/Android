@@ -1,5 +1,6 @@
 package com.rapid.android.ui.feature.main.navigation;
 
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.core.webview.WebViewActivity;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.lib.domain.model.ArticleListBean;
 import com.lib.domain.model.NavigationBean;
 import com.rapid.android.R;
@@ -35,23 +39,19 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Na
         return new NavigationViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull NavigationViewHolder holder, int position) {
-        NavigationBean item = items.get(position);
-        holder.titleText.setText(item.getName());
-
-        List<ArticleListBean.Data> articles = item.getArticles();
-        if (articles != null && !articles.isEmpty()) {
-            List<String> titles = new ArrayList<>();
-            for (ArticleListBean.Data article : articles) {
-                if (!TextUtils.isEmpty(article.getTitle())) {
-                    titles.add(article.getTitle());
-                }
-            }
-            holder.articlesText.setText(TextUtils.join("  |  ", titles));
+    private static Chip createChip(@NonNull ChipGroup parent, @NonNull String rawTitle) {
+        Chip chip = new Chip(parent.getContext());
+        chip.setCheckable(false);
+        chip.setClickable(true);
+        chip.setEnsureMinTouchTargetSize(false);
+        chip.setMaxLines(1);
+        chip.setEllipsize(TextUtils.TruncateAt.END);
+        if (TextUtils.indexOf(rawTitle, '<') >= 0) {
+            chip.setText(Html.fromHtml(rawTitle, Html.FROM_HTML_MODE_LEGACY));
         } else {
-            holder.articlesText.setText(R.string.no_navigation_articles);
+            chip.setText(rawTitle);
         }
+        return chip;
     }
 
     @Override
@@ -59,14 +59,43 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Na
         return items.size();
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull NavigationViewHolder holder, int position) {
+        NavigationBean item = items.get(position);
+        holder.titleText.setText(item.getName());
+
+        List<ArticleListBean.Data> articles = item.getArticles();
+        holder.articlesGroup.removeAllViews();
+        if (articles != null && !articles.isEmpty()) {
+            for (ArticleListBean.Data article : articles) {
+                if (article == null || TextUtils.isEmpty(article.getTitle())) {
+                    continue;
+                }
+                Chip chip = createChip(holder.articlesGroup, article.getTitle());
+                String link = article.getLink();
+                if (!TextUtils.isEmpty(link)) {
+                    chip.setOnClickListener(v -> WebViewActivity.start(v.getContext(), link, article.getTitle()));
+                } else {
+                    chip.setEnabled(false);
+                    chip.setClickable(false);
+                    chip.setAlpha(0.6f);
+                }
+                holder.articlesGroup.addView(chip);
+            }
+            holder.articlesGroup.setVisibility(holder.articlesGroup.getChildCount() > 0 ? View.VISIBLE : View.GONE);
+        } else {
+            holder.articlesGroup.setVisibility(View.GONE);
+        }
+    }
+
     static class NavigationViewHolder extends RecyclerView.ViewHolder {
         final TextView titleText;
-        final TextView articlesText;
+        final ChipGroup articlesGroup;
 
         NavigationViewHolder(@NonNull View itemView) {
             super(itemView);
             titleText = itemView.findViewById(R.id.titleText);
-            articlesText = itemView.findViewById(R.id.articlesText);
+            articlesGroup = itemView.findViewById(R.id.articlesGroup);
         }
     }
 }

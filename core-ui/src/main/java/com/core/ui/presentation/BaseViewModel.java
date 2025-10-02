@@ -35,6 +35,13 @@ public abstract class BaseViewModel extends ViewModel {
     }
 
     /**
+     * 向外暴露的订阅管理入口，便于辅助类统一托管 Disposable。
+     */
+    public void trackDisposable(Disposable disposable) {
+        autoDispose(disposable);
+    }
+
+    /**
      * 移除指定的 Disposable
      */
     protected void removeDisposable(Disposable disposable) {

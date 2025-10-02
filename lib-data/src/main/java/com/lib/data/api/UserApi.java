@@ -10,9 +10,6 @@ import retrofit2.http.*;
 
 public interface UserApi {
 
-    @GET("/lg/coin/userinfo/json")
-    Observable<BaseResponse<CoinBean>> coin();
-
     @GET("/user/lg/userinfo/json")
     Observable<BaseResponse<UserInfoBean>> userinfo();
 
@@ -29,7 +26,7 @@ public interface UserApi {
     @POST("/lg/uncollect_originId/{id}/json")
     Observable<BaseResponse<String>> unCollect(@Path("id") int id);
 
-    @POST("/lg/user/sign.json")
+    @GET("/lg/coin/userinfo/json")
     Observable<BaseResponse<CoinBean>> signIn();
 
     @POST("/lg/collect/{id}/json")

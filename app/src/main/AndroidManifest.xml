@@ -23,6 +23,9 @@
             android:name=".ui.feature.main.home.search.SearchActivity"
             android:exported="false"/>
         <activity
+            android:name=".ui.feature.main.project.list.ProjectListActivity"
+            android:exported="false"/>
+        <activity
             android:name=".ui.feature.login.LoginActivity"
             android:exported="false"
             android:launchMode="singleInstance"/>

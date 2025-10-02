@@ -60,9 +60,6 @@ dependencies {
     implementation libs.glide
     implementation libs.rxjava3
     implementation libs.rxandroid3
-    implementation libs.refresh.layout.kernel
-    implementation libs.refresh.header.classics
-    implementation libs.refresh.footer.classics
     implementation libs.androidx.media3.exoplayer
     implementation libs.androidx.media3.ui
     implementation libs.androidx.security.crypto

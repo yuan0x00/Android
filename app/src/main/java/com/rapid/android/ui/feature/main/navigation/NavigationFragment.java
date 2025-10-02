@@ -1,19 +1,20 @@
 package com.rapid.android.ui.feature.main.navigation;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.core.common.utils.ToastUtils;
 import com.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentNavigationBinding;
+import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.UiFeedback;
 
 public class NavigationFragment extends BaseFragment<NavigationViewModel, FragmentNavigationBinding> {
 
     private NavigationAdapter adapter;
+    private ContentStateController stateController;
 
     @Override
     protected NavigationViewModel createViewModel() {
@@ -32,6 +33,8 @@ public class NavigationFragment extends BaseFragment<NavigationViewModel, Fragme
         binding.recyclerView.setAdapter(adapter);
 
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.loadNavigation(true));
+
+        stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
     }
 
     @Override
@@ -43,27 +46,13 @@ public class NavigationFragment extends BaseFragment<NavigationViewModel, Fragme
     protected void setupObservers() {
         viewModel.getNavigationItems().observe(this, list -> {
             adapter.submitList(list);
-            binding.emptyView.setVisibility(list == null || list.isEmpty() ? View.VISIBLE : View.GONE);
+            stateController.setEmpty(list == null || list.isEmpty());
         });
 
         viewModel.getLoading().observe(this, loading -> {
-            boolean isLoading = Boolean.TRUE.equals(loading);
-            if (!isLoading) {
-                if (binding.swipeRefresh.isRefreshing()) {
-                    binding.swipeRefresh.setRefreshing(false);
-                }
-                binding.progressBar.setVisibility(View.GONE);
-            } else {
-                if (!binding.swipeRefresh.isRefreshing()) {
-                    binding.progressBar.setVisibility(View.VISIBLE);
-                }
-            }
+            stateController.setLoading(Boolean.TRUE.equals(loading));
         });
 
-        viewModel.getErrorMessage().observe(this, msg -> {
-            if (msg != null && !msg.isEmpty()) {
-                ToastUtils.showLongToast(msg);
-            }
-        });
+        UiFeedback.observeError(this, viewModel.getErrorMessage());
     }
 }

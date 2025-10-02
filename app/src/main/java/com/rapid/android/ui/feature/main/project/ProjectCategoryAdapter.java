@@ -15,9 +15,13 @@ import com.rapid.android.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectCategoryTreeAdapter extends RecyclerView.Adapter<ProjectCategoryTreeAdapter.CategoryViewHolder> {
+public class ProjectCategoryAdapter extends RecyclerView.Adapter<ProjectCategoryAdapter.CategoryViewHolder> {
 
     private final List<CategoryNodeBean> items = new ArrayList<>();
+    private final OnCategoryClickListener clickListener;
+    public ProjectCategoryAdapter(OnCategoryClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
 
     public void submitList(List<CategoryNodeBean> data) {
         items.clear();
@@ -30,32 +34,26 @@ public class ProjectCategoryTreeAdapter extends RecyclerView.Adapter<ProjectCate
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category_node, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_project_category, parent, false);
         return new CategoryViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         CategoryNodeBean item = items.get(position);
-        holder.titleText.setText(item.getName());
-
-        List<CategoryNodeBean> children = item.getChildren();
-        if (children != null && !children.isEmpty()) {
-            List<String> names = new ArrayList<>();
-            for (CategoryNodeBean child : children) {
-                if (!TextUtils.isEmpty(child.getName())) {
-                    names.add(child.getName());
-                }
-            }
-            if (!names.isEmpty()) {
-                holder.childrenText.setText(TextUtils.join("  |  ", names));
-                holder.childrenText.setVisibility(View.VISIBLE);
-            } else {
-                holder.childrenText.setVisibility(View.GONE);
-            }
+        holder.title.setText(item.getName());
+        if (!TextUtils.isEmpty(item.getDesc())) {
+            holder.desc.setVisibility(View.VISIBLE);
+            holder.desc.setText(item.getDesc());
         } else {
-            holder.childrenText.setVisibility(View.GONE);
+            holder.desc.setVisibility(View.GONE);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (clickListener != null) {
+                clickListener.onCategoryClick(item);
+            }
+        });
     }
 
     @Override
@@ -63,14 +61,18 @@ public class ProjectCategoryTreeAdapter extends RecyclerView.Adapter<ProjectCate
         return items.size();
     }
 
+    public interface OnCategoryClickListener {
+        void onCategoryClick(@NonNull CategoryNodeBean category);
+    }
+
     static class CategoryViewHolder extends RecyclerView.ViewHolder {
-        final TextView titleText;
-        final TextView childrenText;
+        final TextView title;
+        final TextView desc;
 
         CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
-            titleText = itemView.findViewById(R.id.titleText);
-            childrenText = itemView.findViewById(R.id.childrenText);
+            title = itemView.findViewById(R.id.tvCategoryName);
+            desc = itemView.findViewById(R.id.tvCategoryDesc);
         }
     }
 }

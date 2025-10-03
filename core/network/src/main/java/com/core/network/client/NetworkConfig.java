@@ -3,10 +3,14 @@ package com.core.network.client;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.core.network.interceptor.AuthInterceptor;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import okhttp3.HttpUrl;
 
@@ -25,6 +29,8 @@ public final class NetworkConfig {
     private final CookieStore cookieStore;
     private final CrashReportEndpointProvider crashReportEndpointProvider;
     private final AuthFailureListener authFailureListener;
+    private final AuthInterceptor.TokenRefreshHandler tokenRefreshHandler;
+    private final Set<Integer> businessUnauthorizedCodes;
     private NetworkConfig(Builder builder) {
         this.baseUrl = builder.baseUrl;
         this.connectTimeoutSeconds = builder.connectTimeoutSeconds;
@@ -36,6 +42,8 @@ public final class NetworkConfig {
         this.cookieStore = builder.cookieStore;
         this.crashReportEndpointProvider = builder.crashReportEndpointProvider;
         this.authFailureListener = builder.authFailureListener;
+        this.tokenRefreshHandler = builder.tokenRefreshHandler;
+        this.businessUnauthorizedCodes = Collections.unmodifiableSet(new CopyOnWriteArraySet<>(builder.businessUnauthorizedCodes));
     }
 
     public static Builder builder() {
@@ -91,6 +99,16 @@ public final class NetworkConfig {
         return authFailureListener;
     }
 
+    @Nullable
+    public AuthInterceptor.TokenRefreshHandler getTokenRefreshHandler() {
+        return tokenRefreshHandler;
+    }
+
+    @NonNull
+    public Set<Integer> getBusinessUnauthorizedCodes() {
+        return businessUnauthorizedCodes;
+    }
+
     public interface HeaderProvider {
         @NonNull
         Map<String, String> provideHeaders();
@@ -123,8 +141,11 @@ public final class NetworkConfig {
         private CookieStore cookieStore = new InMemoryCookieStore();
         private CrashReportEndpointProvider crashReportEndpointProvider = () -> null;
         private AuthFailureListener authFailureListener = () -> {};
+        private final Set<Integer> businessUnauthorizedCodes = new CopyOnWriteArraySet<>();
+        private AuthInterceptor.TokenRefreshHandler tokenRefreshHandler;
 
         private Builder() {
+            businessUnauthorizedCodes.add(-1001);
         }
 
         public Builder baseUrl(@NonNull String baseUrl) {
@@ -174,6 +195,21 @@ public final class NetworkConfig {
 
         public Builder authFailureListener(@NonNull AuthFailureListener listener) {
             this.authFailureListener = listener;
+            return this;
+        }
+
+        public Builder tokenRefreshHandler(@Nullable AuthInterceptor.TokenRefreshHandler handler) {
+            this.tokenRefreshHandler = handler;
+            return this;
+        }
+
+        public Builder businessUnauthorizedCodes(@Nullable int... codes) {
+            businessUnauthorizedCodes.clear();
+            if (codes != null) {
+                for (int code : codes) {
+                    businessUnauthorizedCodes.add(code);
+                }
+            }
             return this;
         }
 

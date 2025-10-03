@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.core.common.utils.ToastUtils;
+import com.core.common.utils.WindowInsetsUtils;
 import com.core.ui.presentation.BaseActivity;
 import com.lib.data.session.SessionManager;
 import com.rapid.android.R;
@@ -72,6 +73,8 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
     @Override
     protected void initializeViews() {
         setupToolbar();
+        WindowInsetsUtils.addImeVisibilityListener(binding.getRoot(), isVisible ->
+                binding.layoutPrivacy.setVisibility(isVisible ? android.view.View.GONE : android.view.View.VISIBLE));
     }
 
     private void setupToolbar() {

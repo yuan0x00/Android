@@ -37,7 +37,11 @@ public class NetworkClient {
 
         okHttpBuilder.addInterceptor(new RequestHeaderInterceptor(activeConfig));
         okHttpBuilder.addInterceptor(new ResponseHeaderInterceptor(activeConfig));
-        okHttpBuilder.addInterceptor(new AuthInterceptor(activeConfig.getAuthFailureListener()));
+        okHttpBuilder.addInterceptor(new AuthInterceptor(
+                activeConfig.getAuthFailureListener(),
+                null,
+                activeConfig.getTokenRefreshHandler(),
+                activeConfig.getBusinessUnauthorizedCodes()));
 //        okHttpBuilder.addInterceptor(new ResponseErrorInterceptor());
 
         if (activeConfig.isLoggingEnabled()) {

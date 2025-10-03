@@ -5,11 +5,13 @@ import android.os.StrictMode;
 import com.core.common.app.BaseApplication;
 import com.core.network.client.NetworkClient;
 import com.core.network.client.NetworkConfig;
+import com.core.network.interceptor.AuthInterceptor;
 import com.google.android.material.color.DynamicColors;
 import com.lib.data.DataInitializer;
 import com.lib.data.network.AuthHeaderProvider;
 import com.lib.data.network.NetApis;
 import com.lib.data.network.PersistentCookieStore;
+import com.lib.data.network.TokenRefreshHandlerImpl;
 import com.lib.data.session.SessionManager;
 import com.rapid.android.utils.ThemeManager;
 
@@ -17,6 +19,7 @@ public class MainApplication extends BaseApplication {
 
     private final NetworkConfig.AuthFailureListener authFailureHandler =
             () -> SessionManager.getInstance().forceLogout();
+    private AuthInterceptor.TokenRefreshHandler tokenRefreshHandler;
 
     @Override
     public void onCreate() {
@@ -54,12 +57,15 @@ public class MainApplication extends BaseApplication {
     }
 
     private void initNetWork() {
+        tokenRefreshHandler = new TokenRefreshHandlerImpl();
         NetworkConfig config = NetworkConfig.builder()
                 .baseUrl("https://www.wanandroid.com/")
                 .enableLogging(BuildConfig.DEBUG)
                 .allowInsecureSsl(BuildConfig.DEBUG)
                 .crashReportEndpointProvider(() -> "https://www.wanandroid.com/app/crash/upload")
                 .authFailureListener(authFailureHandler)
+                .businessUnauthorizedCodes(-1001)
+                .tokenRefreshHandler(tokenRefreshHandler)
                 .headerProvider(new AuthHeaderProvider())
                 .cookieStore(new PersistentCookieStore(getApplicationContext()))
                 .build();

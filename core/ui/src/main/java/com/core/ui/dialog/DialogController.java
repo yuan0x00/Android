@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.core.ui.presentation.BaseDialogFragment;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
@@ -49,6 +50,8 @@ public final class DialogController {
             showLoading((DialogEffect.Loading) effect);
         } else if (effect instanceof DialogEffect.Snackbar) {
             showSnackbar((DialogEffect.Snackbar) effect);
+        } else if (effect instanceof DialogEffect.Custom) {
+            showCustom((DialogEffect.Custom) effect);
         }
     }
 
@@ -104,6 +107,35 @@ public final class DialogController {
         handles.put(effect.getTag(), new DialogHandle.Snack(snackbar));
     }
 
+    private void showCustom(DialogEffect.Custom effect) {
+        dismiss(effect.getTag());
+
+        BaseDialogFragment fragment = effect.getFragment();
+        Boolean cancelableOverride = effect.getCancelableOverride();
+        if (cancelableOverride != null) {
+            fragment.setDialogCancelable(cancelableOverride);
+        }
+        Boolean dimEnabledOverride = effect.getDimEnabledOverride();
+        if (dimEnabledOverride != null) {
+            fragment.setDimEnabled(dimEnabledOverride);
+        }
+        Float dimAmountOverride = effect.getDimAmountOverride();
+        if (dimAmountOverride != null) {
+            fragment.setDimAmount(dimAmountOverride);
+        }
+        fragment.setOnDismissListener(() -> {
+            DialogHandle handle = handles.get(effect.getTag());
+            if (handle instanceof DialogHandle.Fragment) {
+                DialogFragment stored = ((DialogHandle.Fragment) handle).getFragment();
+                if (stored == fragment) {
+                    handles.remove(effect.getTag());
+                }
+            }
+        });
+        fragment.showSafely(fragmentManager);
+        handles.put(effect.getTag(), new DialogHandle.Fragment(fragment));
+    }
+
     public interface DialogHandle {
         void dismiss();
 
@@ -132,6 +164,10 @@ public final class DialogController {
             @Override
             public void dismiss() {
                 fragment.dismissAllowingStateLoss();
+            }
+
+            DialogFragment getFragment() {
+                return fragment;
             }
         }
 

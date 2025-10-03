@@ -186,6 +186,7 @@ public class WebView {
         private final Context context;
         private final Lifecycle lifecycle;
         private final DefaultWebViewConfig.Builder configBuilder = new DefaultWebViewConfig.Builder();
+        private WebViewConfiguration explicitConfig;
 
         private Builder(@NonNull Context context, @NonNull Lifecycle lifecycle) {
             this.context = context;
@@ -320,8 +321,7 @@ public class WebView {
          */
         @NonNull
         public Builder config(@NonNull WebViewConfiguration config) {
-            // 这里需要重新创建Builder并应用配置
-            // 为了简化，暂时不支持此方法的高级用法
+            this.explicitConfig = config;
             return this;
         }
 
@@ -331,7 +331,7 @@ public class WebView {
          */
         @NonNull
         public WebView build() {
-            WebViewConfiguration config = configBuilder.build();
+            WebViewConfiguration config = explicitConfig != null ? explicitConfig : configBuilder.build();
             WebViewFactory factory = WebViewFactory.getInstance(context);
             WebViewController controller = factory.createController(config, lifecycle);
             return new WebView(controller, config);

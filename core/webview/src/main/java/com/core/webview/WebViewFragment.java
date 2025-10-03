@@ -25,6 +25,7 @@ public class WebViewFragment extends Fragment {
     private ProgressBar progressBar;
     private View errorView;
     private WebViewEventListener externalListener;
+    private WebViewEventListener internalListener;
 
     /**
      * 创建Fragment实例
@@ -70,6 +71,8 @@ public class WebViewFragment extends Fragment {
             webView = WebView.with(requireContext(), getLifecycle())
                     .config(config)
                     .build();
+            internalListener = new InternalEventListener();
+            webView.setEventListener(internalListener);
 
             // 如果有URL，立即加载
             if (url != null && !url.isEmpty()) {
@@ -215,6 +218,29 @@ public class WebViewFragment extends Fragment {
             if (externalListener != null) {
                 externalListener.onDownloadRequested(url, userAgent, contentDisposition,
                                                    mimetype, contentLength);
+            }
+        }
+
+        @Override
+        public boolean onPermissionRequested(@NonNull String url, @NonNull String[] resources) {
+            if (externalListener != null) {
+                return externalListener.onPermissionRequested(url, resources);
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onSslError(@NonNull String url, @NonNull String error) {
+            if (externalListener != null) {
+                return externalListener.onSslError(url, error);
+            }
+            return false;
+        }
+
+        @Override
+        public void onJavaScriptResult(@NonNull String result) {
+            if (externalListener != null) {
+                externalListener.onJavaScriptResult(result);
             }
         }
     }

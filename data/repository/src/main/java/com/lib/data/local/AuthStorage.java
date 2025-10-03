@@ -90,4 +90,8 @@ public final class AuthStorage {
     public String peekUsername() {
         return dataStore.getString(KEY_USERNAME, null);
     }
+
+    public String peekPassword() {
+        return dataStore.getString(KEY_PASSWORD, null);
+    }
 }

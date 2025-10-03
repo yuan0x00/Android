@@ -75,7 +75,7 @@ public class WebViewFactory {
         lifecycle.addObserver(lifecycleManager);
 
         // 创建控制器
-        return new DefaultWebViewController(webView, webViewPool, lifecycleManager);
+        return new DefaultWebViewController(webView, webViewPool, lifecycleManager, configuration);
     }
 
     /**

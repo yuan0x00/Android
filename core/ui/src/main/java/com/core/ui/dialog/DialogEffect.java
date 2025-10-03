@@ -3,6 +3,8 @@ package com.core.ui.dialog;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.core.ui.presentation.BaseDialogFragment;
+
 public abstract class DialogEffect {
 
     private final String tag;
@@ -101,6 +103,49 @@ public abstract class DialogEffect {
 
         public int getDuration() {
             return duration;
+        }
+    }
+
+    public static final class Custom extends DialogEffect {
+        private final BaseDialogFragment fragment;
+        @Nullable private final Boolean cancelable;
+        @Nullable private final Boolean dimEnabled;
+        @Nullable private final Float dimAmount;
+
+        public Custom(@NonNull String tag, @NonNull BaseDialogFragment fragment) {
+            this(tag, fragment, null, null, null);
+        }
+
+        public Custom(@NonNull String tag,
+                      @NonNull BaseDialogFragment fragment,
+                      @Nullable Boolean cancelable,
+                      @Nullable Boolean dimEnabled,
+                      @Nullable Float dimAmount) {
+            super(tag);
+            this.fragment = fragment;
+            this.cancelable = cancelable;
+            this.dimEnabled = dimEnabled;
+            this.dimAmount = dimAmount;
+        }
+
+        @NonNull
+        public BaseDialogFragment getFragment() {
+            return fragment;
+        }
+
+        @Nullable
+        public Boolean getCancelableOverride() {
+            return cancelable;
+        }
+
+        @Nullable
+        public Boolean getDimEnabledOverride() {
+            return dimEnabled;
+        }
+
+        @Nullable
+        public Float getDimAmountOverride() {
+            return dimAmount;
         }
     }
 }

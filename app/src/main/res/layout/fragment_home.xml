@@ -75,8 +75,8 @@
             app:tabIndicator="@drawable/tab_layout_indicator"
             app:tabIndicatorAnimationMode="elastic"
             app:tabMode="fixed"
-            app:tabRippleColor="?attr/colorSecondaryContainer"
-            app:tabTextAppearance="@style/TextAppearance.Material3.BodyLarge"/>
+            app:tabRippleColor="@null"
+            />
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"

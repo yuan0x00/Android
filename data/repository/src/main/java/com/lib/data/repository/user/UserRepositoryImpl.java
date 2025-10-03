@@ -5,6 +5,7 @@ import com.lib.data.local.AuthStorage;
 import com.lib.data.mapper.DomainResultMapper;
 import com.lib.data.network.NetApis;
 import com.lib.data.network.PersistentCookieStore;
+import com.lib.domain.model.ArticleListBean;
 import com.lib.domain.model.CoinBean;
 import com.lib.domain.model.LoginBean;
 import com.lib.domain.model.UserInfoBean;
@@ -108,6 +109,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<DomainResult<CoinBean>> signIn() {
         return map(NetApis.User().signIn());
+    }
+
+    @Override
+    public Observable<DomainResult<ArticleListBean>> favoriteArticles(int page) {
+        return map(NetApis.User().collectList(page));
     }
 
     private <T> Observable<DomainResult<T>> map(Observable<BaseResponse<T>> source) {

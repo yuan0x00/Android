@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.core.common.log.Logger;
+import com.core.log.LogKit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +71,7 @@ public class AppLifecycleObserver implements DefaultLifecycleObserver {
         mHandler.removeCallbacks(mBackgroundDelayRunnable);
         if (!mIsAppForeground) {
             mIsAppForeground = true;
-            Logger.d(">>> App 进入前台");
+            LogKit.d("AppLifecycle", ">>> App 进入前台");
             notifyAppForeground();
         }
     }
@@ -82,7 +82,7 @@ public class AppLifecycleObserver implements DefaultLifecycleObserver {
         mBackgroundDelayRunnable = () -> {
             if (mIsAppForeground) {
                 mIsAppForeground = false;
-                Logger.d(">>> App 进入后台");
+                LogKit.d("AppLifecycle", ">>> App 进入后台");
                 notifyAppBackground();
             }
         };

@@ -1,4 +1,4 @@
-package com.rapid.android.ui.feature.main.project.list;
+package com.rapid.android.ui.feature.main.mine.favorite;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,46 +10,39 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.core.ui.presentation.BaseActivity;
 import com.rapid.android.R;
-import com.rapid.android.databinding.ActivityProjectListBinding;
+import com.rapid.android.databinding.ActivityFavoriteBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
 
-public class ProjectListActivity extends BaseActivity<ProjectListViewModel, ActivityProjectListBinding> {
+public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFavoriteBinding> {
 
-    private static final String EXTRA_CATEGORY_ID = "extra_category_id";
-    private static final String EXTRA_CATEGORY_NAME = "extra_category_name";
-
-    private ProjectListAdapter adapter;
+    private FavoriteAdapter adapter;
     private ContentStateController stateController;
 
-    public static void start(@NonNull Context context, int categoryId, @NonNull String categoryName) {
-        Intent intent = new Intent(context, ProjectListActivity.class);
-        intent.putExtra(EXTRA_CATEGORY_ID, categoryId);
-        intent.putExtra(EXTRA_CATEGORY_NAME, categoryName);
-        context.startActivity(intent);
+    public static void start(@NonNull Context context) {
+        context.startActivity(new Intent(context, FavoriteActivity.class));
     }
 
     @Override
-    protected ProjectListViewModel createViewModel() {
-        return new ViewModelProvider(this).get(ProjectListViewModel.class);
+    protected FavoriteViewModel createViewModel() {
+        return new ViewModelProvider(this).get(FavoriteViewModel.class);
     }
 
     @Override
-    protected ActivityProjectListBinding createViewBinding() {
-        return ActivityProjectListBinding.inflate(getLayoutInflater());
+    protected ActivityFavoriteBinding createViewBinding() {
+        return ActivityFavoriteBinding.inflate(getLayoutInflater());
     }
 
     @Override
     protected void initializeViews() {
         setSupportActionBar(binding.toolbar);
+        binding.toolbar.setTitle(R.string.favorite_title);
         binding.toolbar.setNavigationOnClickListener(v -> finish());
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        String title = getIntent().getStringExtra(EXTRA_CATEGORY_NAME);
-        binding.toolbar.setTitle(title != null ? title : getString(R.string.project_title_list_default));
 
-        adapter = new ProjectListAdapter();
+        adapter = new FavoriteAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
@@ -81,16 +74,16 @@ public class ProjectListActivity extends BaseActivity<ProjectListViewModel, Acti
 
     @Override
     protected void setupObservers() {
-        viewModel.getProjectItems().observe(this, items -> {
+        viewModel.getFavoriteItems().observe(this, items -> {
             adapter.submitNewList(items);
             stateController.setEmpty(items == null || items.isEmpty());
         });
 
-        viewModel.getLoading().observe(this, isLoading ->
-                stateController.setLoading(Boolean.TRUE.equals(isLoading)));
+        viewModel.getLoading().observe(this, loading ->
+                stateController.setLoading(Boolean.TRUE.equals(loading)));
 
-        viewModel.getLoadingMore().observe(this, isLoadingMore ->
-                binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(isLoadingMore)
+        viewModel.getLoadingMore().observe(this, loadingMore ->
+                binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loadingMore)
                         ? android.view.View.VISIBLE : android.view.View.GONE));
 
         UiFeedback.observeError(this, viewModel.getErrorMessage());
@@ -99,16 +92,15 @@ public class ProjectListActivity extends BaseActivity<ProjectListViewModel, Acti
 
     @Override
     protected void loadData() {
-        int cid = getIntent().getIntExtra(EXTRA_CATEGORY_ID, -1);
-        viewModel.initialize(cid);
+        viewModel.initialize();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        if(binding != null){
+        if (binding != null) {
             binding.swipeRefresh.setOnRefreshListener(null);
             binding.recyclerView.setAdapter(null);
         }
+        super.onDestroy();
     }
 }

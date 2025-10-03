@@ -71,7 +71,7 @@ public class WebViewFactory {
         configuration.applyTo(webView.getSettings());
 
         // 创建生命周期管理器
-        WebViewLifecycleManager lifecycleManager = new WebViewLifecycleManager(webView, webViewPool);
+        WebViewLifecycleManager lifecycleManager = new WebViewLifecycleManager(webView, webViewPool, lifecycle);
         lifecycle.addObserver(lifecycleManager);
 
         // 创建控制器

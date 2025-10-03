@@ -11,6 +11,7 @@ import com.core.ui.presentation.BaseViewModel;
 import com.lib.data.repository.RepositoryProvider;
 import com.lib.data.session.SessionManager;
 import com.lib.domain.model.CoinBean;
+import com.lib.domain.model.CollectArticleInfoBean;
 import com.lib.domain.model.LoginBean;
 import com.lib.domain.model.UserInfoBean;
 import com.lib.domain.repository.UserRepository;
@@ -24,6 +25,7 @@ public class MineViewModel extends BaseViewModel {
     private final UserRepository userRepository = RepositoryProvider.getUserRepository();
     private final SessionManager sessionManager = SessionManager.getInstance();
     private boolean profileLoading = false;
+    private boolean signedInToday = false;
 
     public LiveData<MineUiState> getUiState() {
         return uiState;
@@ -48,6 +50,7 @@ public class MineViewModel extends BaseViewModel {
     public void resetToGuest() {
         stopLoading();
         loading.setValue(false);
+        signedInToday = false;
         uiState.setValue(MineUiState.guest());
     }
 
@@ -61,7 +64,7 @@ public class MineViewModel extends BaseViewModel {
         if (userInfo != null) {
             stopLoading();
             loading.setValue(false);
-            uiState.setValue(MineUiState.from(userInfo));
+            uiState.setValue(MineUiState.from(userInfo, signedInToday));
         } else {
             if (!profileLoading) {
                 startLoading();
@@ -88,7 +91,7 @@ public class MineViewModel extends BaseViewModel {
         stopLoading();
         loading.setValue(false);
         if (userInfo != null) {
-            uiState.setValue(MineUiState.from(userInfo));
+            uiState.setValue(MineUiState.from(userInfo, signedInToday));
             SessionManager.getInstance().updateUserInfo(userInfo);
         } else {
             uiState.setValue(MineUiState.guest());
@@ -97,7 +100,7 @@ public class MineViewModel extends BaseViewModel {
 
     public void applyUserInfo(UserInfoBean userInfo) {
         if (userInfo != null) {
-            uiState.setValue(MineUiState.from(userInfo));
+            uiState.setValue(MineUiState.from(userInfo, signedInToday));
         } else {
             uiState.setValue(MineUiState.guest());
         }
@@ -125,11 +128,18 @@ public class MineViewModel extends BaseViewModel {
                             if (coinInfo != null) {
                                 toastMessage.setValue(BaseApplication.getAppContext()
                                         .getString(R.string.mine_checkin_success_points, coinInfo.getCoinCount()));
-                                refresh();
                             } else {
                                 toastMessage.setValue(BaseApplication.getAppContext()
                                         .getString(R.string.mine_checkin_success_no_points));
                             }
+                            signedInToday = true;
+                            MineUiState state = uiState.getValue();
+                            if (state != null) {
+                                uiState.setValue(state.withDailyAction(
+                                        BaseApplication.getAppContext().getString(R.string.mine_action_checked_in),
+                                        false));
+                            }
+                            refresh();
                         } else {
                             String errorMsg = result != null && result.getError() != null
                                     ? result.getError().getMessage()
@@ -170,7 +180,6 @@ public class MineViewModel extends BaseViewModel {
         private final boolean dailyActionEnabled;
         private final String coinDisplay;
         private final String favoriteDisplay;
-        private final String achievementDisplay;
 
         private MineUiState(boolean loggedIn,
                             String displayName,
@@ -180,8 +189,7 @@ public class MineViewModel extends BaseViewModel {
                             String dailyActionText,
                             boolean dailyActionEnabled,
                             String coinDisplay,
-                            String favoriteDisplay,
-                            String achievementDisplay) {
+                            String favoriteDisplay) {
             this.loggedIn = loggedIn;
             this.displayName = displayName;
             this.tagline = tagline;
@@ -191,7 +199,6 @@ public class MineViewModel extends BaseViewModel {
             this.dailyActionEnabled = dailyActionEnabled;
             this.coinDisplay = coinDisplay;
             this.favoriteDisplay = favoriteDisplay;
-            this.achievementDisplay = achievementDisplay;
         }
 
         public static MineUiState guest() {
@@ -202,17 +209,18 @@ public class MineViewModel extends BaseViewModel {
                     context.getString(R.string.mine_guest_tagline),
                     "",
                     false,
-                    context.getString(R.string.mine_guest_action),
-                    true,
-                    context.getString(R.string.mine_placeholder_dash),
+                    context.getString(R.string.mine_action_check_in),
+                    false,
                     context.getString(R.string.mine_placeholder_dash),
                     context.getString(R.string.mine_placeholder_dash)
             );
         }
 
-        public static MineUiState from(UserInfoBean userInfoBean) {
+        public static MineUiState from(UserInfoBean userInfoBean, boolean signedInToday) {
             LoginBean user = userInfoBean != null ? userInfoBean.getUserInfo() : new LoginBean();
             CoinBean coin = userInfoBean != null ? userInfoBean.getCoinInfo() : new CoinBean();
+            CollectArticleInfoBean collectInfo =
+                    userInfoBean != null ? userInfoBean.getCollectArticleInfo() : new CollectArticleInfoBean();
 
             String nickname = !TextUtils.isEmpty(user.getNickname()) ? user.getNickname() : user.getPublicName();
             if (TextUtils.isEmpty(nickname)) {
@@ -238,8 +246,16 @@ public class MineViewModel extends BaseViewModel {
                 membershipLabel = context.getString(R.string.mine_membership_newbie);
             }
 
-            int favoriteCount = user.getCollectIds() != null ? user.getCollectIds().size() : 0;
-            int achievementCount = user.getChapterTops() != null ? user.getChapterTops().size() : 0;
+            int favoriteCount = collectInfo != null ? collectInfo.getCount() : 0;
+            String dailyText;
+            boolean dailyEnabled;
+            if (signedInToday) {
+                dailyText = context.getString(R.string.mine_action_checked_in);
+                dailyEnabled = false;
+            } else {
+                dailyText = context.getString(R.string.mine_action_check_in);
+                dailyEnabled = true;
+            }
 
             return new MineUiState(
                     true,
@@ -247,11 +263,10 @@ public class MineViewModel extends BaseViewModel {
                     tagline,
                     membershipLabel,
                     true,
-                    context.getString(R.string.mine_action_check_in),
-                    true,
+                    dailyText,
+                    dailyEnabled,
                     String.valueOf(coin.getCoinCount()),
-                    String.valueOf(favoriteCount),
-                    String.valueOf(achievementCount)
+                    String.valueOf(favoriteCount)
             );
         }
 
@@ -291,8 +306,18 @@ public class MineViewModel extends BaseViewModel {
             return favoriteDisplay;
         }
 
-        public String getAchievementDisplay() {
-            return achievementDisplay;
+        public MineUiState withDailyAction(String text, boolean enabled) {
+            return new MineUiState(
+                    loggedIn,
+                    displayName,
+                    tagline,
+                    membershipLabel,
+                    showMembership,
+                    text,
+                    enabled,
+                    coinDisplay,
+                    favoriteDisplay
+            );
         }
     }
 }

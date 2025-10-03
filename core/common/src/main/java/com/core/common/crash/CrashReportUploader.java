@@ -4,7 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.core.common.log.Logger;
+import com.core.log.LogKit;
 import com.core.network.client.NetworkClient;
 import com.core.network.client.NetworkConfig;
 import com.core.network.client.SSLTrustManager;
@@ -29,7 +29,7 @@ final class CrashReportUploader {
     static void uploadAsync(@Nullable File crashFile, @Nullable Throwable throwable) {
         String endpoint = NetworkClient.getActiveConfig().getCrashReportEndpoint();
         if (endpoint == null || endpoint.isEmpty()) {
-            Logger.w("Crash upload skipped: endpoint is empty");
+            LogKit.w(TAG, "Crash upload skipped: endpoint is empty");
             return;
         }
         new Thread(() -> performUpload(endpoint, crashFile, throwable), "CrashUploader").start();
@@ -44,12 +44,12 @@ final class CrashReportUploader {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
-                Logger.w("Crash upload failed: code=%d, message=%s", response.code(), response.message());
+                LogKit.w(TAG, "Crash upload failed: code=%d, message=%s", response.code(), response.message());
             } else {
-                Logger.d("Crash upload success, code=%d", response.code());
+                LogKit.d(TAG, "Crash upload success, code=%d", response.code());
             }
         } catch (IOException e) {
-            Logger.e(e, "Crash upload request error");
+            LogKit.e(TAG, e, "Crash upload request error");
         }
     }
 

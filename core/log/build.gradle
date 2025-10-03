@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.core.network'
+    namespace 'com.core.log'
 
     defaultConfig {
         consumerProguardFiles "consumer-rules.pro"
@@ -19,10 +19,5 @@ android {
 
 dependencies {
     implementation libs.androidx.annotation
-    implementation libs.androidx.lifecycle.runtime
-    api libs.rxjava3
-    api libs.retrofit
-    api libs.retrofit.rxjava3
-    api libs.retrofit.converter.gson
-    implementation project(':core:log')
+    implementation libs.timber
 }

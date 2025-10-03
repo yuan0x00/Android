@@ -11,7 +11,7 @@ import com.core.common.BuildConfig;
 import com.core.common.data.StorageManager;
 import com.core.common.device.ScreenAdaptUtils;
 import com.core.common.lifecycle.AppLifecycleObserver;
-import com.core.common.log.Logger;
+import com.core.log.LogKit;
 import com.tencent.mmkv.MMKV;
 
 /**
@@ -61,31 +61,31 @@ public class BaseApplication extends Application {
 
     private void performInitialization() {
         try {
-            Logger.init(BuildConfig.DEBUG);
-            Logger.d("BaseApplication", "Logger initialized");
+            LogKit.init(BuildConfig.DEBUG);
+            LogKit.d("BaseApplication", "LogKit initialized");
 
             // 如需启用崩溃监控，取消下行注释
             // GlobalCrashHandler.install(this);
-            Logger.d("BaseApplication", "GlobalCrashHandler installation skipped (commented out)");
+            LogKit.d("BaseApplication", "GlobalCrashHandler installation skipped (commented out)");
 
             String rootDir = MMKV.initialize(this);
-            Logger.d("BaseApplication", "MMKV initialized at: " + rootDir);
+            LogKit.d("BaseApplication", "MMKV initialized at: %s", rootDir);
 
             StorageManager.init();
-            Logger.d("BaseApplication", "StorageManager initialized");
+            LogKit.d("BaseApplication", "StorageManager initialized");
 
             ScreenAdaptUtils.init(this);
-            Logger.d("BaseApplication", "ScreenAdaptUtils initialized");
+            LogKit.d("BaseApplication", "ScreenAdaptUtils initialized");
 
             AppLifecycleObserver.initialize(this);
             ProcessLifecycleOwner.get().getLifecycle().addObserver(AppLifecycleObserver.getInstance());
-            Logger.d("BaseApplication", "AppLifecycleObserver added");
+            LogKit.d("BaseApplication", "AppLifecycleObserver added");
 
             isInitialized = true;
-            Logger.i("BaseApplication", "Initialization completed successfully");
+            LogKit.i("BaseApplication", "Initialization completed successfully");
 
         } catch (Exception e) {
-            Logger.e("BaseApplication", "Initialization error", e);
+            LogKit.e("BaseApplication", e, "Initialization error");
             throw new RuntimeException("Failed to initialize BaseApplication", e);
         }
     }
@@ -94,6 +94,6 @@ public class BaseApplication extends Application {
     public void onTerminate() {
         super.onTerminate();
         isInitialized = false;
-        Logger.d("BaseApplication", "Application terminated");
+        LogKit.d("BaseApplication", "Application terminated");
     }
 }

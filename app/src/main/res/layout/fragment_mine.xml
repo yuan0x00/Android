@@ -102,34 +102,17 @@
                         app:layout_constraintStart_toEndOf="@id/ivAvatar"
                         app:layout_constraintTop_toBottomOf="@id/tvTagline"/>
 
-                    <LinearLayout
-                        android:id="@+id/layoutProfileActions"
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDailyAction"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:orientation="horizontal"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/mine_action_check_in"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/ivAvatar"
-                        app:layout_constraintTop_toBottomOf="@id/chipMembership">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnPrimaryAction"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_weight="1"
-                            android:text="@string/mine_action_login"
-                            android:visibility="visible"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnDailyAction"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_weight="1"
-                            android:text="@string/mine_action_check_in"
-                            android:visibility="gone"/>
-                    </LinearLayout>
+                        app:layout_constraintTop_toBottomOf="@id/chipMembership"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -202,28 +185,6 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/mine_stat_favorites"/>
                         </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/layoutAchievements"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tvAchievementCount"
-                                style="@style/TextAppearance.Material3.TitleMedium"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="--"/>
-
-                            <TextView
-                                style="@style/TextAppearance.Material3.BodySmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/mine_stat_shared"/>
-                        </LinearLayout>
                     </LinearLayout>
 
 
@@ -244,38 +205,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/itemFavorites"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:orientation="horizontal"
-                        android:padding="16dp">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            app:iconTint="?attr/colorPrimary"
-                            app:srcCompat="@drawable/favorite_fill_24px"/>
-
-                        <TextView
-                            style="@style/TextAppearance.Material3.BodyLarge"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_weight="1"
-                            android:text="@string/mine_section_favorites"
-                            android:textColor="?attr/colorOnSurface"/>
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            app:srcCompat="@drawable/arrow_forward_ios_24px"
-                            app:tint="?attr/colorOnSurfaceVariant"/>
-                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/itemSettings"

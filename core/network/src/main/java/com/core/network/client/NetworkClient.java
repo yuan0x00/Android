@@ -2,6 +2,7 @@ package com.core.network.client;
 
 import androidx.annotation.NonNull;
 
+import com.core.log.LogKit;
 import com.core.network.interceptor.AuthInterceptor;
 
 import java.io.IOException;
@@ -13,9 +14,10 @@ import okhttp3.*;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import timber.log.Timber;
 
 public class NetworkClient {
+
+    private static final String TAG = "NetworkClient";
 
     private static volatile NetworkConfig config = NetworkConfig.defaultConfig();
     private static NetworkClient instance;
@@ -157,14 +159,14 @@ public class NetworkClient {
             try {
                 Response response = chain.proceed(request);
                 if (!response.isSuccessful()) {
-                    Timber.w("HTTP %d %s", response.code(), response.request().url());
+                    LogKit.w(TAG, "HTTP %d %s", response.code(), response.request().url());
                 }
                 return response;
             } catch (IOException e) {
-                Timber.e(e, "Network error: %s", request.url());
+                LogKit.e(TAG, e, "Network error: %s", request.url());
                 throw e;
             } catch (Exception e) {
-                Timber.e(e, "Unexpected network error: %s", request.url());
+                LogKit.e(TAG, e, "Unexpected network error: %s", request.url());
                 throw new IOException("Unexpected network error", e);
             }
         }
@@ -176,10 +178,10 @@ public class NetworkClient {
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
             long startNs = System.nanoTime();
-            Timber.d("➡️ %s %s", request.method(), request.url());
+            LogKit.d(TAG, "➡️ %s %s", request.method(), request.url());
             Response response = chain.proceed(request);
             long costMs = (System.nanoTime() - startNs) / 1_000_000L;
-            Timber.d("⬅️ %s %s code=%d (%dms)",
+            LogKit.d(TAG, "⬅️ %s %s code=%d (%dms)",
                     request.method(),
                     response.request().url(),
                     response.code(),

@@ -342,6 +342,7 @@ public class DefaultWebViewController implements WebViewController {
             if (lifecycleManager != null) {
                 lifecycleManager.destroyImmediately();
             }
+            eventListener = null;
         }
     }
 

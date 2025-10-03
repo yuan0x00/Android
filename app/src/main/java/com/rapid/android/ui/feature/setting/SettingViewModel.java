@@ -12,8 +12,6 @@ import com.rapid.android.utils.ThemeManager;
 public class SettingViewModel extends BaseViewModel {
 
     private final MutableLiveData<ThemeManager.ThemeMode> themeMode = new MutableLiveData<>(ThemeManager.ThemeMode.SYSTEM);
-    private final MutableLiveData<Boolean> dataSaver = new MutableLiveData<>(AppPreferences.isDataSaverEnabled());
-    private final MutableLiveData<Boolean> wifiOnlyMedia = new MutableLiveData<>(AppPreferences.isWifiOnlyMediaEnabled());
     private final MutableLiveData<Boolean> notifications = new MutableLiveData<>(AppPreferences.isNotificationsEnabled());
     private final MutableLiveData<Integer> operationMessageRes = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
@@ -25,30 +23,6 @@ public class SettingViewModel extends BaseViewModel {
     public void setThemeMode(ThemeManager.ThemeMode mode) {
         themeMode.setValue(mode);
         ThemeManager.applyThemeMode(mode);
-    }
-
-    public LiveData<Boolean> getDataSaver() {
-        return dataSaver;
-    }
-
-    public void setDataSaver(boolean enabled) {
-        dataSaver.setValue(enabled);
-        AppPreferences.setDataSaverEnabled(enabled);
-        operationMessageRes.setValue(enabled
-                ? R.string.setting_data_saver_on
-                : R.string.setting_data_saver_off);
-    }
-
-    public LiveData<Boolean> getWifiOnlyMedia() {
-        return wifiOnlyMedia;
-    }
-
-    public void setWifiOnlyMedia(boolean enabled) {
-        wifiOnlyMedia.setValue(enabled);
-        AppPreferences.setWifiOnlyMediaEnabled(enabled);
-        operationMessageRes.setValue(enabled
-                ? R.string.setting_wifi_only_on
-                : R.string.setting_wifi_only_off);
     }
 
     public LiveData<Boolean> getNotifications() {
@@ -91,8 +65,6 @@ public class SettingViewModel extends BaseViewModel {
         ThemeManager.ThemeMode saved = ThemeManager.getSavedThemeMode();
         themeMode.setValue(saved);
         ThemeManager.applyThemeMode(saved);
-        dataSaver.setValue(AppPreferences.isDataSaverEnabled());
-        wifiOnlyMedia.setValue(AppPreferences.isWifiOnlyMediaEnabled());
         notifications.setValue(AppPreferences.isNotificationsEnabled());
     }
     

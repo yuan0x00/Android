@@ -114,6 +114,21 @@ public class WebViewFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onDestroyView() {
+        if (webView != null && webView.getWebView() != null) {
+            android.webkit.WebView actualWebView = webView.getWebView();
+            ViewGroup parent = (ViewGroup) actualWebView.getParent();
+            if (parent != null) {
+                parent.removeView(actualWebView);
+                android.util.Log.d("WebViewFragment", "WebView removed from container onDestroyView");
+            }
+        }
+        progressBar = null;
+        errorView = null;
+        super.onDestroyView();
+    }
+
     /**
      * 设置外部事件监听器
      * @param listener 事件监听器
@@ -133,20 +148,13 @@ public class WebViewFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        // 从父容器中移除WebView，防止内存泄露
-        if (webView != null && webView.getWebView() != null) {
-            android.webkit.WebView actualWebView = webView.getWebView();
-            ViewGroup parent = (ViewGroup) actualWebView.getParent();
-            if (parent != null) {
-                parent.removeView(actualWebView);
-                android.util.Log.d("WebViewFragment", "WebView removed from parent container");
-            }
-        }
-
-        // 销毁WebView
         if (webView != null) {
+            webView.setEventListener(null);
             webView.destroy();
+            webView = null;
         }
+        internalListener = null;
+        externalListener = null;
         super.onDestroy();
     }
 

@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.core.common.log.Logger;
+import com.core.log.LogKit;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -259,7 +259,7 @@ public final class GlobalCrashHandler implements Thread.UncaughtExceptionHandler
     private void safeLog(String msg) {
         if (msg == null) return;
         try {
-            Logger.e("[CrashHandler] %s", msg);
+            LogKit.e("CrashHandler", "[CrashHandler] %s", msg);
         } catch (Throwable t) {
             System.err.println("[GlobalCrashHandler] " + msg);
         }

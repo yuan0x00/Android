@@ -75,4 +75,10 @@
     <color name="md_theme_dark_inversePrimary">#6750A4</color>
     <color name="md_theme_dark_shadow">#000000</color>
     <color name="md_theme_dark_surfaceTint">#D0BCFF</color>
+
+    <!-- Project category accents -->
+    <color name="project_category_accent1">#FFB86C</color>
+    <color name="project_category_accent2">#7DD5C9</color>
+    <color name="project_category_accent3">#A3C9F9</color>
+    <color name="project_category_accent4">#F28FAD</color>
 </resources>

@@ -1,5 +1,6 @@
 package com.lib.domain.repository;
 
+import com.lib.domain.model.ArticleListBean;
 import com.lib.domain.model.CoinBean;
 import com.lib.domain.model.LoginBean;
 import com.lib.domain.model.UserInfoBean;
@@ -30,4 +31,6 @@ public interface UserRepository {
     Observable<DomainResult<UserInfoBean>> fetchUserProfile();
 
     Observable<DomainResult<CoinBean>> signIn();
+
+    Observable<DomainResult<ArticleListBean>> favoriteArticles(int page);
 }

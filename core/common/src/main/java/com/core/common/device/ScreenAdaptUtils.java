@@ -5,7 +5,7 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 
 import com.core.common.BuildConfig;
-import com.core.common.log.Logger;
+import com.core.log.LogKit;
 
 /**
  * 屏幕适配工具类（今日头条方案）
@@ -75,7 +75,7 @@ public class ScreenAdaptUtils {
 
         // 同时修改 configuration（兼容部分 ROM）
         if (BuildConfig.DEBUG) {
-            Logger.d("ScreenAdapt", "适配完成: density=" + dm.density + ", width=" + dm.widthPixels + "px");
+            LogKit.d("ScreenAdapt", "适配完成: density=%s, width=%spx", dm.density, dm.widthPixels);
         }
     }
 

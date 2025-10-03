@@ -19,10 +19,14 @@ public class WebViewLifecycleManager implements LifecycleObserver {
 
     private final WeakReference<WebView> webViewRef;
     private final WebViewPool webViewPool;
+    private final WeakReference<Lifecycle> lifecycleRef;
 
-    public WebViewLifecycleManager(@NonNull WebView webView, @NonNull WebViewPool webViewPool) {
+    public WebViewLifecycleManager(@NonNull WebView webView,
+                                   @NonNull WebViewPool webViewPool,
+                                   @NonNull Lifecycle lifecycle) {
         this.webViewRef = new WeakReference<>(webView);
         this.webViewPool = webViewPool;
+        this.lifecycleRef = new WeakReference<>(lifecycle);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -57,6 +61,7 @@ public class WebViewLifecycleManager implements LifecycleObserver {
             webViewPool.releaseWebView(webView);
             Log.d(TAG, "WebView recycled to pool");
         }
+        detachFromLifecycle();
     }
 
     /**
@@ -79,6 +84,7 @@ public class WebViewLifecycleManager implements LifecycleObserver {
             // 清除引用，防止被回收到池中
             webViewRef.clear();
         }
+        detachFromLifecycle();
     }
 
     /**
@@ -107,6 +113,13 @@ public class WebViewLifecycleManager implements LifecycleObserver {
         } catch (Exception e) {
             // WebView已经被销毁
             return false;
+        }
+    }
+
+    private void detachFromLifecycle() {
+        Lifecycle lifecycle = lifecycleRef != null ? lifecycleRef.get() : null;
+        if (lifecycle != null) {
+            lifecycle.removeObserver(this);
         }
     }
 }

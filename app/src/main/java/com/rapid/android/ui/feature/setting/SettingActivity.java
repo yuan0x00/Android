@@ -75,20 +75,6 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
             }
         });
 
-        viewModel.getDataSaver().observe(this, enabled -> {
-            boolean target = Boolean.TRUE.equals(enabled);
-            if (binding.switchDataSaver.isChecked() != target) {
-                binding.switchDataSaver.setChecked(target);
-            }
-        });
-
-        viewModel.getWifiOnlyMedia().observe(this, enabled -> {
-            boolean target = Boolean.TRUE.equals(enabled);
-            if (binding.switchWifiOnly.isChecked() != target) {
-                binding.switchWifiOnly.setChecked(target);
-            }
-        });
-
         viewModel.getNotifications().observe(this, isChecked -> {
             boolean target = Boolean.TRUE.equals(isChecked);
             if (binding.switchNotifications.isChecked() != target) {
@@ -127,20 +113,6 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
             } else if (checkedId == binding.btnThemeDark.getId()) {
                 viewModel.setThemeMode(ThemeManager.ThemeMode.DARK);
             }
-        });
-
-        binding.switchDataSaver.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (!buttonView.isPressed()) {
-                return;
-            }
-            viewModel.setDataSaver(isChecked);
-        });
-
-        binding.switchWifiOnly.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (!buttonView.isPressed()) {
-                return;
-            }
-            viewModel.setWifiOnlyMedia(isChecked);
         });
 
         binding.switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {

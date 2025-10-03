@@ -24,6 +24,7 @@ dependencyResolutionManagement {
 rootProject.name = "Android"
 include ':app'
 include ':core:common'
+include ':core:log'
 include ':core:datastore'
 include ':core:network'
 include ':core:ui'

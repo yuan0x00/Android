@@ -13,6 +13,8 @@ import com.core.ui.presentation.BaseFragment;
 import com.rapid.android.R;
 import com.rapid.android.databinding.FragmentMineBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
+import com.rapid.android.ui.feature.main.mine.coin.CoinActivity;
+import com.rapid.android.ui.feature.main.mine.favorite.FavoriteActivity;
 import com.rapid.android.ui.feature.setting.SettingActivity;
 
 public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBinding> {
@@ -46,17 +48,6 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
             // 如果已登录，则不执行任何操作
         });
 
-        // 主要操作按钮（登录/查看资料）
-        binding.btnPrimaryAction.setOnClickListener(v -> {
-            com.lib.data.session.SessionManager.SessionState state =
-                    com.lib.data.session.SessionManager.getInstance().getCurrentState();
-            if (state != null && state.isLoggedIn()) {
-                ToastUtils.showShortToast(getString(R.string.mine_toast_profile_building));
-            } else {
-                navigateToLogin();
-            }
-        });
-
         // 签到按钮
         binding.btnDailyAction.setOnClickListener(v -> {
             // 检查登录状态，只有登录用户才能签到
@@ -71,10 +62,17 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         });
 
         binding.itemSettings.setOnClickListener(v -> openSettings());
-        binding.itemFavorites.setOnClickListener(v -> handleProtectedAction(R.string.mine_action_open_favorites));
-        binding.layoutCoin.setOnClickListener(v -> handleProtectedAction(R.string.mine_action_view_points));
-        binding.layoutFavorite.setOnClickListener(v -> handleProtectedAction(R.string.mine_action_view_collection));
-        binding.layoutAchievements.setOnClickListener(v -> handleProtectedAction(R.string.mine_action_view_achievements));
+        binding.layoutCoin.setOnClickListener(v -> {
+            com.lib.data.session.SessionManager.SessionState state =
+                    com.lib.data.session.SessionManager.getInstance().getCurrentState();
+            if (state != null && state.isLoggedIn()) {
+                CoinActivity.start(requireContext());
+            } else {
+                ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+                navigateToLogin();
+            }
+        });
+        binding.layoutFavorite.setOnClickListener(v -> openFavorites());
     }
 
     @Override
@@ -120,18 +118,13 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
 
         binding.tvCoinCount.setText(state.getCoinDisplay());
         binding.tvFavoriteCount.setText(state.getFavoriteDisplay());
-        binding.tvAchievementCount.setText(state.getAchievementDisplay());
 
         binding.btnDailyAction.setText(state.getDailyActionText());
         binding.btnDailyAction.setEnabled(state.isDailyActionEnabled());
 
         if (state.isLoggedIn()) {
-            binding.btnPrimaryAction.setText(R.string.mine_action_view_profile);
-            binding.btnPrimaryAction.setVisibility(View.VISIBLE);
             binding.btnDailyAction.setVisibility(View.VISIBLE); // 签到按钮显示
         } else {
-            binding.btnPrimaryAction.setText(R.string.mine_action_login);
-            binding.btnPrimaryAction.setVisibility(View.VISIBLE);
             binding.btnDailyAction.setVisibility(View.GONE); // 签到按钮隐藏
         }
 
@@ -153,11 +146,11 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         startActivity(new Intent(getContext(), SettingActivity.class));
     }
 
-    private void handleProtectedAction(int messageRes) {
+    private void openFavorites() {
         com.lib.data.session.SessionManager.SessionState state =
                 com.lib.data.session.SessionManager.getInstance().getCurrentState();
         if (state != null && state.isLoggedIn()) {
-            ToastUtils.showShortToast(getString(messageRes));
+            FavoriteActivity.start(requireContext());
         } else {
             ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
             navigateToLogin();

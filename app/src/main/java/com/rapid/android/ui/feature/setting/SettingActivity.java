@@ -3,7 +3,6 @@ package com.rapid.android.ui.feature.setting;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -152,7 +151,7 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(this, getString(R.string.setting_open_link_failed), Toast.LENGTH_SHORT).show();
+            ToastUtils.showShortToast(getString(R.string.setting_open_link_failed));
         }
     }
 }

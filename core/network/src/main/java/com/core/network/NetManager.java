@@ -108,6 +108,17 @@ public class NetManager {
     }
 
     /**
+     * 重置 Retrofit 及 API 缓存，确保后续调用使用最新配置。
+     */
+    public static void reset() {
+        synchronized (lock) {
+            apiCache.clear();
+            retrofit = null;
+            initialized = false;
+        }
+    }
+
+    /**
      * 检查 Retrofit 是否已初始化
      */
     public static boolean isInitialized() {

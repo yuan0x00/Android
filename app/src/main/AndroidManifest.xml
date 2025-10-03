@@ -20,6 +20,9 @@
             android:name=".ui.feature.setting.SettingActivity"
             android:exported="false"/>
         <activity
+            android:name=".ui.feature.setting.developer.ProxyConfigActivity"
+            android:exported="false"/>
+        <activity
             android:name=".ui.feature.main.mine.coin.CoinActivity"
             android:exported="false"/>
         <activity

@@ -30,6 +30,8 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     private BottomTabNavigator navigator;
     private long exitTime = 0L;
 
+    private boolean isOnCreate = true;
+
     @Override
     protected MainViewModel createViewModel() {
         return new ViewModelProvider(this).get(MainViewModel.class);
@@ -78,6 +80,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     @Override
     protected void loadData() {
         viewModel.refreshLoginState();
+        isOnCreate = false;
     }
 
     private void setTabLayout(Bundle savedInstanceState) {
@@ -142,9 +145,9 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     @Override
     protected void onResume() {
         super.onResume();
-        // 检查登录状态以处理应用从后台返回的情况
-        // 主要是为了处理token过期或网络状态变化等情况
-        viewModel.refreshLoginState();
+        if (!isOnCreate) {
+            viewModel.refreshLoginState();
+        }
     }
 
     @Override

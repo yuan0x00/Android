@@ -16,6 +16,7 @@ import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.mine.coin.CoinActivity;
 import com.rapid.android.ui.feature.main.mine.favorite.FavoriteActivity;
 import com.rapid.android.ui.feature.setting.SettingActivity;
+import com.rapid.android.ui.feature.setting.developer.ProxyConfigActivity;
 
 public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBinding> {
 
@@ -61,6 +62,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
             }
         });
 
+        binding.itemDeveloper.setOnClickListener(v -> openDeveloperTools());
         binding.itemSettings.setOnClickListener(v -> openSettings());
         binding.layoutCoin.setOnClickListener(v -> {
             com.lib.data.session.SessionManager.SessionState state =
@@ -144,6 +146,10 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
 
     private void openSettings() {
         startActivity(new Intent(getContext(), SettingActivity.class));
+    }
+
+    private void openDeveloperTools() {
+        startActivity(new Intent(getContext(), ProxyConfigActivity.class));
     }
 
     private void openFavorites() {

@@ -36,6 +36,7 @@ dependencies {
     implementation project(':core:network')
     implementation project(':core:webview')
     implementation project(':core:datastore')
+    implementation project(':core:log')
     implementation project(':data:repository')
     implementation project(':domain:model')
     implementation libs.androidx.core

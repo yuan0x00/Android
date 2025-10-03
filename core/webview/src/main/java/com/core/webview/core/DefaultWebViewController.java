@@ -214,7 +214,9 @@ public class DefaultWebViewController implements WebViewController {
         webView.setWebChromeClient(new EnhancedWebChromeClient());
         webView.setDownloadListener((url, userAgent, contentDisposition, mimetype, contentLength) ->
                 downloadManager.handleDownloadRequest(url, userAgent, contentDisposition, mimetype, contentLength));
-        advancedPerformanceMonitor.bindWebView(webView);
+        if (configuration.isEnablePerformanceMonitoring()) {
+            advancedPerformanceMonitor.bindWebView(webView);
+        }
     }
 
     private void startMonitoringIfRequired() {
@@ -372,7 +374,9 @@ public class DefaultWebViewController implements WebViewController {
 
     private void notifyPageStarted(@NonNull String url) {
         performanceMonitor.startPageLoad(url);
-        advancedPerformanceMonitor.startPageLoad(url);
+        if (configuration.isEnablePerformanceMonitoring()) {
+            advancedPerformanceMonitor.startPageLoad(url);
+        }
         if (eventListener != null) {
             eventListener.onPageStarted(url);
         }
@@ -380,7 +384,9 @@ public class DefaultWebViewController implements WebViewController {
 
     private void notifyPageFinished(@NonNull String url, boolean success) {
         performanceMonitor.endPageLoad(url);
-        advancedPerformanceMonitor.endPageLoad(url, success);
+        if (configuration.isEnablePerformanceMonitoring()) {
+            advancedPerformanceMonitor.endPageLoad(url, success);
+        }
         if (eventListener != null && success) {
             eventListener.onPageFinished(url);
         }

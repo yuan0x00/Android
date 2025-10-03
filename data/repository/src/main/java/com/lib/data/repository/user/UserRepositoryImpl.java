@@ -98,7 +98,7 @@ public class UserRepositoryImpl implements UserRepository {
                     return Observable.just(DomainResult.<LoginBean>failure(DomainError.of(DomainError.UNKNOWN_CODE, "Username not available")));
                 }
             })
-            .onErrorReturn(throwable -> DomainResultMapper.mapError(throwable));
+            .onErrorReturn(DomainResultMapper::mapError);
     }
 
     @Override

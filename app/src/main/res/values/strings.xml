@@ -54,6 +54,7 @@
     <string name="mine_stat_points">积分</string>
     <string name="mine_stat_favorites">收藏</string>
     <string name="mine_section_favorites">我的收藏</string>
+    <string name="mine_section_developer">开发者工具</string>
     <string name="mine_section_settings">设置</string>
     <string name="mine_toast_profile_building">个人中心建设中</string>
     <string name="mine_toast_require_login">请先登录</string>
@@ -78,6 +79,19 @@
     <string name="coin_tab_records">积分明细</string>
     <string name="coin_tab_rank">积分排行榜</string>
     <string name="coin_empty_records">暂无积分明细</string>
+    <string name="proxy_config_title">应用内代理</string>
+    <string name="proxy_config_enable_proxy">启用应用内代理</string>
+    <string name="proxy_config_host_hint">代理服务器地址</string>
+    <string name="proxy_config_port_hint">代理端口</string>
+    <string name="proxy_config_auto_disable">连接失败自动降级为直连</string>
+    <string name="proxy_config_last_failure_none">暂无失败记录</string>
+    <string name="proxy_config_last_failure_prefix">最近降级：</string>
+    <string name="proxy_config_button_save">保存</string>
+    <string name="proxy_config_error_host">请输入有效的代理地址</string>
+    <string name="proxy_config_error_port">端口需为 1-65535</string>
+    <string name="proxy_config_saved">代理配置已更新</string>
+    <string name="proxy_config_disabled">已关闭代理</string>
+    <string name="proxy_config_degraded_notice">代理连接失败，已自动降级为直连</string>
     <string name="coin_empty_rank">暂无积分排行</string>
     <string name="coin_error_load_records">加载积分明细失败</string>
     <string name="coin_error_load_rank">加载积分排行失败</string>

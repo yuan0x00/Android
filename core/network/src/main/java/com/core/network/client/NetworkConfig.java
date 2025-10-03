@@ -5,14 +5,13 @@ import androidx.annotation.Nullable;
 
 import com.core.network.interceptor.AuthInterceptor;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.net.ProxySelector;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
 
 /**
  * 网络配置项，支持业务侧定制基础 URL、请求头、Cookie 管理等能力。
@@ -31,6 +30,8 @@ public final class NetworkConfig {
     private final AuthFailureListener authFailureListener;
     private final AuthInterceptor.TokenRefreshHandler tokenRefreshHandler;
     private final Set<Integer> businessUnauthorizedCodes;
+    private final ProxySelector proxySelector;
+    private final List<Interceptor> applicationInterceptors;
     private NetworkConfig(Builder builder) {
         this.baseUrl = builder.baseUrl;
         this.connectTimeoutSeconds = builder.connectTimeoutSeconds;
@@ -44,6 +45,8 @@ public final class NetworkConfig {
         this.authFailureListener = builder.authFailureListener;
         this.tokenRefreshHandler = builder.tokenRefreshHandler;
         this.businessUnauthorizedCodes = Collections.unmodifiableSet(new CopyOnWriteArraySet<>(builder.businessUnauthorizedCodes));
+        this.proxySelector = builder.proxySelector;
+        this.applicationInterceptors = Collections.unmodifiableList(new ArrayList<>(builder.applicationInterceptors));
     }
 
     public static Builder builder() {
@@ -109,6 +112,16 @@ public final class NetworkConfig {
         return businessUnauthorizedCodes;
     }
 
+    @Nullable
+    public ProxySelector getProxySelector() {
+        return proxySelector;
+    }
+
+    @NonNull
+    public List<Interceptor> getApplicationInterceptors() {
+        return applicationInterceptors;
+    }
+
     public interface HeaderProvider {
         @NonNull
         Map<String, String> provideHeaders();
@@ -143,6 +156,8 @@ public final class NetworkConfig {
         private AuthFailureListener authFailureListener = () -> {};
         private final Set<Integer> businessUnauthorizedCodes = new CopyOnWriteArraySet<>();
         private AuthInterceptor.TokenRefreshHandler tokenRefreshHandler;
+        private final List<Interceptor> applicationInterceptors = new ArrayList<>();
+        private ProxySelector proxySelector;
 
         private Builder() {
             businessUnauthorizedCodes.add(-1001);
@@ -200,6 +215,18 @@ public final class NetworkConfig {
 
         public Builder tokenRefreshHandler(@Nullable AuthInterceptor.TokenRefreshHandler handler) {
             this.tokenRefreshHandler = handler;
+            return this;
+        }
+
+        public Builder proxySelector(@Nullable ProxySelector proxySelector) {
+            this.proxySelector = proxySelector;
+            return this;
+        }
+
+        public Builder addApplicationInterceptor(@NonNull Interceptor interceptor) {
+            if (interceptor != null) {
+                this.applicationInterceptors.add(interceptor);
+            }
             return this;
         }
 

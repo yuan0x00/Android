@@ -6,6 +6,7 @@ import com.core.log.LogKit;
 import com.core.network.interceptor.AuthInterceptor;
 
 import java.io.IOException;
+import java.net.ProxySelector;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +38,11 @@ public class NetworkClient {
             okHttpBuilder.hostnameVerifier(SSLTrustManager.getHostnameVerifier());
         }
 
+        for (Interceptor interceptor : activeConfig.getApplicationInterceptors()) {
+            if (interceptor != null) {
+                okHttpBuilder.addInterceptor(interceptor);
+            }
+        }
         okHttpBuilder.addInterceptor(new RequestHeaderInterceptor(activeConfig));
         okHttpBuilder.addInterceptor(new ResponseHeaderInterceptor(activeConfig));
         okHttpBuilder.addInterceptor(new AuthInterceptor(
@@ -44,10 +50,15 @@ public class NetworkClient {
                 null,
                 activeConfig.getTokenRefreshHandler(),
                 activeConfig.getBusinessUnauthorizedCodes()));
-//        okHttpBuilder.addInterceptor(new ResponseErrorInterceptor());
+        okHttpBuilder.addInterceptor(new ResponseErrorInterceptor());
 
         if (activeConfig.isLoggingEnabled()) {
             okHttpBuilder.addInterceptor(new LoggingInterceptor());
+        }
+
+        ProxySelector proxySelector = activeConfig.getProxySelector();
+        if (proxySelector != null) {
+            okHttpBuilder.proxySelector(proxySelector);
         }
 
         OkHttpClient okHttpClient = okHttpBuilder.build();

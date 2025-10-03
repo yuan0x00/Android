@@ -255,7 +255,7 @@ public class DefaultWebViewConfig implements WebViewConfiguration, Parcelable {
             this.config.safeBrowsingEnabled = true;
             this.config.allowedDomains = new String[0];
             this.config.strictDomainChecking = false;
-            this.config.enablePerformanceMonitoring = true;
+            this.config.enablePerformanceMonitoring = false;
             this.config.enableMemoryMonitoring = true;
             this.config.slowRenderingThreshold = 500;
         }

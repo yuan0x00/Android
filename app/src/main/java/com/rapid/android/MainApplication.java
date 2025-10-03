@@ -1,8 +1,11 @@
 package com.rapid.android;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 
 import com.core.common.app.BaseApplication;
+import com.core.network.NetManager;
 import com.core.network.client.NetworkClient;
 import com.core.network.client.NetworkConfig;
 import com.core.network.interceptor.AuthInterceptor;
@@ -13,6 +16,7 @@ import com.lib.data.network.NetApis;
 import com.lib.data.network.PersistentCookieStore;
 import com.lib.data.network.TokenRefreshHandlerImpl;
 import com.lib.data.session.SessionManager;
+import com.rapid.android.network.proxy.DeveloperProxyManager;
 import com.rapid.android.utils.ThemeManager;
 
 public class MainApplication extends BaseApplication {
@@ -20,6 +24,13 @@ public class MainApplication extends BaseApplication {
     private final NetworkConfig.AuthFailureListener authFailureHandler =
             () -> SessionManager.getInstance().forceLogout();
     private AuthInterceptor.TokenRefreshHandler tokenRefreshHandler;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final DeveloperProxyManager.ProxySettingsListener proxyListener =
+            (settings, failureTriggered) -> {
+                if (!failureTriggered) {
+                    scheduleNetworkRebuild();
+                }
+            };
 
     @Override
     public void onCreate() {
@@ -31,7 +42,7 @@ public class MainApplication extends BaseApplication {
         enableStrictMode();
         // 初始化数据层
         DataInitializer.init();
-        initNetWork();
+        initNetwork();
     }
 
     private void enableStrictMode() {
@@ -56,9 +67,32 @@ public class MainApplication extends BaseApplication {
         }
     }
 
-    private void initNetWork() {
+    private void initNetwork() {
         tokenRefreshHandler = new TokenRefreshHandlerImpl();
-        NetworkConfig config = NetworkConfig.builder()
+        DeveloperProxyManager proxyManager = DeveloperProxyManager.getInstance();
+        proxyManager.addListener(proxyListener);
+
+        rebuildNetworkClient();
+        NetApis.init();
+
+        // 初始化统一的会话管理器
+        SessionManager.getInstance().initialize();
+    }
+
+    private void scheduleNetworkRebuild() {
+        mainHandler.post(this::rebuildNetworkClient);
+    }
+
+    private void rebuildNetworkClient() {
+        NetworkConfig config = createNetworkConfig();
+        NetworkClient.configure(config);
+        NetManager.reset();
+        NetApis.init();
+    }
+
+    private NetworkConfig createNetworkConfig() {
+        DeveloperProxyManager proxyManager = DeveloperProxyManager.getInstance();
+        return NetworkConfig.builder()
                 .baseUrl("https://www.wanandroid.com/")
                 .enableLogging(BuildConfig.DEBUG)
                 .allowInsecureSsl(BuildConfig.DEBUG)
@@ -68,12 +102,14 @@ public class MainApplication extends BaseApplication {
                 .tokenRefreshHandler(tokenRefreshHandler)
                 .headerProvider(new AuthHeaderProvider())
                 .cookieStore(new PersistentCookieStore(getApplicationContext()))
+                .proxySelector(proxyManager.getProxySelector())
                 .build();
-        NetworkClient.configure(config);
-        NetApis.init();
+    }
 
-        // 初始化统一的会话管理器
-        SessionManager.getInstance().initialize();
+    @Override
+    public void onTerminate() {
+        DeveloperProxyManager.getInstance().removeListener(proxyListener);
+        super.onTerminate();
     }
 
 }

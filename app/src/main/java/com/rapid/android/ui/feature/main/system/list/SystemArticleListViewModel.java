@@ -1,10 +1,10 @@
-package com.rapid.android.ui.feature.main.project.list;
+package com.rapid.android.ui.feature.main.system.list;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.core.common.app.BaseApplication;
 import com.core.data.repository.RepositoryProvider;
-import com.core.domain.model.ProjectPageBean;
+import com.core.domain.model.ArticleListBean;
 import com.core.domain.repository.ContentRepository;
 import com.core.domain.result.DomainError;
 import com.core.domain.result.DomainResult;
@@ -19,16 +19,15 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class ProjectListViewModel extends BaseViewModel {
+public class SystemArticleListViewModel extends BaseViewModel {
 
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
-
     private final ContentRepository repository = RepositoryProvider.getContentRepository();
     private int categoryId;
-    private final PagingController<ProjectPageBean.ProjectItemBean> pagingController =
-            new PagingController<>(this, 1, this::fetchProjectPage);
+    private final PagingController<ArticleListBean.Data> pagingController =
+            new PagingController<>(this, 0, this::fetchArticlesPage);
 
-    public MutableLiveData<List<ProjectPageBean.ProjectItemBean>> getProjectItems() {
+    public MutableLiveData<List<ArticleListBean.Data>> getArticleItems() {
         return pagingController.getItemsLiveData();
     }
 
@@ -75,36 +74,36 @@ public class ProjectListViewModel extends BaseViewModel {
         pagingController.loadMore();
     }
 
-    private Observable<DomainResult<PagingPayload<ProjectPageBean.ProjectItemBean>>> fetchProjectPage(int page) {
+    private Observable<DomainResult<PagingPayload<ArticleListBean.Data>>> fetchArticlesPage(int page) {
         if (categoryId <= 0) {
             errorMessage.setValue(BaseApplication.getAppContext()
-                    .getString(R.string.project_error_invalid_category));
-            return Observable.just(
-                    DomainResult.failure(DomainError.of(DomainError.UNKNOWN_CODE,
-                            BaseApplication.getAppContext().getString(R.string.project_error_invalid_category)))
-            );
+                    .getString(R.string.system_error_invalid_category));
+            return Observable.just(DomainResult.failure(DomainError.of(DomainError.UNKNOWN_CODE,
+                    BaseApplication.getAppContext().getString(R.string.system_error_invalid_category))));
         }
 
-        return repository.projectArticles(page, categoryId)
+        return repository.articlesByCategory(page, categoryId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(result -> {
                     if (result.isSuccess() && result.getData() != null) {
-                        ProjectPageBean pageBean = result.getData();
-                        int next = pageBean.getCurPage() + 1;
-                        boolean more = !pageBean.isOver() && pageBean.getCurPage() < pageBean.getPageCount();
-                        return DomainResult.success(new PagingPayload<>(pageBean.getDatas(), next, more));
+                        ArticleListBean pageBean = result.getData();
+                        int nextPage = page + 1;
+                        boolean hasMore = !pageBean.isOver() && pageBean.getCurPage() < pageBean.getPageCount();
+                        return DomainResult.success(new PagingPayload<>(pageBean.getDatas(), nextPage, hasMore));
                     }
+
                     DomainError error = result.getError();
                     if (error != null && error.getMessage() != null) {
                         errorMessage.setValue(error.getMessage());
                         return DomainResult.failure(error);
                     }
+
                     errorMessage.setValue(BaseApplication.getAppContext()
-                            .getString(R.string.project_error_load_failed));
+                            .getString(R.string.system_error_article_load_failed));
                     return DomainResult.failure(error != null ? error
                             : DomainError.of(DomainError.UNKNOWN_CODE,
-                            BaseApplication.getAppContext().getString(R.string.project_error_load_failed)));
+                            BaseApplication.getAppContext().getString(R.string.system_error_article_load_failed)));
                 });
     }
 }

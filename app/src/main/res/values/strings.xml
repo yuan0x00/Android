@@ -96,6 +96,11 @@
     <string name="coin_error_load_records">加载积分明细失败</string>
     <string name="coin_error_load_rank">加载积分排行失败</string>
     <string name="system_error_load_failed">加载体系数据失败</string>
+    <string name="system_error_invalid_category">无效的体系分类</string>
+    <string name="system_error_article_load_failed">加载体系文章失败</string>
+    <string name="system_title_article_default">体系文章</string>
+    <string name="system_empty_article_list">暂无体系文章</string>
+    <string name="system_placeholder_author">匿名作者</string>
     <string name="navigation_error_load_failed">加载导航数据失败</string>
     <string name="home_banner_load_failed">获取 Banner 失败</string>
     <string name="home_article_load_failed">获取文章失败</string>
@@ -107,6 +112,14 @@
     <string name="project_empty_navigation">暂无导航数据</string>
     <string name="project_empty_system">暂无体系数据</string>
     <string name="project_empty_latest">暂无最新项目</string>
+    <string name="plaza_empty_feed">暂无广场内容</string>
+    <string name="plaza_error_load_failed">加载广场数据失败</string>
+    <string name="home_page_plaza">广场</string>
+    <string name="common_back_to_top">回到顶部</string>
+    <string name="wechat_empty_articles">暂无公众号文章</string>
+    <string name="wechat_error_load_failed">加载公众号文章失败</string>
+    <string name="wechat_error_load_chapters">加载公众号列表失败</string>
+    <string name="home_page_wechat">公众号</string>
     <string name="project_empty_recommend">暂无推荐内容</string>
     <string name="favorite_title">我的收藏</string>
     <string name="favorite_empty_list">暂无收藏内容</string>
@@ -117,9 +130,10 @@
     <string name="main_tab_home">首页</string>
     <string name="main_tab_system">体系</string>
     <string name="main_tab_navigation">导航</string>
+    <string name="main_tab_wechat">公众号</string>
     <string name="main_tab_project">项目</string>
     <string name="main_tab_profile">我的</string>
-    <string name="home_page_recommend">首页</string>
+    <string name="home_page_recommend">推荐</string>
     <string name="home_page_latest">最新项目</string>
     <string name="home_avatar_placeholder_tip">个人中心建设中，敬请期待</string>
 

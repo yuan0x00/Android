@@ -21,6 +21,7 @@ import com.rapid.android.ui.feature.main.mine.MineFragment;
 import com.rapid.android.ui.feature.main.navigation.NavigationFragment;
 import com.rapid.android.ui.feature.main.project.ProjectFragment;
 import com.rapid.android.ui.feature.main.system.SystemFragment;
+import com.rapid.android.ui.feature.main.wechat.WechatFragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -96,15 +97,20 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         R.drawable.home_fill_24px,
                         HomeFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
+                        getString(R.string.main_tab_navigation),
+                        R.drawable.signpost_24px,
+                        R.drawable.signpost_fill_24px,
+                        NavigationFragment.class))
+                .addTab(new BottomTabNavigator.TabItem(
                         getString(R.string.main_tab_system),
                         R.drawable.family_history_24px,
                         R.drawable.family_history_fill_24px,
                         SystemFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
-                        getString(R.string.main_tab_navigation),
-                        R.drawable.signpost_24px,
-                        R.drawable.signpost_fill_24px,
-                        NavigationFragment.class))
+                        getString(R.string.main_tab_wechat),
+                        R.drawable.article_person_24px,
+                        R.drawable.article_person_fill_24px,
+                        WechatFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
                         getString(R.string.main_tab_project),
                         R.drawable.folder_code_24px,
@@ -117,11 +123,12 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         MineFragment.class))
                 .setOnTabSelectInterceptor((position) -> {
                     switch (position) {
-                        case 3:
+                        case 4:
 //                            return checkLoginState();
                         case 0:
                         case 1:
                         case 2:
+                        case 3:
                     }
                     return true;
                 })

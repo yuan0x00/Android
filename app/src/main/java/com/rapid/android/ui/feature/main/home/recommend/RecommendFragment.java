@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.core.domain.model.ArticleListBean;
 import com.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentRecommandBinding;
+import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.main.home.BannerAdapter;
@@ -27,6 +28,7 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
     private FeedAdapter feedAdapter;
     private LinearLayoutManager layoutManager;
     private ContentStateController stateController;
+    private BackToTopController backToTopController;
 
     @Override
     protected RecommendViewModel createViewModel() {
@@ -83,6 +85,8 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
 
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.refreshAll());
 
+        backToTopController = BackToTopController.attach(binding.fabBackToTop, binding.recyclerView);
+
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -103,5 +107,14 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (backToTopController != null) {
+            backToTopController.detach();
+            backToTopController = null;
+        }
+        super.onDestroyView();
     }
 }

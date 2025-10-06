@@ -1,11 +1,11 @@
-package com.rapid.android.ui.feature.main.project;
+package com.rapid.android.ui.feature.main.wechat;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.core.common.app.BaseApplication;
 import com.core.data.repository.RepositoryProvider;
-import com.core.domain.model.CategoryNodeBean;
-import com.core.domain.model.ProjectPageBean;
+import com.core.domain.model.ArticleListBean;
+import com.core.domain.model.WxChapterBean;
 import com.core.domain.repository.ContentRepository;
 import com.core.domain.result.DomainError;
 import com.core.domain.result.DomainResult;
@@ -21,16 +21,17 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class ProjectViewModel extends BaseViewModel {
+public class WechatViewModel extends BaseViewModel {
 
-    private final MutableLiveData<List<CategoryNodeBean>> projectCategories = new MutableLiveData<>(Collections.emptyList());
+    private final MutableLiveData<List<WxChapterBean>> chapters = new MutableLiveData<>(Collections.emptyList());
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<String> articleErrorMessage = new MutableLiveData<>();
+
     private final ContentRepository repository = RepositoryProvider.getContentRepository();
 
-    public MutableLiveData<List<CategoryNodeBean>> getProjectCategories() {
-        return projectCategories;
+    public MutableLiveData<List<WxChapterBean>> getChapters() {
+        return chapters;
     }
 
     public MutableLiveData<Boolean> getLoading() {
@@ -45,27 +46,23 @@ public class ProjectViewModel extends BaseViewModel {
         return articleErrorMessage;
     }
 
-    void emitArticleError(String message) {
-        articleErrorMessage.setValue(message);
-    }
-
-    public void loadProjects(boolean forceRefresh) {
+    public void loadWechatChapters(boolean forceRefresh) {
         loading.setValue(true);
-        autoDispose(repository.projectTree()
+        autoDispose(repository.wechatChapters()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<DomainResult<List<CategoryNodeBean>>>() {
+                .subscribeWith(new DisposableObserver<DomainResult<List<WxChapterBean>>>() {
                     @Override
-                    public void onNext(DomainResult<List<CategoryNodeBean>> result) {
+                    public void onNext(DomainResult<List<WxChapterBean>> result) {
                         if (result.isSuccess() && result.getData() != null) {
-                            projectCategories.setValue(result.getData());
+                            chapters.setValue(result.getData());
                         } else {
                             DomainError error = result.getError();
                             if (error != null && error.getMessage() != null) {
                                 errorMessage.setValue(error.getMessage());
                             } else {
                                 errorMessage.setValue(BaseApplication.getAppContext()
-                                        .getString(R.string.project_error_load_failed));
+                                        .getString(R.string.wechat_error_load_chapters));
                             }
                         }
                     }
@@ -73,11 +70,11 @@ public class ProjectViewModel extends BaseViewModel {
                     @Override
                     public void onError(Throwable e) {
                         loading.setValue(false);
-                        if (e.getMessage() != null) {
+                        if (e != null && e.getMessage() != null) {
                             errorMessage.setValue(e.getMessage());
                         } else {
                             errorMessage.setValue(BaseApplication.getAppContext()
-                                    .getString(R.string.project_error_load_failed));
+                                    .getString(R.string.wechat_error_load_chapters));
                         }
                     }
 
@@ -88,23 +85,22 @@ public class ProjectViewModel extends BaseViewModel {
                 }));
     }
 
-    Observable<DomainResult<PagingPayload<ProjectPageBean.ProjectItemBean>>> fetchProjectArticles(int page, int categoryId) {
-        if (categoryId <= 0) {
-            String message = BaseApplication.getAppContext().getString(R.string.project_error_invalid_category);
+    Observable<DomainResult<PagingPayload<ArticleListBean.Data>>> fetchWechatArticles(int chapterId, int page) {
+        if (chapterId <= 0) {
+            String message = BaseApplication.getAppContext().getString(R.string.wechat_error_load_failed);
             articleErrorMessage.setValue(message);
-            return Observable.just(DomainResult.failure(
-                    DomainError.of(DomainError.UNKNOWN_CODE, message)));
+            return Observable.just(DomainResult.failure(DomainError.of(DomainError.UNKNOWN_CODE, message)));
         }
 
-        return repository.projectArticles(page, categoryId)
+        return repository.wechatArticles(chapterId, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(result -> {
                     if (result.isSuccess() && result.getData() != null) {
-                        ProjectPageBean pageBean = result.getData();
-                        int nextPage = pageBean.getCurPage() + 1;
-                        boolean hasMore = !pageBean.isOver() && pageBean.getCurPage() < pageBean.getPageCount();
-                        return DomainResult.success(new PagingPayload<>(pageBean.getDatas(), nextPage, hasMore));
+                        ArticleListBean bean = result.getData();
+                        int nextPage = bean.getCurPage() + 1;
+                        boolean hasMore = !bean.isOver();
+                        return DomainResult.success(new PagingPayload<>(bean.getDatas(), nextPage, hasMore));
                     }
 
                     DomainError error = result.getError();
@@ -113,7 +109,7 @@ public class ProjectViewModel extends BaseViewModel {
                         return DomainResult.failure(error);
                     }
 
-                    String message = BaseApplication.getAppContext().getString(R.string.project_error_load_failed);
+                    String message = BaseApplication.getAppContext().getString(R.string.wechat_error_load_failed);
                     articleErrorMessage.setValue(message);
                     return DomainResult.failure(DomainError.of(DomainError.UNKNOWN_CODE, message));
                 });

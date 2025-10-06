@@ -1,4 +1,4 @@
-package com.rapid.android.ui.feature.main.project.list;
+package com.rapid.android.ui.feature.main.system.list;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,33 +10,35 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.core.ui.presentation.BaseActivity;
 import com.rapid.android.R;
-import com.rapid.android.databinding.ActivityProjectListBinding;
+import com.rapid.android.databinding.ActivitySystemArticleListBinding;
+import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
 
-public class ProjectListActivity extends BaseActivity<ProjectListViewModel, ActivityProjectListBinding> {
+public class SystemArticleListActivity extends BaseActivity<SystemArticleListViewModel, ActivitySystemArticleListBinding> {
 
     private static final String EXTRA_CATEGORY_ID = "extra_category_id";
     private static final String EXTRA_CATEGORY_NAME = "extra_category_name";
 
-    private ProjectListAdapter adapter;
+    private SystemArticleListAdapter adapter;
     private ContentStateController stateController;
+    private BackToTopController backToTopController;
 
     public static void start(@NonNull Context context, int categoryId, @NonNull String categoryName) {
-        Intent intent = new Intent(context, ProjectListActivity.class);
+        Intent intent = new Intent(context, SystemArticleListActivity.class);
         intent.putExtra(EXTRA_CATEGORY_ID, categoryId);
         intent.putExtra(EXTRA_CATEGORY_NAME, categoryName);
         context.startActivity(intent);
     }
 
     @Override
-    protected ProjectListViewModel createViewModel() {
-        return new ViewModelProvider(this).get(ProjectListViewModel.class);
+    protected SystemArticleListViewModel createViewModel() {
+        return new ViewModelProvider(this).get(SystemArticleListViewModel.class);
     }
 
     @Override
-    protected ActivityProjectListBinding createViewBinding() {
-        return ActivityProjectListBinding.inflate(getLayoutInflater());
+    protected ActivitySystemArticleListBinding createViewBinding() {
+        return ActivitySystemArticleListBinding.inflate(getLayoutInflater());
     }
 
     @Override
@@ -47,28 +49,30 @@ public class ProjectListActivity extends BaseActivity<ProjectListViewModel, Acti
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         String title = getIntent().getStringExtra(EXTRA_CATEGORY_NAME);
-        binding.toolbar.setTitle(title != null ? title : getString(R.string.project_title_list_default));
+        binding.toolbar.setTitle(title != null ? title : getString(R.string.system_title_article_default));
 
-        adapter = new ProjectListAdapter();
+        adapter = new SystemArticleListAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 
+        backToTopController = BackToTopController.attach(binding.fabBackToTop, binding.recyclerView);
+
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
                 if (dy <= 0) {
                     return;
                 }
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager == null) {
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                if (!(layoutManager instanceof LinearLayoutManager)) {
                     return;
                 }
-                int totalItemCount = layoutManager.getItemCount();
-                int lastVisible = layoutManager.findLastVisibleItemPosition();
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+                int totalItemCount = linearLayoutManager.getItemCount();
+                int lastVisible = linearLayoutManager.findLastVisibleItemPosition();
                 if (totalItemCount == 0) {
                     return;
                 }
@@ -81,16 +85,16 @@ public class ProjectListActivity extends BaseActivity<ProjectListViewModel, Acti
 
     @Override
     protected void setupObservers() {
-        viewModel.getProjectItems().observe(this, items -> {
+        viewModel.getArticleItems().observe(this, items -> {
             adapter.submitNewList(items);
             stateController.setEmpty(items == null || items.isEmpty());
         });
 
-        viewModel.getLoading().observe(this, isLoading ->
-                stateController.setLoading(Boolean.TRUE.equals(isLoading)));
+        viewModel.getLoading().observe(this, loading ->
+                stateController.setLoading(Boolean.TRUE.equals(loading)));
 
-        viewModel.getLoadingMore().observe(this, isLoadingMore ->
-                binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(isLoadingMore)
+        viewModel.getLoadingMore().observe(this, loading ->
+                binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loading)
                         ? android.view.View.VISIBLE : android.view.View.GONE));
 
         UiFeedback.observeError(this, viewModel.getErrorMessage());
@@ -99,16 +103,20 @@ public class ProjectListActivity extends BaseActivity<ProjectListViewModel, Acti
 
     @Override
     protected void loadData() {
-        int cid = getIntent().getIntExtra(EXTRA_CATEGORY_ID, -1);
-        viewModel.initialize(cid);
+        int categoryId = getIntent().getIntExtra(EXTRA_CATEGORY_ID, -1);
+        viewModel.initialize(categoryId);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(binding != null){
+        if (binding != null) {
             binding.swipeRefresh.setOnRefreshListener(null);
             binding.recyclerView.setAdapter(null);
+        }
+        if (backToTopController != null) {
+            backToTopController.detach();
+            backToTopController = null;
         }
     }
 }

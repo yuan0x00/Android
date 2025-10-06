@@ -24,7 +24,53 @@ import java.util.List;
  */
 public class CategoryTreeAdapter extends RecyclerView.Adapter<CategoryTreeAdapter.CategoryViewHolder> {
 
+    private final OnChildClickListener childClickListener;
+
     private final List<CategoryNodeBean> items = new ArrayList<>();
+    public CategoryTreeAdapter() {
+        this(null);
+    }
+
+    public CategoryTreeAdapter(OnChildClickListener listener) {
+        this.childClickListener = listener;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
+        CategoryNodeBean item = items.get(position);
+        holder.titleText.setText(item.getName());
+
+        List<CategoryNodeBean> children = item.getChildren();
+        holder.childrenGroup.removeAllViews();
+        if (children != null && !children.isEmpty()) {
+            for (CategoryNodeBean child : children) {
+                if (child == null || TextUtils.isEmpty(child.getName())) {
+                    continue;
+                }
+                Chip chip = createChip(holder.childrenGroup, child.getName());
+                if (childClickListener != null) {
+                    chip.setOnClickListener(v -> childClickListener.onChildClick(child, item));
+                    chip.setEnabled(true);
+                    chip.setAlpha(1f);
+                } else {
+                    String targetUrl = resolveTargetUrl(child);
+                    if (!TextUtils.isEmpty(targetUrl)) {
+                        chip.setOnClickListener(v -> WebViewActivity.start(v.getContext(), targetUrl, child.getName()));
+                        chip.setEnabled(true);
+                        chip.setAlpha(1f);
+                    } else {
+                        chip.setEnabled(false);
+                        chip.setClickable(false);
+                        chip.setAlpha(0.6f);
+                    }
+                }
+                holder.childrenGroup.addView(chip);
+            }
+            holder.childrenGroup.setVisibility(holder.childrenGroup.getChildCount() > 0 ? View.VISIBLE : View.GONE);
+        } else {
+            holder.childrenGroup.setVisibility(View.GONE);
+        }
+    }
 
     private static Chip createChip(@NonNull ChipGroup parent, @NonNull String text) {
         Chip chip = new Chip(parent.getContext());
@@ -81,35 +127,8 @@ public class CategoryTreeAdapter extends RecyclerView.Adapter<CategoryTreeAdapte
         return new CategoryViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
-        CategoryNodeBean item = items.get(position);
-        holder.titleText.setText(item.getName());
-
-        List<CategoryNodeBean> children = item.getChildren();
-        holder.childrenGroup.removeAllViews();
-        if (children != null && !children.isEmpty()) {
-            for (CategoryNodeBean child : children) {
-                if (child == null || TextUtils.isEmpty(child.getName())) {
-                    continue;
-                }
-                Chip chip = createChip(holder.childrenGroup, child.getName());
-                String targetUrl = resolveTargetUrl(child);
-                if (!TextUtils.isEmpty(targetUrl)) {
-                    chip.setOnClickListener(v -> WebViewActivity.start(v.getContext(), targetUrl, child.getName()));
-                    chip.setEnabled(true);
-                    chip.setAlpha(1f);
-                } else {
-                    chip.setEnabled(false);
-                    chip.setClickable(false);
-                    chip.setAlpha(0.6f);
-                }
-                holder.childrenGroup.addView(chip);
-            }
-            holder.childrenGroup.setVisibility(holder.childrenGroup.getChildCount() > 0 ? View.VISIBLE : View.GONE);
-        } else {
-            holder.childrenGroup.setVisibility(View.GONE);
-        }
+    public interface OnChildClickListener {
+        void onChildClick(CategoryNodeBean child, CategoryNodeBean parent);
     }
 
     @Override

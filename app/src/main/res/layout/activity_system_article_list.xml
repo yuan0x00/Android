@@ -28,8 +28,8 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clipToPadding="false"
                 android:background="?attr/colorSurface"
+                android:clipToPadding="false"
                 android:padding="16dp"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -49,10 +49,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/project_empty_list"
+            android:text="@string/system_empty_article_list"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:visibility="gone"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabBackToTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/common_back_to_top"
+            android:visibility="gone"
+            app:srcCompat="@drawable/vertical_align_top_24px"
+            app:tint="@android:color/white"/>
 
     </FrameLayout>
 

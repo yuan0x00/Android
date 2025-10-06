@@ -32,7 +32,7 @@
             android:name=".ui.feature.main.home.search.SearchActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.main.project.list.ProjectListActivity"
+            android:name=".ui.feature.main.system.list.SystemArticleListActivity"
             android:exported="false"/>
         <activity
             android:name=".ui.feature.login.LoginActivity"

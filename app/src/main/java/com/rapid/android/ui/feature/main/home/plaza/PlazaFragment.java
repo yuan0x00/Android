@@ -1,4 +1,4 @@
-package com.rapid.android.ui.feature.main.home.lastproject;
+package com.rapid.android.ui.feature.main.home.plaza;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.core.domain.model.ArticleListBean;
 import com.core.ui.presentation.BaseFragment;
-import com.rapid.android.databinding.FragmentLastProjectBinding;
+import com.rapid.android.databinding.FragmentPlazaBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.main.home.FeedAdapter;
 
-
-public class LastProjectFragment extends BaseFragment<LastProjectViewModel, FragmentLastProjectBinding> {
+public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBinding> {
 
     private FeedAdapter feedAdapter;
     private LinearLayoutManager layoutManager;
@@ -26,49 +25,21 @@ public class LastProjectFragment extends BaseFragment<LastProjectViewModel, Frag
     private BackToTopController backToTopController;
 
     @Override
-    protected LastProjectViewModel createViewModel() {
-        return new ViewModelProvider(this).get(LastProjectViewModel.class);
+    protected PlazaViewModel createViewModel() {
+        return new ViewModelProvider(this).get(PlazaViewModel.class);
     }
 
     @Override
-    protected FragmentLastProjectBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
-        return FragmentLastProjectBinding.inflate(inflater, container, false);
-    }
-
-    @Override
-    protected void loadData() {
-        super.loadData();
-        viewModel.refresh();
-    }
-
-    @Override
-    protected void setupObservers() {
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
-        UiFeedback.observeError(this, viewModel.getPagingError());
-        viewModel.getProjectItems().observe(this, items -> {
-            feedAdapter.submitList(items);
-            boolean empty = items == null || items.isEmpty();
-            stateController.setEmpty(empty);
-        });
-        viewModel.getLoading().observe(this, isLoading -> {
-            stateController.setLoading(Boolean.TRUE.equals(isLoading));
-        });
-        viewModel.getLoadingMore().observe(this, isLoadingMore ->
-                binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(isLoadingMore) ? View.VISIBLE : View.GONE));
+    protected FragmentPlazaBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
+        return FragmentPlazaBinding.inflate(inflater, container, false);
     }
 
     @Override
     protected void initializeViews() {
-
-        // 初始化 RecyclerView
         layoutManager = new LinearLayoutManager(requireContext());
         binding.recyclerView.setLayoutManager(layoutManager);
 
-        ArticleListBean feeds = new ArticleListBean();
-
-        // 创建各模块 Adapter
-        feedAdapter = new FeedAdapter(feeds);
-
+        feedAdapter = new FeedAdapter(new ArticleListBean());
         binding.recyclerView.setAdapter(feedAdapter);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
@@ -97,7 +68,29 @@ public class LastProjectFragment extends BaseFragment<LastProjectViewModel, Frag
                 }
             }
         });
+    }
 
+    @Override
+    protected void loadData() {
+        viewModel.refresh();
+    }
+
+    @Override
+    protected void setupObservers() {
+        UiFeedback.observeError(this, viewModel.getErrorMessage());
+        UiFeedback.observeError(this, viewModel.getPagingError());
+
+        viewModel.getPlazaItems().observe(this, items -> {
+            feedAdapter.submitList(items);
+            stateController.setEmpty(items == null || items.isEmpty());
+        });
+
+        viewModel.getLoading().observe(this, loading ->
+                stateController.setLoading(Boolean.TRUE.equals(loading)));
+
+        viewModel.getLoadingMore().observe(this, loading ->
+                binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loading)
+                        ? View.VISIBLE : View.GONE));
     }
 
     @Override

@@ -6,12 +6,12 @@ import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.core.ui.dialog.DialogController;
-import com.core.ui.dialog.DialogEffect;
+import com.core.ui.components.dialog.DialogController;
+import com.core.ui.components.dialog.DialogEffect;
 import com.core.ui.presentation.BaseFragment;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.rapid.android.databinding.FragmentHomeBinding;
-import com.rapid.android.ui.common.dialog.TipDialogFragment;
+import com.rapid.android.ui.common.dialog.TipDialogView;
 import com.rapid.android.ui.feature.main.home.search.SearchActivity;
 
 public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBinding> {
@@ -41,24 +41,21 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
             startActivity(new Intent(getContext(), SearchActivity.class));
         });
         binding.avatar.setOnClickListener(v -> {
-//            dialogController.show(new DialogEffect.Snackbar(
-//                    "home_avatar_tip",
-//                    getString(R.string.home_avatar_placeholder_tip),
-//                    Snackbar.LENGTH_SHORT));
 
-//            dialogController.show(new DialogEffect.Confirm(
-//                    "home_avatar_tip",
-//                    "", "", "", "", () -> {
-//            }, () -> {
-//            }));
+            dialogController.show(new DialogEffect.Confirm(
+                    "", "", "", "", () -> {
+            }, () -> {
+            }));
 
-//            dialogController.show(new DialogEffect.Loading(
-//                    "home_avatar_tip",
-//                    true));
+            dialogController.show(new DialogEffect.Loading(true));
 
             dialogController.show(new DialogEffect.Custom(
-                    "home_avatar_tip",
-                    new TipDialogFragment()));
+                    new TipDialogView(requireContext())));
+//
+            dialogController.show(new DialogEffect.Toast(
+                    "Toast"
+            ));
+
         });
     }
 

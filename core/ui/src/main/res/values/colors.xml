@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="dim_overlay">#33000000</color>
+    <color name="core_ui_toast_background">#CC000000</color>
+    <color name="core_ui_toast_text">#FFFFFFFF</color>
 </resources>

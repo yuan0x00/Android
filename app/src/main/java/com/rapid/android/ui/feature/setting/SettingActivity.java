@@ -6,9 +6,8 @@ import android.os.Bundle;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.core.common.utils.ToastUtils;
-import com.core.ui.dialog.DialogController;
-import com.core.ui.dialog.DialogEffect;
+import com.core.ui.components.dialog.DialogController;
+import com.core.ui.components.dialog.DialogEffect;
 import com.core.ui.presentation.BaseActivity;
 import com.rapid.android.R;
 import com.rapid.android.databinding.ActivitySettingBinding;
@@ -84,7 +83,7 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
         // 观察操作消息
         viewModel.getOperationMessageRes().observe(this, messageRes -> {
             if (messageRes != null) {
-                ToastUtils.showShortToast(getString(messageRes));
+                dialogController.showToast(getString(messageRes));
             }
         });
 
@@ -131,13 +130,12 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
 
         binding.btnLogout.setOnClickListener(v -> dialogController.show(
                 new DialogEffect.Confirm(
-                        "logout_confirm",
                         getString(R.string.setting_dialog_logout_title),
                         getString(R.string.setting_dialog_logout_message),
                         getString(R.string.confirm),
                         getString(R.string.cancel),
                         () -> viewModel.logoutWithCallback((success, messageRes) -> {
-                            ToastUtils.showShortToast(getString(messageRes));
+                            dialogController.showToast(getString(messageRes));
                             if (success) {
                                 binding.getRoot().postDelayed(this::finish, 500L);
                             }
@@ -151,7 +149,7 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
         } catch (Exception e) {
-            ToastUtils.showShortToast(getString(R.string.setting_open_link_failed));
+            dialogController.showToast(getString(R.string.setting_open_link_failed));
         }
     }
 }

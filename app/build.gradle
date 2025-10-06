@@ -37,8 +37,8 @@ dependencies {
     implementation project(':core:webview')
     implementation project(':core:datastore')
     implementation project(':core:log')
-    implementation project(':data:repository')
-    implementation project(':domain:model')
+    implementation project(':core:data')
+    implementation project(':core:domain')
     implementation libs.androidx.core
     implementation libs.androidx.lifecycle.runtime
     implementation libs.androidx.lifecycle.livedata

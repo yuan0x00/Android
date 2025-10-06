@@ -9,10 +9,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.core.data.session.SessionManager;
+import com.core.domain.model.CoinRankBean;
+import com.core.domain.model.CoinRecordBean;
 import com.core.ui.presentation.BaseActivity;
-import com.lib.data.session.SessionManager;
-import com.lib.domain.model.CoinRankBean;
-import com.lib.domain.model.CoinRecordBean;
 import com.rapid.android.R;
 import com.rapid.android.databinding.ActivityCoinBinding;
 import com.rapid.android.ui.common.ContentStateController;

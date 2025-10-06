@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.core.domain.model.ArticleListBean;
 import com.core.ui.presentation.BaseFragment;
-import com.lib.domain.model.ArticleListBean;
 import com.rapid.android.databinding.FragmentLastProjectBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;

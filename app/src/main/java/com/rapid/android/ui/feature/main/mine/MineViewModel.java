@@ -7,14 +7,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.core.common.app.BaseApplication;
+import com.core.data.repository.RepositoryProvider;
+import com.core.data.session.SessionManager;
+import com.core.domain.model.CoinBean;
+import com.core.domain.model.CollectArticleInfoBean;
+import com.core.domain.model.LoginBean;
+import com.core.domain.model.UserInfoBean;
+import com.core.domain.repository.UserRepository;
 import com.core.ui.presentation.BaseViewModel;
-import com.lib.data.repository.RepositoryProvider;
-import com.lib.data.session.SessionManager;
-import com.lib.domain.model.CoinBean;
-import com.lib.domain.model.CollectArticleInfoBean;
-import com.lib.domain.model.LoginBean;
-import com.lib.domain.model.UserInfoBean;
-import com.lib.domain.repository.UserRepository;
 import com.rapid.android.R;
 
 public class MineViewModel extends BaseViewModel {

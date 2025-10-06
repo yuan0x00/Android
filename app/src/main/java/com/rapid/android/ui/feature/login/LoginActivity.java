@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.core.common.utils.ToastUtils;
 import com.core.common.utils.WindowInsetsUtils;
+import com.core.data.session.SessionManager;
 import com.core.ui.presentation.BaseActivity;
-import com.lib.data.session.SessionManager;
 import com.rapid.android.R;
 import com.rapid.android.databinding.ActivityLoginBinding;
 

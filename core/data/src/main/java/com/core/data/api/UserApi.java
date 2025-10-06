@@ -1,0 +1,34 @@
+package com.core.data.api;
+
+import com.core.domain.model.ArticleListBean;
+import com.core.domain.model.CoinBean;
+import com.core.domain.model.UserInfoBean;
+import com.core.network.base.BaseResponse;
+
+import io.reactivex.rxjava3.core.Observable;
+import retrofit2.http.*;
+
+public interface UserApi {
+
+    @GET("/user/lg/userinfo/json")
+    Observable<BaseResponse<UserInfoBean>> userinfo();
+
+    @GET("/lg/collect/list/{page}/json")
+    Observable<BaseResponse<ArticleListBean>> collectList(@Path("page") int page);
+
+    @FormUrlEncoded
+    @POST("/lg/uncollect/{id}/json")
+    Observable<BaseResponse<String>> unCollectInMine(
+            @Path("id") int id,
+            @Field("originId") int originId
+    );
+
+    @POST("/lg/uncollect_originId/{id}/json")
+    Observable<BaseResponse<String>> unCollect(@Path("id") int id);
+
+    @GET("/lg/coin/userinfo/json")
+    Observable<BaseResponse<CoinBean>> signIn();
+
+    @POST("/lg/collect/{id}/json")
+    Observable<BaseResponse<String>> collect(@Path("id") int id);
+}

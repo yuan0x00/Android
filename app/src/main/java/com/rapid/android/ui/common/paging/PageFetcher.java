@@ -1,6 +1,6 @@
 package com.rapid.android.ui.common.paging;
 
-import com.lib.domain.result.DomainResult;
+import com.core.domain.result.DomainResult;
 
 import io.reactivex.rxjava3.core.Observable;
 

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.lib.domain.model.CoinRecordBean;
+import com.core.domain.model.CoinRecordBean;
 import com.rapid.android.R;
 
 import java.text.SimpleDateFormat;

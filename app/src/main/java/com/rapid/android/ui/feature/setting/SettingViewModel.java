@@ -4,6 +4,7 @@ import androidx.annotation.StringRes;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.core.data.session.SessionManager;
 import com.core.ui.presentation.BaseViewModel;
 import com.rapid.android.R;
 import com.rapid.android.utils.AppPreferences;
@@ -72,7 +73,7 @@ public class SettingViewModel extends BaseViewModel {
         isLoading.setValue(true);
         operationMessageRes.setValue(null);
         // 使用统一的会话管理器来处理登出
-        com.lib.data.session.SessionManager.getInstance().logout();
+        SessionManager.getInstance().logout();
         isLoading.setValue(false);
         if (callback != null) {
             callback.onLogoutComplete(true, R.string.setting_logout_success);

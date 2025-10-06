@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.core.domain.model.ProjectPageBean;
 import com.core.webview.WebViewActivity;
-import com.lib.domain.model.ProjectPageBean;
 import com.rapid.android.R;
 
 import java.util.ArrayList;

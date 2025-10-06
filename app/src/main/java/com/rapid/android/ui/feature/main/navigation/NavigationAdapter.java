@@ -10,11 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.core.domain.model.ArticleListBean;
+import com.core.domain.model.NavigationBean;
 import com.core.webview.WebViewActivity;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.lib.domain.model.ArticleListBean;
-import com.lib.domain.model.NavigationBean;
 import com.rapid.android.R;
 
 import java.util.ArrayList;

@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.lib.domain.model.CategoryNodeBean;
+import com.core.domain.model.CategoryNodeBean;
 import com.rapid.android.R;
 
 import java.util.ArrayList;

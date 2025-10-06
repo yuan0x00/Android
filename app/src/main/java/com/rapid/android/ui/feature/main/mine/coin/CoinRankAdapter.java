@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.lib.domain.model.CoinRankBean;
+import com.core.domain.model.CoinRankBean;
 import com.rapid.android.R;
 
 import java.util.ArrayList;

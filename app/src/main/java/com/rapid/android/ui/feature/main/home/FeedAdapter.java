@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.core.common.text.StringUtils;
 import com.core.common.utils.ResUtils;
+import com.core.domain.model.ArticleListBean;
 import com.core.ui.components.popup.BasePopupWindow;
 import com.core.webview.WebViewActivity;
-import com.lib.domain.model.ArticleListBean;
 import com.rapid.android.R;
 import com.rapid.android.databinding.ItemFeedBinding;
 

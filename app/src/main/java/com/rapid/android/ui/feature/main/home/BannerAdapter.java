@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.lib.domain.model.BannerItemBean;
+import com.core.domain.model.BannerItemBean;
 import com.rapid.android.R;
 import com.rapid.android.ui.view.ImageBanner;
 

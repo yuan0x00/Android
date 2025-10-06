@@ -5,17 +5,17 @@ import android.os.Looper;
 import android.os.StrictMode;
 
 import com.core.common.app.BaseApplication;
+import com.core.data.DataInitializer;
+import com.core.data.network.AuthHeaderProvider;
+import com.core.data.network.NetApis;
+import com.core.data.network.PersistentCookieStore;
+import com.core.data.network.TokenRefreshHandlerImpl;
+import com.core.data.session.SessionManager;
 import com.core.network.NetManager;
 import com.core.network.client.NetworkClient;
 import com.core.network.client.NetworkConfig;
 import com.core.network.interceptor.AuthInterceptor;
 import com.google.android.material.color.DynamicColors;
-import com.lib.data.DataInitializer;
-import com.lib.data.network.AuthHeaderProvider;
-import com.lib.data.network.NetApis;
-import com.lib.data.network.PersistentCookieStore;
-import com.lib.data.network.TokenRefreshHandlerImpl;
-import com.lib.data.session.SessionManager;
 import com.rapid.android.network.proxy.DeveloperProxyManager;
 import com.rapid.android.utils.ThemeManager;
 

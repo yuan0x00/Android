@@ -11,7 +11,6 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
@@ -221,7 +220,7 @@ public final class DialogController {
         ToastDialogView toastView = new ToastDialogView(context);
         toastView.setMessage(effect.getMessage());
         toastView.setOnDismissListener(() -> removeToastEntry(tag));
-        ViewCompat.setTranslationZ(toastView, 10f);
+        toastView.setTranslationZ(10f);
 
         ToastEntry entry = new ToastEntry(tag, toastView);
         toastEntries.put(tag, entry);
@@ -433,7 +432,7 @@ public final class DialogController {
                     return;
                 }
                 dismissed = true;
-                if (!ViewCompat.isAttachedToWindow(dialogView)) {
+                if (!dialogView.isAttachedToWindow()) {
                     overlay.removeDialog(dialogView);
                     dialogView.notifyDismissed();
                     if (onDismissed != null) {
@@ -475,7 +474,7 @@ public final class DialogController {
                     setVisibility(GONE);
                 }
             };
-            if (ViewCompat.isAttachedToWindow(this)) {
+            if (isAttachedToWindow()) {
                 post(action);
             } else {
                 action.run();
@@ -492,7 +491,7 @@ public final class DialogController {
     private static final class ToastOverlayLayout extends BaseOverlayLayout {
         ToastOverlayLayout(@NonNull Context context) {
             super(context);
-            ViewCompat.setTranslationZ(this, 50f);
+            setTranslationZ(50f);
         }
     }
 

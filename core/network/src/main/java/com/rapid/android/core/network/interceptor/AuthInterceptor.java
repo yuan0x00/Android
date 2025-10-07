@@ -187,7 +187,7 @@ public class AuthInterceptor implements Interceptor {
             // 非标准结构，直接忽略
         }
 
-        ResponseBody newBody = ResponseBody.create(contentType, bodyString);
+        ResponseBody newBody = ResponseBody.create(bodyString, contentType);
         Response rebuilt = response.newBuilder().body(newBody).build();
         return new BusinessCheckResult(rebuilt, unauthorized);
     }

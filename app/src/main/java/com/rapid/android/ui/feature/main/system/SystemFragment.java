@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.core.domain.model.CategoryNodeBean;
-import com.core.ui.presentation.BaseFragment;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.rapid.android.core.domain.model.CategoryNodeBean;
+import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentSystemBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;

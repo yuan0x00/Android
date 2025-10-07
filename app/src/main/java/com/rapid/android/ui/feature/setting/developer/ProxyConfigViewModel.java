@@ -7,8 +7,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.core.ui.presentation.BaseViewModel;
 import com.rapid.android.R;
+import com.rapid.android.core.ui.presentation.BaseViewModel;
 import com.rapid.android.network.proxy.DeveloperProxyManager;
 import com.rapid.android.network.proxy.ProxySettings;
 

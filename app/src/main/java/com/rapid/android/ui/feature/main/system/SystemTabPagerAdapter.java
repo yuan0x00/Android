@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.core.domain.model.ArticleListBean;
-import com.core.domain.model.CategoryNodeBean;
 import com.google.android.material.chip.Chip;
+import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.databinding.ItemSystemTabPageBinding;
 import com.rapid.android.ui.feature.main.system.list.SystemArticleListActivity;
 

@@ -4,8 +4,8 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.core.ui.components.dialog.BaseDialogView;
 import com.rapid.android.R;
+import com.rapid.android.core.ui.components.dialog.BaseDialogView;
 
 public class TipDialogView extends BaseDialogView {
 

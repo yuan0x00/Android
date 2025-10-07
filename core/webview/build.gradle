@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.core.webview'
+    namespace 'com.rapid.android.core.webview'
 
     defaultConfig {
         consumerProguardFiles "consumer-rules.pro"

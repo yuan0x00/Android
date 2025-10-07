@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.core.ui.presentation.BaseActivity;
 import com.rapid.android.R;
+import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivityFavoriteBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;

@@ -2,15 +2,15 @@ package com.rapid.android.ui.feature.main.home.recommend;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.core.common.app.BaseApplication;
-import com.core.data.repository.RepositoryProvider;
-import com.core.domain.model.ArticleListBean;
-import com.core.domain.model.BannerItemBean;
-import com.core.domain.repository.HomeRepository;
-import com.core.domain.result.DomainError;
-import com.core.domain.result.DomainResult;
-import com.core.ui.presentation.BaseViewModel;
 import com.rapid.android.R;
+import com.rapid.android.core.common.app.BaseApplication;
+import com.rapid.android.core.data.repository.RepositoryProvider;
+import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.core.domain.model.BannerItemBean;
+import com.rapid.android.core.domain.repository.HomeRepository;
+import com.rapid.android.core.domain.result.DomainError;
+import com.rapid.android.core.domain.result.DomainResult;
+import com.rapid.android.core.ui.presentation.BaseViewModel;
 import com.rapid.android.ui.common.paging.PagingController;
 import com.rapid.android.ui.common.paging.PagingPayload;
 

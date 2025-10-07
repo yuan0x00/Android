@@ -6,13 +6,13 @@ import android.text.TextUtils;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.core.common.app.BaseApplication;
-import com.core.data.repository.RepositoryProvider;
-import com.core.data.session.SessionManager;
-import com.core.domain.model.*;
-import com.core.domain.repository.UserRepository;
-import com.core.ui.presentation.BaseViewModel;
 import com.rapid.android.R;
+import com.rapid.android.core.common.app.BaseApplication;
+import com.rapid.android.core.data.repository.RepositoryProvider;
+import com.rapid.android.core.data.session.SessionManager;
+import com.rapid.android.core.domain.model.*;
+import com.rapid.android.core.domain.repository.UserRepository;
+import com.rapid.android.core.ui.presentation.BaseViewModel;
 
 public class MineViewModel extends BaseViewModel {
 

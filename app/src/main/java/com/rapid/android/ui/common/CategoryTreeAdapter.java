@@ -9,12 +9,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.core.domain.model.ArticleListBean;
-import com.core.domain.model.CategoryNodeBean;
-import com.core.webview.WebViewActivity;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.rapid.android.R;
+import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.core.domain.model.CategoryNodeBean;
+import com.rapid.android.core.webview.WebViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;

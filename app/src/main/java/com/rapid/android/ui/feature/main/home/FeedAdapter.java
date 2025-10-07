@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.core.common.text.StringUtils;
-import com.core.common.utils.ResUtils;
-import com.core.domain.model.ArticleListBean;
-import com.core.ui.components.popup.BasePopupWindow;
-import com.core.webview.WebViewActivity;
 import com.rapid.android.R;
+import com.rapid.android.core.common.text.StringUtils;
+import com.rapid.android.core.common.utils.ResUtils;
+import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.core.ui.components.popup.BasePopupWindow;
+import com.rapid.android.core.webview.WebViewActivity;
 import com.rapid.android.databinding.ItemFeedBinding;
 
 import java.util.ArrayList;

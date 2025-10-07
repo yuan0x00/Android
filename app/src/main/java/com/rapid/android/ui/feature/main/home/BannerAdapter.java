@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.core.domain.model.BannerItemBean;
 import com.rapid.android.R;
+import com.rapid.android.core.domain.model.BannerItemBean;
 import com.rapid.android.ui.view.ImageBanner;
 
 import java.util.ArrayList;

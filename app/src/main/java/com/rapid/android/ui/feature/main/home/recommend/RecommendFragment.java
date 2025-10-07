@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.core.domain.model.ArticleListBean;
-import com.core.ui.presentation.BaseFragment;
+import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentRecommandBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;

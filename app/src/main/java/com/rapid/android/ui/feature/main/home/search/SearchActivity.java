@@ -2,7 +2,7 @@ package com.rapid.android.ui.feature.main.home.search;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.core.ui.presentation.BaseActivity;
+import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivitySearchBinding;
 
 public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearchBinding> {

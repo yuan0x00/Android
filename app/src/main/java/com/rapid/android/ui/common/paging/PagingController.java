@@ -2,9 +2,9 @@ package com.rapid.android.ui.common.paging;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.core.domain.result.DomainError;
-import com.core.domain.result.DomainResult;
-import com.core.ui.presentation.BaseViewModel;
+import com.rapid.android.core.domain.result.DomainError;
+import com.rapid.android.core.domain.result.DomainResult;
+import com.rapid.android.core.ui.presentation.BaseViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

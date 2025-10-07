@@ -6,10 +6,10 @@ import android.os.Bundle;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.core.ui.components.dialog.DialogController;
-import com.core.ui.components.dialog.DialogEffect;
-import com.core.ui.presentation.BaseActivity;
 import com.rapid.android.R;
+import com.rapid.android.core.ui.components.dialog.DialogController;
+import com.rapid.android.core.ui.components.dialog.DialogEffect;
+import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivitySettingBinding;
 import com.rapid.android.utils.ThemeManager;
 

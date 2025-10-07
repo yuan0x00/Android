@@ -3,7 +3,7 @@ package com.rapid.android.network.proxy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.core.log.LogKit;
+import com.rapid.android.core.log.LogKit;
 
 import java.io.IOException;
 import java.net.URI;

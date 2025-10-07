@@ -9,8 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.core.domain.model.CoinRecordBean;
 import com.rapid.android.R;
+import com.rapid.android.core.domain.model.CoinRecordBean;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

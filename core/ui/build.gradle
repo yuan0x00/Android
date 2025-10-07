@@ -3,7 +3,8 @@ plugins {
 }
 
 android {
-    namespace 'com.core.ui'
+    namespace 'com.rapid.android.core.ui'
+    resourcePrefix 'core_ui_'
 
     defaultConfig {
         consumerProguardFiles "consumer-rules.pro"

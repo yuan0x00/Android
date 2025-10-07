@@ -13,9 +13,9 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.AspectRatioFrameLayout;
 
-import com.core.common.data.StorageManager;
-import com.core.ui.presentation.BaseActivity;
 import com.rapid.android.R;
+import com.rapid.android.core.common.data.StorageManager;
+import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivitySplashBinding;
 import com.rapid.android.ui.feature.main.MainActivity;
 

@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.core.datastore'
+    namespace 'com.rapid.android.core.datastore'
 
     defaultConfig {
         consumerProguardFiles "consumer-rules.pro"

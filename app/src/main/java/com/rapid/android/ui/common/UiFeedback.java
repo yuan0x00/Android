@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 
-import com.core.common.utils.ToastUtils;
+import com.rapid.android.core.common.utils.ToastUtils;
 
 public final class UiFeedback {
 

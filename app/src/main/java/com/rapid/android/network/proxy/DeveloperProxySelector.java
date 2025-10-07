@@ -39,14 +39,14 @@ final class DeveloperProxySelector extends ProxySelector {
         failureHandled.set(false);
         ProxySettings current = settings;
         if (current != null && current.isConfigured()) {
-            com.core.log.LogKit.d("DeveloperProxy", "select proxy for %s -> %s:%d",
+            com.rapid.android.core.log.LogKit.d("DeveloperProxy", "select proxy for %s -> %s:%d",
                     String.valueOf(uri), current.getHost(), current.getPort());
             InetSocketAddress address = InetSocketAddress.createUnresolved(
                     current.getHost(),
                     current.getPort());
             return java.util.Arrays.asList(new Proxy(Proxy.Type.HTTP, address), Proxy.NO_PROXY);
         }
-        com.core.log.LogKit.d("DeveloperProxy", "select direct for %s (proxy disabled)", String.valueOf(uri));
+        com.rapid.android.core.log.LogKit.d("DeveloperProxy", "select direct for %s (proxy disabled)", String.valueOf(uri));
         return DIRECT;
     }
 
@@ -57,7 +57,7 @@ final class DeveloperProxySelector extends ProxySelector {
             return;
         }
         if (failureHandled.compareAndSet(false, true)) {
-            com.core.log.LogKit.w("DeveloperProxy", ioe,
+            com.rapid.android.core.log.LogKit.w("DeveloperProxy", ioe,
                     "connectFailed uri=%s proxy=%s:%d", String.valueOf(uri), current.getHost(), current.getPort());
             manager.handleProxyFailure(uri, current, ioe);
         }

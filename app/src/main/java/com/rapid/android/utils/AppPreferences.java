@@ -3,7 +3,7 @@ package com.rapid.android.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.core.common.app.BaseApplication;
+import com.rapid.android.core.common.app.BaseApplication;
 
 public final class AppPreferences {
 

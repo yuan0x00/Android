@@ -9,11 +9,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.core.common.utils.ToastUtils;
-import com.core.common.utils.WindowInsetsUtils;
-import com.core.data.session.SessionManager;
-import com.core.ui.presentation.BaseActivity;
 import com.rapid.android.R;
+import com.rapid.android.core.common.utils.ToastUtils;
+import com.rapid.android.core.common.utils.WindowInsetsUtils;
+import com.rapid.android.core.data.session.SessionManager;
+import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBinding> {

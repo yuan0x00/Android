@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.core.common.utils.ToastUtils;
-import com.core.data.session.SessionManager;
-import com.core.ui.presentation.BaseFragment;
 import com.rapid.android.R;
+import com.rapid.android.core.common.utils.ToastUtils;
+import com.rapid.android.core.data.session.SessionManager;
+import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentMineBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.mine.coin.CoinActivity;

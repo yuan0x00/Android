@@ -4,9 +4,9 @@ import androidx.annotation.StringRes;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.core.data.session.SessionManager;
-import com.core.ui.presentation.BaseViewModel;
 import com.rapid.android.R;
+import com.rapid.android.core.data.session.SessionManager;
+import com.rapid.android.core.ui.presentation.BaseViewModel;
 import com.rapid.android.utils.AppPreferences;
 import com.rapid.android.utils.ThemeManager;
 

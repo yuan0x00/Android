@@ -2,14 +2,14 @@ package com.rapid.android.ui.feature.main;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.core.common.app.BaseApplication;
-import com.core.data.repository.RepositoryProvider;
-import com.core.data.session.SessionManager;
-import com.core.domain.repository.UserRepository;
-import com.core.domain.result.DomainError;
-import com.core.log.LogKit;
-import com.core.ui.presentation.BaseViewModel;
 import com.rapid.android.R;
+import com.rapid.android.core.common.app.BaseApplication;
+import com.rapid.android.core.data.repository.RepositoryProvider;
+import com.rapid.android.core.data.session.SessionManager;
+import com.rapid.android.core.domain.repository.UserRepository;
+import com.rapid.android.core.domain.result.DomainError;
+import com.rapid.android.core.log.LogKit;
+import com.rapid.android.core.ui.presentation.BaseViewModel;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;

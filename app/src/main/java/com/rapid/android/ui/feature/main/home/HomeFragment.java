@@ -6,10 +6,10 @@ import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.core.ui.components.dialog.DialogController;
-import com.core.ui.components.dialog.DialogEffect;
-import com.core.ui.presentation.BaseFragment;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.rapid.android.core.ui.components.dialog.DialogController;
+import com.rapid.android.core.ui.components.dialog.DialogEffect;
+import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentHomeBinding;
 import com.rapid.android.ui.common.dialog.TipDialogView;
 import com.rapid.android.ui.feature.main.home.search.SearchActivity;

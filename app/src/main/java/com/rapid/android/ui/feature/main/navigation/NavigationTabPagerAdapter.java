@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.core.domain.model.ArticleListBean;
-import com.core.domain.model.NavigationBean;
-import com.core.webview.WebViewActivity;
 import com.google.android.material.chip.Chip;
+import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.core.domain.model.NavigationBean;
+import com.rapid.android.core.webview.WebViewActivity;
 import com.rapid.android.databinding.ItemNavigationTabPageBinding;
 
 import java.util.ArrayList;

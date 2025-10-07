@@ -9,9 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.core.domain.model.ArticleListBean;
-import com.core.webview.WebViewActivity;
 import com.rapid.android.R;
+import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.core.webview.WebViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;

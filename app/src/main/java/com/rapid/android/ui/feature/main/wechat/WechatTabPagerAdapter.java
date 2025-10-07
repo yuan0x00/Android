@@ -9,10 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.core.domain.model.ArticleListBean;
-import com.core.domain.model.WxChapterBean;
-import com.core.domain.result.DomainResult;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.core.domain.model.WxChapterBean;
+import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.databinding.ItemWechatTabPageBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.paging.PagingPayload;

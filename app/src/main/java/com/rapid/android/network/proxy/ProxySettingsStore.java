@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.core.common.app.BaseApplication;
+import com.rapid.android.core.common.app.BaseApplication;
 
 final class ProxySettingsStore {
 

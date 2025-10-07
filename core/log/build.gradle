@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.core.log'
+    namespace 'com.rapid.android.core.log'
 
     defaultConfig {
         consumerProguardFiles "consumer-rules.pro"

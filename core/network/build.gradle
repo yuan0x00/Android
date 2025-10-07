@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.core.network'
+    namespace 'com.rapid.android.core.network'
 
     defaultConfig {
         consumerProguardFiles "consumer-rules.pro"

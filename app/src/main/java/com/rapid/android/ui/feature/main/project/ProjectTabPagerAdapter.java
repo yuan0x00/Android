@@ -9,10 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.core.domain.model.ArticleListBean;
-import com.core.domain.model.CategoryNodeBean;
-import com.core.domain.model.ProjectPageBean;
-import com.core.domain.result.DomainResult;
+import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.core.domain.model.CategoryNodeBean;
+import com.rapid.android.core.domain.model.ProjectPageBean;
+import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.databinding.ItemProjectTabPageBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.paging.PagingPayload;

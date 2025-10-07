@@ -63,7 +63,7 @@
             android:contentDescription="@string/common_back_to_top"
             android:visibility="gone"
             app:srcCompat="@drawable/vertical_align_top_24px"
-            app:tint="@android:color/white"/>
+            />
 
     </FrameLayout>
 

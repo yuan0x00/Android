@@ -239,10 +239,10 @@
                             android:layout_height="24dp"
                             android:contentDescription="@null"
                             android:src="@drawable/arrow_forward_ios_24px"
-                            android:tint="?attr/colorOnSurfaceVariant"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/colorOnSurfaceVariant"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -293,10 +293,10 @@
                             android:layout_height="24dp"
                             android:contentDescription="@null"
                             android:src="@drawable/arrow_forward_ios_24px"
-                            android:tint="?attr/colorOnSurfaceVariant"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/colorOnSurfaceVariant"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -347,10 +347,10 @@
                             android:layout_height="24dp"
                             android:contentDescription="@null"
                             android:src="@drawable/arrow_forward_ios_24px"
-                            android:tint="?attr/colorOnSurfaceVariant"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/colorOnSurfaceVariant"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

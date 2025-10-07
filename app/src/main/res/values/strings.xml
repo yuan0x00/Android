@@ -20,8 +20,8 @@
     <string name="notifications_description">接收应用推送通知和提醒</string>
     <string name="settings_section_appearance">外观</string>
     <string name="settings_theme_mode_description">选择应用配色方案，随时切换浅色或深色。</string>
-    <string name="settings_section_content">内容与数据</string>
-    <string name="settings_section_about">关于与支持</string>
+    <string name="settings_section_content">内容</string>
+    <string name="settings_section_about">关于</string>
     <string name="setting_clear_cache">清除缓存</string>
     <string name="setting_clear_cache_desc">移除已下载的图片、视频等临时文件。</string>
     <string name="setting_privacy">隐私政策</string>

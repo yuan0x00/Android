@@ -1,5 +1,6 @@
 package com.rapid.android.ui.feature.main.home.plaza;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +10,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.rapid.android.R;
+import com.rapid.android.core.common.utils.ToastUtils;
+import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentPlazaBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
+import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.home.FeedAdapter;
+import com.rapid.android.ui.feature.share.ShareArticleActivity;
 
 public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBinding> {
 
@@ -47,6 +53,15 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.refresh());
 
         backToTopController = BackToTopController.attach(binding.fabBackToTop, binding.recyclerView);
+
+        binding.fabShareArticle.setOnClickListener(v -> {
+            if (!SessionManager.getInstance().isLoggedIn()) {
+                ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+                startActivity(new Intent(requireContext(), LoginActivity.class));
+                return;
+            }
+            ShareArticleActivity.start(requireContext());
+        });
 
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

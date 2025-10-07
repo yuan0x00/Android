@@ -53,20 +53,20 @@
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
             android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintBottom_toBottomOf="@id/tvAuthor"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvAuthor"
             app:layout_constraintStart_toEndOf="@id/tvAuthor"
-            app:layout_constraintTop_toTopOf="@id/tvAuthor"
             tools:text=" · 2025年1月1日"
             />
 
         <ImageView
             android:id="@+id/ivFavorite"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/favorite_24px"
+            android:layout_width="18sp"
+            android:layout_height="18sp"
+            android:src="@drawable/bookmark_24px"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            />
+            app:layout_constraintTop_toBottomOf="@id/tvAuthor"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/tvClass"
@@ -76,10 +76,11 @@
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
             android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/ivFavorite"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="父分类"
-            />
+            app:layout_constraintTop_toTopOf="@id/ivFavorite"
+            app:layout_constraintVertical_bias="1.0"
+            tools:text="父分类" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

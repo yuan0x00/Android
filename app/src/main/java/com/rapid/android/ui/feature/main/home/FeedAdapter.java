@@ -1,7 +1,6 @@
 package com.rapid.android.ui.feature.main.home;
 
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,17 +11,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.R;
 import com.rapid.android.core.common.text.StringUtils;
-import com.rapid.android.core.common.utils.ResUtils;
+import com.rapid.android.core.common.utils.ToastUtils;
+import com.rapid.android.core.data.repository.RepositoryProvider;
+import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.core.domain.repository.UserRepository;
+import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.core.ui.components.popup.BasePopupWindow;
 import com.rapid.android.databinding.ItemFeedBinding;
+import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder> {
     private final List<ArticleListBean.Data> items = new ArrayList<>();
+    private final UserRepository userRepository = RepositoryProvider.getUserRepository();
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
 
     public FeedAdapter(ArticleListBean feeds) {
@@ -58,7 +69,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
                 parent,
                 false
         );
-        return new FeedViewHolder(binding);
+        return new FeedViewHolder(binding, userRepository, disposables);
     }
 
     @Override
@@ -71,12 +82,25 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         return items.size();
     }
 
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        disposables.clear();
+    }
+
     public static class FeedViewHolder extends RecyclerView.ViewHolder {
         private final ItemFeedBinding binding;
+        private final UserRepository userRepository;
+        private final CompositeDisposable disposables;
+        private boolean collectRequestRunning = false;
 
-        public FeedViewHolder(@NonNull ItemFeedBinding binding) {
+        public FeedViewHolder(@NonNull ItemFeedBinding binding,
+                              @NonNull UserRepository userRepository,
+                              @NonNull CompositeDisposable disposables) {
             super(binding.getRoot());
             this.binding = binding;
+            this.userRepository = userRepository;
+            this.disposables = disposables;
         }
 
         public void bind(ArticleListBean.Data feedItem) {
@@ -90,6 +114,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             binding.tvTitle.setText(feedItem.getTitle());
             binding.tvTime.setText(" · " + feedItem.getNiceShareDate());
             binding.tvClass.setText(feedItem.getSuperChapterName());
+            binding.ivFavorite.setEnabled(true);
+            collectRequestRunning = false;
+            renderFavorite(feedItem.isCollect());
 
             GestureDetector gestureDetector = new GestureDetector(itemView.getContext(), new GestureDetector.SimpleOnGestureListener() {
                 @Override
@@ -117,12 +144,69 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             binding.getRoot().setOnClickListener(v -> ArticleWebViewActivity.start(binding.getRoot().getContext(), feedItem));
 
             binding.ivFavorite.setOnClickListener(v -> {
-                Drawable drawable = ResUtils.getDrawable(R.drawable.favorite_fill_24px);
-                if (drawable != null) {
-                    drawable.setTint(Color.RED);
-                }
-                binding.ivFavorite.setImageDrawable(drawable);
+                handleFavoriteToggle(feedItem);
             });
+        }
+
+        private void handleFavoriteToggle(@NonNull ArticleListBean.Data feedItem) {
+            if (collectRequestRunning) {
+                return;
+            }
+            int articleId = feedItem.getId();
+            if (articleId <= 0) {
+                ToastUtils.showShortToast(binding.getRoot().getContext().getString(R.string.article_collect_failed));
+                return;
+            }
+            if (!SessionManager.getInstance().isLoggedIn()) {
+                ToastUtils.showShortToast(binding.getRoot().getContext().getString(R.string.article_collect_need_login));
+                binding.getRoot().getContext().startActivity(new Intent(binding.getRoot().getContext(), LoginActivity.class));
+                return;
+            }
+            boolean targetCollect = !feedItem.isCollect();
+            binding.ivFavorite.setEnabled(false);
+            collectRequestRunning = true;
+            Disposable disposable;
+            if (targetCollect) {
+                disposable = userRepository.collectArticle(articleId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(result -> handleCollectResult(feedItem, true, result), this::handleCollectError);
+            } else {
+                disposable = userRepository.unCollectArticle(articleId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(result -> handleCollectResult(feedItem, false, result), this::handleCollectError);
+            }
+            disposables.add(disposable);
+        }
+
+        private void handleCollectResult(@NonNull ArticleListBean.Data feedItem,
+                                         boolean targetCollect,
+                                         DomainResult<String> result) {
+            collectRequestRunning = false;
+            binding.ivFavorite.setEnabled(true);
+            if (result != null && result.isSuccess()) {
+                feedItem.setCollect(targetCollect);
+                renderFavorite(targetCollect);
+                ToastUtils.showShortToast(binding.getRoot().getContext().getString(
+                        targetCollect ? R.string.article_collect_success : R.string.article_uncollect_success
+                ));
+            } else {
+                ToastUtils.showShortToast(binding.getRoot().getContext().getString(R.string.article_collect_failed));
+            }
+        }
+
+        private void handleCollectError(@NonNull Throwable throwable) {
+            collectRequestRunning = false;
+            binding.ivFavorite.setEnabled(true);
+            ToastUtils.showShortToast(binding.getRoot().getContext().getString(R.string.article_collect_failed));
+        }
+
+        private void renderFavorite(boolean collected) {
+            binding.ivFavorite.setImageResource(collected ? R.drawable.bookmark_fill_24px : R.drawable.bookmark_24px);
+            binding.ivFavorite.setContentDescription(binding.getRoot().getContext().getString(
+                    collected ? R.string.article_uncollect : R.string.article_collect
+            ));
         }
     }
 }

@@ -8,13 +8,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.rapid.android.R;
-import com.rapid.android.core.common.utils.ToastUtils;
-import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentHomeBinding;
-import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.home.search.SearchActivity;
-import com.rapid.android.ui.feature.share.ShareArticleActivity;
 
 public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBinding> {
 
@@ -40,14 +36,6 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
             int itemId = item.getItemId();
             if (itemId == R.id.action_search) {
                 startActivity(new Intent(requireContext(), SearchActivity.class));
-                return true;
-            } else if (itemId == R.id.action_share_article) {
-                if (!SessionManager.getInstance().isLoggedIn()) {
-                    ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
-                    startActivity(new Intent(requireContext(), LoginActivity.class));
-                    return true;
-                }
-                ShareArticleActivity.start(requireContext());
                 return true;
             }
             return false;

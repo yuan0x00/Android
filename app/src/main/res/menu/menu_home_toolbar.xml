@@ -8,10 +8,4 @@
         android:title="@string/discover_search"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/action_share_article"
-        android:icon="@drawable/add_24px"
-        android:title="@string/home_share_article"
-        app:showAsAction="ifRoom" />
-
 </menu>

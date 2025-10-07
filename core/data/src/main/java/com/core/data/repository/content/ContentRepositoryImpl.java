@@ -1,6 +1,7 @@
 package com.core.data.repository.content;
 
 import com.core.data.api.ContentApi;
+import com.core.data.api.HomeApi;
 import com.core.data.mapper.DomainResultMapper;
 import com.core.data.network.NetApis;
 import com.core.domain.model.*;
@@ -62,12 +63,16 @@ public class ContentRepositoryImpl implements ContentRepository {
 
     @Override
     public Observable<DomainResult<List<HotKeyBean>>> hotKeys() {
-        return map(api().hotKeys());
+        return homeApi().hotKeys()
+                .map(DomainResultMapper::map)
+                .onErrorReturn(DomainResultMapper::mapError);
     }
 
     @Override
     public Observable<DomainResult<List<FriendLinkBean>>> friendLinks() {
-        return map(api().friendLinks());
+        return homeApi().friendLinks()
+                .map(DomainResultMapper::map)
+                .onErrorReturn(DomainResultMapper::mapError);
     }
 
     @Override
@@ -98,5 +103,9 @@ public class ContentRepositoryImpl implements ContentRepository {
 
     private ContentApi api() {
         return NetApis.Content();
+    }
+
+    private HomeApi homeApi() {
+        return NetApis.Home();
     }
 }

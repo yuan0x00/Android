@@ -4,10 +4,7 @@ import com.core.data.local.AuthStorage;
 import com.core.data.mapper.DomainResultMapper;
 import com.core.data.network.NetApis;
 import com.core.data.network.PersistentCookieStore;
-import com.core.domain.model.ArticleListBean;
-import com.core.domain.model.CoinBean;
-import com.core.domain.model.LoginBean;
-import com.core.domain.model.UserInfoBean;
+import com.core.domain.model.*;
 import com.core.domain.repository.UserRepository;
 import com.core.domain.result.DomainError;
 import com.core.domain.result.DomainResult;
@@ -114,6 +111,31 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<DomainResult<ArticleListBean>> favoriteArticles(int page) {
         return map(NetApis.User().collectList(page));
+    }
+
+    @Override
+    public Observable<DomainResult<UserShareBean>> myShareArticles(int page, Integer pageSize) {
+        return map(NetApis.User().privateShareArticles(page, pageSize));
+    }
+
+    @Override
+    public Observable<DomainResult<String>> deleteShareArticle(int articleId) {
+        return map(NetApis.User().deleteShareArticle(articleId));
+    }
+
+    @Override
+    public Observable<DomainResult<ArticleListBean.Data>> shareArticle(String title, String link) {
+        return map(NetApis.User().addShareArticle(title, link));
+    }
+
+    @Override
+    public Observable<DomainResult<ArticleListBean.Data>> collectOutside(String title, String author, String link) {
+        return map(NetApis.User().collectOutside(title, author, link));
+    }
+
+    @Override
+    public Observable<DomainResult<ArticleListBean.Data>> updateCollectedArticle(int articleId, String title, String link, String author) {
+        return map(NetApis.User().updateCollectedArticle(articleId, title, link, author));
     }
 
     private <T> Observable<DomainResult<T>> map(Observable<BaseResponse<T>> source) {

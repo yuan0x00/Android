@@ -140,7 +140,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:weightSum="3">
 
                         <LinearLayout
                             android:id="@+id/layoutCoin"
@@ -184,6 +185,28 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/mine_stat_favorites"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layoutShare"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvShareCount"
+                                style="@style/TextAppearance.Material3.TitleMedium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="--"/>
+
+                            <TextView
+                                style="@style/TextAppearance.Material3.BodySmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/mine_stat_share"/>
                         </LinearLayout>
                     </LinearLayout>
 

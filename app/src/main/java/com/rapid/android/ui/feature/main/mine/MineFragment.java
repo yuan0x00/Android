@@ -16,6 +16,7 @@ import com.rapid.android.databinding.FragmentMineBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.mine.coin.CoinActivity;
 import com.rapid.android.ui.feature.main.mine.favorite.FavoriteActivity;
+import com.rapid.android.ui.feature.main.mine.share.ShareActivity;
 import com.rapid.android.ui.feature.setting.SettingActivity;
 import com.rapid.android.ui.feature.setting.developer.ProxyConfigActivity;
 
@@ -76,6 +77,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
             }
         });
         binding.layoutFavorite.setOnClickListener(v -> openFavorites());
+        binding.layoutShare.setOnClickListener(v -> openShare());
     }
 
     @Override
@@ -121,6 +123,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
 
         binding.tvCoinCount.setText(state.getCoinDisplay());
         binding.tvFavoriteCount.setText(state.getFavoriteDisplay());
+        binding.tvShareCount.setText(state.getShareDisplay());
 
         binding.btnDailyAction.setText(state.getDailyActionText());
         binding.btnDailyAction.setEnabled(state.isDailyActionEnabled());
@@ -158,6 +161,17 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
                 SessionManager.getInstance().getCurrentState();
         if (state != null && state.isLoggedIn()) {
             FavoriteActivity.start(requireContext());
+        } else {
+            ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+            navigateToLogin();
+        }
+    }
+
+    private void openShare() {
+        SessionManager.SessionState state =
+                SessionManager.getInstance().getCurrentState();
+        if (state != null && state.isLoggedIn()) {
+            ShareActivity.start(requireContext());
         } else {
             ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
             navigateToLogin();

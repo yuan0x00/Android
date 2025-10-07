@@ -29,6 +29,9 @@
             android:name=".ui.feature.main.mine.favorite.FavoriteActivity"
             android:exported="false"/>
         <activity
+            android:name=".ui.feature.main.mine.share.ShareActivity"
+            android:exported="false"/>
+        <activity
             android:name=".ui.feature.main.home.search.SearchActivity"
             android:exported="false"/>
         <activity

@@ -9,17 +9,15 @@ import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.*;
 
 public interface ContentApi {
-
-    // 首页拓展
-    @GET("/article/top/json")
-    Observable<BaseResponse<List<ArticleListBean.Data>>> topArticles();
-
-    // 知识体系
+    // 2. 体系
     @GET("/tree/json")
     Observable<BaseResponse<List<CategoryNodeBean>>> knowledgeTree();
 
     @GET("/article/list/{page}/json")
     Observable<BaseResponse<ArticleListBean>> articlesByCategory(@Path("page") int page, @Query("cid") int categoryId);
+
+    @GET("/article/list/{page}/json")
+    Observable<BaseResponse<ArticleListBean>> articlesByAuthor(@Path("page") int page, @Query("author") String author);
 
     @GET("/navi/json")
     Observable<BaseResponse<List<NavigationBean>>> navigation();
@@ -31,7 +29,7 @@ public interface ContentApi {
     @GET("/project/list/{page}/json")
     Observable<BaseResponse<ProjectPageBean>> projectArticles(@Path("page") int page, @Query("cid") int categoryId);
 
-    // 公众号
+    // 15. 公众号 Tab
     @GET("/wxarticle/chapters/json")
     Observable<BaseResponse<List<WxChapterBean>>> weChatChapters();
 
@@ -46,20 +44,28 @@ public interface ContentApi {
     @POST("/article/query/{page}/json")
     Observable<BaseResponse<ArticleListBean>> searchArticles(@Path("page") int page, @Field("k") String keyword);
 
-    @GET("/hotkey/json")
-    Observable<BaseResponse<List<HotKeyBean>>> hotKeys();
-
-    @GET("/friend/json")
-    Observable<BaseResponse<List<FriendLinkBean>>> friendLinks();
-
-    // 问答广场
+    // 11. 问答
     @GET("/wenda/list/{page}/json")
     Observable<BaseResponse<ArticleListBean>> questionAnswers(@Path("page") int page);
 
+    @GET("/wenda/comments/{questionId}/json")
+    Observable<BaseResponse<PageBean<WendaCommentBean>>> wendaComments(@Path("questionId") int questionId);
+
+    // 10.2 分享人对应列表数据
     @GET("/user/{userId}/share_articles/{page}/json")
     Observable<BaseResponse<ArticleListBean>> userSharedArticles(@Path("userId") int userId, @Path("page") int page);
 
-    // 积分
+    // 热门/发现类
+    @GET("/popular/wenda/json")
+    Observable<BaseResponse<List<ArticleListBean.Data>>> popularWenda();
+
+    @GET("/popular/column/json")
+    Observable<BaseResponse<List<PopularColumnBean>>> popularColumns();
+
+    @GET("/popular/route/json")
+    Observable<BaseResponse<List<CategoryNodeBean>>> popularRoutes();
+
+    // 9. 积分
     @GET("/lg/coin/list/{page}/json")
     Observable<BaseResponse<PageBean<CoinRecordBean>>> coinRecords(@Path("page") int page);
 

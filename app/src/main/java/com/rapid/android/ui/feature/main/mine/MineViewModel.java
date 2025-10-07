@@ -9,10 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.core.common.app.BaseApplication;
 import com.core.data.repository.RepositoryProvider;
 import com.core.data.session.SessionManager;
-import com.core.domain.model.CoinBean;
-import com.core.domain.model.CollectArticleInfoBean;
-import com.core.domain.model.LoginBean;
-import com.core.domain.model.UserInfoBean;
+import com.core.domain.model.*;
 import com.core.domain.repository.UserRepository;
 import com.core.ui.presentation.BaseViewModel;
 import com.rapid.android.R;
@@ -26,6 +23,8 @@ public class MineViewModel extends BaseViewModel {
     private final SessionManager sessionManager = SessionManager.getInstance();
     private boolean profileLoading = false;
     private boolean signedInToday = false;
+    private boolean shareCountLoading = false;
+    private boolean shareCountLoaded = false;
 
     public LiveData<MineUiState> getUiState() {
         return uiState;
@@ -51,6 +50,8 @@ public class MineViewModel extends BaseViewModel {
         stopLoading();
         loading.setValue(false);
         signedInToday = false;
+        shareCountLoaded = false;
+        shareCountLoading = false;
         uiState.setValue(MineUiState.guest());
     }
 
@@ -65,6 +66,7 @@ public class MineViewModel extends BaseViewModel {
             stopLoading();
             loading.setValue(false);
             uiState.setValue(MineUiState.from(userInfo, signedInToday));
+            loadShareCount();
         } else {
             if (!profileLoading) {
                 startLoading();
@@ -101,8 +103,10 @@ public class MineViewModel extends BaseViewModel {
     public void applyUserInfo(UserInfoBean userInfo) {
         if (userInfo != null) {
             uiState.setValue(MineUiState.from(userInfo, signedInToday));
+            loadShareCount();
         } else {
             uiState.setValue(MineUiState.guest());
+            shareCountLoaded = false;
         }
     }
 
@@ -170,6 +174,37 @@ public class MineViewModel extends BaseViewModel {
         profileLoading = false;
     }
 
+    private void loadShareCount() {
+        if (shareCountLoading || shareCountLoaded) {
+            return;
+        }
+        shareCountLoading = true;
+        autoDispose(
+                userRepository.myShareArticles(1, 1)
+                        .subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.io())
+                        .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+                        .subscribe(result -> {
+                            shareCountLoading = false;
+                            if (result != null && result.isSuccess()) {
+                                int total = 0;
+                                if (result.getData() != null && result.getData().getShareArticles() != null) {
+                                    ArticleListBean shares = result.getData().getShareArticles();
+                                    total = shares != null ? shares.getTotal() : 0;
+                                }
+                                shareCountLoaded = true;
+                                updateShareDisplay(String.valueOf(total));
+                            }
+                        }, throwable -> shareCountLoading = false)
+        );
+    }
+
+    private void updateShareDisplay(String display) {
+        MineUiState state = uiState.getValue();
+        if (state != null) {
+            uiState.setValue(state.withShareCount(display));
+        }
+    }
+
     public static class MineUiState {
         private final boolean loggedIn;
         private final String displayName;
@@ -180,6 +215,7 @@ public class MineViewModel extends BaseViewModel {
         private final boolean dailyActionEnabled;
         private final String coinDisplay;
         private final String favoriteDisplay;
+        private final String shareDisplay;
 
         private MineUiState(boolean loggedIn,
                             String displayName,
@@ -189,7 +225,8 @@ public class MineViewModel extends BaseViewModel {
                             String dailyActionText,
                             boolean dailyActionEnabled,
                             String coinDisplay,
-                            String favoriteDisplay) {
+                            String favoriteDisplay,
+                            String shareDisplay) {
             this.loggedIn = loggedIn;
             this.displayName = displayName;
             this.tagline = tagline;
@@ -199,6 +236,7 @@ public class MineViewModel extends BaseViewModel {
             this.dailyActionEnabled = dailyActionEnabled;
             this.coinDisplay = coinDisplay;
             this.favoriteDisplay = favoriteDisplay;
+            this.shareDisplay = shareDisplay;
         }
 
         public static MineUiState guest() {
@@ -211,6 +249,7 @@ public class MineViewModel extends BaseViewModel {
                     false,
                     context.getString(R.string.mine_action_check_in),
                     false,
+                    context.getString(R.string.mine_placeholder_dash),
                     context.getString(R.string.mine_placeholder_dash),
                     context.getString(R.string.mine_placeholder_dash)
             );
@@ -266,7 +305,8 @@ public class MineViewModel extends BaseViewModel {
                     dailyText,
                     dailyEnabled,
                     String.valueOf(coin.getCoinCount()),
-                    String.valueOf(favoriteCount)
+                    String.valueOf(favoriteCount),
+                    context.getString(R.string.mine_placeholder_dash)
             );
         }
 
@@ -306,6 +346,10 @@ public class MineViewModel extends BaseViewModel {
             return favoriteDisplay;
         }
 
+        public String getShareDisplay() {
+            return shareDisplay;
+        }
+
         public MineUiState withDailyAction(String text, boolean enabled) {
             return new MineUiState(
                     loggedIn,
@@ -316,7 +360,23 @@ public class MineViewModel extends BaseViewModel {
                     text,
                     enabled,
                     coinDisplay,
-                    favoriteDisplay
+                    favoriteDisplay,
+                    shareDisplay
+            );
+        }
+
+        public MineUiState withShareCount(String display) {
+            return new MineUiState(
+                    loggedIn,
+                    displayName,
+                    tagline,
+                    membershipLabel,
+                    showMembership,
+                    dailyActionText,
+                    dailyActionEnabled,
+                    coinDisplay,
+                    favoriteDisplay,
+                    display
             );
         }
     }

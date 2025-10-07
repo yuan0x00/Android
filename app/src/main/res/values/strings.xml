@@ -53,6 +53,7 @@
     <string name="mine_action_checked_in">今日已签到</string>
     <string name="mine_stat_points">积分</string>
     <string name="mine_stat_favorites">收藏</string>
+    <string name="mine_stat_share">分享</string>
     <string name="mine_section_favorites">我的收藏</string>
     <string name="mine_section_developer">开发者工具</string>
     <string name="mine_section_settings">设置</string>
@@ -124,6 +125,9 @@
     <string name="favorite_title">我的收藏</string>
     <string name="favorite_empty_list">暂无收藏内容</string>
     <string name="favorite_error_load_failed">加载收藏失败</string>
+    <string name="share_title">我的分享</string>
+    <string name="share_empty_list">暂无分享内容</string>
+    <string name="share_error_load_failed">加载分享列表失败</string>
     <string name="dialog_tip_placeholder">这是提示内容</string>
     <string name="login_privacy_statement">已阅读并同意我们的 隐私协议、用户协议</string>
     <string name="home_entry_label">入口</string>

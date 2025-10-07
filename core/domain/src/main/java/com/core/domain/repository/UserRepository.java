@@ -1,9 +1,6 @@
 package com.core.domain.repository;
 
-import com.core.domain.model.ArticleListBean;
-import com.core.domain.model.CoinBean;
-import com.core.domain.model.LoginBean;
-import com.core.domain.model.UserInfoBean;
+import com.core.domain.model.*;
 import com.core.domain.result.DomainResult;
 
 import io.reactivex.rxjava3.core.Completable;
@@ -33,4 +30,14 @@ public interface UserRepository {
     Observable<DomainResult<CoinBean>> signIn();
 
     Observable<DomainResult<ArticleListBean>> favoriteArticles(int page);
+
+    Observable<DomainResult<UserShareBean>> myShareArticles(int page, Integer pageSize);
+
+    Observable<DomainResult<String>> deleteShareArticle(int articleId);
+
+    Observable<DomainResult<ArticleListBean.Data>> shareArticle(String title, String link);
+
+    Observable<DomainResult<ArticleListBean.Data>> collectOutside(String title, String author, String link);
+
+    Observable<DomainResult<ArticleListBean.Data>> updateCollectedArticle(int articleId, String title, String link, String author);
 }

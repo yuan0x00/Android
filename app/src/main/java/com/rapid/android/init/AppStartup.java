@@ -79,7 +79,6 @@ final class AppStartup {
         proxyManager.addListener(proxyListener);
 
         rebuildNetworkClient();
-        NetApis.init();
         SessionManager.getInstance().initialize();
     }
 

@@ -22,6 +22,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class FavoriteViewModel extends BaseViewModel {
 
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    private final MutableLiveData<String> toastMessage = new MutableLiveData<>();
 
     private final UserRepository repository = RepositoryProvider.getUserRepository();
     private final PagingController<ArticleListBean.Data> pagingController =
@@ -51,6 +52,10 @@ public class FavoriteViewModel extends BaseViewModel {
         return errorMessage;
     }
 
+    public MutableLiveData<String> getToastMessage() {
+        return toastMessage;
+    }
+
     public void initialize() {
         if (!pagingController.isInitialized()) {
             pagingController.refresh();
@@ -63,6 +68,25 @@ public class FavoriteViewModel extends BaseViewModel {
 
     public void loadMore() {
         pagingController.loadMore();
+    }
+
+    public void updateFavorite(int articleId, String title, String link, String author) {
+        autoDispose(repository.updateCollectedArticle(articleId, title, link, author)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    if (result.isSuccess()) {
+                        toastMessage.setValue(BaseApplication.getAppContext().getString(R.string.favorite_update_success));
+                        pagingController.refresh();
+                    } else {
+                        DomainError error = result.getError();
+                        toastMessage.setValue(error != null && error.getMessage() != null
+                                ? error.getMessage()
+                                : BaseApplication.getAppContext().getString(R.string.share_article_error_submit));
+                    }
+                }, throwable -> toastMessage.setValue(throwable != null && throwable.getMessage() != null
+                        ? throwable.getMessage()
+                        : BaseApplication.getAppContext().getString(R.string.share_article_error_submit))));
     }
 
     private Observable<DomainResult<PagingPayload<ArticleListBean.Data>>> fetchFavoritePage(int page) {

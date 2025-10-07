@@ -7,6 +7,7 @@ import com.rapid.android.core.common.app.BaseApplication;
 import com.rapid.android.core.data.repository.RepositoryProvider;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.model.BannerItemBean;
+import com.rapid.android.core.domain.model.FriendLinkBean;
 import com.rapid.android.core.domain.repository.HomeRepository;
 import com.rapid.android.core.domain.result.DomainError;
 import com.rapid.android.core.domain.result.DomainResult;
@@ -25,6 +26,8 @@ public class RecommendViewModel extends BaseViewModel {
 
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<BannerItemBean>> bannerList = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<ArticleListBean.Data>> topArticles = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<FriendLinkBean>> friendLinks = new MutableLiveData<>(new ArrayList<>());
     private final HomeRepository repository = RepositoryProvider.getHomeRepository();
 
     private final PagingController<ArticleListBean.Data> pagingController =
@@ -37,6 +40,15 @@ public class RecommendViewModel extends BaseViewModel {
     public MutableLiveData<ArrayList<BannerItemBean>> getBannerList() {
         return bannerList;
     }
+
+    public MutableLiveData<List<ArticleListBean.Data>> getTopArticles() {
+        return topArticles;
+    }
+
+    public MutableLiveData<List<FriendLinkBean>> getFriendLinks() {
+        return friendLinks;
+    }
+
 
     public MutableLiveData<List<ArticleListBean.Data>> getArticleItems() {
         return pagingController.getItemsLiveData();
@@ -60,6 +72,7 @@ public class RecommendViewModel extends BaseViewModel {
 
     public void refreshAll() {
         loadBanner();
+        loadHighlights();
         pagingController.refresh();
     }
 
@@ -86,6 +99,27 @@ public class RecommendViewModel extends BaseViewModel {
                 }, throwable -> errorMessage.setValue(throwable != null && throwable.getMessage() != null
                         ? throwable.getMessage()
                         : BaseApplication.getAppContext().getString(R.string.home_banner_load_failed))));
+    }
+
+    private void loadHighlights() {
+        autoDispose(repository.topArticles()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    if (result.isSuccess() && result.getData() != null) {
+                        topArticles.setValue(result.getData());
+                    }
+                }, throwable -> {}));
+
+        autoDispose(repository.friendLinks()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    if (result.isSuccess() && result.getData() != null) {
+                        friendLinks.setValue(result.getData());
+                    }
+                }, throwable -> {}));
+
     }
 
     private io.reactivex.rxjava3.core.Observable<DomainResult<PagingPayload<ArticleListBean.Data>>> fetchArticlePage(int page) {

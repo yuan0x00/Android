@@ -17,6 +17,7 @@ import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.mine.coin.CoinActivity;
 import com.rapid.android.ui.feature.main.mine.favorite.FavoriteActivity;
 import com.rapid.android.ui.feature.main.mine.share.ShareActivity;
+import com.rapid.android.ui.feature.main.mine.tools.UserToolsActivity;
 import com.rapid.android.ui.feature.setting.SettingActivity;
 import com.rapid.android.ui.feature.setting.developer.ProxyConfigActivity;
 
@@ -65,6 +66,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         });
 
         binding.itemDeveloper.setOnClickListener(v -> openDeveloperTools());
+        binding.itemTools.setOnClickListener(v -> openTools());
         binding.itemSettings.setOnClickListener(v -> openSettings());
         binding.layoutCoin.setOnClickListener(v -> {
             SessionManager.SessionState state =
@@ -154,6 +156,17 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
 
     private void openDeveloperTools() {
         startActivity(new Intent(getContext(), ProxyConfigActivity.class));
+    }
+
+    private void openTools() {
+        SessionManager.SessionState state =
+                SessionManager.getInstance().getCurrentState();
+        if (state != null && state.isLoggedIn()) {
+            UserToolsActivity.start(requireContext());
+        } else {
+            ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+            navigateToLogin();
+        }
     }
 
     private void openFavorites() {

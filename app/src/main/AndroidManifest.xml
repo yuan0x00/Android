@@ -35,7 +35,19 @@
             android:name=".ui.feature.main.home.search.SearchActivity"
             android:exported="false"/>
         <activity
+            android:name=".ui.feature.share.ShareArticleActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".ui.feature.tool.ToolCenterActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".ui.feature.main.mine.tools.UserToolsActivity"
+            android:exported="false"/>
+        <activity
             android:name=".ui.feature.main.system.list.SystemArticleListActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".ui.feature.web.ArticleWebViewActivity"
             android:exported="false"/>
         <activity
             android:name=".ui.feature.login.LoginActivity"

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.ProjectPageBean;
-import com.rapid.android.core.webview.WebViewActivity;
+import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +92,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
         String targetUrl = !TextUtils.isEmpty(item.getLink()) ? item.getLink() : item.getProjectLink();
         holder.itemView.setOnClickListener(v -> {
             if (!TextUtils.isEmpty(targetUrl)) {
-                WebViewActivity.start(v.getContext(), targetUrl, item.getTitle());
+                ArticleWebViewActivity.start(v.getContext(), targetUrl, item.getTitle());
             }
         });
     }

@@ -19,6 +19,7 @@ import com.rapid.android.databinding.ActivityLoginBinding;
 public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBinding> {
 
     private Toolbar toolbar;
+    private boolean isRegisterMode = false;
 
     @Override
     protected LoginViewModel createViewModel() {
@@ -42,7 +43,24 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
                 return;
             }
             binding.btnLogin.setEnabled(false);
-            viewModel.login(username, password);
+            if (isRegisterMode) {
+                String confirm = binding.inputPasswordConfirm.getText() != null
+                        ? binding.inputPasswordConfirm.getText().toString().trim()
+                        : "";
+                if (!TextUtils.equals(password, confirm)) {
+                    ToastUtils.showLongToast(getString(R.string.login_error_password_mismatch));
+                    binding.btnLogin.setEnabled(true);
+                    return;
+                }
+                viewModel.register(username, password, confirm);
+            } else {
+                viewModel.login(username, password);
+            }
+        });
+
+        binding.btnToggleMode.setOnClickListener(v -> {
+            isRegisterMode = !isRegisterMode;
+            updateMode();
         });
     }
 
@@ -63,6 +81,12 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
             }
         });
 
+        viewModel.getInfoMessage().observe(this, msg -> {
+            if (!TextUtils.isEmpty(msg)) {
+                ToastUtils.showLongToast(msg);
+            }
+        });
+
         SessionManager.getInstance().loginState().observe(this, loggedIn -> {
             if (Boolean.TRUE.equals(loggedIn)) {
                 finish();
@@ -75,6 +99,7 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
         setupToolbar();
         WindowInsetsUtils.addImeVisibilityListener(binding.getRoot(), isVisible ->
                 binding.layoutPrivacy.setVisibility(isVisible ? android.view.View.GONE : android.view.View.VISIBLE));
+        updateMode();
     }
 
     private void setupToolbar() {
@@ -105,6 +130,15 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
     protected void loadData() {
         if (Boolean.TRUE.equals(SessionManager.getInstance().loginState().getValue())) {
             finish();
+        }
+    }
+
+    private void updateMode() {
+        binding.inputPasswordConfirmLayout.setVisibility(isRegisterMode ? android.view.View.VISIBLE : android.view.View.GONE);
+        binding.btnLogin.setText(isRegisterMode ? R.string.login_action_register : R.string.login_action_login);
+        binding.btnToggleMode.setText(isRegisterMode ? R.string.login_toggle_login : R.string.login_toggle_register);
+        if (toolbar != null) {
+            toolbar.setTitle(isRegisterMode ? R.string.login_action_register : R.string.login_title);
         }
     }
 }

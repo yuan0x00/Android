@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.ArticleListBean;
-import com.rapid.android.core.webview.WebViewActivity;
+import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +98,7 @@ final class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.ShareViewHold
 
             itemView.setOnClickListener(v -> {
                 if (!TextUtils.isEmpty(data.getLink())) {
-                    WebViewActivity.start(v.getContext(), data.getLink(), data.getTitle());
+                    ArticleWebViewActivity.start(v.getContext(), data);
                 }
             });
         }

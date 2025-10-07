@@ -22,10 +22,10 @@ public final class DomainResultMapper {
         }
         if (response.isSuccess()) {
             T data = response.getData();
-            if (data != null) {
+//            if (data != null) {
                 return DomainResult.success(data);
-            }
-            return DomainResult.failure(DomainError.of(response.getErrorCode(), "响应数据为空"));
+//            }
+//            return DomainResult.failure(DomainError.of(response.getErrorCode(), "响应数据为空"));
         }
         return DomainResult.failure(DomainError.of(response.getErrorCode(), response.getErrorMsg()));
     }

@@ -2,9 +2,11 @@ package com.rapid.android.core.data.repository;
 
 import com.rapid.android.core.data.repository.content.ContentRepositoryImpl;
 import com.rapid.android.core.data.repository.home.HomeRepositoryImpl;
+import com.rapid.android.core.data.repository.message.MessageRepositoryImpl;
 import com.rapid.android.core.data.repository.user.UserRepositoryImpl;
 import com.rapid.android.core.domain.repository.ContentRepository;
 import com.rapid.android.core.domain.repository.HomeRepository;
+import com.rapid.android.core.domain.repository.MessageRepository;
 import com.rapid.android.core.domain.repository.UserRepository;
 
 public final class RepositoryProvider {
@@ -12,6 +14,7 @@ public final class RepositoryProvider {
     private static volatile HomeRepository homeRepository;
     private static volatile ContentRepository contentRepository;
     private static volatile UserRepository userRepository;
+    private static volatile MessageRepository messageRepository;
 
     private RepositoryProvider() {
     }
@@ -47,5 +50,16 @@ public final class RepositoryProvider {
             }
         }
         return userRepository;
+    }
+
+    public static MessageRepository getMessageRepository() {
+        if (messageRepository == null) {
+            synchronized (RepositoryProvider.class) {
+                if (messageRepository == null) {
+                    messageRepository = new MessageRepositoryImpl();
+                }
+            }
+        }
+        return messageRepository;
     }
 }

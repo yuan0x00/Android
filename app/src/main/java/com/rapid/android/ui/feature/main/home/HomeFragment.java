@@ -7,16 +7,16 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.rapid.android.core.ui.components.dialog.DialogController;
-import com.rapid.android.core.ui.components.dialog.DialogEffect;
+import com.rapid.android.R;
+import com.rapid.android.core.common.utils.ToastUtils;
+import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentHomeBinding;
-import com.rapid.android.ui.common.dialog.TipDialogView;
+import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.home.search.SearchActivity;
+import com.rapid.android.ui.feature.share.ShareArticleActivity;
 
 public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBinding> {
-
-    private DialogController dialogController;
 
     @Override
     protected HomeViewModel createViewModel() {
@@ -35,27 +35,22 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
 
     @Override
     protected void initializeViews() {
-        dialogController = DialogController.from(this, binding.getRoot());
         setupViewPager();
-        binding.topSearch.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), SearchActivity.class));
-        });
-        binding.avatar.setOnClickListener(v -> {
-
-            dialogController.show(new DialogEffect.Confirm(
-                    "", "", "", "", () -> {
-            }, () -> {
-            }));
-
-            dialogController.show(new DialogEffect.Loading(true));
-
-            dialogController.show(new DialogEffect.Custom(
-                    new TipDialogView(requireContext())));
-//
-            dialogController.show(new DialogEffect.Toast(
-                    "Toast"
-            ));
-
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.action_search) {
+                startActivity(new Intent(requireContext(), SearchActivity.class));
+                return true;
+            } else if (itemId == R.id.action_share_article) {
+                if (!SessionManager.getInstance().isLoggedIn()) {
+                    ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+                    startActivity(new Intent(requireContext(), LoginActivity.class));
+                    return true;
+                }
+                ShareArticleActivity.start(requireContext());
+                return true;
+            }
+            return false;
         });
     }
 

@@ -16,7 +16,7 @@ public final class DomainResult<T> {
     }
 
     public static <T> DomainResult<T> success(T data) {
-        return new DomainResult<>(Objects.requireNonNull(data), null);
+        return new DomainResult<>(data, null);
     }
 
     public static <T> DomainResult<T> emptySuccess() {

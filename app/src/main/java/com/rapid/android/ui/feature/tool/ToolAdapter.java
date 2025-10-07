@@ -1,0 +1,69 @@
+package com.rapid.android.ui.feature.tool;
+
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.rapid.android.core.domain.model.ToolItemBean;
+import com.rapid.android.databinding.ItemToolBinding;
+import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+class ToolAdapter extends RecyclerView.Adapter<ToolAdapter.ToolViewHolder> {
+
+    private final List<ToolItemBean> items = new ArrayList<>();
+
+    void submitList(List<ToolItemBean> data) {
+        items.clear();
+        if (data != null) {
+            items.addAll(data);
+        }
+        notifyDataSetChanged();
+    }
+
+    @NonNull
+    @Override
+    public ToolViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ItemToolBinding binding = ItemToolBinding.inflate(
+                LayoutInflater.from(parent.getContext()),
+                parent,
+                false
+        );
+        return new ToolViewHolder(binding);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ToolViewHolder holder, int position) {
+        holder.bind(items.get(position));
+    }
+
+    @Override
+    public int getItemCount() {
+        return items.size();
+    }
+
+    static class ToolViewHolder extends RecyclerView.ViewHolder {
+
+        private final ItemToolBinding binding;
+
+        ToolViewHolder(@NonNull ItemToolBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        void bind(ToolItemBean bean) {
+            binding.toolName.setText(bean.getName());
+            binding.toolLink.setText(bean.getLink());
+            binding.getRoot().setOnClickListener(v -> {
+                if (!TextUtils.isEmpty(bean.getLink())) {
+                    ArticleWebViewActivity.start(v.getContext(), bean.getLink(), bean.getName());
+                }
+            });
+        }
+    }
+}

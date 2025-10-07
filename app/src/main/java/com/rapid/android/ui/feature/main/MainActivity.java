@@ -16,12 +16,10 @@ import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.core.webview.core.WebViewPrewarmer;
 import com.rapid.android.databinding.ActivityMainBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
+import com.rapid.android.ui.feature.main.discover.DiscoverFragment;
 import com.rapid.android.ui.feature.main.home.HomeFragment;
+import com.rapid.android.ui.feature.main.message.MessageFragment;
 import com.rapid.android.ui.feature.main.mine.MineFragment;
-import com.rapid.android.ui.feature.main.navigation.NavigationFragment;
-import com.rapid.android.ui.feature.main.project.ProjectFragment;
-import com.rapid.android.ui.feature.main.system.SystemFragment;
-import com.rapid.android.ui.feature.main.wechat.WechatFragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -97,56 +95,27 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         R.drawable.home_fill_24px,
                         HomeFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
-                        getString(R.string.main_tab_navigation),
-                        R.drawable.signpost_24px,
-                        R.drawable.signpost_fill_24px,
-                        NavigationFragment.class))
+                        getString(R.string.main_tab_discover),
+                        R.drawable.explore_24px,
+                        R.drawable.explore_fill_24px,
+                        DiscoverFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
-                        getString(R.string.main_tab_system),
-                        R.drawable.family_history_24px,
-                        R.drawable.family_history_fill_24px,
-                        SystemFragment.class))
-                .addTab(new BottomTabNavigator.TabItem(
-                        getString(R.string.main_tab_wechat),
-                        R.drawable.article_person_24px,
-                        R.drawable.article_person_fill_24px,
-                        WechatFragment.class))
-                .addTab(new BottomTabNavigator.TabItem(
-                        getString(R.string.main_tab_project),
-                        R.drawable.folder_code_24px,
-                        R.drawable.folder_code_fill_24px,
-                        ProjectFragment.class))
+                        getString(R.string.main_tab_message),
+                        R.drawable.mail_24px,
+                        R.drawable.mail_fill_24px,
+                        MessageFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
                         getString(R.string.main_tab_profile),
                         R.drawable.person_24px,
                         R.drawable.person_fill_24px,
                         MineFragment.class))
-                .setOnTabSelectInterceptor((position) -> {
-                    switch (position) {
-                        case 4:
-//                            return checkLoginState();
-                        case 0:
-                        case 1:
-                        case 2:
-                        case 3:
-                    }
-                    return true;
-                })
+                .setOnTabSelectInterceptor(this::shouldAllowTabSelection)
                 .build();
         // 恢复之前选中的 Tab
         if (savedInstanceState != null) {
             int position = savedInstanceState.getInt("CURRENT_TAB", 0);
             navigator.selectTab(position);
         }
-    }
-
-    private boolean checkLoginState() {
-        Boolean isLoggedIn = SessionManager.getInstance().loginState().getValue();
-        if (Boolean.TRUE.equals(isLoggedIn)) {
-            return true;
-        }
-        startActivity(new Intent(this, LoginActivity.class));
-        return false;
     }
 
     @Override
@@ -166,20 +135,22 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         });
 
         SessionManager.getInstance().loginState().observe(this, loggedIn -> {
-//            if (navigator == null) {
-//                return;
-//            }
-//            if (!Boolean.TRUE.equals(loggedIn) && navigator.getCurrentPosition() == 3) {
-//                navigator.selectTab(0);
-//            }
+            if (navigator == null) {
+                return;
+            }
+            if (!Boolean.TRUE.equals(loggedIn) && navigator.getCurrentPosition() >= 2) {
+                navigator.selectTab(0);
+            }
         });
 
         SessionManager.getInstance().authEvents().observe(this, event -> {
-//            if (event == null || navigator == null) return;
-//            if (event.getType() == AuthSessionManager.EventType.LOGOUT
-//                    || event.getType() == AuthSessionManager.EventType.UNAUTHORIZED) {
-//                navigator.selectTab(0);
-//            }
+            if (event == null || navigator == null) {
+                return;
+            }
+            SessionManager.EventType type = event.getType();
+            if (type == SessionManager.EventType.LOGOUT || type == SessionManager.EventType.UNAUTHORIZED) {
+                navigator.selectTab(0);
+            }
         });
     }
 
@@ -196,5 +167,21 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     @Override
     public void enableTab(int position) {
         navigator.enableTab(position);
+    }
+
+    private boolean shouldAllowTabSelection(int position) {
+        if (position < 2) {
+            return true;
+        }
+        return ensureLoggedIn();
+    }
+
+    private boolean ensureLoggedIn() {
+        if (SessionManager.getInstance().isLoggedIn()) {
+            return true;
+        }
+        ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+        startActivity(new Intent(this, LoginActivity.class));
+        return false;
     }
 }

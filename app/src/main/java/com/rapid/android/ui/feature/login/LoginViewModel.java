@@ -19,6 +19,7 @@ public class LoginViewModel extends BaseViewModel {
     private final UserRepository userRepository;
     private final MutableLiveData<Boolean> loginSuccess = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    private final MutableLiveData<String> infoMessage = new MutableLiveData<>();
 
     public LoginViewModel() {
         this.userRepository = RepositoryProvider.getUserRepository();
@@ -78,5 +79,26 @@ public class LoginViewModel extends BaseViewModel {
 
     public LiveData<String> getErrorMessage() {
         return errorMessage;
+    }
+
+    public LiveData<String> getInfoMessage() {
+        return infoMessage;
+    }
+
+    public void register(String username, String password, String rePassword) {
+        autoDispose(userRepository.register(username, password, rePassword)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    if (result != null && result.isSuccess()) {
+                        infoMessage.setValue(BaseApplication.getAppContext().getString(R.string.login_register_success));
+                        login(username, password);
+                    } else {
+                        errorMessage.setValue(BaseApplication.getAppContext().getString(R.string.login_error));
+                    }
+                }, throwable -> errorMessage.setValue(
+                        throwable != null && throwable.getMessage() != null
+                                ? throwable.getMessage()
+                                : BaseApplication.getAppContext().getString(R.string.login_error))));
     }
 }

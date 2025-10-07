@@ -76,6 +76,21 @@ public class ContentRepositoryImpl implements ContentRepository {
     }
 
     @Override
+    public Observable<DomainResult<List<ArticleListBean.Data>>> popularWenda() {
+        return map(api().popularWenda());
+    }
+
+    @Override
+    public Observable<DomainResult<List<PopularColumnBean>>> popularColumns() {
+        return map(api().popularColumns());
+    }
+
+    @Override
+    public Observable<DomainResult<List<CategoryNodeBean>>> popularRoutes() {
+        return map(api().popularRoutes());
+    }
+
+    @Override
     public Observable<DomainResult<ArticleListBean>> questionAnswers(int page) {
         return map(api().questionAnswers(page));
     }

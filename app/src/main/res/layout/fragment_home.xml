@@ -22,44 +22,20 @@
             app:contentScrim="@android:color/transparent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways">
 
-            <!-- 搜索栏（M3 Docked Search Bar） -->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/topSearchLayout"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="?attr/colorSurface"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp">
+                android:layout_height="match_parent">
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_launcher_round"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/CoreUiCircleImageView"/>
-
-                <com.google.android.material.search.SearchBar
-                    android:id="@+id/topSearch"
-                    style="@style/Widget.Material3.SearchBar"
-                    android:layout_width="0dp"
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    style="@style/Widget.Material3.Toolbar"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="?attr/colorSurfaceContainerHigh"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:hint="@string/home_search_placeholder"
-                    android:imeOptions="actionSearch"
-                    android:importantForAutofill="no"
-                    android:inputType="text"
-                    app:layout_constraintBottom_toBottomOf="@id/avatar"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/avatar"
-                    app:layout_constraintTop_toTopOf="@id/avatar"
-                    app:navigationIcon="@drawable/search_24px"
-                    app:navigationIconTint="?attr/colorOnSurfaceVariant"/>
+                    android:background="?attr/colorSurface"
+                    android:paddingHorizontal="16dp"
+                    app:menu="@menu/menu_home_toolbar"
+                    app:title="@string/home_title"
+                    app:titleCentered="false"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

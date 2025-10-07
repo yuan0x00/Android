@@ -15,8 +15,8 @@ import com.rapid.android.core.common.text.StringUtils;
 import com.rapid.android.core.common.utils.ResUtils;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.ui.components.popup.BasePopupWindow;
-import com.rapid.android.core.webview.WebViewActivity;
 import com.rapid.android.databinding.ItemFeedBinding;
+import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +114,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
                 return false;
             });
 
-            binding.getRoot().setOnClickListener(v -> WebViewActivity.start(binding.getRoot().getContext(), feedItem.getLink(), feedItem.getTitle()));
+            binding.getRoot().setOnClickListener(v -> ArticleWebViewActivity.start(binding.getRoot().getContext(), feedItem));
 
             binding.ivFavorite.setOnClickListener(v -> {
                 Drawable drawable = ResUtils.getDrawable(R.drawable.favorite_fill_24px);

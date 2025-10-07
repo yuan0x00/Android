@@ -31,6 +31,12 @@ public interface ContentRepository {
 
     Observable<DomainResult<List<FriendLinkBean>>> friendLinks();
 
+    Observable<DomainResult<List<ArticleListBean.Data>>> popularWenda();
+
+    Observable<DomainResult<List<PopularColumnBean>>> popularColumns();
+
+    Observable<DomainResult<List<CategoryNodeBean>>> popularRoutes();
+
     Observable<DomainResult<ArticleListBean>> questionAnswers(int page);
 
     Observable<DomainResult<ArticleListBean>> userShares(int userId, int page);

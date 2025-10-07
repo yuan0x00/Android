@@ -11,14 +11,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.ArticleListBean;
-import com.rapid.android.core.webview.WebViewActivity;
+import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder> {
 
+    private final Callback callback;
+
     private final List<ArticleListBean.Data> items = new ArrayList<>();
+    FavoriteAdapter(Callback callback) {
+        this.callback = callback;
+    }
+
+    @NonNull
+    @Override
+    public FavoriteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_favorite_article, parent, false);
+        return new FavoriteViewHolder(view, callback);
+    }
 
     void submitNewList(List<ArticleListBean.Data> data) {
         items.clear();
@@ -37,12 +50,8 @@ final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favorit
         notifyItemRangeInserted(start, more.size());
     }
 
-    @NonNull
-    @Override
-    public FavoriteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_favorite_article, parent, false);
-        return new FavoriteViewHolder(view);
+    interface Callback {
+        void onEdit(ArticleListBean.Data data);
     }
 
     @Override
@@ -60,13 +69,17 @@ final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favorit
         private final TextView desc;
         private final TextView author;
         private final TextView meta;
+        private final com.google.android.material.button.MaterialButton editButton;
+        private final Callback callback;
 
-        FavoriteViewHolder(@NonNull View itemView) {
+        FavoriteViewHolder(@NonNull View itemView, Callback callback) {
             super(itemView);
             title = itemView.findViewById(R.id.tvTitle);
             desc = itemView.findViewById(R.id.tvDesc);
             author = itemView.findViewById(R.id.tvAuthor);
             meta = itemView.findViewById(R.id.tvMeta);
+            editButton = itemView.findViewById(R.id.btnEdit);
+            this.callback = callback;
         }
 
         void bind(ArticleListBean.Data data) {
@@ -105,9 +118,16 @@ final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favorit
 
             itemView.setOnClickListener(v -> {
                 if (!TextUtils.isEmpty(data.getLink())) {
-                    WebViewActivity.start(v.getContext(), data.getLink(), data.getTitle());
+                    ArticleWebViewActivity.start(v.getContext(), data);
                 }
             });
+
+            if (callback != null) {
+                editButton.setVisibility(View.VISIBLE);
+                editButton.setOnClickListener(v -> callback.onEdit(data));
+            } else {
+                editButton.setVisibility(View.GONE);
+            }
         }
     }
 }

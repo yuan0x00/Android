@@ -18,6 +18,7 @@ import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.main.home.BannerAdapter;
 import com.rapid.android.ui.feature.main.home.FeedAdapter;
+import com.rapid.android.ui.feature.main.home.HomeHighlightAdapter;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 public class RecommendFragment extends BaseFragment<RecommendViewModel, FragmentRecommandBinding> {
 
     private BannerAdapter bannerAdapter;
+    private HomeHighlightAdapter highlightAdapter;
     private FeedAdapter feedAdapter;
     private LinearLayoutManager layoutManager;
     private ContentStateController stateController;
@@ -60,6 +62,8 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
             boolean empty = items == null || items.isEmpty();
             stateController.setEmpty(empty);
         });
+        viewModel.getTopArticles().observe(this, articles -> updateHighlights());
+        viewModel.getFriendLinks().observe(this, links -> updateHighlights());
         viewModel.getLoading().observe(this, isLoading -> {
             stateController.setLoading(Boolean.TRUE.equals(isLoading));
         });
@@ -78,9 +82,10 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
         ArticleListBean feeds = new ArticleListBean();
 
         bannerAdapter = new BannerAdapter(new ArrayList<>());
+        highlightAdapter = new HomeHighlightAdapter();
         feedAdapter = new FeedAdapter(feeds);
 
-        ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, feedAdapter);
+        ConcatAdapter concatAdapter = new ConcatAdapter(highlightAdapter, bannerAdapter, feedAdapter);
         binding.recyclerView.setAdapter(concatAdapter);
 
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.refreshAll());
@@ -107,6 +112,16 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
                 }
             }
         });
+    }
+
+    private void updateHighlights() {
+        if (highlightAdapter == null) {
+            return;
+        }
+        highlightAdapter.setData(new HomeHighlightAdapter.HighlightData(
+                viewModel.getTopArticles().getValue(),
+                viewModel.getFriendLinks().getValue()
+        ));
     }
 
     @Override

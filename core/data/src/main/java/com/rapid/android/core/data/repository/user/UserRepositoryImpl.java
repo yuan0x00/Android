@@ -10,6 +10,8 @@ import com.rapid.android.core.domain.result.DomainError;
 import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.core.network.base.BaseResponse;
 
+import java.util.List;
+
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
@@ -20,6 +22,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<DomainResult<LoginBean>> login(String username, String password) {
         return map(NetApis.Login().login(username, password));
+    }
+
+    @Override
+    public Observable<DomainResult<RegisterBean>> register(String username, String password, String rePassword) {
+        return map(NetApis.Login().register(username, password, rePassword));
     }
 
     @Override
@@ -136,6 +143,36 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Observable<DomainResult<ArticleListBean.Data>> updateCollectedArticle(int articleId, String title, String link, String author) {
         return map(NetApis.User().updateCollectedArticle(articleId, title, link, author));
+    }
+
+    @Override
+    public Observable<DomainResult<List<UserToolBean>>> userTools() {
+        return map(NetApis.User().userTools());
+    }
+
+    @Override
+    public Observable<DomainResult<UserToolBean>> addUserTool(String name, String link) {
+        return map(NetApis.User().addUserTool(name, link));
+    }
+
+    @Override
+    public Observable<DomainResult<UserToolBean>> updateUserTool(int id, String name, String link) {
+        return map(NetApis.User().updateUserTool(id, name, link));
+    }
+
+    @Override
+    public Observable<DomainResult<String>> deleteUserTool(int id) {
+        return map(NetApis.User().deleteUserTool(id));
+    }
+
+    @Override
+    public Observable<DomainResult<String>> collectArticle(int id) {
+        return map(NetApis.User().collect(id));
+    }
+
+    @Override
+    public Observable<DomainResult<String>> unCollectArticle(int id) {
+        return map(NetApis.User().unCollect(id));
     }
 
     private <T> Observable<DomainResult<T>> map(Observable<BaseResponse<T>> source) {

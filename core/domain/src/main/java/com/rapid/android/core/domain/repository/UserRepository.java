@@ -56,4 +56,6 @@ public interface UserRepository {
     Observable<DomainResult<String>> collectArticle(int id);
 
     Observable<DomainResult<String>> unCollectArticle(int id);
+
+    Observable<DomainResult<String>> unCollectFavorite(int collectId, int originId);
 }

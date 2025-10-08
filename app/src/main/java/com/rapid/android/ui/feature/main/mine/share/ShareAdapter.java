@@ -4,14 +4,15 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.R;
+import com.rapid.android.core.common.text.StringUtils;
 import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.databinding.ItemFeedBinding;
 import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.ArrayList;
@@ -32,9 +33,8 @@ final class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.ShareViewHold
     @NonNull
     @Override
     public ShareViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_favorite_article, parent, false);
-        return new ShareViewHolder(view);
+        ItemFeedBinding binding = ItemFeedBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new ShareViewHolder(binding);
     }
 
     @Override
@@ -48,29 +48,17 @@ final class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.ShareViewHold
     }
 
     static class ShareViewHolder extends RecyclerView.ViewHolder {
-        private final TextView title;
-        private final TextView desc;
-        private final TextView author;
-        private final TextView meta;
+        private final ItemFeedBinding binding;
 
-        ShareViewHolder(@NonNull View itemView) {
-            super(itemView);
-            title = itemView.findViewById(R.id.tvTitle);
-            desc = itemView.findViewById(R.id.tvDesc);
-            author = itemView.findViewById(R.id.tvAuthor);
-            meta = itemView.findViewById(R.id.tvMeta);
+        ShareViewHolder(@NonNull ItemFeedBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
         void bind(ArticleListBean.Data data) {
-            title.setText(data.getTitle());
-
-            if (!TextUtils.isEmpty(data.getDesc())) {
-                desc.setVisibility(View.VISIBLE);
-                desc.setText(data.getDesc());
-            } else {
-                desc.setVisibility(View.GONE);
-                desc.setText("");
-            }
+            binding.tvTopTag.setVisibility(View.GONE);
+            binding.ivFavorite.setVisibility(View.GONE);
+            binding.tvTitle.setText(data.getTitle());
 
             String authorName = !TextUtils.isEmpty(data.getShareUser())
                     ? data.getShareUser()
@@ -78,26 +66,22 @@ final class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.ShareViewHold
             if (TextUtils.isEmpty(authorName)) {
                 authorName = itemView.getContext().getString(R.string.mine_placeholder_dash);
             }
-            author.setText(authorName);
+            binding.tvAuthor.setText(authorName);
 
-            StringBuilder metaBuilder = new StringBuilder();
-            if (!TextUtils.isEmpty(data.getSuperChapterName())) {
-                metaBuilder.append(data.getSuperChapterName());
-            }
-            if (!TextUtils.isEmpty(data.getNiceShareDate())) {
-                if (metaBuilder.length() > 0) {
-                    metaBuilder.append(" · ");
-                }
-                metaBuilder.append(data.getNiceShareDate());
-            } else if (!TextUtils.isEmpty(data.getNiceDate())) {
-                if (metaBuilder.length() > 0) {
-                    metaBuilder.append(" · ");
-                }
-                metaBuilder.append(data.getNiceDate());
-            }
-            meta.setText(metaBuilder.toString());
+            String time = !StringUtils.isEmpty(data.getNiceShareDate()) ? data.getNiceShareDate() : data.getNiceDate();
+            binding.tvTime.setText(!StringUtils.isEmpty(time) ? " · " + time : "");
 
-            itemView.setOnClickListener(v -> {
+            if (!StringUtils.isEmpty(data.getSuperChapterName())) {
+                binding.tvClass.setText(data.getSuperChapterName());
+                binding.tvClass.setVisibility(View.VISIBLE);
+            } else if (!StringUtils.isEmpty(data.getChapterName())) {
+                binding.tvClass.setText(data.getChapterName());
+                binding.tvClass.setVisibility(View.VISIBLE);
+            } else {
+                binding.tvClass.setVisibility(View.GONE);
+            }
+
+            binding.getRoot().setOnClickListener(v -> {
                 if (!TextUtils.isEmpty(data.getLink())) {
                     ArticleWebViewActivity.start(v.getContext(), data);
                 }

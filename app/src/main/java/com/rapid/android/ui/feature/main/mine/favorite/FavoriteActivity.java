@@ -8,18 +8,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.rapid.android.R;
-import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.ui.presentation.BaseActivity;
-import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ActivityFavoriteBinding;
-import com.rapid.android.databinding.DialogFavoriteEditBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
 
-public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFavoriteBinding>
-        implements FavoriteAdapter.Callback {
+public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFavoriteBinding> {
 
     private FavoriteAdapter adapter;
     private ContentStateController stateController;
@@ -47,7 +42,7 @@ public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFa
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        adapter = new FavoriteAdapter(this);
+        adapter = new FavoriteAdapter(provideDialogController(), data -> viewModel.refresh());
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
@@ -93,7 +88,6 @@ public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFa
 
         UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
         UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
-        viewModel.getToastMessage().observe(this, msg -> showShortToast(msg));
     }
 
     @Override
@@ -110,35 +104,4 @@ public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFa
         super.onDestroy();
     }
 
-    @Override
-    public void onEdit(ArticleListBean.Data data) {
-        showEditDialog(data);
-    }
-
-    private void showEditDialog(ArticleListBean.Data data) {
-        DialogFavoriteEditBinding dialogBinding = DialogFavoriteEditBinding.inflate(getLayoutInflater());
-        dialogBinding.inputTitle.setText(data.getTitle());
-        dialogBinding.inputLink.setText(data.getLink());
-        String author = data.getAuthor();
-        if (author == null || author.isEmpty()) {
-            author = data.getShareUser();
-        }
-        dialogBinding.inputAuthor.setText(author);
-
-        new MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.favorite_edit)
-                .setView(dialogBinding.getRoot())
-                .setPositiveButton(R.string.user_tools_save, (dialog, which) -> {
-                    String title = dialogBinding.inputTitle.getText() != null ? dialogBinding.inputTitle.getText().toString() : "";
-                    String link = dialogBinding.inputLink.getText() != null ? dialogBinding.inputLink.getText().toString() : "";
-                    String authorValue = dialogBinding.inputAuthor.getText() != null ? dialogBinding.inputAuthor.getText().toString() : "";
-                    viewModel.updateFavorite(data.getId(), title, link, authorValue);
-                })
-                .setNegativeButton(R.string.user_tools_cancel, null)
-                .show();
-    }
-
-    private void showShortToast(String message) {
-        ToastUtils.showShortToast(getDialogController(), message);
-    }
 }

@@ -175,6 +175,11 @@ public class UserRepositoryImpl implements UserRepository {
         return map(NetApis.User().unCollect(id));
     }
 
+    @Override
+    public Observable<DomainResult<String>> unCollectFavorite(int collectId, int originId) {
+        return map(NetApis.User().unCollectInMine(collectId, originId));
+    }
+
     private <T> Observable<DomainResult<T>> map(Observable<BaseResponse<T>> source) {
         return source
             .map(DomainResultMapper::map)

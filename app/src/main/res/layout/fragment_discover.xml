@@ -28,10 +28,8 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
             app:tabGravity="center"
-            app:tabIndicator="@drawable/tab_layout_indicator"
             app:tabIndicatorAnimationMode="elastic"
-            app:tabMode="scrollable"
-            app:tabRippleColor="@null" />
+            app:tabMode="scrollable" />
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"

@@ -14,44 +14,26 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorSurface">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolbar"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.Material3.Toolbar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
-            app:contentScrim="@android:color/transparent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar"
-                    style="@style/Widget.Material3.Toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/colorSurface"
-                    android:paddingHorizontal="16dp"
-                    app:menu="@menu/menu_home_toolbar"
-                    app:title="@string/home_title"
-                    app:titleCentered="false"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+            android:paddingHorizontal="16dp"
+            app:menu="@menu/menu_home_toolbar"
+            app:title="@string/home_title"
+            app:titleCentered="false"/>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/topTab"
             style="@style/Widget.Material3.TabLayout.Secondary"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
             app:tabGravity="center"
-            app:tabIndicator="@drawable/tab_layout_indicator"
             app:tabIndicatorAnimationMode="elastic"
-            app:tabMode="fixed"
-            app:tabRippleColor="@null"
+            app:tabMode="scrollable"
             />
 
         <com.google.android.material.divider.MaterialDivider

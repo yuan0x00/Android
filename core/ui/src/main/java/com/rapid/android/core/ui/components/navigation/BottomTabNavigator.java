@@ -1,14 +1,21 @@
 package com.rapid.android.core.ui.components.navigation;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +25,18 @@ import java.util.List;
  */
 public class BottomTabNavigator {
 
-    private final TabLayout tabLayout;
+    private final NavigationBarView navigationBarView;
     private final FrameLayout container;
     private final FragmentActivity activity;
     private final List<TabItem> tabs = new ArrayList<>();
     private final FragmentManager fm;
     private int currentPosition = -1;
     private OnTabSelectInterceptor onTabSelectInterceptor;
+    private boolean isUpdatingSelection = false;
 
-    public BottomTabNavigator(FragmentActivity activity, TabLayout tabLayout, FrameLayout container) {
+    public BottomTabNavigator(FragmentActivity activity, NavigationBarView navigationBarView, FrameLayout container) {
         this.activity = activity;
-        this.tabLayout = tabLayout;
+        this.navigationBarView = navigationBarView;
         this.container = container;
         this.fm = activity.getSupportFragmentManager();
     }
@@ -46,50 +54,48 @@ public class BottomTabNavigator {
     public BottomTabNavigator build() {
         if (tabs.isEmpty()) throw new IllegalStateException("至少一个 Tab");
 
-        // 添加 Tab
-        tabLayout.removeAllTabs();
+        // 添加菜单项
+        Menu menu = navigationBarView.getMenu();
+        menu.clear();
         for (int i = 0; i < tabs.size(); i++) {
             TabItem item = tabs.get(i);
-            TabLayout.Tab tab = tabLayout.newTab().setText(item.title).setIcon(item.iconNormal);
-            tabLayout.addTab(tab);
-            updateTabIcon(tab, i, false);
+            MenuItem menuItem = menu.add(Menu.NONE, i, i, item.title);
+            menuItem.setIcon(createStateListDrawable(activity, item.iconNormal, item.iconSelected));
         }
 
         // 初始选中第一页
         setCurrentItem(0);
 
-        // Tab 点击监听
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int pos = tab.getPosition();
-                boolean allow = onTabSelectInterceptor == null || onTabSelectInterceptor.shouldAllowTabSelection(pos);
-                if (allow) {
-                    setCurrentItem(pos);
-                } else {
-                    if (currentPosition != -1) {
-                        TabLayout.Tab currentTab = tabLayout.getTabAt(currentPosition);
-                        if (currentTab != null) currentTab.select();
-                        updateTabIcon(tab, pos, false);
-                    }
-                }
+        navigationBarView.setOnItemSelectedListener(item -> {
+            if (isUpdatingSelection) {
+                return true;
             }
+            int position = item.getItemId();
+            boolean allow = onTabSelectInterceptor == null || onTabSelectInterceptor.shouldAllowTabSelection(position);
+            if (allow) {
+                setCurrentItem(position);
+                return true;
+            }
+            restoreCurrentSelection();
+            return false;
+        });
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
+        navigationBarView.setOnItemReselectedListener(item -> {
+            // no-op for now
         });
 
         return this;
     }
 
-    private void updateTabIcon(TabLayout.Tab tab, int position, boolean isSelected) {
-        @DrawableRes int icon = isSelected ? tabs.get(position).iconSelected : tabs.get(position).iconNormal;
-        tab.setIcon(icon);
+    private Drawable createStateListDrawable(@NonNull Context context,
+                                             @DrawableRes int iconNormal,
+                                             @DrawableRes int iconSelected) {
+        StateListDrawable drawable = new StateListDrawable();
+        Drawable selected = ContextCompat.getDrawable(context, iconSelected);
+        Drawable normal = ContextCompat.getDrawable(context, iconNormal);
+        drawable.addState(new int[]{android.R.attr.state_checked}, selected);
+        drawable.addState(new int[]{}, normal);
+        return drawable;
     }
 
     public int getCurrentPosition() {
@@ -98,6 +104,7 @@ public class BottomTabNavigator {
 
     private void setCurrentItem(int position) {
         if (position == currentPosition) return;
+        isUpdatingSelection = true;
 
         FragmentTransaction ft = fm.beginTransaction();
 
@@ -127,41 +134,46 @@ public class BottomTabNavigator {
 
             currentPosition = position;
 
-            // 更新 Tab 图标
-            for (int i = 0; i < tabLayout.getTabCount(); i++) {
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
-                if (tab != null) {
-                    updateTabIcon(tab, i, i == position);
-                }
+            if (navigationBarView.getMenu().size() > position) {
+                navigationBarView.getMenu().getItem(position).setChecked(true);
             }
 
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            isUpdatingSelection = false;
         }
     }
 
     public void selectTab(int position) {
         if (position >= 0 && position < tabs.size()) {
-            TabLayout.Tab tab = tabLayout.getTabAt(position);
-            if (tab != null) {
-                tab.select();
-            }
+            setCurrentItem(position);
         }
     }
 
     public void disableTab(int position) {
-        TabLayout.Tab tab = tabLayout.getTabAt(position);
-        if (tab != null) {
-            tab.view.setEnabled(false);
-            tab.view.setAlpha(0.6f);
+        if (position >= 0 && position < navigationBarView.getMenu().size()) {
+            MenuItem item = navigationBarView.getMenu().getItem(position);
+            if (item != null) {
+                item.setEnabled(false);
+            }
         }
     }
 
     public void enableTab(int position) {
-        TabLayout.Tab tab = tabLayout.getTabAt(position);
-        if (tab != null) {
-            tab.view.setEnabled(true);
-            tab.view.setAlpha(1.0f);
+        if (position >= 0 && position < navigationBarView.getMenu().size()) {
+            MenuItem item = navigationBarView.getMenu().getItem(position);
+            if (item != null) {
+                item.setEnabled(true);
+            }
+        }
+    }
+
+    private void restoreCurrentSelection() {
+        if (currentPosition >= 0 && currentPosition < navigationBarView.getMenu().size()) {
+            isUpdatingSelection = true;
+            navigationBarView.getMenu().getItem(currentPosition).setChecked(true);
+            isUpdatingSelection = false;
         }
     }
 

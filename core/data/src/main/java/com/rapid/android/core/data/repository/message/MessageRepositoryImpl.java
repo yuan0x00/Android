@@ -33,13 +33,6 @@ public class MessageRepositoryImpl implements MessageRepository {
                 .onErrorReturn(DomainResultMapper::mapError);
     }
 
-    @Override
-    public Observable<DomainResult<PageBean<MessageBean>>> pushedMessages(int page, Integer pageSize) {
-        return api().pushedMessages(page, pageSize)
-                .map(DomainResultMapper::map)
-                .onErrorReturn(DomainResultMapper::mapError);
-    }
-
     private MessageApi api() {
         return NetApis.Message();
     }

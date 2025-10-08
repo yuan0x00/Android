@@ -45,7 +45,7 @@ public class DiscoverHotFragment extends BaseFragment<DiscoverHotViewModel, Frag
         viewModel.getPopularColumns().observe(this, this::renderColumns);
         viewModel.getPopularRoutes().observe(this, this::renderRoutes);
         viewModel.getErrorMessage().observe(this, msg -> binding.swipeRefresh.setRefreshing(false));
-        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
     }
 
     private void renderWenda(List<ArticleListBean.Data> list) {

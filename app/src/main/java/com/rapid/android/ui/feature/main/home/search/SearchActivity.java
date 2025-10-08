@@ -128,8 +128,8 @@ public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearch
         viewModel.getErrorMessage().observe(this, msg -> stateController.stopRefreshing());
         viewModel.getPagingError().observe(this, msg -> stateController.stopRefreshing());
 
-        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, getDialogController(), viewModel.getPagingError());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
     }
 
     @Override

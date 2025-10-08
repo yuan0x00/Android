@@ -11,10 +11,11 @@ import com.rapid.android.core.common.utils.WindowInsetsUtils;
 import com.rapid.android.core.network.state.NetworkStateManager;
 import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.core.ui.components.dialog.DialogHost;
+import com.rapid.android.core.ui.components.dialog.ScopedDialogHost;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBinding> extends AppCompatActivity implements DialogHost {
+public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBinding> extends AppCompatActivity implements DialogHost, ScopedDialogHost {
 
     protected VM viewModel;
     protected VB binding;
@@ -80,5 +81,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
             throw new IllegalStateException("DialogController is not available after destruction.");
         }
         return dialogController;
+    }
+
+    @Override
+    public @NotNull DialogController provideDialogController() {
+        return getDialogController();
     }
 }

@@ -14,5 +14,4 @@ public interface MessageRepository {
 
     Observable<DomainResult<PageBean<MessageBean>>> readMessages(int page, Integer pageSize);
 
-    Observable<DomainResult<PageBean<MessageBean>>> pushedMessages(int page, Integer pageSize);
 }

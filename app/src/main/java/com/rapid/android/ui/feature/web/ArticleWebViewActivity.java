@@ -18,6 +18,7 @@ import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.core.ui.components.dialog.DialogHost;
+import com.rapid.android.core.ui.components.dialog.ScopedDialogHost;
 import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.core.webview.WebView;
 import com.rapid.android.core.webview.WebViewFragment;
@@ -29,7 +30,7 @@ import com.rapid.android.ui.feature.login.LoginActivity;
 
 import org.jetbrains.annotations.NotNull;
 
-public class ArticleWebViewActivity extends AppCompatActivity implements DialogHost {
+public class ArticleWebViewActivity extends AppCompatActivity implements DialogHost, ScopedDialogHost {
 
     private static final String EXTRA_URL = "extra_url";
     private static final String EXTRA_TITLE = "extra_title";
@@ -246,6 +247,11 @@ public class ArticleWebViewActivity extends AppCompatActivity implements DialogH
             throw new IllegalStateException("DialogController is not available after destruction.");
         }
         return dialogController;
+    }
+
+    @Override
+    public @NotNull DialogController provideDialogController() {
+        return getDialogController();
     }
 
     private void showShortToast(String message) {

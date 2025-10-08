@@ -43,8 +43,8 @@ public class LastProjectFragment extends BaseFragment<LastProjectViewModel, Frag
 
     @Override
     protected void setupObservers() {
-        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, getDialogController(), viewModel.getPagingError());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
         viewModel.getProjectItems().observe(this, items -> {
             feedAdapter.submitList(items);
             boolean empty = items == null || items.isEmpty();

@@ -1,5 +1,7 @@
 package com.rapid.android.ui.feature.main.message;
 
+import android.os.SystemClock;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -31,6 +33,7 @@ class MessageListViewModel extends BaseViewModel {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final PagingController<MessageBean> pagingController =
             new PagingController<>(this, 1, this::fetchPage);
+    private final MutableLiveData<Long> unreadSyncSignal = new MutableLiveData<>();
 
     MessageListViewModel(MessageCategory category) {
         this.category = category;
@@ -56,6 +59,10 @@ class MessageListViewModel extends BaseViewModel {
         return errorMessage;
     }
 
+    MutableLiveData<Long> getUnreadSyncSignal() {
+        return unreadSyncSignal;
+    }
+
     void initialize() {
         if (!pagingController.isInitialized()) {
             pagingController.refresh();
@@ -72,17 +79,10 @@ class MessageListViewModel extends BaseViewModel {
 
     private Observable<DomainResult<PagingPayload<MessageBean>>> fetchPage(int page) {
         Observable<DomainResult<PageBean<MessageBean>>> source;
-        switch (category) {
-            case READ:
-                source = repository.readMessages(page, null);
-                break;
-            case PUSH:
-                source = repository.pushedMessages(page, null);
-                break;
-            case UNREAD:
-            default:
-                source = repository.unreadMessages(page, null);
-                break;
+        if (category == MessageCategory.READ) {
+            source = repository.readMessages(page, null);
+        } else {
+            source = repository.unreadMessages(page, null);
         }
 
         return source
@@ -97,6 +97,9 @@ class MessageListViewModel extends BaseViewModel {
                         }
                         int nextPage = pageBean.getCurPage() + 1;
                         boolean hasMore = !pageBean.isOver() && pageBean.getCurPage() < pageBean.getPageCount();
+                        if (category == MessageCategory.UNREAD && page == 1) {
+                            unreadSyncSignal.setValue(SystemClock.uptimeMillis());
+                        }
                         return DomainResult.success(new PagingPayload<>(items, nextPage, hasMore));
                     }
 

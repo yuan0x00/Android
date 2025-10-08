@@ -92,8 +92,8 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
 
     @Override
     protected void setupObservers() {
-        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, getDialogController(), viewModel.getPagingError());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
 
         viewModel.getPlazaItems().observe(this, items -> {
             feedAdapter.submitList(items);

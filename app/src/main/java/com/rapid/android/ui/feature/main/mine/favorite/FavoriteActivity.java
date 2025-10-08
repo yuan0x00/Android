@@ -91,8 +91,8 @@ public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFa
                 binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loadingMore)
                         ? android.view.View.VISIBLE : android.view.View.GONE));
 
-        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, getDialogController(), viewModel.getPagingError());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
         viewModel.getToastMessage().observe(this, msg -> showShortToast(msg));
     }
 

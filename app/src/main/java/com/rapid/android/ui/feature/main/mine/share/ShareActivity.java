@@ -86,8 +86,8 @@ public class ShareActivity extends BaseActivity<ShareViewModel, ActivityShareBin
                 binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loadingMore)
                         ? android.view.View.VISIBLE : android.view.View.GONE));
 
-        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, getDialogController(), viewModel.getPagingError());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
     }
 
     @Override

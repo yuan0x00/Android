@@ -63,7 +63,7 @@ public class MessageFragment extends BaseFragment<MessageViewModel, FragmentMess
         viewModel.getLoading().observe(this, loading ->
                 binding.unreadCard.setAlpha(Boolean.TRUE.equals(loading) ? 0.7f : 1f));
 
-        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
     }
 
     @Override
@@ -96,5 +96,10 @@ public class MessageFragment extends BaseFragment<MessageViewModel, FragmentMess
         for (MessageListFragment fragment : fragmentCache.values()) {
             fragment.refreshList();
         }
+    }
+
+    @Override
+    public void onUnreadMessagesConsumed() {
+        viewModel.refreshUnreadCount();
     }
 }

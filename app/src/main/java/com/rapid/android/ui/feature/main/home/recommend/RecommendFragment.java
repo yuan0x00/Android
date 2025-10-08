@@ -50,8 +50,8 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
 
     @Override
     protected void setupObservers() {
-        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, getDialogController(), viewModel.getPagingError());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
         viewModel.getBannerList().observe(this, bannerList -> {
             if (bannerList != null) {
                 bannerAdapter.setData(bannerList);

@@ -130,7 +130,6 @@
     <string name="message_empty_list">暂无消息</string>
     <string name="message_tab_unread">未读</string>
     <string name="message_tab_read">已读</string>
-    <string name="message_tab_push">推送</string>
     <string name="message_refresh">刷新</string>
     <string name="message_unread_count_placeholder">未读消息</string>
     <string name="message_unread_count_value">未读消息：%1$d 条</string>

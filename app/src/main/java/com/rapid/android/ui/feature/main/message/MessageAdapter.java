@@ -61,10 +61,7 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
             binding.messageTitle.setText(TextUtils.isEmpty(bean.getTitle()) ? itemView.getContext().getString(R.string.message_title) : bean.getTitle());
             binding.messageContent.setText(TextUtils.isEmpty(bean.getMessage()) ? "" : bean.getMessage());
 
-            String time = !TextUtils.isEmpty(bean.getNiceDate()) ? bean.getNiceDate() : bean.getDate();
-            if (time == null) {
-                time = "";
-            }
+            String time = bean.getDisplayTime();
             String fromUser = !TextUtils.isEmpty(bean.getFromUserNick()) ? bean.getFromUserNick() : bean.getFromUser();
             if (fromUser == null) {
                 fromUser = "";
@@ -79,11 +76,11 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
             }
             binding.messageMeta.setText(meta);
 
-            boolean isRead = bean.isReadState();
+            boolean isRead = bean.isRead();
             binding.getRoot().setAlpha(isRead ? 0.7f : 1f);
 
             View root = binding.getRoot();
-            String link = bean.getLink();
+            String link = bean.getEffectiveLink();
             if (!TextUtils.isEmpty(link)) {
                 root.setOnClickListener(v -> ArticleWebViewActivity.start(v.getContext(), link, bean.getTitle()));
             } else {

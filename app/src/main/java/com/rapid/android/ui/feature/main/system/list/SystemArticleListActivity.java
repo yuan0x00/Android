@@ -97,8 +97,8 @@ public class SystemArticleListActivity extends BaseActivity<SystemArticleListVie
                 binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loading)
                         ? android.view.View.VISIBLE : android.view.View.GONE));
 
-        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, getDialogController(), viewModel.getPagingError());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
     }
 
     @Override

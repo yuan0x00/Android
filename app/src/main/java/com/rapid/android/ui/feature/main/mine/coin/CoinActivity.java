@@ -167,10 +167,10 @@ public class CoinActivity extends BaseActivity<CoinViewModel, ActivityCoinBindin
             }
         });
 
-        UiFeedback.observeError(this, getDialogController(), viewModel.getRecordError());
-        UiFeedback.observeError(this, getDialogController(), viewModel.getRecordPagingError());
-        UiFeedback.observeError(this, getDialogController(), viewModel.getRankError());
-        UiFeedback.observeError(this, getDialogController(), viewModel.getRankPagingError());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getRecordError());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getRecordPagingError());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getRankError());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getRankPagingError());
     }
 
     @Override

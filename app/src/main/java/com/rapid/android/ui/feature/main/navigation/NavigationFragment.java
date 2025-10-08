@@ -83,7 +83,7 @@ public class NavigationFragment extends BaseFragment<NavigationViewModel, Fragme
             stateController.setLoading(Boolean.TRUE.equals(loading));
         });
 
-        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
     }
 
     private void updateTabs() {

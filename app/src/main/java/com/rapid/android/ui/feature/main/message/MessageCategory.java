@@ -5,8 +5,7 @@ import com.rapid.android.R;
 enum MessageCategory {
 
     UNREAD(0, R.string.message_tab_unread),
-    READ(1, R.string.message_tab_read),
-    PUSH(2, R.string.message_tab_push);
+    READ(1, R.string.message_tab_read);
 
     private final int position;
     private final int titleRes;

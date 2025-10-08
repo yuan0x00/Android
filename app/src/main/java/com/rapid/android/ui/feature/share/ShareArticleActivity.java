@@ -81,7 +81,7 @@ public class ShareArticleActivity extends BaseActivity<ShareArticleViewModel, Ac
                 finish();
             }
         });
-        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
     }
 
     @Override

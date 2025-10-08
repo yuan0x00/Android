@@ -26,9 +26,4 @@ public interface MessageApi {
             @Query("page_size") Integer pageSize
     );
 
-    @GET("/message/lg/push/list/{page}/json")
-    Observable<BaseResponse<PageBean<MessageBean>>> pushedMessages(
-            @Path("page") int page,
-            @Query("page_size") Integer pageSize
-    );
 }

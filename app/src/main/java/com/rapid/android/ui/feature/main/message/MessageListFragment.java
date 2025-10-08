@@ -108,7 +108,15 @@ public class MessageListFragment extends BaseFragment<MessageListViewModel, Frag
         viewModel.getMessages().observe(this, this::renderMessages);
         viewModel.getLoading().observe(this, loading -> stateController.setLoading(Boolean.TRUE.equals(loading)));
         viewModel.getErrorMessage().observe(this, msg -> stateController.stopRefreshing());
-        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
+
+        if (category == MessageCategory.UNREAD) {
+            viewModel.getUnreadSyncSignal().observe(this, signal -> {
+                if (signal != null && host != null) {
+                    host.onUnreadMessagesConsumed();
+                }
+            });
+        }
     }
 
     @Override
@@ -141,5 +149,7 @@ public class MessageListFragment extends BaseFragment<MessageListViewModel, Frag
         void onListFragmentAttached(MessageCategory category, MessageListFragment fragment);
 
         void onListFragmentDetached(MessageCategory category);
+
+        void onUnreadMessagesConsumed();
     }
 }

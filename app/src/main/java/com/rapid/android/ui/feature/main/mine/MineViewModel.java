@@ -10,21 +10,35 @@ import com.rapid.android.R;
 import com.rapid.android.core.common.app.BaseApplication;
 import com.rapid.android.core.data.repository.RepositoryProvider;
 import com.rapid.android.core.data.session.SessionManager;
+import com.rapid.android.core.datastore.DefaultDataStore;
+import com.rapid.android.core.datastore.IDataStore;
 import com.rapid.android.core.domain.model.*;
 import com.rapid.android.core.domain.repository.UserRepository;
 import com.rapid.android.core.ui.presentation.BaseViewModel;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class MineViewModel extends BaseViewModel {
+
+    private static final String KEY_LAST_SIGN_IN_DATE = "mine_last_sign_in_date";
 
     private final MutableLiveData<MineUiState> uiState = new MutableLiveData<>(MineUiState.guest());
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
     private final MutableLiveData<String> toastMessage = new MutableLiveData<>();
     private final UserRepository userRepository = RepositoryProvider.getUserRepository();
     private final SessionManager sessionManager = SessionManager.getInstance();
+    private final IDataStore dataStore;
     private boolean profileLoading = false;
     private boolean signedInToday = false;
     private boolean shareCountLoading = false;
     private boolean shareCountLoaded = false;
+
+    public MineViewModel() {
+        dataStore = new DefaultDataStore();
+        signedInToday = hasSignedInToday();
+    }
 
     public LiveData<MineUiState> getUiState() {
         return uiState;
@@ -49,13 +63,14 @@ public class MineViewModel extends BaseViewModel {
     public void resetToGuest() {
         stopLoading();
         loading.setValue(false);
-        signedInToday = false;
+        signedInToday = hasSignedInToday();
         shareCountLoaded = false;
         shareCountLoading = false;
         uiState.setValue(MineUiState.guest());
     }
 
     public void applySessionState(SessionManager.SessionState sessionState) {
+        signedInToday = hasSignedInToday();
         if (sessionState == null || !sessionState.isLoggedIn()) {
             resetToGuest();
             return;
@@ -117,7 +132,12 @@ public class MineViewModel extends BaseViewModel {
         if (loading.getValue() != null && loading.getValue()) {
             return; // 防止重复点击
         }
-        
+        if (signedInToday) {
+            toastMessage.setValue(BaseApplication.getAppContext()
+                    .getString(R.string.mine_checkin_already_done));
+            return;
+        }
+
         loading.setValue(true);
         
         autoDispose(
@@ -137,6 +157,7 @@ public class MineViewModel extends BaseViewModel {
                                         .getString(R.string.mine_checkin_success_no_points));
                             }
                             signedInToday = true;
+                            saveSignInDate();
                             MineUiState state = uiState.getValue();
                             if (state != null) {
                                 uiState.setValue(state.withDailyAction(
@@ -203,6 +224,23 @@ public class MineViewModel extends BaseViewModel {
         if (state != null) {
             uiState.setValue(state.withShareCount(display));
         }
+    }
+
+    private boolean hasSignedInToday() {
+        String lastDate = dataStore.getString(KEY_LAST_SIGN_IN_DATE, "");
+        if (TextUtils.isEmpty(lastDate)) {
+            return false;
+        }
+        return TextUtils.equals(lastDate, getTodayKey());
+    }
+
+    private void saveSignInDate() {
+        dataStore.putString(KEY_LAST_SIGN_IN_DATE, getTodayKey());
+    }
+
+    private String getTodayKey() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return formatter.format(new Date());
     }
 
     public static class MineUiState {

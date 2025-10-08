@@ -80,6 +80,7 @@
     <string name="mine_checkin_success_no_points">签到成功，但未获取到积分信息</string>
     <string name="mine_checkin_failed">签到失败</string>
     <string name="mine_checkin_failed_with_reason">签到失败: %1$s</string>
+    <string name="mine_checkin_already_done">今日已签到，无需重复操作</string>
     <string name="coin_title">积分中心</string>
     <string name="coin_balance_label">当前可用积分</string>
     <string name="coin_level_label">等级</string>

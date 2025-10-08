@@ -11,7 +11,6 @@ import com.rapid.android.R;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentDiscoverBinding;
 import com.rapid.android.ui.feature.main.home.search.SearchActivity;
-import com.rapid.android.ui.feature.tool.ToolCenterActivity;
 
 public class DiscoverFragment extends BaseFragment<DiscoverViewModel, FragmentDiscoverBinding> {
 
@@ -39,9 +38,6 @@ public class DiscoverFragment extends BaseFragment<DiscoverViewModel, FragmentDi
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_search) {
                 startActivity(new Intent(requireContext(), SearchActivity.class));
-                return true;
-            } else if (item.getItemId() == R.id.action_tools) {
-                startActivity(new Intent(requireContext(), ToolCenterActivity.class));
                 return true;
             }
             return false;

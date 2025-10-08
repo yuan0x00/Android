@@ -1,10 +1,7 @@
 package com.rapid.android.ui.feature.main.home;
 
 import android.content.Intent;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.ViewGroup;
+import android.view.*;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +23,9 @@ import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -39,6 +38,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
     private final CompositeDisposable disposables = new CompositeDisposable();
     @Nullable
     private final DialogController dialogController;
+    private final Set<Integer> topArticleIds = new HashSet<>();
 
 
     public FeedAdapter(@Nullable DialogController dialogController, ArticleListBean feeds) {
@@ -80,7 +80,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FeedViewHolder holder, int position) {
-        holder.bind(items.get(position));
+        ArticleListBean.Data item = items.get(position);
+        holder.bind(item, isTopArticle(item));
     }
 
     @Override
@@ -92,6 +93,18 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
     public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
         disposables.clear();
+    }
+
+    public void setTopArticleIds(Set<Integer> ids) {
+        topArticleIds.clear();
+        if (ids != null) {
+            topArticleIds.addAll(ids);
+        }
+        notifyDataSetChanged();
+    }
+
+    private boolean isTopArticle(@NonNull ArticleListBean.Data item) {
+        return topArticleIds.contains(item.getId()) || item.getType() == 1;
     }
 
     public static class FeedViewHolder extends RecyclerView.ViewHolder {
@@ -113,7 +126,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             this.dialogController = dialogController;
         }
 
-        public void bind(ArticleListBean.Data feedItem) {
+        public void bind(ArticleListBean.Data feedItem, boolean isTopArticle) {
             String author;
             if (StringUtils.isEmpty(feedItem.getAuthor())) {
                 author = feedItem.getShareUser();
@@ -124,6 +137,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             binding.tvTitle.setText(feedItem.getTitle());
             binding.tvTime.setText(" · " + feedItem.getNiceShareDate());
             binding.tvClass.setText(feedItem.getSuperChapterName());
+            renderTopTag(isTopArticle);
             binding.ivFavorite.setEnabled(true);
             collectRequestRunning = false;
             renderFavorite(feedItem.isCollect());
@@ -217,6 +231,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             binding.ivFavorite.setContentDescription(binding.getRoot().getContext().getString(
                     collected ? R.string.article_uncollect : R.string.article_collect
             ));
+        }
+
+        private void renderTopTag(boolean isTopArticle) {
+            binding.tvTopTag.setVisibility(isTopArticle ? View.VISIBLE : View.GONE);
         }
 
         private void showShortToast(String message) {

@@ -65,6 +65,14 @@ public interface ContentApi {
     @GET("/popular/route/json")
     Observable<BaseResponse<List<CategoryNodeBean>>> popularRoutes();
 
+    @GET("/chapter/547/sublist/json")
+    Observable<BaseResponse<List<CategoryNodeBean>>> tutorialChapters();
+
+    @GET("/article/list/{page}/json")
+    Observable<BaseResponse<ArticleListBean>> tutorialArticles(@Path("page") int page,
+                                                               @Query("cid") int tutorialId,
+                                                               @Query("order_type") int orderType);
+
     // 9. 积分
     @GET("/lg/coin/list/{page}/json")
     Observable<BaseResponse<PageBean<CoinRecordBean>>> coinRecords(@Path("page") int page);

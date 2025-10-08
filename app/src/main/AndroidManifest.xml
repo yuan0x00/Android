@@ -35,16 +35,16 @@
             android:name=".ui.feature.main.home.search.SearchActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.share.ShareArticleActivity"
+            android:name=".ui.feature.main.discover.share.ShareArticleActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.tool.ToolCenterActivity"
+            android:name=".ui.feature.main.discover.tutorial.list.TutorialArticleListActivity"
             android:exported="false"/>
         <activity
             android:name=".ui.feature.main.mine.tools.UserToolsActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.main.system.list.SystemArticleListActivity"
+            android:name=".ui.feature.main.discover.system.list.SystemArticleListActivity"
             android:exported="false"/>
         <activity
             android:name=".ui.feature.web.ArticleWebViewActivity"

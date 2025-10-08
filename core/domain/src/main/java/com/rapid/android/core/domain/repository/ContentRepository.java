@@ -37,6 +37,10 @@ public interface ContentRepository {
 
     Observable<DomainResult<List<CategoryNodeBean>>> popularRoutes();
 
+    Observable<DomainResult<List<CategoryNodeBean>>> tutorialChapters();
+
+    Observable<DomainResult<ArticleListBean>> tutorialArticles(int page, int tutorialId);
+
     Observable<DomainResult<ArticleListBean>> questionAnswers(int page);
 
     Observable<DomainResult<ArticleListBean>> userShares(int userId, int page);

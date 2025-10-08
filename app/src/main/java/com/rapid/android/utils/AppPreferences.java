@@ -10,6 +10,7 @@ public final class AppPreferences {
     private static final String PREF_NAME = "app_preferences";
     private static final String KEY_THEME_MODE = "pref_theme_mode";
     private static final String KEY_NOTIFICATIONS = "pref_notifications";
+    private static final String KEY_HOME_TOP_ENABLED = "pref_home_top_enabled";
 
     private AppPreferences() {
     }
@@ -33,5 +34,13 @@ public final class AppPreferences {
 
     public static void setNotificationsEnabled(boolean enabled) {
         getPrefs().edit().putBoolean(KEY_NOTIFICATIONS, enabled).apply();
+    }
+
+    public static boolean isHomeTopEnabled() {
+        return getPrefs().getBoolean(KEY_HOME_TOP_ENABLED, true);
+    }
+
+    public static void setHomeTopEnabled(boolean enabled) {
+        getPrefs().edit().putBoolean(KEY_HOME_TOP_ENABLED, enabled).apply();
     }
 }

@@ -91,6 +91,16 @@ public class ContentRepositoryImpl implements ContentRepository {
     }
 
     @Override
+    public Observable<DomainResult<List<CategoryNodeBean>>> tutorialChapters() {
+        return map(api().tutorialChapters());
+    }
+
+    @Override
+    public Observable<DomainResult<ArticleListBean>> tutorialArticles(int page, int tutorialId) {
+        return map(api().tutorialArticles(page, tutorialId, 1));
+    }
+
+    @Override
     public Observable<DomainResult<ArticleListBean>> questionAnswers(int page) {
         return map(api().questionAnswers(page));
     }

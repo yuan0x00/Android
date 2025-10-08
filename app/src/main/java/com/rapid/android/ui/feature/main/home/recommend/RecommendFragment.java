@@ -18,19 +18,22 @@ import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.main.home.BannerAdapter;
 import com.rapid.android.ui.feature.main.home.FeedAdapter;
-import com.rapid.android.ui.feature.main.home.HomeHighlightAdapter;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 
 public class RecommendFragment extends BaseFragment<RecommendViewModel, FragmentRecommandBinding> {
 
     private BannerAdapter bannerAdapter;
-    private HomeHighlightAdapter highlightAdapter;
     private FeedAdapter feedAdapter;
     private LinearLayoutManager layoutManager;
     private ContentStateController stateController;
     private BackToTopController backToTopController;
+    private final List<ArticleListBean.Data> topArticleItems = new ArrayList<>();
+    private List<ArticleListBean.Data> articleItems = new ArrayList<>();
 
     @Override
     protected RecommendViewModel createViewModel() {
@@ -57,13 +60,8 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
                 bannerAdapter.setData(bannerList);
             }
         });
-        viewModel.getArticleItems().observe(this, items -> {
-            feedAdapter.submitList(items);
-            boolean empty = items == null || items.isEmpty();
-            stateController.setEmpty(empty);
-        });
-        viewModel.getTopArticles().observe(this, articles -> updateHighlights());
-        viewModel.getFriendLinks().observe(this, links -> updateHighlights());
+        viewModel.getArticleItems().observe(this, this::updateArticleItems);
+        viewModel.getTopArticles().observe(this, this::updateTopArticles);
         viewModel.getLoading().observe(this, isLoading -> {
             stateController.setLoading(Boolean.TRUE.equals(isLoading));
         });
@@ -82,11 +80,12 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
         ArticleListBean feeds = new ArticleListBean();
 
         bannerAdapter = new BannerAdapter(new ArrayList<>());
-        highlightAdapter = new HomeHighlightAdapter();
         feedAdapter = new FeedAdapter(getDialogController(), feeds);
 
-        ConcatAdapter concatAdapter = new ConcatAdapter(highlightAdapter, bannerAdapter, feedAdapter);
+        ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, feedAdapter);
         binding.recyclerView.setAdapter(concatAdapter);
+
+        refreshArticleDisplay();
 
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.refreshAll());
 
@@ -114,14 +113,58 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
         });
     }
 
-    private void updateHighlights() {
-        if (highlightAdapter == null) {
+    private void updateArticleItems(List<ArticleListBean.Data> items) {
+        articleItems = items != null ? new ArrayList<>(items) : new ArrayList<>();
+        refreshArticleDisplay();
+    }
+
+    private void updateTopArticles(List<ArticleListBean.Data> articles) {
+        topArticleItems.clear();
+        if (articles != null) {
+            topArticleItems.addAll(articles);
+        }
+        refreshArticleDisplay();
+    }
+
+    private void refreshArticleDisplay() {
+        if (feedAdapter == null) {
             return;
         }
-        highlightAdapter.setData(new HomeHighlightAdapter.HighlightData(
-                viewModel.getTopArticles().getValue(),
-                viewModel.getFriendLinks().getValue()
-        ));
+        List<ArticleListBean.Data> combined = buildCombinedArticleList();
+        Set<Integer> topIds = new LinkedHashSet<>();
+        for (ArticleListBean.Data item : topArticleItems) {
+            if (item == null) {
+                continue;
+            }
+            topIds.add(item.getId());
+        }
+        feedAdapter.submitList(combined);
+        feedAdapter.setTopArticleIds(topIds);
+        if (stateController != null) {
+            stateController.setEmpty(combined.isEmpty());
+        }
+    }
+
+    private List<ArticleListBean.Data> buildCombinedArticleList() {
+        List<ArticleListBean.Data> combined = new ArrayList<>();
+        Set<Integer> seenIds = new LinkedHashSet<>();
+        for (ArticleListBean.Data item : topArticleItems) {
+            if (item == null) {
+                continue;
+            }
+            if (seenIds.add(item.getId())) {
+                combined.add(item);
+            }
+        }
+        for (ArticleListBean.Data item : articleItems) {
+            if (item == null) {
+                continue;
+            }
+            if (seenIds.add(item.getId())) {
+                combined.add(item);
+            }
+        }
+        return combined;
     }
 
     @Override

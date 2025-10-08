@@ -7,13 +7,13 @@ import com.rapid.android.core.common.app.BaseApplication;
 import com.rapid.android.core.data.repository.RepositoryProvider;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.model.BannerItemBean;
-import com.rapid.android.core.domain.model.FriendLinkBean;
 import com.rapid.android.core.domain.repository.HomeRepository;
 import com.rapid.android.core.domain.result.DomainError;
 import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.core.ui.presentation.BaseViewModel;
 import com.rapid.android.ui.common.paging.PagingController;
 import com.rapid.android.ui.common.paging.PagingPayload;
+import com.rapid.android.utils.AppPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,6 @@ public class RecommendViewModel extends BaseViewModel {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<BannerItemBean>> bannerList = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<ArticleListBean.Data>> topArticles = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<List<FriendLinkBean>> friendLinks = new MutableLiveData<>(new ArrayList<>());
     private final HomeRepository repository = RepositoryProvider.getHomeRepository();
 
     private final PagingController<ArticleListBean.Data> pagingController =
@@ -44,11 +43,6 @@ public class RecommendViewModel extends BaseViewModel {
     public MutableLiveData<List<ArticleListBean.Data>> getTopArticles() {
         return topArticles;
     }
-
-    public MutableLiveData<List<FriendLinkBean>> getFriendLinks() {
-        return friendLinks;
-    }
-
 
     public MutableLiveData<List<ArticleListBean.Data>> getArticleItems() {
         return pagingController.getItemsLiveData();
@@ -102,23 +96,18 @@ public class RecommendViewModel extends BaseViewModel {
     }
 
     private void loadHighlights() {
-        autoDispose(repository.topArticles()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> {
-                    if (result.isSuccess() && result.getData() != null) {
-                        topArticles.setValue(result.getData());
-                    }
-                }, throwable -> {}));
-
-        autoDispose(repository.friendLinks()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> {
-                    if (result.isSuccess() && result.getData() != null) {
-                        friendLinks.setValue(result.getData());
-                    }
-                }, throwable -> {}));
+        if (AppPreferences.isHomeTopEnabled()) {
+            autoDispose(repository.topArticles()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {
+                        if (result.isSuccess() && result.getData() != null) {
+                            topArticles.setValue(result.getData());
+                        }
+                    }, throwable -> {}));
+        } else {
+            topArticles.setValue(new ArrayList<>());
+        }
 
     }
 

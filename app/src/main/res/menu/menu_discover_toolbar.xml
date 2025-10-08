@@ -9,10 +9,4 @@
         android:title="@string/discover_search"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/action_tools"
-        android:icon="@drawable/service_toolbox_24px"
-        android:title="@string/discover_tools"
-        app:showAsAction="ifRoom" />
-
 </menu>

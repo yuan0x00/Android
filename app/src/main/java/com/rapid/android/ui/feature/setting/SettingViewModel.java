@@ -14,6 +14,7 @@ public class SettingViewModel extends BaseViewModel {
 
     private final MutableLiveData<ThemeManager.ThemeMode> themeMode = new MutableLiveData<>(ThemeManager.ThemeMode.SYSTEM);
     private final MutableLiveData<Boolean> notifications = new MutableLiveData<>(AppPreferences.isNotificationsEnabled());
+    private final MutableLiveData<Boolean> homeTopEnabled = new MutableLiveData<>(AppPreferences.isHomeTopEnabled());
     private final MutableLiveData<Integer> operationMessageRes = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
@@ -36,6 +37,18 @@ public class SettingViewModel extends BaseViewModel {
         operationMessageRes.setValue(enabled
                 ? R.string.setting_notifications_on
                 : R.string.setting_notifications_off);
+    }
+
+    public LiveData<Boolean> getHomeTopEnabled() {
+        return homeTopEnabled;
+    }
+
+    public void setHomeTopEnabled(boolean enabled) {
+        homeTopEnabled.setValue(enabled);
+        AppPreferences.setHomeTopEnabled(enabled);
+//        operationMessageRes.setValue(enabled
+//                ? R.string.setting_top_articles_on
+//                : R.string.setting_top_articles_off);
     }
 
     public LiveData<Integer> getOperationMessageRes() {
@@ -67,6 +80,7 @@ public class SettingViewModel extends BaseViewModel {
         themeMode.setValue(saved);
         ThemeManager.applyThemeMode(saved);
         notifications.setValue(AppPreferences.isNotificationsEnabled());
+        homeTopEnabled.setValue(AppPreferences.isHomeTopEnabled());
     }
     
     public void logoutWithCallback(LogoutCallback callback) {

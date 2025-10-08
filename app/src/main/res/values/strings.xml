@@ -6,7 +6,7 @@
     <string name="network_not_good">网络不给力</string>
     <string name="back_twice_to_launcher">再返回一次回到桌面</string>
     <string name="home_search_placeholder">搜索文章、项目或作者</string>
-    
+
     <!-- 设置页面相关字符串 -->
     <string name="settings">设置</string>
 
@@ -121,11 +121,26 @@
     <string name="discover_tab_project">项目</string>
     <string name="discover_tab_wechat">公众号</string>
     <string name="discover_tab_hot">热点</string>
+    <string name="settings_show_top_articles">显示置顶文章</string>
+    <string name="settings_show_top_articles_description">关闭后首页将不会请求置顶文章数据</string>
+    <string name="discover_tab_harmony">鸿蒙开发</string>
+    <string name="discover_tab_routes">学习路线</string>
+    <string name="discover_tab_square">广场</string>
+    <string name="discover_tab_tutorial">教程</string>
+    <string name="discover_tab_wenda">问答</string>
+    <string name="discover_tab_tools">工具</string>
     <string name="discover_hot_wenda">热门问答</string>
     <string name="discover_hot_columns">精选专栏</string>
     <string name="discover_hot_routes">优秀路线</string>
     <string name="discover_hot_empty">暂时没有热点推荐</string>
     <string name="discover_tools">工具</string>
+    <string name="discover_harmony_links">鸿蒙开发官方资源</string>
+    <string name="discover_harmony_open_source">鸿蒙开发开源项目</string>
+    <string name="discover_harmony_tools">鸿蒙开发常用工具</string>
+    <string name="discover_harmony_empty">暂未获取到鸿蒙内容</string>
+    <string name="discover_routes_empty">暂未获取到学习路线</string>
+    <string name="discover_tutorial_empty">暂未获取到教程内容</string>
+    <string name="discover_wenda_empty">暂未获取到问答内容</string>
     <string name="message_title">消息中心</string>
     <string name="message_empty_list">暂无消息</string>
     <string name="message_tab_unread">未读</string>
@@ -141,6 +156,10 @@
     <string name="tool_center_empty">暂无常用工具</string>
     <string name="tool_center_load_failed">加载工具列表失败</string>
     <string name="tool_item_open">打开</string>
+    <string name="tutorial_title_default">教程合集</string>
+    <string name="tutorial_empty">暂无教程文章</string>
+    <string name="tutorial_error_invalid">教程信息无效</string>
+    <string name="tutorial_error_load_failed">加载教程文章失败</string>
     <string name="project_empty_category">暂无项目分类</string>
     <string name="project_category_sub_count">子分类 %1$d 个</string>
     <string name="project_empty_list">暂无项目</string>
@@ -183,6 +202,7 @@
     <string name="main_tab_discover">发现</string>
     <string name="main_tab_message">消息</string>
     <string name="main_tab_profile">我的</string>
+    <string name="home_top_tag">置顶</string>
     <string name="home_page_recommend">推荐</string>
     <string name="home_page_latest">最新项目</string>
     <string name="home_avatar_placeholder_tip">个人中心建设中，敬请期待</string>

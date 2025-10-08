@@ -76,6 +76,13 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
             }
         });
 
+        viewModel.getHomeTopEnabled().observe(this, isChecked -> {
+            boolean target = Boolean.TRUE.equals(isChecked);
+            if (binding.switchTopArticles.isChecked() != target) {
+                binding.switchTopArticles.setChecked(target);
+            }
+        });
+
         // 观察操作消息
         viewModel.getOperationMessageRes().observe(this, messageRes -> {
             if (messageRes != null) {
@@ -114,6 +121,13 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
                 return;
             }
             viewModel.setNotifications(isChecked);
+        });
+
+        binding.switchTopArticles.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!buttonView.isPressed()) {
+                return;
+            }
+            viewModel.setHomeTopEnabled(isChecked);
         });
 
         binding.itemClearCache.setOnClickListener(v -> viewModel.clearCache());

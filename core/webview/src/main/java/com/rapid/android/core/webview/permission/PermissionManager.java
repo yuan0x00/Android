@@ -27,7 +27,6 @@ public class PermissionManager {
 
     private final Context context;
     private final Map<String, PermissionHandler> permissionHandlers = new HashMap<>();
-    private final List<PermissionRequest> pendingRequests = new ArrayList<>();
 
     private PermissionListener listener;
     private boolean autoGrantSafePermissions = true;
@@ -198,16 +197,8 @@ public class PermissionManager {
     /**
      * 获取待处理的权限请求数量
      */
-    public int getPendingRequestCount() {
-        return pendingRequests.size();
-    }
-
-    /**
-     * 清理资源
-     */
     public void cleanup() {
         permissionHandlers.clear();
-        pendingRequests.clear();
     }
 
     public interface PermissionListener {

@@ -19,6 +19,8 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class AdvancedPerformanceMonitor {
     private static final String TAG = "AdvancedPerfMonitor";
+    private static final float LOW_FPS_THRESHOLD = 45f;
+    private static final long LOW_FPS_WARNING_INTERVAL_MS = 2000L;
 
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final PerformanceData performanceData = new PerformanceData();
@@ -34,6 +36,7 @@ public class AdvancedPerformanceMonitor {
     private int frameCount = 0;
     private float currentFPS = 0;
     private MemoryInfo lastMemoryInfo;
+    private long lastLowFpsWarningAt = 0;
 
     /**
      * 绑定WebView
@@ -155,15 +158,17 @@ public class AdvancedPerformanceMonitor {
             @Override
             public void doFrame(long frameTimeNanos) {
                 if (lastFrameTimeNanos != 0) {
-                    long frameTimeMs = (frameTimeNanos - lastFrameTimeNanos) / 1_000_000;
+                    long frameTimeMsRaw = (frameTimeNanos - lastFrameTimeNanos) / 1_000_000;
+                    long frameTimeMs = Math.max(1, frameTimeMsRaw);
                     currentFPS = 1000f / frameTimeMs;
 
                     // 计算掉帧数（理想60FPS）
-                    int expectedFrames = Math.round(frameTimeMs / (1000f / 60f));
+                    int expectedFrames = Math.max(1, Math.round(frameTimeMs / (1000f / 60f)));
                     int droppedFrames = Math.max(0, expectedFrames - 1);
 
                     if (listener != null) {
                         listener.onFPSUpdate(currentFPS, droppedFrames);
+                        maybeReportLowFpsWarning();
                     }
 
                     frameCount++;
@@ -175,6 +180,23 @@ public class AdvancedPerformanceMonitor {
         };
 
         Choreographer.getInstance().postFrameCallback(frameCallback);
+    }
+
+    private void maybeReportLowFpsWarning() {
+        if (currentFPS >= LOW_FPS_THRESHOLD || listener == null) {
+            return;
+        }
+        long now = SystemClock.elapsedRealtime();
+        if (now - lastLowFpsWarningAt < LOW_FPS_WARNING_INTERVAL_MS) {
+            return;
+        }
+        lastLowFpsWarningAt = now;
+        PerformanceWarning warning = new PerformanceWarning(
+                PerformanceWarning.Type.LOW_FPS,
+                String.format("Low FPS detected: %.1f", currentFPS),
+                currentFPS
+        );
+        listener.onPerformanceWarning(warning);
     }
 
     /**

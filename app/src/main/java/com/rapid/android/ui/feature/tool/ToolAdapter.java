@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.core.domain.model.ToolItemBean;
@@ -19,11 +20,11 @@ class ToolAdapter extends RecyclerView.Adapter<ToolAdapter.ToolViewHolder> {
     private final List<ToolItemBean> items = new ArrayList<>();
 
     void submitList(List<ToolItemBean> data) {
+        List<ToolItemBean> newItems = data != null ? new ArrayList<>(data) : new ArrayList<>();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ToolDiffCallback(items, newItems));
         items.clear();
-        if (data != null) {
-            items.addAll(data);
-        }
-        notifyDataSetChanged();
+        items.addAll(newItems);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @NonNull
@@ -64,6 +65,42 @@ class ToolAdapter extends RecyclerView.Adapter<ToolAdapter.ToolViewHolder> {
                     ArticleWebViewActivity.start(v.getContext(), bean.getLink(), bean.getName());
                 }
             });
+        }
+    }
+
+    private static class ToolDiffCallback extends DiffUtil.Callback {
+        private final List<ToolItemBean> oldList;
+        private final List<ToolItemBean> newList;
+
+        ToolDiffCallback(List<ToolItemBean> oldList, List<ToolItemBean> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            ToolItemBean oldItem = oldList.get(oldItemPosition);
+            ToolItemBean newItem = newList.get(newItemPosition);
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            ToolItemBean oldItem = oldList.get(oldItemPosition);
+            ToolItemBean newItem = newList.get(newItemPosition);
+            return TextUtils.equals(oldItem.getName(), newItem.getName())
+                    && TextUtils.equals(oldItem.getLink(), newItem.getLink())
+                    && TextUtils.equals(oldItem.getIcon(), newItem.getIcon());
         }
     }
 }

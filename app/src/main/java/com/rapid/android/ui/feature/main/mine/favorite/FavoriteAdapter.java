@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.R;
@@ -34,11 +35,11 @@ final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favorit
     }
 
     void submitNewList(List<ArticleListBean.Data> data) {
+        List<ArticleListBean.Data> newItems = data != null ? new ArrayList<>(data) : new ArrayList<>();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FavoriteDiffCallback(items, newItems));
         items.clear();
-        if (data != null) {
-            items.addAll(data);
-        }
-        notifyDataSetChanged();
+        items.addAll(newItems);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     void appendList(List<ArticleListBean.Data> more) {
@@ -128,6 +129,46 @@ final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favorit
             } else {
                 editButton.setVisibility(View.GONE);
             }
+        }
+    }
+
+    private static class FavoriteDiffCallback extends DiffUtil.Callback {
+        private final List<ArticleListBean.Data> oldList;
+        private final List<ArticleListBean.Data> newList;
+
+        FavoriteDiffCallback(List<ArticleListBean.Data> oldList, List<ArticleListBean.Data> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            ArticleListBean.Data oldItem = oldList.get(oldItemPosition);
+            ArticleListBean.Data newItem = newList.get(newItemPosition);
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            ArticleListBean.Data oldItem = oldList.get(oldItemPosition);
+            ArticleListBean.Data newItem = newList.get(newItemPosition);
+            return TextUtils.equals(oldItem.getTitle(), newItem.getTitle())
+                    && TextUtils.equals(oldItem.getDesc(), newItem.getDesc())
+                    && TextUtils.equals(oldItem.getAuthor(), newItem.getAuthor())
+                    && TextUtils.equals(oldItem.getShareUser(), newItem.getShareUser())
+                    && TextUtils.equals(oldItem.getNiceShareDate(), newItem.getNiceShareDate())
+                    && TextUtils.equals(oldItem.getNiceDate(), newItem.getNiceDate())
+                    && TextUtils.equals(oldItem.getLink(), newItem.getLink());
         }
     }
 }

@@ -341,6 +341,7 @@ public class DefaultWebViewController implements WebViewController {
             performanceMonitor.stop();
             advancedPerformanceMonitor.unbindWebView();
             advancedPerformanceMonitor.setPerformanceListener(null);
+            downloadManager.release();
             if (lifecycleManager != null) {
                 lifecycleManager.destroyImmediately();
             }

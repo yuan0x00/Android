@@ -21,6 +21,8 @@ public class JavaScriptBridge {
     private static final String TAG = "JSBridge";
 
     private final android.webkit.WebView webView;
+    private static final String INTERNAL_CALLBACK_METHOD = "__callback__";
+
     private final Map<String, BridgeHandler> handlers = new ConcurrentHashMap<>();
     private final Map<String, ValueCallback<String>> callbacks = new ConcurrentHashMap<>();
 
@@ -30,6 +32,7 @@ public class JavaScriptBridge {
     public JavaScriptBridge(@NonNull android.webkit.WebView webView) {
         this.webView = webView;
         setupBridge();
+        registerInternalHandlers();
     }
 
     /**
@@ -52,6 +55,9 @@ public class JavaScriptBridge {
      * 注册处理器
      */
     public JavaScriptBridge registerHandler(@NonNull String handlerName, @NonNull BridgeHandler handler) {
+        if (INTERNAL_CALLBACK_METHOD.equals(handlerName)) {
+            throw new IllegalArgumentException("Handler name " + INTERNAL_CALLBACK_METHOD + " is reserved");
+        }
         handlers.put(handlerName, handler);
         return this;
     }
@@ -163,7 +169,7 @@ public class JavaScriptBridge {
     private String wrapWithCallback(String script, String callbackId) {
         return "javascript:(function() {" +
                 "window." + BRIDGE_NAME + "Callbacks['" + callbackId + "'] = function(result) {" +
-                BRIDGE_NAME + ".call('callback', result, '" + callbackId + "');" +
+                BRIDGE_NAME + ".call('" + INTERNAL_CALLBACK_METHOD + "', result, '" + callbackId + "');" +
                 "};" +
                 script +
                 "})();";
@@ -221,6 +227,23 @@ public class JavaScriptBridge {
         void onBridgeError(@NonNull String error);
     }
 
+    private void registerInternalHandlers() {
+        handlers.put(INTERNAL_CALLBACK_METHOD, (data, callback) -> {
+            // no-op placeholder, real handling happens inside JavaScriptInterface#onMessage
+        });
+    }
+
+    private void handleInternalCallback(@Nullable String callbackId, @Nullable Object data) {
+        if (callbackId == null) {
+            return;
+        }
+        ValueCallback<String> callback = callbacks.remove(callbackId);
+        if (callback != null) {
+            String payload = data != null ? String.valueOf(data) : "null";
+            callback.onReceiveValue(payload);
+        }
+    }
+
     /**
      * JavaScript接口类
      */
@@ -237,24 +260,29 @@ public class JavaScriptBridge {
                 Object data = json.opt("data");
                 String callbackId = json.optString("callbackId", null);
 
-                if (listener != null) {
-                    listener.onJavaScriptCall(method, data);
-                }
+            if (INTERNAL_CALLBACK_METHOD.equals(method)) {
+                handleInternalCallback(callbackId, data);
+                return;
+            }
 
-                BridgeHandler handler = handlers.get(method);
-                if (handler != null) {
-                    ValueCallback<String> callback = callbackId != null ?
+            if (listener != null) {
+                listener.onJavaScriptCall(method, data);
+            }
+
+            BridgeHandler handler = handlers.get(method);
+            if (handler != null) {
+                ValueCallback<String> bridgeCallback = callbackId != null ?
                         result -> sendCallback(callbackId, result) : null;
-                    handler.handle(data, callback);
-                } else {
-                    String error = "No handler found for method: " + method;
-                    if (listener != null) {
-                        listener.onBridgeError(error);
-                    }
-                    if (callbackId != null) {
-                        sendCallback(callbackId, "{\"error\":\"" + error + "\"}");
-                    }
+                handler.handle(data, bridgeCallback);
+            } else {
+                String error = "No handler found for method: " + method;
+                if (listener != null) {
+                    listener.onBridgeError(error);
                 }
+                if (callbackId != null) {
+                    sendCallback(callbackId, "{\"error\":\"" + error + "\"}");
+                }
+            }
 
             } catch (JSONException e) {
                 String error = "Error parsing JavaScript message: " + e.getMessage();
@@ -269,4 +297,5 @@ public class JavaScriptBridge {
             webView.evaluateJavascript(script, null);
         }
     }
+
 }

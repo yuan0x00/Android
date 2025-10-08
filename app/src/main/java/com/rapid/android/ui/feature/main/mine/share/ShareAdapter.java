@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.R;
@@ -21,11 +22,11 @@ final class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.ShareViewHold
     private final List<ArticleListBean.Data> items = new ArrayList<>();
 
     void submitNewList(List<ArticleListBean.Data> data) {
+        List<ArticleListBean.Data> newItems = data != null ? new ArrayList<>(data) : new ArrayList<>();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ShareDiffCallback(items, newItems));
         items.clear();
-        if (data != null) {
-            items.addAll(data);
-        }
-        notifyDataSetChanged();
+        items.addAll(newItems);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @NonNull
@@ -101,6 +102,43 @@ final class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.ShareViewHold
                     ArticleWebViewActivity.start(v.getContext(), data);
                 }
             });
+        }
+    }
+
+    private static class ShareDiffCallback extends DiffUtil.Callback {
+        private final List<ArticleListBean.Data> oldList;
+        private final List<ArticleListBean.Data> newList;
+
+        ShareDiffCallback(List<ArticleListBean.Data> oldList, List<ArticleListBean.Data> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            return oldList.get(oldItemPosition).getId() == newList.get(newItemPosition).getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            ArticleListBean.Data oldItem = oldList.get(oldItemPosition);
+            ArticleListBean.Data newItem = newList.get(newItemPosition);
+            return TextUtils.equals(oldItem.getTitle(), newItem.getTitle())
+                    && TextUtils.equals(oldItem.getDesc(), newItem.getDesc())
+                    && TextUtils.equals(oldItem.getLink(), newItem.getLink())
+                    && TextUtils.equals(oldItem.getNiceShareDate(), newItem.getNiceShareDate())
+                    && TextUtils.equals(oldItem.getNiceDate(), newItem.getNiceDate())
+                    && oldItem.isCollect() == newItem.isCollect();
         }
     }
 }

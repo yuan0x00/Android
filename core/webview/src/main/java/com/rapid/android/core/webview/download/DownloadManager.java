@@ -1,13 +1,18 @@
 package com.rapid.android.core.webview.download;
 
 import android.app.DownloadManager.Request;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +26,21 @@ public class DownloadManager {
 
     private final Context context;
     private final android.app.DownloadManager downloadManager;
-    private final Map<String, DownloadRequest> activeDownloads = new HashMap<>();
+    private final Map<Long, DownloadRequest> activeDownloads = new HashMap<>();
+    private final Map<String, Long> urlToDownloadId = new HashMap<>();
+    private final BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent == null || !android.app.DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(intent.getAction())) {
+                return;
+            }
+            long downloadId = intent.getLongExtra(android.app.DownloadManager.EXTRA_DOWNLOAD_ID, -1L);
+            if (downloadId == -1L) {
+                return;
+            }
+            handleSystemDownloadComplete(downloadId);
+        }
+    };
 
     private DownloadListener listener;
     private String downloadPath = Environment.DIRECTORY_DOWNLOADS;
@@ -30,6 +49,12 @@ public class DownloadManager {
     public DownloadManager(@NonNull Context context) {
         this.context = context.getApplicationContext();
         this.downloadManager = (android.app.DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        IntentFilter filter = new IntentFilter(android.app.DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            this.context.registerReceiver(downloadReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            ContextCompat.registerReceiver(this.context, downloadReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
+        }
     }
 
     /**
@@ -104,6 +129,14 @@ public class DownloadManager {
         try {
             Request downloadRequest = new Request(Uri.parse(request.url));
 
+            Long existingId = urlToDownloadId.remove(request.url);
+            if (existingId != null) {
+                DownloadRequest existing = activeDownloads.remove(existingId);
+                if (existing != null && existing.downloadId != -1) {
+                    downloadManager.remove(existing.downloadId);
+                }
+            }
+
             // 设置请求头
             if (request.userAgent != null) {
                 downloadRequest.addRequestHeader("User-Agent", request.userAgent);
@@ -126,7 +159,8 @@ public class DownloadManager {
             // 开始下载
             long downloadId = downloadManager.enqueue(downloadRequest);
             request.downloadId = downloadId;
-            activeDownloads.put(request.url, request);
+            activeDownloads.put(downloadId, request);
+            urlToDownloadId.put(request.url, downloadId);
 
             Log.d(TAG, "Started download: " + request.url + " -> " + fileName);
 
@@ -196,11 +230,13 @@ public class DownloadManager {
      * 取消下载
      */
     public void cancelDownload(String url) {
-        DownloadRequest request = activeDownloads.get(url);
-        if (request != null && request.downloadId != -1) {
-            downloadManager.remove(request.downloadId);
-            activeDownloads.remove(url);
-            Log.d(TAG, "Cancelled download: " + url);
+        Long downloadId = urlToDownloadId.remove(url);
+        if (downloadId != null) {
+            DownloadRequest request = activeDownloads.remove(downloadId);
+            if (request != null && request.downloadId != -1) {
+                downloadManager.remove(request.downloadId);
+                Log.d(TAG, "Cancelled download: " + url);
+            }
         }
     }
 
@@ -208,12 +244,11 @@ public class DownloadManager {
      * 取消所有下载
      */
     public void cancelAllDownloads() {
-        for (DownloadRequest request : activeDownloads.values()) {
-            if (request.downloadId != -1) {
-                downloadManager.remove(request.downloadId);
-            }
+        for (Long downloadId : activeDownloads.keySet()) {
+            downloadManager.remove(downloadId);
         }
         activeDownloads.clear();
+        urlToDownloadId.clear();
         Log.d(TAG, "Cancelled all downloads");
     }
 
@@ -222,6 +257,74 @@ public class DownloadManager {
      */
     public int getActiveDownloadCount() {
         return activeDownloads.size();
+    }
+
+    /**
+     * 处理下载任务结果，可直接供外部调用
+     */
+    public void handleDownloadResult(long downloadId, boolean success, @Nullable String filePath,
+                                     @Nullable String errorMessage) {
+        DownloadRequest request = activeDownloads.remove(downloadId);
+        if (request != null) {
+            urlToDownloadId.remove(request.url);
+            if (listener != null) {
+                if (success) {
+                    listener.onDownloadCompleted(request, true, filePath);
+                } else {
+                    String reason = errorMessage != null ? errorMessage : "Download failed";
+                    listener.onDownloadFailed(request, reason);
+                }
+            }
+        }
+    }
+
+    private void handleSystemDownloadComplete(long downloadId) {
+        DownloadRequest request = activeDownloads.get(downloadId);
+        if (request == null) {
+            return;
+        }
+        android.app.DownloadManager.Query query = new android.app.DownloadManager.Query().setFilterById(downloadId);
+        android.database.Cursor cursor = null;
+        boolean success = false;
+        String filePath = null;
+        String errorMessage = null;
+        try {
+            cursor = downloadManager.query(query);
+            if (cursor != null && cursor.moveToFirst()) {
+                int statusIndex = cursor.getColumnIndex(android.app.DownloadManager.COLUMN_STATUS);
+                int status = statusIndex != -1 ? cursor.getInt(statusIndex) : android.app.DownloadManager.STATUS_FAILED;
+                success = status == android.app.DownloadManager.STATUS_SUCCESSFUL;
+                if (success) {
+                    int uriIndex = cursor.getColumnIndex(android.app.DownloadManager.COLUMN_LOCAL_URI);
+                    if (uriIndex != -1) {
+                        String uriString = cursor.getString(uriIndex);
+                        if (uriString != null) {
+                            filePath = Uri.parse(uriString).getPath();
+                        }
+                    }
+                } else {
+                    int reasonIndex = cursor.getColumnIndex(android.app.DownloadManager.COLUMN_REASON);
+                    if (reasonIndex != -1) {
+                        errorMessage = "code=" + cursor.getInt(reasonIndex);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            errorMessage = "query_failed:" + e.getMessage();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        handleDownloadResult(downloadId, success, filePath, errorMessage);
+    }
+
+    public void release() {
+        try {
+            context.unregisterReceiver(downloadReceiver);
+        } catch (IllegalArgumentException ignore) {
+            // receiver already unregistered
+        }
     }
 
     public interface DownloadListener {

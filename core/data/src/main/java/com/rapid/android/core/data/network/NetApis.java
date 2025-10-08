@@ -5,14 +5,6 @@ import com.rapid.android.core.network.NetManager;
 
 public final class NetApis {
 
-    public static void init() {
-        NetApis.Login();
-        NetApis.Home();
-        NetApis.User();
-        NetApis.Content();
-        NetApis.Message();
-    }
-
     public static LoginApi Login() {
         return NetManager.createNetApi(LoginApi.class);
     }

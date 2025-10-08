@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Lifecycle;
 
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -107,28 +108,33 @@ public class BottomTabNavigator {
         isUpdatingSelection = true;
 
         FragmentTransaction ft = fm.beginTransaction();
+        ft.setReorderingAllowed(true);
 
         try {
             Fragment fragment = fm.findFragmentByTag("tab_" + position);
             if (fragment == null) {
                 fragment = tabs.get(position).fragmentClass.newInstance();
                 ft.add(container.getId(), fragment, "tab_" + position);
-            } else {
-                ft.show(fragment);
-                if (fragment.getView() != null) {
-                    fragment.getView().setAlpha(0.9f);
-                    fragment.getView().setTranslationY(2);
-                    fragment.getView().animate().alpha(1f).setDuration(100).start();
-                    fragment.getView().animate().translationY(0).setDuration(100).start();
-                }
+            }
+
+            ft.show(fragment);
+            if (fragment.getView() != null) {
+                fragment.getView().setAlpha(0.9f);
+                fragment.getView().setTranslationY(2);
+                fragment.getView().animate().alpha(1f).setDuration(100).start();
+                fragment.getView().animate().translationY(0).setDuration(100).start();
             }
 
             if (currentPosition != -1) {
                 Fragment old = fm.findFragmentByTag("tab_" + currentPosition);
                 if (old != null) {
                     ft.hide(old);
+                    ft.setMaxLifecycle(old, Lifecycle.State.STARTED);
                 }
             }
+
+            ft.setMaxLifecycle(fragment, Lifecycle.State.RESUMED);
+            ft.setPrimaryNavigationFragment(fragment);
 
             ft.commit();
 

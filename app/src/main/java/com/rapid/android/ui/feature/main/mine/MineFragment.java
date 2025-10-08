@@ -36,6 +36,12 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.refresh();
+    }
+
+    @Override
     protected void initializeViews() {
         setupClickListeners();
     }

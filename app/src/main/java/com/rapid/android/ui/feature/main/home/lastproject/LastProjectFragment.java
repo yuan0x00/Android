@@ -43,8 +43,8 @@ public class LastProjectFragment extends BaseFragment<LastProjectViewModel, Frag
 
     @Override
     protected void setupObservers() {
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
-        UiFeedback.observeError(this, viewModel.getPagingError());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getPagingError());
         viewModel.getProjectItems().observe(this, items -> {
             feedAdapter.submitList(items);
             boolean empty = items == null || items.isEmpty();
@@ -67,7 +67,7 @@ public class LastProjectFragment extends BaseFragment<LastProjectViewModel, Frag
         ArticleListBean feeds = new ArticleListBean();
 
         // 创建各模块 Adapter
-        feedAdapter = new FeedAdapter(feeds);
+        feedAdapter = new FeedAdapter(getDialogController(), feeds);
 
         binding.recyclerView.setAdapter(feedAdapter);
 

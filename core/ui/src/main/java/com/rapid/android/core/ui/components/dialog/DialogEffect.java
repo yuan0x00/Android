@@ -154,7 +154,7 @@ public abstract class DialogEffect {
 
     public static final class Toast extends DialogEffect {
         private static final long DEFAULT_DURATION = 2000L;
-        private static final int DEFAULT_MAX_COUNT = 2;
+        private static final int DEFAULT_MAX_COUNT = 3;
 
         private final CharSequence message;
         private final long durationMillis;

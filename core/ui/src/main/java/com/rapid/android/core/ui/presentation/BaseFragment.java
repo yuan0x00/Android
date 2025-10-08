@@ -10,10 +10,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewbinding.ViewBinding;
 
-public abstract class BaseFragment<VM extends BaseViewModel, VB extends ViewBinding> extends Fragment {
+import com.rapid.android.core.ui.components.dialog.DialogController;
+import com.rapid.android.core.ui.components.dialog.DialogHost;
+
+import org.jetbrains.annotations.NotNull;
+
+public abstract class BaseFragment<VM extends BaseViewModel, VB extends ViewBinding> extends Fragment implements DialogHost {
 
     protected VM viewModel;
     protected VB binding;
+    private DialogController dialogController;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,6 +37,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VB extends ViewBind
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        dialogController = DialogController.from(requireActivity(), binding.getRoot());
         initializeViews();
         setupObservers();
         loadData();
@@ -40,6 +47,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VB extends ViewBind
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        dialogController = null;
     }
 
     protected abstract VM createViewModel();
@@ -53,6 +61,14 @@ public abstract class BaseFragment<VM extends BaseViewModel, VB extends ViewBind
     }
 
     protected void loadData() {
+    }
+
+    @Override
+    public @NotNull DialogController getDialogController() {
+        if (dialogController == null) {
+            throw new IllegalStateException("DialogController is not available after view destruction.");
+        }
+        return dialogController;
     }
 
 }

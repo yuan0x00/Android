@@ -10,9 +10,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.rapid.android.R;
-import com.rapid.android.core.common.utils.ToastUtils;
 import com.rapid.android.core.domain.model.UserToolBean;
 import com.rapid.android.core.ui.presentation.BaseActivity;
+import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ActivityUserToolsBinding;
 import com.rapid.android.databinding.DialogUserToolBinding;
 import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
@@ -61,11 +61,7 @@ public class UserToolsActivity extends BaseActivity<UserToolsViewModel, Activity
             binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
             binding.swipeRefresh.setRefreshing(isLoading);
         });
-        viewModel.getMessage().observe(this, msg -> {
-            if (msg != null && !msg.isEmpty()) {
-                ToastUtils.showShortToast(msg);
-            }
-        });
+        viewModel.getMessage().observe(this, this::showShortToast);
     }
 
     @Override
@@ -113,5 +109,9 @@ public class UserToolsActivity extends BaseActivity<UserToolsViewModel, Activity
                 })
                 .setNegativeButton(R.string.user_tools_cancel, null)
                 .show();
+    }
+
+    private void showShortToast(String message) {
+        ToastUtils.showShortToast(getDialogController(), message);
     }
 }

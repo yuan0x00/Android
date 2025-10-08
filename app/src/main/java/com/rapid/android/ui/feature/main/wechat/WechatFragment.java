@@ -46,8 +46,9 @@ public class WechatFragment extends BaseFragment<WechatViewModel, FragmentWechat
     protected void initializeViews() {
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 
-        pagerAdapter = new WechatTabPagerAdapter(viewModel, refreshing ->
-                binding.swipeRefresh.post(() -> binding.swipeRefresh.setRefreshing(refreshing)));
+        pagerAdapter = new WechatTabPagerAdapter(viewModel,
+                refreshing -> binding.swipeRefresh.post(() -> binding.swipeRefresh.setRefreshing(refreshing)),
+                getDialogController());
         binding.viewPager.setAdapter(pagerAdapter);
         binding.viewPager.registerOnPageChangeCallback(pageChangeCallback);
 
@@ -89,8 +90,8 @@ public class WechatFragment extends BaseFragment<WechatViewModel, FragmentWechat
         viewModel.getLoading().observe(this, loading ->
                 stateController.setLoading(Boolean.TRUE.equals(loading)));
 
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
-        UiFeedback.observeError(this, viewModel.getArticleErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getArticleErrorMessage());
     }
 
     private void updateTabs() {

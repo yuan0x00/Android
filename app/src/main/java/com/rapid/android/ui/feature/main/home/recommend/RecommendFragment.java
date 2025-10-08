@@ -50,8 +50,8 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
 
     @Override
     protected void setupObservers() {
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
-        UiFeedback.observeError(this, viewModel.getPagingError());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getPagingError());
         viewModel.getBannerList().observe(this, bannerList -> {
             if (bannerList != null) {
                 bannerAdapter.setData(bannerList);
@@ -83,7 +83,7 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
 
         bannerAdapter = new BannerAdapter(new ArrayList<>());
         highlightAdapter = new HomeHighlightAdapter();
-        feedAdapter = new FeedAdapter(feeds);
+        feedAdapter = new FeedAdapter(getDialogController(), feeds);
 
         ConcatAdapter concatAdapter = new ConcatAdapter(highlightAdapter, bannerAdapter, feedAdapter);
         binding.recyclerView.setAdapter(concatAdapter);

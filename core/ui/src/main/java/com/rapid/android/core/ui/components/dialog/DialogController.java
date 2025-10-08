@@ -111,11 +111,6 @@ public final class DialogController {
         }
     }
 
-    public void showToast(@NonNull CharSequence message) {
-        assertMainThread();
-        show(new DialogEffect.Toast(message));
-    }
-
     public void dismiss(@NonNull String tag) {
         assertMainThread();
         DialogHandle handle = handles.remove(tag);

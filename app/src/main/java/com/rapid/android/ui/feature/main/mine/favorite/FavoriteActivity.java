@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.rapid.android.R;
-import com.rapid.android.core.common.utils.ToastUtils;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.ui.presentation.BaseActivity;
+import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ActivityFavoriteBinding;
 import com.rapid.android.databinding.DialogFavoriteEditBinding;
 import com.rapid.android.ui.common.ContentStateController;
@@ -91,13 +91,9 @@ public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFa
                 binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loadingMore)
                         ? android.view.View.VISIBLE : android.view.View.GONE));
 
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
-        UiFeedback.observeError(this, viewModel.getPagingError());
-        viewModel.getToastMessage().observe(this, msg -> {
-            if (msg != null && !msg.isEmpty()) {
-                ToastUtils.showShortToast(msg);
-            }
-        });
+        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getPagingError());
+        viewModel.getToastMessage().observe(this, msg -> showShortToast(msg));
     }
 
     @Override
@@ -140,5 +136,9 @@ public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFa
                 })
                 .setNegativeButton(R.string.user_tools_cancel, null)
                 .show();
+    }
+
+    private void showShortToast(String message) {
+        ToastUtils.showShortToast(getDialogController(), message);
     }
 }

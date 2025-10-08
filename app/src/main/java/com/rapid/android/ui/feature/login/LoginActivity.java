@@ -10,10 +10,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rapid.android.R;
-import com.rapid.android.core.common.utils.ToastUtils;
 import com.rapid.android.core.common.utils.WindowInsetsUtils;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.ui.presentation.BaseActivity;
+import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBinding> {
@@ -39,7 +39,7 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
             String username = binding.inputAccount.getText().toString().trim();
             String password = binding.inputPassword.getText().toString().trim();
             if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-                ToastUtils.showLongToast(getString(R.string.login_prompt_credentials));
+                ToastUtils.showLongToast(getDialogController(), getString(R.string.login_prompt_credentials));
                 return;
             }
             binding.btnLogin.setEnabled(false);
@@ -48,7 +48,7 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
                         ? binding.inputPasswordConfirm.getText().toString().trim()
                         : "";
                 if (!TextUtils.equals(password, confirm)) {
-                    ToastUtils.showLongToast(getString(R.string.login_error_password_mismatch));
+                    ToastUtils.showLongToast(getDialogController(), getString(R.string.login_error_password_mismatch));
                     binding.btnLogin.setEnabled(true);
                     return;
                 }
@@ -69,7 +69,7 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
         viewModel.getLoginSuccess().observe(this, success -> {
             binding.btnLogin.setEnabled(true);
             if (Boolean.TRUE.equals(success)) {
-                ToastUtils.showLongToast(getString(R.string.login_success));
+                ToastUtils.showLongToast(getDialogController(), getString(R.string.login_success));
                 finish();
             }
         });
@@ -77,13 +77,13 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
         viewModel.getErrorMessage().observe(this, msg -> {
             binding.btnLogin.setEnabled(true);
             if (msg != null && !msg.isEmpty()) {
-                ToastUtils.showLongToast(msg);
+                ToastUtils.showLongToast(getDialogController(), msg);
             }
         });
 
         viewModel.getInfoMessage().observe(this, msg -> {
             if (!TextUtils.isEmpty(msg)) {
-                ToastUtils.showLongToast(msg);
+                ToastUtils.showLongToast(getDialogController(), msg);
             }
         });
 
@@ -141,4 +141,5 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
             toolbar.setTitle(isRegisterMode ? R.string.login_action_register : R.string.login_title);
         }
     }
+
 }

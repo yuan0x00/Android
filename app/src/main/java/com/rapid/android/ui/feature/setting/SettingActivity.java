@@ -7,22 +7,18 @@ import android.os.Bundle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rapid.android.R;
-import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.core.ui.components.dialog.DialogEffect;
 import com.rapid.android.core.ui.presentation.BaseActivity;
+import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ActivitySettingBinding;
 import com.rapid.android.utils.ThemeManager;
 
 public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySettingBinding> {
 
-    private DialogController dialogController;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupToolbar();
-        dialogController = DialogController.from(this, binding.getRoot());
-        setupObservers();
         setupClickListeners();
         viewModel.loadSettings();
     }
@@ -83,7 +79,7 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
         // 观察操作消息
         viewModel.getOperationMessageRes().observe(this, messageRes -> {
             if (messageRes != null) {
-                dialogController.showToast(getString(messageRes));
+                showShortToast(getString(messageRes));
             }
         });
 
@@ -128,14 +124,14 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
         binding.itemOpenSource.setOnClickListener(v ->
                 openWebPage(getString(R.string.settings_open_source_url)));
 
-        binding.btnLogout.setOnClickListener(v -> dialogController.show(
+        binding.btnLogout.setOnClickListener(v -> getDialogController().show(
                 new DialogEffect.Confirm(
                         getString(R.string.setting_dialog_logout_title),
                         getString(R.string.setting_dialog_logout_message),
                         getString(R.string.confirm),
                         getString(R.string.cancel),
                         () -> viewModel.logoutWithCallback((success, messageRes) -> {
-                            dialogController.showToast(getString(messageRes));
+                            showShortToast(getString(messageRes));
                             if (success) {
                                 binding.getRoot().postDelayed(this::finish, 500L);
                             }
@@ -149,7 +145,11 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
         } catch (Exception e) {
-            dialogController.showToast(getString(R.string.setting_open_link_failed));
+            showShortToast(getString(R.string.setting_open_link_failed));
         }
+    }
+
+    private void showShortToast(String message) {
+        ToastUtils.showShortToast(getDialogController(), message);
     }
 }

@@ -7,17 +7,19 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.R;
 import com.rapid.android.core.common.text.StringUtils;
-import com.rapid.android.core.common.utils.ToastUtils;
 import com.rapid.android.core.data.repository.RepositoryProvider;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.repository.UserRepository;
 import com.rapid.android.core.domain.result.DomainResult;
+import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.core.ui.components.popup.BasePopupWindow;
+import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ItemFeedBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
@@ -34,9 +36,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
     private final List<ArticleListBean.Data> items = new ArrayList<>();
     private final UserRepository userRepository = RepositoryProvider.getUserRepository();
     private final CompositeDisposable disposables = new CompositeDisposable();
+    @Nullable
+    private final DialogController dialogController;
 
 
-    public FeedAdapter(ArticleListBean feeds) {
+    public FeedAdapter(@Nullable DialogController dialogController, ArticleListBean feeds) {
+        this.dialogController = dialogController;
         setData(feeds);
     }
 
@@ -69,7 +74,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
                 parent,
                 false
         );
-        return new FeedViewHolder(binding, userRepository, disposables);
+        return new FeedViewHolder(binding, userRepository, disposables, dialogController);
     }
 
     @Override
@@ -92,15 +97,19 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         private final ItemFeedBinding binding;
         private final UserRepository userRepository;
         private final CompositeDisposable disposables;
+        @Nullable
+        private final DialogController dialogController;
         private boolean collectRequestRunning = false;
 
         public FeedViewHolder(@NonNull ItemFeedBinding binding,
                               @NonNull UserRepository userRepository,
-                              @NonNull CompositeDisposable disposables) {
+                              @NonNull CompositeDisposable disposables,
+                              @Nullable DialogController dialogController) {
             super(binding.getRoot());
             this.binding = binding;
             this.userRepository = userRepository;
             this.disposables = disposables;
+            this.dialogController = dialogController;
         }
 
         public void bind(ArticleListBean.Data feedItem) {
@@ -154,11 +163,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             }
             int articleId = feedItem.getId();
             if (articleId <= 0) {
-                ToastUtils.showShortToast(binding.getRoot().getContext().getString(R.string.article_collect_failed));
+                showShortToast(binding.getRoot().getContext().getString(R.string.article_collect_failed));
                 return;
             }
             if (!SessionManager.getInstance().isLoggedIn()) {
-                ToastUtils.showShortToast(binding.getRoot().getContext().getString(R.string.article_collect_need_login));
+                showShortToast(binding.getRoot().getContext().getString(R.string.article_collect_need_login));
                 binding.getRoot().getContext().startActivity(new Intent(binding.getRoot().getContext(), LoginActivity.class));
                 return;
             }
@@ -188,18 +197,18 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             if (result != null && result.isSuccess()) {
                 feedItem.setCollect(targetCollect);
                 renderFavorite(targetCollect);
-                ToastUtils.showShortToast(binding.getRoot().getContext().getString(
+                showShortToast(binding.getRoot().getContext().getString(
                         targetCollect ? R.string.article_collect_success : R.string.article_uncollect_success
                 ));
             } else {
-                ToastUtils.showShortToast(binding.getRoot().getContext().getString(R.string.article_collect_failed));
+                showShortToast(binding.getRoot().getContext().getString(R.string.article_collect_failed));
             }
         }
 
         private void handleCollectError(@NonNull Throwable throwable) {
             collectRequestRunning = false;
             binding.ivFavorite.setEnabled(true);
-            ToastUtils.showShortToast(binding.getRoot().getContext().getString(R.string.article_collect_failed));
+            showShortToast(binding.getRoot().getContext().getString(R.string.article_collect_failed));
         }
 
         private void renderFavorite(boolean collected) {
@@ -207,6 +216,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             binding.ivFavorite.setContentDescription(binding.getRoot().getContext().getString(
                     collected ? R.string.article_uncollect : R.string.article_collect
             ));
+        }
+
+        private void showShortToast(String message) {
+            if (dialogController == null || message == null || message.isEmpty()) {
+                return;
+            }
+            ToastUtils.showShortToast(dialogController, message);
         }
     }
 }

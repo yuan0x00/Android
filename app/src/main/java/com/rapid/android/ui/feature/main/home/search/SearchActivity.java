@@ -77,7 +77,7 @@ public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearch
         binding.resultRecyclerView.setLayoutManager(layoutManager);
 
         ArticleListBean listBean = new ArticleListBean();
-        resultAdapter = new FeedAdapter(listBean);
+        resultAdapter = new FeedAdapter(getDialogController(), listBean);
         binding.resultRecyclerView.setAdapter(resultAdapter);
 
         binding.resultRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -128,8 +128,8 @@ public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearch
         viewModel.getErrorMessage().observe(this, msg -> stateController.stopRefreshing());
         viewModel.getPagingError().observe(this, msg -> stateController.stopRefreshing());
 
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
-        UiFeedback.observeError(this, viewModel.getPagingError());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getPagingError());
     }
 
     @Override

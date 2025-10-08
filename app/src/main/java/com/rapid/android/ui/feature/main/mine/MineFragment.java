@@ -9,9 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rapid.android.R;
-import com.rapid.android.core.common.utils.ToastUtils;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.ui.presentation.BaseFragment;
+import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.FragmentMineBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.mine.coin.CoinActivity;
@@ -60,7 +60,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
             if (state != null && state.isLoggedIn()) {
                 viewModel.signIn();
             } else {
-                ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+                showShortToast(getString(R.string.mine_toast_require_login));
                 navigateToLogin();
             }
         });
@@ -74,7 +74,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
             if (state != null && state.isLoggedIn()) {
                 CoinActivity.start(requireContext());
             } else {
-                ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+                showShortToast(getString(R.string.mine_toast_require_login));
                 navigateToLogin();
             }
         });
@@ -87,7 +87,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         viewModel.getUiState().observe(getViewLifecycleOwner(), this::renderState);
         viewModel.getToastMessage().observe(getViewLifecycleOwner(), msg -> {
             if (msg != null && !msg.isEmpty()) {
-                ToastUtils.showShortToast(msg);
+                showShortToast(msg);
             }
         });
 
@@ -164,7 +164,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         if (state != null && state.isLoggedIn()) {
             UserToolsActivity.start(requireContext());
         } else {
-            ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+            showShortToast(getString(R.string.mine_toast_require_login));
             navigateToLogin();
         }
     }
@@ -175,7 +175,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         if (state != null && state.isLoggedIn()) {
             FavoriteActivity.start(requireContext());
         } else {
-            ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+            showShortToast(getString(R.string.mine_toast_require_login));
             navigateToLogin();
         }
     }
@@ -186,12 +186,16 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         if (state != null && state.isLoggedIn()) {
             ShareActivity.start(requireContext());
         } else {
-            ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+            showShortToast(getString(R.string.mine_toast_require_login));
             navigateToLogin();
         }
     }
 
     private void navigateToLogin() {
         startActivity(new Intent(getContext(), LoginActivity.class));
+    }
+
+    private void showShortToast(String message) {
+        ToastUtils.showShortToast(getDialogController(), message);
     }
 }

@@ -13,6 +13,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.model.WxChapterBean;
 import com.rapid.android.core.domain.result.DomainResult;
+import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.databinding.ItemWechatTabPageBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.paging.PagingPayload;
@@ -31,9 +32,12 @@ final class WechatTabPagerAdapter extends RecyclerView.Adapter<WechatTabPagerAda
     private final HostCallbacks hostCallbacks;
     private final List<WxChapterBean> chapters = new ArrayList<>();
     private final Map<Integer, PageState> states = new HashMap<>();
-    WechatTabPagerAdapter(WechatViewModel viewModel, HostCallbacks hostCallbacks) {
+    private final DialogController dialogController;
+
+    WechatTabPagerAdapter(WechatViewModel viewModel, HostCallbacks hostCallbacks, DialogController dialogController) {
         this.viewModel = viewModel;
         this.hostCallbacks = hostCallbacks;
+        this.dialogController = dialogController;
     }
 
     void submitChapters(List<WxChapterBean> data) {
@@ -251,7 +255,7 @@ final class WechatTabPagerAdapter extends RecyclerView.Adapter<WechatTabPagerAda
             binding.recyclerView.setLayoutManager(state.layoutManager);
 
             if (state.adapter == null) {
-                state.adapter = new FeedAdapter(new ArticleListBean());
+                state.adapter = new FeedAdapter(dialogController, new ArticleListBean());
             }
             binding.recyclerView.setAdapter(state.adapter);
 

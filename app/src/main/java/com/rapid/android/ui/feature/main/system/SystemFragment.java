@@ -83,7 +83,7 @@ public class SystemFragment extends BaseFragment<SystemViewModel, FragmentSystem
         viewModel.getLoading().observe(this, loading ->
                 stateController.setLoading(Boolean.TRUE.equals(loading)));
 
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
     }
 
     private void updateTabs() {

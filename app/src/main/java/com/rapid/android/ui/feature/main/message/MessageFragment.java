@@ -63,7 +63,7 @@ public class MessageFragment extends BaseFragment<MessageViewModel, FragmentMess
         viewModel.getLoading().observe(this, loading ->
                 binding.unreadCard.setAlpha(Boolean.TRUE.equals(loading) ? 0.7f : 1f));
 
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
     }
 
     @Override

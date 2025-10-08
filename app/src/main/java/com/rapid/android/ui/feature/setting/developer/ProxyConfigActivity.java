@@ -8,8 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rapid.android.R;
-import com.rapid.android.core.common.utils.ToastUtils;
 import com.rapid.android.core.ui.presentation.BaseActivity;
+import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ActivityProxyConfigBinding;
 import com.rapid.android.network.proxy.ProxySettings;
 
@@ -44,7 +44,7 @@ public class ProxyConfigActivity extends BaseActivity<ProxyConfigViewModel, Acti
         viewModel.getFormError().observe(this, this::renderFormErrors);
         viewModel.getMessageRes().observe(this, resId -> {
             if (resId != null) {
-                ToastUtils.showShortToast(getString(resId));
+                showShortToast(getString(resId));
             }
         });
     }
@@ -172,5 +172,9 @@ public class ProxyConfigActivity extends BaseActivity<ProxyConfigViewModel, Acti
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showShortToast(String message) {
+        ToastUtils.showShortToast(getDialogController(), message);
     }
 }

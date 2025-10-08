@@ -89,8 +89,8 @@ public class ProjectFragment extends BaseFragment<ProjectViewModel, FragmentProj
         viewModel.getLoading().observe(this, loading ->
                 stateController.setLoading(Boolean.TRUE.equals(loading)));
 
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
-        UiFeedback.observeError(this, viewModel.getArticleErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getArticleErrorMessage());
     }
 
     private void updateTabs() {

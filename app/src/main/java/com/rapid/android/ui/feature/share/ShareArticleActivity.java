@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rapid.android.R;
-import com.rapid.android.core.common.utils.ToastUtils;
 import com.rapid.android.core.ui.presentation.BaseActivity;
+import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ActivityShareArticleBinding;
 import com.rapid.android.ui.common.UiFeedback;
 
@@ -77,11 +77,11 @@ public class ShareArticleActivity extends BaseActivity<ShareArticleViewModel, Ac
         viewModel.getLoading().observe(this, loading -> binding.progressBar.setVisibility(Boolean.TRUE.equals(loading) ? View.VISIBLE : View.GONE));
         viewModel.getSubmitSuccess().observe(this, success -> {
             if (Boolean.TRUE.equals(success)) {
-                ToastUtils.showShortToast(getString(R.string.share_article_success));
+                ToastUtils.showShortToast(getDialogController(), getString(R.string.share_article_success));
                 finish();
             }
         });
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
     }
 
     @Override

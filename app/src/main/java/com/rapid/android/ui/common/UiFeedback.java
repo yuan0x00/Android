@@ -5,20 +5,21 @@ import android.text.TextUtils;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 
-import com.rapid.android.core.common.utils.ToastUtils;
+import com.rapid.android.core.ui.components.dialog.DialogController;
+import com.rapid.android.core.ui.utils.ToastUtils;
 
 public final class UiFeedback {
 
     private UiFeedback() {
     }
 
-    public static void observeError(LifecycleOwner owner, LiveData<String> source) {
+    public static void observeError(LifecycleOwner owner, DialogController dialogController, LiveData<String> source) {
         if (source == null) {
             return;
         }
         source.observe(owner, msg -> {
             if (!TextUtils.isEmpty(msg)) {
-                ToastUtils.showLongToast(msg);
+                ToastUtils.showLongToast(dialogController, msg);
             }
         });
     }

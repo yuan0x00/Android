@@ -108,7 +108,7 @@ public class MessageListFragment extends BaseFragment<MessageListViewModel, Frag
         viewModel.getMessages().observe(this, this::renderMessages);
         viewModel.getLoading().observe(this, loading -> stateController.setLoading(Boolean.TRUE.equals(loading)));
         viewModel.getErrorMessage().observe(this, msg -> stateController.stopRefreshing());
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
     }
 
     @Override

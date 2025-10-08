@@ -9,11 +9,16 @@ import androidx.viewbinding.ViewBinding;
 
 import com.rapid.android.core.common.utils.WindowInsetsUtils;
 import com.rapid.android.core.network.state.NetworkStateManager;
+import com.rapid.android.core.ui.components.dialog.DialogController;
+import com.rapid.android.core.ui.components.dialog.DialogHost;
 
-public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBinding> extends AppCompatActivity {
+import org.jetbrains.annotations.NotNull;
+
+public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBinding> extends AppCompatActivity implements DialogHost {
 
     protected VM viewModel;
     protected VB binding;
+    private DialogController dialogController;
 
     @Override
     @CallSuper
@@ -23,6 +28,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
         viewModel = createViewModel();
         binding = createViewBinding();
         setContentView(binding.getRoot());
+
+        dialogController = DialogController.from(this, binding.getRoot());
 
         if (shouldObserveNetworkState()) {
             getLifecycle().addObserver(NetworkStateManager.getInstance());
@@ -43,6 +50,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
         super.onDestroy();
         binding = null;
         viewModel = null;
+        dialogController = null;
     }
 
     protected boolean shouldObserveNetworkState() {
@@ -64,5 +72,13 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
     }
 
     protected void loadData() {
+    }
+
+    @Override
+    public @NotNull DialogController getDialogController() {
+        if (dialogController == null) {
+            throw new IllegalStateException("DialogController is not available after destruction.");
+        }
+        return dialogController;
     }
 }

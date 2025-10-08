@@ -8,11 +8,11 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rapid.android.R;
-import com.rapid.android.core.common.utils.ToastUtils;
 import com.rapid.android.core.common.utils.WindowInsetsUtils;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.ui.components.navigation.BottomTabNavigator;
 import com.rapid.android.core.ui.presentation.BaseActivity;
+import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.core.webview.core.WebViewPrewarmer;
 import com.rapid.android.databinding.ActivityMainBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 if (System.currentTimeMillis() - exitTime > 2000) {
                     exitTime = System.currentTimeMillis();
                     String msg = getString(R.string.back_twice_to_launcher);
-                    ToastUtils.showShortToast(msg);
+                    ToastUtils.showShortToast(getDialogController(), msg);
                 } else {
                     moveTaskToBack(true);
                 }
@@ -130,7 +130,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     protected void setupObservers() {
         viewModel.getErrorMessage().observe(this, msg -> {
             if (msg != null && !msg.isEmpty()) {
-                ToastUtils.showLongToast(msg);
+                ToastUtils.showLongToast(getDialogController(), msg);
             }
         });
 
@@ -180,8 +180,9 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         if (SessionManager.getInstance().isLoggedIn()) {
             return true;
         }
-        ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+        ToastUtils.showShortToast(getDialogController(), getString(R.string.mine_toast_require_login));
         startActivity(new Intent(this, LoginActivity.class));
         return false;
     }
+
 }

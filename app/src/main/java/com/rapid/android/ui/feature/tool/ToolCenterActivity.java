@@ -58,7 +58,7 @@ public class ToolCenterActivity extends BaseActivity<ToolCenterViewModel, Activi
         viewModel.getLoading().observe(this, isLoading -> stateController.setLoading(Boolean.TRUE.equals(isLoading)));
 
         viewModel.getErrorMessage().observe(this, message -> stateController.stopRefreshing());
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
     }
 
     @Override

@@ -14,9 +14,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rapid.android.R;
-import com.rapid.android.core.common.utils.ToastUtils;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.core.ui.components.dialog.DialogController;
+import com.rapid.android.core.ui.components.dialog.DialogHost;
+import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.core.webview.WebView;
 import com.rapid.android.core.webview.WebViewFragment;
 import com.rapid.android.core.webview.config.DefaultWebViewConfig;
@@ -25,7 +27,9 @@ import com.rapid.android.core.webview.event.WebViewEventListener;
 import com.rapid.android.core.webview.utils.StatusBarUtils;
 import com.rapid.android.ui.feature.login.LoginActivity;
 
-public class ArticleWebViewActivity extends AppCompatActivity {
+import org.jetbrains.annotations.NotNull;
+
+public class ArticleWebViewActivity extends AppCompatActivity implements DialogHost {
 
     private static final String EXTRA_URL = "extra_url";
     private static final String EXTRA_TITLE = "extra_title";
@@ -42,6 +46,7 @@ public class ArticleWebViewActivity extends AppCompatActivity {
 
     private ArticleWebViewViewModel viewModel;
     private int articleId;
+    private DialogController dialogController;
 
     public static void start(@NonNull Context context, @NonNull ArticleListBean.Data data) {
         Intent intent = new Intent(context, ArticleWebViewActivity.class);
@@ -67,6 +72,7 @@ public class ArticleWebViewActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.rapid.android.core.webview.R.layout.activity_webview);
+        dialogController = DialogController.from(this, findViewById(android.R.id.content));
 
         viewModel = new ViewModelProvider(this).get(ArticleWebViewViewModel.class);
 
@@ -81,11 +87,7 @@ public class ArticleWebViewActivity extends AppCompatActivity {
 
     private void observeViewModel() {
         viewModel.getCollectState().observe(this, state -> invalidateOptionsMenu());
-        viewModel.getToastMessage().observe(this, msg -> {
-            if (msg != null && !msg.isEmpty()) {
-                ToastUtils.showShortToast(msg);
-            }
-        });
+        viewModel.getToastMessage().observe(this, this::showShortToast);
         viewModel.getLoading().observe(this, loading -> {
             if (collectMenuItem != null) {
                 collectMenuItem.setEnabled(!Boolean.TRUE.equals(loading));
@@ -225,10 +227,28 @@ public class ArticleWebViewActivity extends AppCompatActivity {
             return;
         }
         if (!SessionManager.getInstance().isLoggedIn()) {
-            ToastUtils.showShortToast(getString(R.string.article_collect_need_login));
+            showShortToast(getString(R.string.article_collect_need_login));
             startActivity(new Intent(this, LoginActivity.class));
             return;
         }
         viewModel.toggleCollect();
+    }
+
+    @Override
+    protected void onDestroy() {
+        dialogController = null;
+        super.onDestroy();
+    }
+
+    @Override
+    public @NotNull DialogController getDialogController() {
+        if (dialogController == null) {
+            throw new IllegalStateException("DialogController is not available after destruction.");
+        }
+        return dialogController;
+    }
+
+    private void showShortToast(String message) {
+        ToastUtils.showShortToast(getDialogController(), message);
     }
 }

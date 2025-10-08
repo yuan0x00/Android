@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.R;
-import com.rapid.android.core.common.utils.ToastUtils;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
+import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.FragmentPlazaBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
@@ -45,7 +45,7 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
         layoutManager = new LinearLayoutManager(requireContext());
         binding.recyclerView.setLayoutManager(layoutManager);
 
-        feedAdapter = new FeedAdapter(new ArticleListBean());
+        feedAdapter = new FeedAdapter(getDialogController(), new ArticleListBean());
         binding.recyclerView.setAdapter(feedAdapter);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
@@ -56,7 +56,7 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
 
         binding.fabShareArticle.setOnClickListener(v -> {
             if (!SessionManager.getInstance().isLoggedIn()) {
-                ToastUtils.showShortToast(getString(R.string.mine_toast_require_login));
+                showShortToast(getString(R.string.mine_toast_require_login));
                 startActivity(new Intent(requireContext(), LoginActivity.class));
                 return;
             }
@@ -92,8 +92,8 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
 
     @Override
     protected void setupObservers() {
-        UiFeedback.observeError(this, viewModel.getErrorMessage());
-        UiFeedback.observeError(this, viewModel.getPagingError());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getErrorMessage());
+        UiFeedback.observeError(this, getDialogController(), viewModel.getPagingError());
 
         viewModel.getPlazaItems().observe(this, items -> {
             feedAdapter.submitList(items);
@@ -115,5 +115,9 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
             backToTopController = null;
         }
         super.onDestroyView();
+    }
+
+    private void showShortToast(String message) {
+        ToastUtils.showShortToast(getDialogController(), message);
     }
 }

@@ -20,6 +20,10 @@
     <string name="notifications_description">接收应用推送通知和提醒</string>
     <string name="settings_section_appearance">外观</string>
     <string name="settings_theme_mode_description">选择应用配色方案，随时切换浅色或深色。</string>
+    <string name="settings_no_image_mode">无图模式</string>
+    <string name="settings_no_image_mode_description">仅展示默认占位图，节省流量与资源。</string>
+    <string name="settings_no_image_mode_on">已开启无图模式</string>
+    <string name="settings_no_image_mode_off">已关闭无图模式</string>
     <string name="settings_section_content">内容</string>
     <string name="settings_section_about">关于</string>
     <string name="setting_clear_cache">清除缓存</string>

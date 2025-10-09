@@ -15,6 +15,7 @@ public class SettingViewModel extends BaseViewModel {
     private final MutableLiveData<ThemeManager.ThemeMode> themeMode = new MutableLiveData<>(ThemeManager.ThemeMode.SYSTEM);
     private final MutableLiveData<Boolean> notifications = new MutableLiveData<>(AppPreferences.isNotificationsEnabled());
     private final MutableLiveData<Boolean> homeTopEnabled = new MutableLiveData<>(AppPreferences.isHomeTopEnabled());
+    private final MutableLiveData<Boolean> noImageMode = new MutableLiveData<>(AppPreferences.isNoImageModeEnabled());
     private final MutableLiveData<Integer> operationMessageRes = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
@@ -51,6 +52,18 @@ public class SettingViewModel extends BaseViewModel {
 //                : R.string.setting_top_articles_off);
     }
 
+    public LiveData<Boolean> getNoImageMode() {
+        return noImageMode;
+    }
+
+    public void setNoImageMode(boolean enabled) {
+        noImageMode.setValue(enabled);
+        AppPreferences.setNoImageModeEnabled(enabled);
+        operationMessageRes.setValue(enabled
+                ? R.string.settings_no_image_mode_on
+                : R.string.settings_no_image_mode_off);
+    }
+
     public LiveData<Integer> getOperationMessageRes() {
         return operationMessageRes;
     }
@@ -66,6 +79,7 @@ public class SettingViewModel extends BaseViewModel {
         ThemeManager.applyThemeMode(saved);
         notifications.setValue(AppPreferences.isNotificationsEnabled());
         homeTopEnabled.setValue(AppPreferences.isHomeTopEnabled());
+        noImageMode.setValue(AppPreferences.isNoImageModeEnabled());
     }
     
     public void logoutWithCallback(LogoutCallback callback) {

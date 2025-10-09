@@ -11,6 +11,7 @@ public final class AppPreferences {
     private static final String KEY_THEME_MODE = "pref_theme_mode";
     private static final String KEY_NOTIFICATIONS = "pref_notifications";
     private static final String KEY_HOME_TOP_ENABLED = "pref_home_top_enabled";
+    private static final String KEY_NO_IMAGE_MODE = "pref_no_image_mode";
 
     private AppPreferences() {
     }
@@ -42,5 +43,13 @@ public final class AppPreferences {
 
     public static void setHomeTopEnabled(boolean enabled) {
         getPrefs().edit().putBoolean(KEY_HOME_TOP_ENABLED, enabled).apply();
+    }
+
+    public static boolean isNoImageModeEnabled() {
+        return getPrefs().getBoolean(KEY_NO_IMAGE_MODE, false);
+    }
+
+    public static void setNoImageModeEnabled(boolean enabled) {
+        getPrefs().edit().putBoolean(KEY_NO_IMAGE_MODE, enabled).apply();
     }
 }

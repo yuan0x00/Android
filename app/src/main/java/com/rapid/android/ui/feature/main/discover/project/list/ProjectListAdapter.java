@@ -10,10 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.ProjectPageBean;
 import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
+import com.rapid.android.utils.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,16 +78,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
         }
         holder.meta.setText(metaBuilder.toString());
 
-        String coverUrl = item.getEnvelopePic();
-        if (!TextUtils.isEmpty(coverUrl)) {
-            holder.cover.setVisibility(View.VISIBLE);
-            Glide.with(holder.cover.getContext())
-                    .load(coverUrl)
-                    .placeholder(R.mipmap.ic_launcher)
-                    .into(holder.cover);
-        } else {
-            holder.cover.setVisibility(View.GONE);
-        }
+        ImageLoader.loadOrHide(holder.cover, item.getEnvelopePic());
 
         String targetUrl = !TextUtils.isEmpty(item.getLink()) ? item.getLink() : item.getProjectLink();
         holder.itemView.setOnClickListener(v -> {

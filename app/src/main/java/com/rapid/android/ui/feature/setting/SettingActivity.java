@@ -83,6 +83,13 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
             }
         });
 
+        viewModel.getNoImageMode().observe(this, isChecked -> {
+            boolean target = Boolean.TRUE.equals(isChecked);
+            if (binding.switchNoImage.isChecked() != target) {
+                binding.switchNoImage.setChecked(target);
+            }
+        });
+
         // 观察操作消息
         viewModel.getOperationMessageRes().observe(this, messageRes -> {
             if (messageRes != null) {
@@ -128,6 +135,13 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
                 return;
             }
             viewModel.setHomeTopEnabled(isChecked);
+        });
+
+        binding.switchNoImage.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!buttonView.isPressed()) {
+                return;
+            }
+            viewModel.setNoImageMode(isChecked);
         });
 
         binding.itemOpenSource.setOnClickListener(v ->

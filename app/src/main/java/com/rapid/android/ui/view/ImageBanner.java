@@ -5,9 +5,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.BannerItemBean;
+import com.rapid.android.utils.ImageLoader;
 
 public class ImageBanner extends BaseBanner<BannerItemBean> {
 
@@ -28,9 +28,6 @@ public class ImageBanner extends BaseBanner<BannerItemBean> {
     protected void bindItem(View itemView, BannerItemBean item, int position) {
         ImageView iv = itemView.findViewById(R.id.iv_image);
         // 使用 Glide 加载图片
-        Glide.with(itemView)
-                .load(item.getImagePath())
-                .centerCrop()
-                .into(iv);
+        ImageLoader.load(iv, item.getImagePath());
     }
 }

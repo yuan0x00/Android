@@ -33,14 +33,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="24dp">
+            android:paddingHorizontal="@dimen/app_spacing_lg"
+            android:paddingTop="@dimen/app_spacing_lg"
+            android:paddingBottom="@dimen/app_spacing_xl">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/app_spacing_lg"
                 app:cardBackgroundColor="?attr/colorSurfaceContainer"
                 app:cardElevation="0dp"
                 app:strokeColor="?attr/colorOutlineVariant"
@@ -50,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/app_spacing_lg">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -62,7 +62,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="@dimen/app_spacing_xs"
                         android:text="@string/settings_theme_mode_description"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                         android:textColor="?attr/colorOnSurfaceVariant"/>
@@ -71,7 +71,7 @@
                         android:id="@+id/group_theme_mode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="@dimen/app_spacing_lg"
                         app:singleSelection="true">
 
                         <com.google.android.material.button.MaterialButton
@@ -79,7 +79,7 @@
                             style="@style/Widget.Material3.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
+                            android:layout_marginEnd="@dimen/app_spacing_sm"
                             android:layout_weight="1"
                             android:text="@string/theme_follow_system"/>
 
@@ -88,7 +88,7 @@
                             style="@style/Widget.Material3.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
+                            android:layout_marginEnd="@dimen/app_spacing_sm"
                             android:layout_weight="1"
                             android:text="@string/theme_light"/>
 
@@ -109,7 +109,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/app_spacing_lg"
                 app:cardBackgroundColor="?attr/colorSurfaceContainer"
                 app:cardElevation="0dp"
                 app:strokeColor="?attr/colorOutlineVariant"
@@ -119,7 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/app_spacing_lg">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -129,12 +129,61 @@
                         android:textColor="?attr/colorOnSurface"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/item_no_image"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="@dimen/app_spacing_lg"
                         android:minHeight="56dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp">
+                        android:paddingTop="@dimen/app_spacing_sm"
+                        android:paddingBottom="@dimen/app_spacing_sm">
+
+                        <TextView
+                            android:id="@+id/text_no_image"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_no_image_mode"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@+id/switch_no_image"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/text_no_image_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/app_spacing_xs"
+                            android:text="@string/settings_no_image_mode_description"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@id/switch_no_image"
+                            app:layout_constraintStart_toStartOf="@id/text_no_image"
+                            app:layout_constraintTop_toBottomOf="@id/text_no_image"/>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_no_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="@dimen/app_spacing_sm"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
+                        android:paddingTop="@dimen/app_spacing_sm"
+                        android:paddingBottom="@dimen/app_spacing_sm">
 
                         <TextView
                             android:id="@+id/text_notifications"
@@ -152,7 +201,7 @@
                             android:id="@+id/text_notifications_desc"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="@dimen/app_spacing_xs"
                             android:text="@string/notifications_description"
                             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant"
@@ -174,15 +223,15 @@
                     <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginVertical="8dp"
+                        android:layout_marginVertical="@dimen/app_spacing_sm"
                         android:background="?attr/colorOutlineVariant" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:minHeight="56dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp">
+                        android:paddingTop="@dimen/app_spacing_sm"
+                        android:paddingBottom="@dimen/app_spacing_sm">
 
                         <TextView
                             android:id="@+id/text_top_articles"
@@ -200,7 +249,7 @@
                             android:id="@+id/text_top_articles_desc"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="@dimen/app_spacing_xs"
                             android:text="@string/settings_show_top_articles_description"
                             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant"
@@ -226,7 +275,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/app_spacing_lg"
                 app:cardBackgroundColor="?attr/colorSurfaceContainer"
                 app:cardElevation="0dp"
                 app:strokeColor="?attr/colorOutlineVariant"
@@ -236,7 +285,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/app_spacing_lg">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -248,19 +297,19 @@
                     <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="8dp"/>
+                        android:layout_marginTop="@dimen/app_spacing_sm"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/item_open_source"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/app_spacing_sm"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
                         android:minHeight="56dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp">
+                        android:paddingTop="@dimen/app_spacing_sm"
+                        android:paddingBottom="@dimen/app_spacing_sm">
 
                         <TextView
                             android:id="@+id/text_open_source"
@@ -277,7 +326,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="@dimen/app_spacing_xs"
                             android:text="@string/setting_open_source_desc"
                             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant"
@@ -308,7 +357,7 @@
                 style="@style/Widget.Material3.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="@dimen/app_spacing_sm"
                 android:text="@string/setting_logout"/>
 
         </LinearLayout>

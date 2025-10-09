@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.rapid.android.core.log.LogKit;
 import com.rapid.android.core.network.interceptor.AuthInterceptor;
+import com.rapid.android.core.network.interceptor.TokenAuthenticator;
 
 import java.io.IOException;
 import java.net.ProxySelector;
@@ -48,9 +49,12 @@ public class NetworkClient {
         okHttpBuilder.addInterceptor(new AuthInterceptor(
                 activeConfig.getAuthFailureListener(),
                 null,
-                activeConfig.getTokenRefreshHandler(),
                 activeConfig.getBusinessUnauthorizedCodes()));
         okHttpBuilder.addInterceptor(new ResponseErrorInterceptor());
+
+        if (activeConfig.getTokenRefreshHandler() != null) {
+            okHttpBuilder.authenticator(new TokenAuthenticator(activeConfig));
+        }
 
         if (activeConfig.isLoggingEnabled()) {
             okHttpBuilder.addInterceptor(new LoggingInterceptor());

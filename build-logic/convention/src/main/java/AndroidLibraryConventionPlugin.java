@@ -13,8 +13,15 @@ public class AndroidLibraryConventionPlugin implements Plugin<@NonNull Project> 
         target.getPluginManager().apply("com.android.library");
 
         LibraryExtension extension = target.getExtensions().getByType(LibraryExtension.class);
-        extension.getDefaultConfig().consumerProguardFile("consumer-rules.pro");
-
         AndroidJava.configureAndroidProject(target, extension);
+
+        extension.getDefaultConfig().consumerProguardFile("consumer-rules.pro");
+        extension.getBuildTypes().configureEach(buildType -> {
+            if ("release".equals(buildType.getName())) {
+                buildType.setMinifyEnabled(false);
+                buildType.proguardFile(extension.getDefaultProguardFile("proguard-android-optimize.txt"));
+                buildType.proguardFile(target.getLayout().getProjectDirectory().file("proguard-rules.pro").getAsFile());
+            }
+        });
     }
 }

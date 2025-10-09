@@ -28,6 +28,7 @@ public final class GlobalCrashHandler implements Thread.UncaughtExceptionHandler
     private static final String CRASH_DIR_NAME = "crash_logs";
 
     private static volatile GlobalCrashHandler sInstance;
+    private static volatile CrashReporter crashReporter;
 
     private final Context appContext;
     private final Handler mainHandler;
@@ -54,6 +55,10 @@ public final class GlobalCrashHandler implements Thread.UncaughtExceptionHandler
 
     public static boolean isInstalled() {
         return sInstance != null;
+    }
+
+    public static void setCrashReporter(@Nullable CrashReporter reporter) {
+        crashReporter = reporter;
     }
 
     private void init() {
@@ -242,8 +247,12 @@ public final class GlobalCrashHandler implements Thread.UncaughtExceptionHandler
     }
 
     private void uploadCrashLog(@Nullable File crashFile, @NonNull Throwable ex) {
+        CrashReporter reporter = crashReporter;
+        if (reporter == null) {
+            return;
+        }
         try {
-            CrashReportUploader.uploadAsync(crashFile, ex);
+            reporter.report(crashFile, ex);
         } catch (Exception e) {
             safeLog("upload crash log failed: " + e.getMessage());
         }
@@ -274,5 +283,9 @@ public final class GlobalCrashHandler implements Thread.UncaughtExceptionHandler
         } catch (Throwable t) {
             return "toString_failed";
         }
+    }
+
+    public interface CrashReporter {
+        void report(@Nullable File crashFile, @NonNull Throwable throwable) throws Exception;
     }
 }

@@ -2,6 +2,7 @@ package com.rapid.android.core.network;
 
 import androidx.annotation.NonNull;
 
+import com.rapid.android.core.log.LogKit;
 import com.rapid.android.core.network.client.NetworkClient;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +18,7 @@ public class NetManager {
 
     private static final Object lock = new Object();
     private static final ConcurrentHashMap<Class<?>, Object> apiCache = new ConcurrentHashMap<>();
+    private static final String TAG = "NetManager";
     private static volatile Retrofit retrofit;
     private static volatile boolean initialized = false;
 
@@ -115,6 +117,7 @@ public class NetManager {
             apiCache.clear();
             retrofit = null;
             initialized = false;
+            LogKit.i(TAG, "Retrofit cache reset");
         }
     }
 

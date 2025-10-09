@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import okhttp3.*;
 
@@ -28,30 +26,19 @@ public class AuthInterceptor implements Interceptor {
     private final NetworkConfig.AuthFailureListener authFailureListener;
     private final Set<Integer> unauthorizedCodes;
     private final Set<Integer> businessUnauthorizedCodes;
-    private final TokenRefreshHandler tokenRefreshHandler;
-    private final AtomicBoolean isRefreshing = new AtomicBoolean(false);
-    private final Object refreshLock = new Object();
     private final Gson gson = new Gson();
-    private volatile boolean lastRefreshSuccessful = false;
 
     public AuthInterceptor(@Nullable NetworkConfig.AuthFailureListener listener) {
-        this(listener, null, null, null);
+        this(listener, null, null);
     }
 
     public AuthInterceptor(@Nullable NetworkConfig.AuthFailureListener listener,
                            @Nullable int[] customUnauthorizedCodes) {
-        this(listener, customUnauthorizedCodes, null, null);
+        this(listener, customUnauthorizedCodes, null);
     }
 
     public AuthInterceptor(@Nullable NetworkConfig.AuthFailureListener listener,
                            @Nullable int[] customUnauthorizedCodes,
-                           @Nullable TokenRefreshHandler tokenRefreshHandler) {
-        this(listener, customUnauthorizedCodes, tokenRefreshHandler, null);
-    }
-
-    public AuthInterceptor(@Nullable NetworkConfig.AuthFailureListener listener,
-                           @Nullable int[] customUnauthorizedCodes,
-                           @Nullable TokenRefreshHandler tokenRefreshHandler,
                            @Nullable Set<Integer> businessUnauthorizedCodes) {
         this.authFailureListener = listener != null ? listener : () -> {};
         this.unauthorizedCodes = new HashSet<>();
@@ -67,7 +54,7 @@ public class AuthInterceptor implements Interceptor {
             }
         }
 
-        this.tokenRefreshHandler = tokenRefreshHandler;
+        // Token 刷新由 TokenAuthenticator 处理
     }
 
     @NonNull
@@ -83,73 +70,14 @@ public class AuthInterceptor implements Interceptor {
             return response;
         }
 
-        if (tokenRefreshHandler == null) {
+        if (businessResult.businessUnauthorized) {
             authFailureListener.onUnauthorized();
-            return response;
         }
-
-        boolean refreshResult = attemptTokenRefresh();
-
-        if (refreshResult) {
-            response.close();
-            Request retryRequest = tokenRefreshHandler.rebuildRequest(request);
-            if (retryRequest == null) {
-                retryRequest = request.newBuilder().build();
-            }
-
-            Response retriedResponse = chain.proceed(retryRequest);
-            BusinessCheckResult retryBusinessResult = evaluateBusinessUnauthorized(retriedResponse);
-            retriedResponse = retryBusinessResult.response;
-            if (!isUnauthorized(retriedResponse.code()) && !retryBusinessResult.businessUnauthorized) {
-                return retriedResponse;
-            }
-
-            authFailureListener.onUnauthorized();
-            return retriedResponse;
-        }
-
-        authFailureListener.onUnauthorized();
         return response;
     }
 
     private boolean isUnauthorized(int code) {
         return unauthorizedCodes.contains(code);
-    }
-
-    private boolean attemptTokenRefresh() {
-        if (tokenRefreshHandler == null) {
-            return false;
-        }
-
-        if (isRefreshing.compareAndSet(false, true)) {
-            boolean success = false;
-            try {
-                if (tokenRefreshHandler.canRefresh()) {
-                    success = tokenRefreshHandler.refreshToken();
-                }
-            } catch (Exception ignored) {
-                success = false;
-            } finally {
-                synchronized (refreshLock) {
-                    lastRefreshSuccessful = success;
-                    isRefreshing.set(false);
-                    refreshLock.notifyAll();
-                }
-            }
-            return success;
-        } else {
-            synchronized (refreshLock) {
-                while (isRefreshing.get()) {
-                    try {
-                        refreshLock.wait(TimeUnit.SECONDS.toMillis(2));
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                        break;
-                    }
-                }
-                return lastRefreshSuccessful;
-            }
-        }
     }
 
     private BusinessCheckResult evaluateBusinessUnauthorized(@NonNull Response response) {

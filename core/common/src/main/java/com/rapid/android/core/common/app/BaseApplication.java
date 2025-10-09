@@ -8,8 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.rapid.android.core.common.BuildConfig;
+import com.rapid.android.core.common.crash.GlobalCrashHandler;
 import com.rapid.android.core.common.data.StorageManager;
-import com.rapid.android.core.common.device.ScreenAdaptUtils;
 import com.rapid.android.core.common.lifecycle.AppLifecycleObserver;
 import com.rapid.android.core.log.LogKit;
 import com.tencent.mmkv.MMKV;
@@ -64,9 +64,8 @@ public class BaseApplication extends Application {
             LogKit.init(BuildConfig.DEBUG);
             LogKit.d("BaseApplication", "LogKit initialized");
 
-            // 如需启用崩溃监控，取消下行注释
-            // GlobalCrashHandler.install(this);
-            LogKit.d("BaseApplication", "GlobalCrashHandler installation skipped (commented out)");
+            GlobalCrashHandler.install(this);
+            LogKit.d("BaseApplication", "GlobalCrashHandler installed");
 
             String rootDir = MMKV.initialize(this);
             LogKit.d("BaseApplication", "MMKV initialized at: %s", rootDir);
@@ -74,8 +73,8 @@ public class BaseApplication extends Application {
             StorageManager.init();
             LogKit.d("BaseApplication", "StorageManager initialized");
 
-            ScreenAdaptUtils.init(this);
-            LogKit.d("BaseApplication", "ScreenAdaptUtils initialized");
+//            ScreenAdaptUtils.init(this);
+//            LogKit.d("BaseApplication", "ScreenAdaptUtils initialized");
 
             AppLifecycleObserver.initialize(this);
             ProcessLifecycleOwner.get().getLifecycle().addObserver(AppLifecycleObserver.getInstance());

@@ -14,5 +14,16 @@ public class AndroidApplicationConventionPlugin implements Plugin<@NonNull Proje
 
         ApplicationExtension extension = target.getExtensions().getByType(ApplicationExtension.class);
         AndroidJava.configureAndroidProject(target, extension);
+
+        int targetSdk = Integer.parseInt(target.getProviders().gradleProperty("targetSdk").get());
+        extension.getDefaultConfig().setTargetSdk(targetSdk);
+
+        extension.getBuildTypes().configureEach(buildType -> {
+            if ("release".equals(buildType.getName())) {
+                buildType.setMinifyEnabled(false);
+                buildType.proguardFile(extension.getDefaultProguardFile("proguard-android-optimize.txt"));
+                buildType.proguardFile(target.getLayout().getProjectDirectory().file("proguard-rules.pro").getAsFile());
+            }
+        });
     }
 }

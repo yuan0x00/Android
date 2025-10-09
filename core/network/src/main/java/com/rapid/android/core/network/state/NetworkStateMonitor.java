@@ -1,23 +1,26 @@
 package com.rapid.android.core.network.state;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Network;
+
+import androidx.annotation.NonNull;
 
 import com.rapid.android.core.log.LogKit;
-import com.rapid.android.core.network.util.NetworkUtils;
 
-import java.util.Objects;
-
-public class NetworkStateMonitor extends BroadcastReceiver {
+public class NetworkStateMonitor extends ConnectivityManager.NetworkCallback {
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        if (Objects.equals(intent.getAction(), ConnectivityManager.CONNECTIVITY_ACTION)) {
-            if (!NetworkUtils.isConnected(context.getApplicationContext())) {
-                LogKit.w("NetworkState", "Network connectivity lost");
-            }
-        }
+    public void onAvailable(@NonNull Network network) {
+        LogKit.d("NetworkState", "Network available: %s", network.toString());
+    }
+
+    @Override
+    public void onLost(@NonNull Network network) {
+        LogKit.w("NetworkState", "Network connectivity lost");
+    }
+
+    @Override
+    public void onUnavailable() {
+        LogKit.w("NetworkState", "Network unavailable");
     }
 }

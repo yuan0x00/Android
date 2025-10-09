@@ -1,9 +1,11 @@
-package com.rapid.android.core.common.crash;
+package com.rapid.android.init;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.rapid.android.core.common.crash.GlobalCrashHandler;
 import com.rapid.android.core.log.LogKit;
 import com.rapid.android.core.network.client.NetworkClient;
 import com.rapid.android.core.network.client.NetworkConfig;
@@ -15,27 +17,22 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.*;
 
-/**
- * 崩溃日志上传器：将本地日志文件和堆栈信息上传至服务端。
- */
-final class CrashReportUploader {
+final class AppCrashReporter implements GlobalCrashHandler.CrashReporter {
 
-    private static final String TAG = "CrashUploader";
+    private static final String TAG = "CrashReporter";
     private static final MediaType MEDIA_TYPE_TEXT = MediaType.parse("text/plain; charset=UTF-8");
 
-    private CrashReportUploader() {
-    }
-
-    static void uploadAsync(@Nullable File crashFile, @Nullable Throwable throwable) {
+    @Override
+    public void report(@Nullable File crashFile, @NonNull Throwable throwable) {
         String endpoint = NetworkClient.getActiveConfig().getCrashReportEndpoint();
         if (endpoint == null || endpoint.isEmpty()) {
-            LogKit.w(TAG, "Crash upload skipped: endpoint is empty");
+            LogKit.w(TAG, "Crash upload skipped: endpoint empty");
             return;
         }
-        new Thread(() -> performUpload(endpoint, crashFile, throwable), "CrashUploader").start();
+        new Thread(() -> performUpload(endpoint, crashFile, throwable), "CrashReporter").start();
     }
 
-    private static void performUpload(String endpoint, @Nullable File crashFile, @Nullable Throwable throwable) {
+    private void performUpload(String endpoint, @Nullable File crashFile, @NonNull Throwable throwable) {
         OkHttpClient client = buildClient();
         RequestBody body = buildRequestBody(crashFile, throwable);
         Request request = new Request.Builder()
@@ -46,14 +43,14 @@ final class CrashReportUploader {
             if (!response.isSuccessful()) {
                 LogKit.w(TAG, "Crash upload failed: code=%d, message=%s", response.code(), response.message());
             } else {
-                LogKit.d(TAG, "Crash upload success, code=%d", response.code());
+                LogKit.d(TAG, "Crash upload success: code=%d", response.code());
             }
         } catch (IOException e) {
             LogKit.e(TAG, e, "Crash upload request error");
         }
     }
 
-    private static OkHttpClient buildClient() {
+    private OkHttpClient buildClient() {
         NetworkConfig config = NetworkClient.getActiveConfig();
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(config.getConnectTimeoutSeconds(), TimeUnit.SECONDS)
@@ -69,16 +66,11 @@ final class CrashReportUploader {
         return builder.build();
     }
 
-    private static RequestBody buildRequestBody(@Nullable File crashFile, @Nullable Throwable throwable) {
+    private RequestBody buildRequestBody(@Nullable File crashFile, @NonNull Throwable throwable) {
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("message", throwable != null && throwable.getMessage() != null
-                        ? throwable.getMessage()
-                        : "unknown");
-
-        if (throwable != null) {
-            builder.addFormDataPart("stacktrace", Log.getStackTraceString(throwable));
-        }
+                .addFormDataPart("message", throwable.getMessage() != null ? throwable.getMessage() : "unknown")
+                .addFormDataPart("stacktrace", Log.getStackTraceString(throwable));
 
         if (crashFile != null && crashFile.exists()) {
             builder.addFormDataPart(
@@ -87,7 +79,6 @@ final class CrashReportUploader {
                     RequestBody.create(MEDIA_TYPE_TEXT, crashFile)
             );
         }
-
         return builder.build();
     }
 }

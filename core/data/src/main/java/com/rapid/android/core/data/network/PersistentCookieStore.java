@@ -5,9 +5,10 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.rapid.android.core.network.client.NetworkConfig;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,13 +24,12 @@ import okhttp3.HttpUrl;
  */
 public class PersistentCookieStore implements NetworkConfig.CookieStore {
     private static final String PREF_NAME = "persistent_cookies";
-    private static final String KEY_COOKIE_MAP = "cookie_map";
-    
+    private static final String KEY_PREFIX = "cookie_host_";
+
     private static PersistentCookieStore instance;
-    
+
     private final Map<String, List<String>> cookieMap = new ConcurrentHashMap<>();
     private final SharedPreferences sharedPreferences;
-    private final Gson gson = new Gson();
     private boolean loaded = false;
 
     public PersistentCookieStore(Context context) {
@@ -49,8 +49,8 @@ public class PersistentCookieStore implements NetworkConfig.CookieStore {
     public void saveFromResponse(@NonNull HttpUrl url, @NonNull List<String> cookies) {
         if (!cookies.isEmpty()) {
             String host = url.host();
-            cookieMap.put(host, new ArrayList<>(cookies));
-            saveCookies();
+            cookieMap.put(host, Collections.unmodifiableList(new ArrayList<>(cookies)));
+            saveCookies(host, cookies);
         }
     }
 
@@ -63,35 +63,44 @@ public class PersistentCookieStore implements NetworkConfig.CookieStore {
         
         String host = url.host();
         List<String> cookies = cookieMap.get(host);
-        return cookies != null ? cookies : Collections.emptyList();
+        if (cookies != null) {
+            return cookies;
+        }
+
+        String stored = sharedPreferences.getString(buildKey(host), null);
+        if (stored == null || stored.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<String> restored = parseCookieList(stored);
+        if (!restored.isEmpty()) {
+            cookieMap.put(host, Collections.unmodifiableList(restored));
+        }
+        return restored;
     }
 
-    private void loadCookies() {
+    private synchronized void loadCookies() {
+        if (loaded) {
+            return;
+        }
         try {
-            String cookieMapJson = sharedPreferences.getString(KEY_COOKIE_MAP, "{}");
-            TypeToken<Map<String, List<String>>> typeToken = new TypeToken<Map<String, List<String>>>() {};
-            Map<String, List<String>> loadedMap = gson.fromJson(cookieMapJson, typeToken.getType());
-            
-            if (loadedMap != null) {
-                cookieMap.clear();
-                cookieMap.putAll(loadedMap);
-            } else {
-                cookieMap.clear();
+            Map<String, ?> all = sharedPreferences.getAll();
+            for (Map.Entry<String, ?> entry : all.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (!(value instanceof String) || !key.startsWith(KEY_PREFIX)) {
+                    continue;
+                }
+                String host = key.substring(KEY_PREFIX.length());
+                List<String> restored = parseCookieList((String) value);
+                if (!restored.isEmpty()) {
+                    cookieMap.put(host, Collections.unmodifiableList(restored));
+                }
             }
         } catch (Exception e) {
-            e.printStackTrace();
             cookieMap.clear();
         }
         loaded = true;
-    }
-
-    private void saveCookies() {
-        try {
-            String cookieMapJson = gson.toJson(cookieMap);
-            sharedPreferences.edit().putString(KEY_COOKIE_MAP, cookieMapJson).apply();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -99,6 +108,37 @@ public class PersistentCookieStore implements NetworkConfig.CookieStore {
      */
     public void clearCookies() {
         cookieMap.clear();
-        saveCookies();
+        sharedPreferences.edit().clear().apply();
+    }
+
+    private void saveCookies(String host, List<String> cookies) {
+        JSONArray array = new JSONArray();
+        for (String cookie : cookies) {
+            array.put(cookie);
+        }
+        sharedPreferences.edit().putString(buildKey(host), array.toString()).apply();
+    }
+
+    private String buildKey(String host) {
+        return KEY_PREFIX + host;
+    }
+
+    private List<String> parseCookieList(String payload) {
+        if (payload == null || payload.isEmpty()) {
+            return Collections.emptyList();
+        }
+        try {
+            JSONArray array = new JSONArray(payload);
+            List<String> result = new ArrayList<>(array.length());
+            for (int i = 0; i < array.length(); i++) {
+                String value = array.optString(i, null);
+                if (value != null && !value.isEmpty()) {
+                    result.add(value);
+                }
+            }
+            return result;
+        } catch (JSONException e) {
+            return Collections.emptyList();
+        }
     }
 }

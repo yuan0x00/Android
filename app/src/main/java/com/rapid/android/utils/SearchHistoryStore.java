@@ -1,10 +1,9 @@
 package com.rapid.android.utils;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.rapid.android.core.common.app.BaseApplication;
+import com.rapid.android.core.datastore.DefaultDataStore;
+import com.rapid.android.core.datastore.IDataStore;
 
 import org.json.JSONArray;
 
@@ -18,17 +17,13 @@ public final class SearchHistoryStore {
     private static final String PREF_NAME = "search_history";
     private static final String KEY_HISTORY = "key_history";
     private static final int MAX_SIZE = 10;
+    private static final IDataStore dataStore = new DefaultDataStore();
 
     private SearchHistoryStore() {
     }
 
-    private static SharedPreferences getPrefs() {
-        Context context = BaseApplication.getAppContext();
-        return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-    }
-
     public static List<String> getHistories() {
-        String json = getPrefs().getString(KEY_HISTORY, "");
+        String json = dataStore.getString(historyKey(), "");
         List<String> result = new ArrayList<>();
         if (TextUtils.isEmpty(json)) {
             return result;
@@ -65,7 +60,7 @@ public final class SearchHistoryStore {
     }
 
     public static void clearHistory() {
-        getPrefs().edit().remove(KEY_HISTORY).apply();
+        dataStore.remove(historyKey());
     }
 
     private static void save(List<String> histories) {
@@ -73,6 +68,10 @@ public final class SearchHistoryStore {
         for (int i = 0; i < histories.size() && i < MAX_SIZE; i++) {
             array.put(histories.get(i));
         }
-        getPrefs().edit().putString(KEY_HISTORY, array.toString()).apply();
+        dataStore.putString(historyKey(), array.toString());
+    }
+
+    private static String historyKey() {
+        return PREF_NAME + ":" + KEY_HISTORY;
     }
 }

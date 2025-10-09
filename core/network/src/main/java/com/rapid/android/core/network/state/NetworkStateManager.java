@@ -1,18 +1,24 @@
 package com.rapid.android.core.network.state;
 
 import android.content.Context;
-import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.NetworkRequest;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class NetworkStateManager implements DefaultLifecycleObserver {
 
     private static final NetworkStateManager S_MANAGER = new NetworkStateManager();
-    private final NetworkStateMonitor mNetworkStateMonitor = new NetworkStateMonitor();
+    private final NetworkStateMonitor networkCallback = new NetworkStateMonitor();
+    private final AtomicInteger activeOwners = new AtomicInteger(0);
+    private ConnectivityManager connectivityManager;
     private Context appContext;
+    private boolean registered = false;
 
     private NetworkStateManager() {
     }
@@ -35,17 +41,25 @@ public class NetworkStateManager implements DefaultLifecycleObserver {
             return;
         }
         appContext = context.getApplicationContext();
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        appContext.registerReceiver(mNetworkStateMonitor, filter);
+        ensureConnectivityManager();
+        if (connectivityManager == null) {
+            return;
+        }
+
+        if (activeOwners.incrementAndGet() == 1) {
+            registerCallback();
+        }
     }
 
     @Override
     public void onPause(@NonNull LifecycleOwner owner) {
-        if (appContext != null) {
-            try {
-                appContext.unregisterReceiver(mNetworkStateMonitor);
-            } catch (IllegalArgumentException ignored) {
-            }
+        if (activeOwners.get() <= 0) {
+            activeOwners.set(0);
+            return;
+        }
+
+        if (activeOwners.decrementAndGet() <= 0) {
+            unregisterCallback();
         }
     }
 
@@ -54,5 +68,40 @@ public class NetworkStateManager implements DefaultLifecycleObserver {
             return (Context) owner;
         }
         return appContext;
+    }
+
+    private void ensureConnectivityManager() {
+        if (connectivityManager == null && appContext != null) {
+            connectivityManager = (ConnectivityManager) appContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        }
+    }
+
+    private void registerCallback() {
+        if (registered || connectivityManager == null) {
+            return;
+        }
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                connectivityManager.registerDefaultNetworkCallback(networkCallback);
+            } else {
+                NetworkRequest request = new NetworkRequest.Builder().build();
+                connectivityManager.registerNetworkCallback(request, networkCallback);
+            }
+            registered = true;
+        } catch (SecurityException | IllegalArgumentException ignored) {
+            registered = false;
+        }
+    }
+
+    private void unregisterCallback() {
+        if (!registered || connectivityManager == null) {
+            return;
+        }
+        try {
+            connectivityManager.unregisterNetworkCallback(networkCallback);
+        } catch (IllegalArgumentException ignored) {
+        } finally {
+            registered = false;
+        }
     }
 }

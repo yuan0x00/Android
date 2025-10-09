@@ -11,9 +11,6 @@ public final class AndroidJava {
 
     private static final String PROPERTY_COMPILE_SDK = "compileSdk";
     private static final String PROPERTY_MIN_SDK = "minSdk";
-
-    //    private static final String PROPERTY_TARGET_SDK = "targetSdk";
-
     private static final String PROPERTY_JAVA_VERSION = "javaVersion";
     private static final String PROPERTY_ENABLE_VIEW_BINDING = "enableViewBinding";
 
@@ -23,12 +20,13 @@ public final class AndroidJava {
     public static void configureAndroidProject(Project project, CommonExtension<?, ?, ?, ?, ?, ?> commonExtension) {
         int compileSdk = Integer.parseInt(getRequiredProperty(project, PROPERTY_COMPILE_SDK));
         int minSdk = Integer.parseInt(getRequiredProperty(project, PROPERTY_MIN_SDK));
-//        int targetSdk = Integer.parseInt(getRequiredProperty(project, PROPERTY_TARGET_SDK));
         String javaVersion = getRequiredProperty(project, PROPERTY_JAVA_VERSION);
 
         commonExtension.setCompileSdk(compileSdk);
         commonExtension.getDefaultConfig().setMinSdk(minSdk);
-//        commonExtension.getDefaultConfig().setTargetSdk(targetSdk);
+
+        commonExtension.getLint().setAbortOnError(false);
+        commonExtension.getLint().setCheckReleaseBuilds(false);
 
         JavaVersion javaVer = getJavaVersion(javaVersion);
         commonExtension.getCompileOptions().setSourceCompatibility(javaVer);

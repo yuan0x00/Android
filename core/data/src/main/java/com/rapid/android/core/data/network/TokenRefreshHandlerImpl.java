@@ -14,6 +14,7 @@ import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.core.network.interceptor.AuthInterceptor;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import okhttp3.HttpUrl;
@@ -23,6 +24,8 @@ import okhttp3.Request;
  * 默认的 Token 刷新实现：使用持久化的账号信息尝试重新登录，并刷新本地会话。
  */
 public class TokenRefreshHandlerImpl implements AuthInterceptor.TokenRefreshHandler {
+
+    private static final long REFRESH_TIMEOUT_SECONDS = 10L;
 
     private final AuthStorage authStorage = AuthStorage.getInstance();
     private final UserRepository userRepository = RepositoryProvider.getUserRepository();
@@ -44,6 +47,7 @@ public class TokenRefreshHandlerImpl implements AuthInterceptor.TokenRefreshHand
 
         DomainResult<LoginBean> result = userRepository.reLogin()
                 .subscribeOn(Schedulers.io())
+                .timeout(REFRESH_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .blockingFirst(DomainResult.failure(
                         DomainError.of(DomainError.UNKNOWN_CODE, "ReLogin failed")));
 

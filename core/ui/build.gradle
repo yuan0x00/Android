@@ -5,17 +5,6 @@ plugins {
 android {
     namespace 'com.rapid.android.core.ui'
     resourcePrefix 'core_ui_'
-
-    defaultConfig {
-        consumerProguardFiles "consumer-rules.pro"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
 }
 
 dependencies {

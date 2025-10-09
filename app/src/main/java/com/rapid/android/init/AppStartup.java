@@ -5,11 +5,13 @@ import android.os.StrictMode;
 import com.google.android.material.color.DynamicColors;
 import com.rapid.android.BuildConfig;
 import com.rapid.android.core.common.app.BaseApplication;
+import com.rapid.android.core.common.crash.GlobalCrashHandler;
 import com.rapid.android.core.data.DataInitializer;
 import com.rapid.android.core.data.network.AuthHeaderProvider;
 import com.rapid.android.core.data.network.PersistentCookieStore;
 import com.rapid.android.core.data.network.TokenRefreshHandlerImpl;
 import com.rapid.android.core.data.session.SessionManager;
+import com.rapid.android.core.log.LogKit;
 import com.rapid.android.core.network.NetManager;
 import com.rapid.android.core.network.client.NetworkClient;
 import com.rapid.android.core.network.client.NetworkConfig;
@@ -19,8 +21,11 @@ import com.rapid.android.utils.ThemeManager;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 final class AppStartup {
+
+    private static final String TAG = "AppStartup";
 
     private final BaseApplication application;
     private final ExecutorService networkExecutor = Executors.newSingleThreadExecutor(r -> {
@@ -30,6 +35,7 @@ final class AppStartup {
     });
     private final NetworkConfig.AuthFailureListener authFailureHandler =
             () -> SessionManager.getInstance().forceLogout();
+    private final AtomicBoolean rebuildPending = new AtomicBoolean(false);
     private AuthInterceptor.TokenRefreshHandler tokenRefreshHandler;
     private DeveloperProxyManager.ProxySettingsListener proxyListener;
 
@@ -40,6 +46,7 @@ final class AppStartup {
     void initialize() {
         applyTheme();
         enableStrictMode();
+        GlobalCrashHandler.setCrashReporter(new AppCrashReporter());
         DataInitializer.init();
         initNetwork();
     }
@@ -78,23 +85,32 @@ final class AppStartup {
         DeveloperProxyManager proxyManager = DeveloperProxyManager.getInstance();
         proxyListener = (settings, failureTriggered) -> {
             if (!failureTriggered) {
-                scheduleNetworkRebuild();
+                scheduleNetworkRebuild("proxy updated");
             }
         };
         proxyManager.addListener(proxyListener);
         networkExecutor.execute(() -> {
-            rebuildNetworkClient();
+            rebuildNetworkClient("app start");
             SessionManager.getInstance().initialize();
         });
     }
 
-    private void scheduleNetworkRebuild() {
-        networkExecutor.execute(this::rebuildNetworkClient);
+    private void scheduleNetworkRebuild(String reason) {
+        if (!rebuildPending.compareAndSet(false, true)) {
+            LogKit.d(TAG, "Skip network rebuild (%s): already pending", reason);
+            return;
+        }
+        networkExecutor.execute(() -> rebuildNetworkClient(reason));
     }
 
-    private void rebuildNetworkClient() {
-        NetworkClient.configure(createNetworkConfig());
-        NetManager.reset();
+    private void rebuildNetworkClient(String reason) {
+        try {
+            LogKit.i(TAG, "Rebuilding network client (%s)", reason);
+            NetworkClient.configure(createNetworkConfig());
+            NetManager.reset();
+        } finally {
+            rebuildPending.set(false);
+        }
     }
 
     private NetworkConfig createNetworkConfig() {
@@ -108,8 +124,16 @@ final class AppStartup {
                 .businessUnauthorizedCodes(-1001)
                 .tokenRefreshHandler(tokenRefreshHandler)
                 .headerProvider(new AuthHeaderProvider())
-                .cookieStore(new PersistentCookieStore(application.getApplicationContext()))
+                .cookieStore(resolveCookieStore())
                 .proxySelector(proxyManager.getProxySelector())
                 .build();
+    }
+
+    private NetworkConfig.CookieStore resolveCookieStore() {
+        PersistentCookieStore existing = PersistentCookieStore.getInstance();
+        if (existing != null) {
+            return existing;
+        }
+        return new PersistentCookieStore(application.getApplicationContext());
     }
 }

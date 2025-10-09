@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
-            android:paddingHorizontal="16dp"
+            android:paddingHorizontal="@dimen/app_spacing_lg"
             app:title="@string/share_article_page_title"
             app:titleCentered="false"/>
 
@@ -32,9 +32,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="24dp"
-            android:paddingBottom="32dp">
+            android:paddingHorizontal="@dimen/app_spacing_lg"
+            android:paddingTop="@dimen/app_spacing_xl"
+            android:paddingBottom="@dimen/app_spacing_2xl">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/titleInputLayout"
@@ -59,7 +59,7 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/app_spacing_lg"
                 android:hint="@string/share_article_input_link"
                 app:expandedHintEnabled="false">
 
@@ -75,10 +75,10 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/submitButton"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.App.Button.Tonal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="@dimen/app_spacing_xl"
                 android:enabled="false"
                 android:text="@string/share_article_submit"/>
 
@@ -88,7 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/app_spacing_lg"
                 android:visibility="gone"/>
 
         </LinearLayout>

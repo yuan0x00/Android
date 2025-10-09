@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
-            android:paddingHorizontal="16dp"
+            android:paddingHorizontal="@dimen/app_spacing_lg"
             app:title="@string/user_tools_title"
             app:titleCentered="false" />
 
@@ -41,8 +41,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="12dp"
+                android:paddingHorizontal="@dimen/app_spacing_lg"
+                android:paddingVertical="@dimen/app_spacing_md"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/user_tools_empty"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textAppearance="@style/TextAppearance.App.Body"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:indicatorSize="48dp"
+            app:indicatorSize="@dimen/app_size_indicator"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,9 +75,10 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabAdd"
+            style="@style/Widget.App.FloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/app_spacing_lg"
             android:contentDescription="@string/user_tools_add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

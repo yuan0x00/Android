@@ -2,4 +2,50 @@
 <resources>
     <dimen name="top_app_bar_small_height">64dp</dimen>
     <dimen name="navigation_bar_elevation">3dp</dimen>
+
+    <!-- 间距体系（Spacing Scale） -->
+    <dimen name="app_spacing_xxs">2dp</dimen>
+    <dimen name="app_spacing_xs">4dp</dimen>
+    <dimen name="app_spacing_sm_plus">6dp</dimen>
+    <dimen name="app_spacing_sm">8dp</dimen>
+    <dimen name="app_spacing_md_plus">10dp</dimen>
+    <dimen name="app_spacing_md">12dp</dimen>
+    <dimen name="app_spacing_lg_plus">15dp</dimen>
+    <dimen name="app_spacing_lg">16dp</dimen>
+    <dimen name="app_spacing_xl">24dp</dimen>
+    <dimen name="app_spacing_2xl">32dp</dimen>
+    <dimen name="app_spacing_3xl">40dp</dimen>
+    <dimen name="app_spacing_4xl">48dp</dimen>
+    <dimen name="app_spacing_5xl">80dp</dimen>
+
+    <!-- 圆角与阴影 -->
+    <dimen name="app_corner_radius_sm">8dp</dimen>
+    <dimen name="app_corner_radius_md">12dp</dimen>
+    <dimen name="app_corner_radius_lg">16dp</dimen>
+
+    <dimen name="app_elevation_card">1dp</dimen>
+    <dimen name="app_elevation_dialog">6dp</dimen>
+    <dimen name="app_elevation_fab">6dp</dimen>
+
+    <!-- 辅助尺寸 -->
+    <dimen name="app_stroke_width">1dp</dimen>
+    <dimen name="app_stroke_width_focused">2dp</dimen>
+
+    <dimen name="app_size_top_bar">56dp</dimen>
+    <dimen name="app_size_indicator">48dp</dimen>
+    <dimen name="app_size_icon_md">24dp</dimen>
+    <dimen name="app_size_icon_lg">40dp</dimen>
+    <dimen name="app_size_avatar_md">72dp</dimen>
+    <dimen name="app_size_thumbnail_lg">96dp</dimen>
+    <dimen name="app_size_feed_min_height">100dp</dimen>
+    <dimen name="app_size_project_min_height">120dp</dimen>
+    <dimen name="app_size_banner_height">180dp</dimen>
+    <dimen name="app_size_home_section_height">200dp</dimen>
+    <dimen name="app_dialog_width">300dp</dimen>
+
+    <!-- 列表安全区 -->
+    <dimen name="app_list_bottom_inset">72dp</dimen>
+
+    <!-- 文本尺寸 -->
+    <dimen name="app_text_size_title">18sp</dimen>
 </resources>

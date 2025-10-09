@@ -1,23 +1,23 @@
 package com.rapid.android.ui.feature.main.discover.wenda;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentDiscoverWendaBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
-import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.List;
 
 public class DiscoverWendaFragment extends BaseFragment<DiscoverWendaViewModel, FragmentDiscoverWendaBinding> {
 
     private ContentStateController stateController;
+    private WendaAdapter adapter;
 
     @Override
     protected DiscoverWendaViewModel createViewModel() {
@@ -31,6 +31,10 @@ public class DiscoverWendaFragment extends BaseFragment<DiscoverWendaViewModel, 
 
     @Override
     protected void initializeViews() {
+        adapter = new WendaAdapter();
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.recyclerView.setAdapter(adapter);
+
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
     }
@@ -54,38 +58,9 @@ public class DiscoverWendaFragment extends BaseFragment<DiscoverWendaViewModel, 
     }
 
     private void renderItems(List<ArticleListBean.Data> list) {
-        binding.wendaContainer.removeAllViews();
-        if (list == null || list.isEmpty()) {
-            stateController.setEmpty(true);
-            return;
-        }
-
-        LayoutInflater inflater = LayoutInflater.from(requireContext());
-        int count = Math.min(list.size(), 10);
-        for (int i = 0; i < count; i++) {
-            ArticleListBean.Data item = list.get(i);
-            if (item == null) {
-                continue;
-            }
-            View view = inflater.inflate(android.R.layout.simple_list_item_2, binding.wendaContainer, false);
-            android.widget.TextView title = view.findViewById(android.R.id.text1);
-            android.widget.TextView subtitle = view.findViewById(android.R.id.text2);
-            title.setText(item.getTitle());
-            if (subtitle != null) {
-                String author = item.getAuthor();
-                if (author == null || author.isEmpty()) {
-                    author = item.getShareUser();
-                }
-                subtitle.setText(author != null ? author : "");
-            }
-            view.setOnClickListener(v -> ArticleWebViewActivity.start(v.getContext(), item));
-            binding.wendaContainer.addView(view);
-        }
-
-        boolean empty = binding.wendaContainer.getChildCount() == 0;
+        adapter.submitList(list);
+        boolean empty = list == null || list.isEmpty();
         stateController.setEmpty(empty);
-        if (!empty) {
-            stateController.stopRefreshing();
-        }
+        stateController.stopRefreshing();
     }
 }

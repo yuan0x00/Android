@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="core_ui_spacing_xl">24dp</dimen>
+    <dimen name="core_ui_spacing_lg">16dp</dimen>
+    <dimen name="core_ui_spacing_md">12dp</dimen>
+    <dimen name="core_ui_spacing_sm">8dp</dimen>
+    <dimen name="core_ui_divider_thin">1dp</dimen>
+    <dimen name="core_ui_toast_max_width">280dp</dimen>
+    <dimen name="core_ui_text_size_toast">14sp</dimen>
+</resources>

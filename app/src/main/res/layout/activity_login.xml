@@ -14,24 +14,24 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorSurface"
         app:titleCentered="true"
-        app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
+        app:titleTextAppearance="@style/TextAppearance.App.Title"
         app:titleTextColor="?attr/colorOnSurface"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="32dp">
+        android:paddingHorizontal="@dimen/app_spacing_xl"
+        android:paddingTop="@dimen/app_spacing_2xl">
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/app_spacing_md_plus"
             android:hint="账号"
-            app:boxStrokeWidth="1dp"
-            app:boxStrokeWidthFocused="2dp"
+            app:boxStrokeWidth="@dimen/app_stroke_width"
+            app:boxStrokeWidthFocused="@dimen/app_stroke_width_focused"
             app:expandedHintEnabled="false"
             app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium">
 
@@ -48,10 +48,10 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/app_spacing_md_plus"
             android:hint="密码"
-            app:boxStrokeWidth="1dp"
-            app:boxStrokeWidthFocused="2dp"
+            app:boxStrokeWidth="@dimen/app_stroke_width"
+            app:boxStrokeWidthFocused="@dimen/app_stroke_width_focused"
             app:endIconMode="password_toggle"
             app:expandedHintEnabled="false"
             app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium">
@@ -70,11 +70,11 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/app_spacing_md_plus"
             android:hint="确认密码"
             android:visibility="gone"
-            app:boxStrokeWidth="1dp"
-            app:boxStrokeWidthFocused="2dp"
+            app:boxStrokeWidth="@dimen/app_stroke_width"
+            app:boxStrokeWidthFocused="@dimen/app_stroke_width_focused"
             app:endIconMode="password_toggle"
             app:expandedHintEnabled="true"
             app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium">
@@ -90,19 +90,19 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogin"
-            style="@style/Widget.Material3.Button"
+            style="@style/Widget.App.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/app_spacing_lg_plus"
             android:text="@string/login_action_login"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnToggleMode"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.App.Button.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/app_spacing_sm"
             android:text="@string/login_toggle_register"/>
 
         <LinearLayout
@@ -110,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="@dimen/app_spacing_md_plus">
 
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:layout_width="wrap_content"
@@ -121,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_privacy_statement"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:textAppearance="@style/TextAppearance.App.Body"
                 android:textColor="?attr/colorOnSurfaceVariant"/>
 
         </LinearLayout>

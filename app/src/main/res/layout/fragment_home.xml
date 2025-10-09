@@ -20,25 +20,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
-            android:paddingHorizontal="16dp"
+            android:paddingHorizontal="@dimen/app_spacing_lg"
             app:menu="@menu/menu_home_toolbar"
             app:title="@string/home_title"
             app:titleCentered="false"/>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/topTab"
-            style="@style/Widget.Material3.TabLayout.Secondary"
+            style="@style/Widget.App.TabLayout.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
+            android:paddingHorizontal="@dimen/app_spacing_lg"
             app:tabGravity="center"
             app:tabIndicatorAnimationMode="elastic"
-            app:tabMode="scrollable"
-            />
+            app:tabMode="scrollable" />
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/app_stroke_width"
             android:background="?attr/colorOutlineVariant"/>
 
     </com.google.android.material.appbar.AppBarLayout>

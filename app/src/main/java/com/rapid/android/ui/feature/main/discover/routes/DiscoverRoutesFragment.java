@@ -4,20 +4,20 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.chip.Chip;
 import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentDiscoverRoutesBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
-import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.List;
 
 public class DiscoverRoutesFragment extends BaseFragment<DiscoverRoutesViewModel, FragmentDiscoverRoutesBinding> {
 
     private ContentStateController stateController;
+    private RouteAdapter adapter;
 
     @Override
     protected DiscoverRoutesViewModel createViewModel() {
@@ -31,6 +31,10 @@ public class DiscoverRoutesFragment extends BaseFragment<DiscoverRoutesViewModel
 
     @Override
     protected void initializeViews() {
+        adapter = new RouteAdapter();
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.recyclerView.setAdapter(adapter);
+
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
     }
@@ -54,37 +58,9 @@ public class DiscoverRoutesFragment extends BaseFragment<DiscoverRoutesViewModel
     }
 
     private void renderRoutes(List<CategoryNodeBean> list) {
-        binding.routesGroup.removeAllViews();
-        if (list == null || list.isEmpty()) {
-            stateController.setEmpty(true);
-            return;
-        }
-
-        for (CategoryNodeBean node : list) {
-            if (node == null || node.getName() == null || node.getName().isEmpty()) {
-                continue;
-            }
-            String target = node.getLink();
-            if ((target == null || target.isEmpty()) && node.getChildren() != null && !node.getChildren().isEmpty()) {
-                CategoryNodeBean firstChild = node.getChildren().get(0);
-                target = firstChild != null ? firstChild.getLink() : null;
-            }
-            if (target == null || target.isEmpty()) {
-                continue;
-            }
-            Chip chip = new Chip(requireContext());
-            chip.setText(node.getName());
-            chip.setCheckable(false);
-            chip.setEnsureMinTouchTargetSize(false);
-            String finalTarget = target;
-            chip.setOnClickListener(v -> ArticleWebViewActivity.start(v.getContext(), finalTarget, node.getName()));
-            binding.routesGroup.addView(chip);
-        }
-
-        boolean empty = binding.routesGroup.getChildCount() == 0;
+        adapter.submitList(list);
+        boolean empty = list == null || list.isEmpty();
         stateController.setEmpty(empty);
-        if (!empty) {
-            stateController.stopRefreshing();
-        }
+        stateController.stopRefreshing();
     }
 }

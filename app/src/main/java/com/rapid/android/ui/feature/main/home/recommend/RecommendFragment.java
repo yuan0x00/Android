@@ -29,6 +29,7 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
 
     private BannerAdapter bannerAdapter;
     private FeedAdapter feedAdapter;
+    private HomePopularSectionRowAdapter popularSectionAdapter;
     private LinearLayoutManager layoutManager;
     private ContentStateController stateController;
     private BackToTopController backToTopController;
@@ -60,6 +61,11 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
                 bannerAdapter.setData(bannerList);
             }
         });
+        viewModel.getPopularSections().observe(this, sections -> {
+            if (popularSectionAdapter != null) {
+                popularSectionAdapter.submitList(sections);
+            }
+        });
         viewModel.getArticleItems().observe(this, this::updateArticleItems);
         viewModel.getTopArticles().observe(this, this::updateTopArticles);
         viewModel.getLoading().observe(this, isLoading -> {
@@ -80,9 +86,10 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
         ArticleListBean feeds = new ArticleListBean();
 
         bannerAdapter = new BannerAdapter(new ArrayList<>());
+        popularSectionAdapter = new HomePopularSectionRowAdapter();
         feedAdapter = new FeedAdapter(getDialogController(), feeds);
 
-        ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, feedAdapter);
+        ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, popularSectionAdapter, feedAdapter);
         binding.recyclerView.setAdapter(concatAdapter);
 
         refreshArticleDisplay();

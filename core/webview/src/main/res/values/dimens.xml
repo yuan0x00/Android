@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="core_webview_progress_height">2dp</dimen>
+    <dimen name="core_webview_spacing_md">16dp</dimen>
+    <dimen name="core_webview_text_body">16sp</dimen>
+</resources>

@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    android:padding="16dp">
+    android:padding="@dimen/app_spacing_lg">
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:chipSpacing="12dp"
-        app:chipSpacingHorizontal="12dp"
-        app:chipSpacingVertical="12dp"
+        app:chipSpacing="@dimen/app_spacing_md"
+        app:chipSpacingHorizontal="@dimen/app_spacing_md"
+        app:chipSpacingVertical="@dimen/app_spacing_md"
         app:singleLine="false"
         app:singleSelection="false"/>
 

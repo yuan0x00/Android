@@ -4,9 +4,9 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
-              android:paddingHorizontal="24dp"
-              android:paddingTop="16dp"
-              android:paddingBottom="8dp">
+              android:paddingHorizontal="@dimen/app_spacing_xl"
+              android:paddingTop="@dimen/app_spacing_lg"
+              android:paddingBottom="@dimen/app_spacing_sm">
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="@dimen/app_spacing_md"
         android:hint="@string/user_tools_link"
         app:expandedHintEnabled="false">
 

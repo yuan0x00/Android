@@ -59,21 +59,6 @@ public class SettingViewModel extends BaseViewModel {
         return isLoading;
     }
 
-    public void clearCache() {
-        isLoading.setValue(true);
-        // 模拟清除缓存操作
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-                operationMessageRes.postValue(R.string.setting_clear_cache_success);
-            } catch (InterruptedException e) {
-                operationMessageRes.postValue(R.string.setting_clear_cache_failed);
-            } finally {
-                isLoading.postValue(false);
-            }
-        }).start();
-    }
-
     // 初始化设置
     public void loadSettings() {
         ThemeManager.ThemeMode saved = ThemeManager.getSavedThemeMode();

@@ -3,15 +3,15 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/core_ui_toast_background"
-    android:padding="16dp">
+    android:padding="@dimen/core_ui_spacing_lg">
 
     <TextView
         android:id="@+id/core_ui_toast_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="280dp"
+        android:maxWidth="@dimen/core_ui_toast_max_width"
         android:textColor="@color/core_ui_toast_text"
-        android:textSize="14sp"
+        android:textSize="@dimen/core_ui_text_size_toast"
         android:textStyle="bold"/>
 
 </FrameLayout>

@@ -16,40 +16,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
-            android:paddingHorizontal="16dp"
+            android:paddingHorizontal="@dimen/app_spacing_lg"
             app:menu="@menu/menu_message_toolbar"
             app:title="@string/message_title"
             app:titleCentered="false" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/unreadCard"
+            style="@style/Widget.App.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="12dp"
-            app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp">
+            android:layout_marginHorizontal="@dimen/app_spacing_lg"
+            android:layout_marginVertical="@dimen/app_spacing_md"
+            app:cardCornerRadius="@dimen/app_corner_radius_lg">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="@dimen/app_spacing_lg">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/unreadTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/message_unread_count_placeholder"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                    android:textAppearance="@style/TextAppearance.App.Subtitle" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/unreadSummary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    android:layout_marginTop="@dimen/app_spacing_sm"
+                    android:textAppearance="@style/TextAppearance.App.Body"
                     android:textColor="?attr/colorOnSurfaceVariant" />
 
             </LinearLayout>
@@ -58,16 +57,17 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
-            style="@style/Widget.Material3.TabLayout.Secondary"
+            style="@style/Widget.App.TabLayout.Secondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
+            android:paddingHorizontal="@dimen/app_spacing_md"
             app:tabIndicatorAnimationMode="elastic"
             app:tabMode="fixed" />
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/app_stroke_width"
             android:background="?attr/colorOutlineVariant" />
 
     </com.google.android.material.appbar.AppBarLayout>

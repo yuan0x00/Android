@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.App.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp">
+    android:layout_marginBottom="@dimen/app_spacing_md"
+    app:cardCornerRadius="@dimen/app_corner_radius_lg">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/app_spacing_lg">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,12 +25,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                android:textAppearance="@style/TextAppearance.App.Subtitle" />
 
             <ImageButton
                 android:id="@+id/btnEdit"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/app_size_icon_lg"
+                android:layout_height="@dimen/app_size_icon_lg"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/user_tools_edit"
                 android:src="@drawable/edit_24px"
@@ -39,8 +38,8 @@
 
             <ImageButton
                 android:id="@+id/btnDelete"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/app_size_icon_lg"
+                android:layout_height="@dimen/app_size_icon_lg"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/user_tools_delete"
                 android:src="@drawable/close_24px"
@@ -52,8 +51,8 @@
             android:id="@+id/toolLink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:layout_marginTop="@dimen/app_spacing_sm"
+            android:textAppearance="@style/TextAppearance.App.Body"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
     </LinearLayout>

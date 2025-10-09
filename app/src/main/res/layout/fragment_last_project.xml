@@ -34,7 +34,7 @@
             android:layout_gravity="center"
             android:indeterminate="true"
             android:visibility="gone"
-            app:indicatorSize="48dp"/>
+            app:indicatorSize="@dimen/app_size_indicator"/>
 
         <TextView
             android:id="@+id/emptyView"
@@ -42,32 +42,33 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/project_empty_latest"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:textAppearance="@style/TextAppearance.App.BodyStrong"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:visibility="gone"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabBackToTop"
+            style="@style/Widget.App.FloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/app_spacing_lg"
             android:contentDescription="@string/common_back_to_top"
             android:visibility="gone"
             app:srcCompat="@drawable/vertical_align_top_24px"
             />
 
-    </FrameLayout>
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/loadMoreProgress"
+            style="@style/Widget.Material3.CircularProgressIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_margin="@dimen/app_spacing_lg"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:indicatorSize="@dimen/app_spacing_2xl"/>
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/loadMoreProgress"
-        style="@style/Widget.Material3.CircularProgressIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="8dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:indicatorSize="32dp"/>
+    </FrameLayout>
 
 </LinearLayout>

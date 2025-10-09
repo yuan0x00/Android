@@ -16,31 +16,34 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="16dp"/>
+            android:paddingStart="@dimen/app_spacing_md"
+            android:paddingTop="@dimen/app_spacing_md"
+            android:paddingEnd="@dimen/app_spacing_md"
+            android:paddingBottom="@dimen/app_spacing_md"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabBackToTop"
+            style="@style/Widget.App.FloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/app_spacing_lg"
             android:contentDescription="@string/common_back_to_top"
             android:visibility="gone"
             app:srcCompat="@drawable/vertical_align_top_24px"
             />
 
-    </FrameLayout>
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/loadMoreProgress"
+            style="@style/Widget.Material3.CircularProgressIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_margin="@dimen/app_spacing_lg"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:indicatorSize="@dimen/app_spacing_2xl"/>
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/loadMoreProgress"
-        style="@style/Widget.Material3.CircularProgressIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="8dp"
-        android:visibility="gone"
-        app:indicatorSize="32dp"/>
+    </FrameLayout>
 
 </LinearLayout>

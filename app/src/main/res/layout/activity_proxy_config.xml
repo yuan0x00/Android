@@ -32,48 +32,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="24dp">
+            android:paddingHorizontal="@dimen/app_spacing_lg"
+            android:paddingTop="@dimen/app_spacing_lg"
+            android:paddingBottom="@dimen/app_spacing_xl">
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.App.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurfaceContainer"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="?attr/colorOutlineVariant"
-                app:strokeWidth="1dp">
+                android:layout_marginBottom="@dimen/app_spacing_lg"
+                app:cardCornerRadius="@dimen/app_corner_radius_lg">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="@dimen/app_spacing_xl">
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/switch_enable_proxy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/proxy_config_enable_proxy"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textAppearance="@style/TextAppearance.App.Subtitle"
                         android:textColor="?attr/colorOnSurface"/>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/switch_auto_disable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/app_spacing_md"
                         android:text="@string/proxy_config_auto_disable"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                        android:textAppearance="@style/TextAppearance.App.BodyStrong"
                         android:textColor="?attr/colorOnSurface"/>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/input_layout_host"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="@dimen/app_spacing_lg"
                         app:expandedHintEnabled="false"
                         app:hintTextColor="?attr/colorOnSurfaceVariant">
 
@@ -91,7 +88,7 @@
                         android:id="@+id/input_layout_port"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="@dimen/app_spacing_lg"
                         app:expandedHintEnabled="false"
                         app:hintTextColor="?attr/colorOnSurfaceVariant">
 
@@ -109,9 +106,9 @@
                         android:id="@+id/tv_last_failure"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/app_spacing_md"
                         android:text="@string/proxy_config_last_failure_none"
-                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                        android:textAppearance="@style/TextAppearance.App.Caption"
                         android:textColor="?attr/colorOnSurfaceVariant"/>
 
                 </LinearLayout>
@@ -123,6 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
+                style="@style/Widget.App.Button.Primary"
                 android:text="@string/proxy_config_button_save"/>
 
         </LinearLayout>

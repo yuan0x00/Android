@@ -130,11 +130,6 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
             viewModel.setHomeTopEnabled(isChecked);
         });
 
-        binding.itemClearCache.setOnClickListener(v -> viewModel.clearCache());
-
-        binding.itemPrivacy.setOnClickListener(v ->
-                openWebPage(getString(R.string.settings_privacy_url)));
-
         binding.itemOpenSource.setOnClickListener(v ->
                 openWebPage(getString(R.string.settings_open_source_url)));
 

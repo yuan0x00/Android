@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorSurface"
-        app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+        app:titleTextAppearance="@style/TextAppearance.App.Subtitle"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
                 android:background="?attr/colorSurface"
                 android:clipToPadding="false"
-                android:padding="16dp"/>
+                android:padding="@dimen/app_spacing_lg"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -42,7 +42,7 @@
             android:layout_gravity="center"
             android:indeterminate="true"
             android:visibility="gone"
-            app:indicatorSize="48dp"/>
+            app:indicatorSize="@dimen/app_size_indicator"/>
 
         <TextView
             android:id="@+id/emptyView"
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/share_empty_list"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:textAppearance="@style/TextAppearance.App.BodyStrong"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:visibility="gone"/>
 
@@ -62,9 +62,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/app_spacing_sm"
         android:indeterminate="true"
         android:visibility="gone"
-        app:indicatorSize="32dp"/>
+        app:indicatorSize="@dimen/app_spacing_2xl"/>
 
 </LinearLayout>

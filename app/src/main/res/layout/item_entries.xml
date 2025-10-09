@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorSurface"
-    android:padding="8dp"
+    android:padding="@dimen/app_spacing_sm"
     app:columnCount="4"> <!-- 4 列 -->
 
     <!-- 动态添加子 View 用代码 bind -->

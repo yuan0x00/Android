@@ -14,12 +14,12 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
+            style="@style/Widget.App.TabLayout.Secondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
-            app:tabIndicatorFullWidth="false"
-            app:tabMode="scrollable"
-            app:tabTextColor="?attr/colorOnSurface"/>
+            android:paddingHorizontal="@dimen/app_spacing_lg"
+            app:tabMode="scrollable"/>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefresh"
@@ -46,7 +46,7 @@
         android:layout_gravity="center"
         android:indeterminate="true"
         android:visibility="gone"
-        app:indicatorSize="48dp"/>
+        app:indicatorSize="@dimen/app_size_indicator"/>
 
     <TextView
         android:id="@+id/emptyView"
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/project_empty_system"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textAppearance="@style/TextAppearance.App.BodyStrong"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:visibility="gone"/>
 

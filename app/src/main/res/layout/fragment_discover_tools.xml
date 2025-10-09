@@ -19,8 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="12dp"
+            android:paddingHorizontal="@dimen/app_spacing_lg"
+            android:paddingVertical="@dimen/app_spacing_md"
             android:scrollbars="vertical" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -28,8 +28,8 @@
     <ProgressBar
         android:id="@+id/progressBar"
         style="@style/Widget.Material3.CircularProgressIndicator"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/app_size_indicator"
+        android:layout_height="@dimen/app_size_indicator"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/tool_center_empty"
-        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textAppearance="@style/TextAppearance.App.Body"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

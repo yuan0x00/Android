@@ -49,7 +49,8 @@ public class NetworkClient {
         okHttpBuilder.addInterceptor(new AuthInterceptor(
                 activeConfig.getAuthFailureListener(),
                 null,
-                activeConfig.getBusinessUnauthorizedCodes()));
+                activeConfig.getBusinessUnauthorizedCodes(),
+                activeConfig.getTokenRefreshHandler()));
         okHttpBuilder.addInterceptor(new ResponseErrorInterceptor());
 
         if (activeConfig.getTokenRefreshHandler() != null) {

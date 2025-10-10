@@ -23,28 +23,39 @@ public class AuthInterceptor implements Interceptor {
 
     private static final Type BASE_RESPONSE_TYPE = new TypeToken<BaseResponse<Object>>() {}.getType();
 
+    private static final String BUSINESS_RETRY_HEADER = "X-Auth-Retry";
+
     private final NetworkConfig.AuthFailureListener authFailureListener;
     private final Set<Integer> unauthorizedCodes;
     private final Set<Integer> businessUnauthorizedCodes;
     private final Gson gson = new Gson();
+    private final TokenRefreshHandler tokenRefreshHandler;
 
     public AuthInterceptor(@Nullable NetworkConfig.AuthFailureListener listener) {
-        this(listener, null, null);
+        this(listener, null, null, null);
     }
 
     public AuthInterceptor(@Nullable NetworkConfig.AuthFailureListener listener,
                            @Nullable int[] customUnauthorizedCodes) {
-        this(listener, customUnauthorizedCodes, null);
+        this(listener, customUnauthorizedCodes, null, null);
     }
 
     public AuthInterceptor(@Nullable NetworkConfig.AuthFailureListener listener,
                            @Nullable int[] customUnauthorizedCodes,
                            @Nullable Set<Integer> businessUnauthorizedCodes) {
+        this(listener, customUnauthorizedCodes, businessUnauthorizedCodes, null);
+    }
+
+    public AuthInterceptor(@Nullable NetworkConfig.AuthFailureListener listener,
+                           @Nullable int[] customUnauthorizedCodes,
+                           @Nullable Set<Integer> businessUnauthorizedCodes,
+                           @Nullable TokenRefreshHandler tokenRefreshHandler) {
         this.authFailureListener = listener != null ? listener : () -> {};
         this.unauthorizedCodes = new HashSet<>();
         this.businessUnauthorizedCodes = businessUnauthorizedCodes != null
                 ? new HashSet<>(businessUnauthorizedCodes)
                 : new HashSet<>();
+        this.tokenRefreshHandler = tokenRefreshHandler;
 
         this.unauthorizedCodes.add(401);
         this.unauthorizedCodes.add(403);
@@ -61,6 +72,7 @@ public class AuthInterceptor implements Interceptor {
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
         Request request = chain.request();
+        boolean alreadyRetried = request.header(BUSINESS_RETRY_HEADER) != null;
         Response response = chain.proceed(request);
 
         BusinessCheckResult businessResult = evaluateBusinessUnauthorized(response);
@@ -71,9 +83,45 @@ public class AuthInterceptor implements Interceptor {
         }
 
         if (businessResult.businessUnauthorized) {
+            if (!alreadyRetried) {
+                Response retry = attemptBusinessRefresh(chain, request, response);
+                if (retry != null) {
+                    return retry;
+                }
+            }
             authFailureListener.onUnauthorized();
         }
         return response;
+    }
+
+    @Nullable
+    private Response attemptBusinessRefresh(@NonNull Chain chain,
+                                            @NonNull Request originalRequest,
+                                            @NonNull Response originalResponse) throws IOException {
+        if (tokenRefreshHandler == null || !tokenRefreshHandler.canRefresh()) {
+            return null;
+        }
+
+        try {
+            boolean refreshed = tokenRefreshHandler.refreshToken();
+            if (!refreshed) {
+                return null;
+            }
+
+            Request rebuilt = tokenRefreshHandler.rebuildRequest(originalRequest);
+            if (rebuilt == null) {
+                rebuilt = originalRequest;
+            }
+
+            Request retryRequest = rebuilt.newBuilder()
+                    .header(BUSINESS_RETRY_HEADER, "1")
+                    .build();
+
+            originalResponse.close();
+            return chain.proceed(retryRequest);
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     private boolean isUnauthorized(int code) {

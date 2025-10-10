@@ -5,7 +5,6 @@
     style="@style/Widget.App.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/app_spacing_md"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"

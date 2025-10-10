@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentDiscoverToolsBinding;
 import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 
 public class DiscoverToolsFragment extends BaseFragment<ToolCenterViewModel, FragmentDiscoverToolsBinding> {
@@ -31,6 +32,7 @@ public class DiscoverToolsFragment extends BaseFragment<ToolCenterViewModel, Fra
         adapter = new ToolAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, com.rapid.android.R.dimen.app_spacing_md);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);

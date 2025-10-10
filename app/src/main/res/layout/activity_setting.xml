@@ -129,58 +129,9 @@
                         android:textColor="?attr/colorOnSurface"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/item_no_image"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/app_spacing_lg"
-                        android:minHeight="56dp"
-                        android:paddingTop="@dimen/app_spacing_sm"
-                        android:paddingBottom="@dimen/app_spacing_sm">
-
-                        <TextView
-                            android:id="@+id/text_no_image"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/settings_no_image_mode"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="?attr/colorOnSurface"
-                            app:layout_constrainedWidth="true"
-                            app:layout_constraintEnd_toStartOf="@+id/switch_no_image"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
-
-                        <TextView
-                            android:id="@+id/text_no_image_desc"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/app_spacing_xs"
-                            android:text="@string/settings_no_image_mode_description"
-                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                            android:textColor="?attr/colorOnSurfaceVariant"
-                            app:layout_constrainedWidth="true"
-                            app:layout_constraintEnd_toStartOf="@id/switch_no_image"
-                            app:layout_constraintStart_toStartOf="@id/text_no_image"
-                            app:layout_constraintTop_toBottomOf="@id/text_no_image"/>
-
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/switch_no_image"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="@dimen/app_spacing_sm"
-                        android:background="?attr/colorOutlineVariant" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:minHeight="56dp"
                         android:paddingTop="@dimen/app_spacing_sm"
                         android:paddingBottom="@dimen/app_spacing_sm">
@@ -224,7 +175,56 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginVertical="@dimen/app_spacing_sm"
-                        android:background="?attr/colorOutlineVariant" />
+                        android:background="?attr/colorOutlineVariant"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/item_no_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
+                        android:paddingTop="@dimen/app_spacing_sm"
+                        android:paddingBottom="@dimen/app_spacing_sm">
+
+                        <TextView
+                            android:id="@+id/text_no_image"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_no_image_mode"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@+id/switch_no_image"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/text_no_image_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/app_spacing_xs"
+                            android:text="@string/settings_no_image_mode_description"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@id/switch_no_image"
+                            app:layout_constraintStart_toStartOf="@id/text_no_image"
+                            app:layout_constraintTop_toBottomOf="@id/text_no_image"/>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_no_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="@dimen/app_spacing_sm"
+                        android:background="?attr/colorOutlineVariant"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -268,6 +268,55 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="@dimen/app_spacing_sm"
+                        android:background="?attr/colorOutlineVariant"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/item_auto_hide_bottom_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
+                        android:paddingTop="@dimen/app_spacing_sm"
+                        android:paddingBottom="@dimen/app_spacing_sm">
+
+                        <TextView
+                            android:id="@+id/text_auto_hide_bottom_bar"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_auto_hide_bottom_bar"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@+id/switch_auto_hide_bottom_bar"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/text_auto_hide_bottom_bar_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/app_spacing_xs"
+                            android:text="@string/settings_auto_hide_bottom_bar_description"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintEnd_toStartOf="@id/switch_auto_hide_bottom_bar"
+                            app:layout_constraintStart_toStartOf="@id/text_auto_hide_bottom_bar"
+                            app:layout_constraintTop_toBottomOf="@id/text_auto_hide_bottom_bar"/>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_auto_hide_bottom_bar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
@@ -293,11 +342,6 @@
                         android:text="@string/settings_section_about"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:textColor="?attr/colorOnSurface"/>
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="@dimen/app_spacing_sm"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/item_open_source"

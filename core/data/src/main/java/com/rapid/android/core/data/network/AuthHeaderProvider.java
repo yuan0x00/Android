@@ -3,6 +3,7 @@ package com.rapid.android.core.data.network;
 import androidx.annotation.NonNull;
 
 import com.rapid.android.core.data.local.AuthStorage;
+import com.rapid.android.core.log.LogKit;
 import com.rapid.android.core.network.client.NetworkConfig;
 
 import java.util.Collections;
@@ -32,7 +33,7 @@ public class AuthHeaderProvider implements NetworkConfig.HeaderProvider {
             }
         } catch (Exception e) {
             // 如果获取token失败，返回空headers
-            e.printStackTrace();
+            LogKit.e("AuthHeaderProvider", e, "Failed to get auth token");
         }
         return Collections.emptyMap();
     }

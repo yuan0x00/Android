@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:name=".init.MainApplication"
@@ -32,7 +33,7 @@
             android:name=".ui.feature.main.mine.share.ShareActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.main.home.search.SearchActivity"
+            android:name=".ui.feature.search.SearchActivity"
             android:exported="false"/>
         <activity
             android:name=".ui.feature.main.discover.share.ShareArticleActivity"

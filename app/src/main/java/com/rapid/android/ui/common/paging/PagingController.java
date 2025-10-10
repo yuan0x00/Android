@@ -9,7 +9,9 @@ import com.rapid.android.core.ui.presentation.BaseViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public final class PagingController<T> {
 
@@ -24,6 +26,7 @@ public final class PagingController<T> {
     private final MutableLiveData<Boolean> loadingMoreLiveData = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> hasMoreLiveData = new MutableLiveData<>(true);
     private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> emptyStateLiveData = new MutableLiveData<>(false);
 
     private int nextPage;
     private boolean initialized = false;
@@ -55,6 +58,10 @@ public final class PagingController<T> {
         return errorLiveData;
     }
 
+    public MutableLiveData<Boolean> getEmptyStateLiveData() {
+        return emptyStateLiveData;
+    }
+
     public void refresh() {
         nextPage = firstPage;
         hasMoreLiveData.setValue(true);
@@ -84,6 +91,8 @@ public final class PagingController<T> {
         }
 
         Disposable disposable = fetcher.fetch(nextPage)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> handleResult(result, refresh), this::handleError);
         owner.trackDisposable(disposable);
     }
@@ -102,10 +111,21 @@ public final class PagingController<T> {
 
             nextPage = payload.getNextPage();
             hasMoreLiveData.setValue(payload.hasMore());
+
+            // 检查空状态：刷新时且列表为空
+            if (refresh && internalItems.isEmpty()) {
+                emptyStateLiveData.setValue(true);
+            } else {
+                emptyStateLiveData.setValue(false);
+            }
         } else {
             DomainError error = result.getError();
             if (error != null) {
                 errorLiveData.setValue(error.getMessage());
+            }
+            // 如果是刷新失败且当前无数据，显示空状态
+            if (refresh && internalItems.isEmpty()) {
+                emptyStateLiveData.setValue(true);
             }
         }
     }

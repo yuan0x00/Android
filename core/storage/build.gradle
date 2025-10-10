@@ -1,0 +1,14 @@
+plugins {
+    alias(libs.plugins.local.android.library)
+}
+
+android {
+    namespace 'com.rapid.android.core.storage'
+}
+
+dependencies {
+    implementation libs.androidx.core
+    implementation libs.androidx.annotation
+    implementation libs.androidx.security.crypto
+    implementation libs.gson
+}

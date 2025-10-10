@@ -1,0 +1,13 @@
+plugins {
+    alias(libs.plugins.local.android.library)
+}
+
+android {
+    namespace 'com.rapid.android.core.image'
+}
+
+dependencies {
+    implementation libs.androidx.annotation
+    implementation libs.glide
+    api libs.glide
+}

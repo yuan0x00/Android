@@ -1,5 +1,6 @@
 package com.rapid.android.ui.feature.main.home.lastproject;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +15,36 @@ import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentLastProjectBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
+import com.rapid.android.ui.feature.main.TabNavigator;
 import com.rapid.android.ui.feature.main.home.FeedAdapter;
+import com.rapid.android.utils.AppPreferences;
 
 
 public class LastProjectFragment extends BaseFragment<LastProjectViewModel, FragmentLastProjectBinding> {
+
+    private static final int BOTTOM_BAR_SCROLL_THRESHOLD = 8;
 
     private FeedAdapter feedAdapter;
     private LinearLayoutManager layoutManager;
     private ContentStateController stateController;
     private BackToTopController backToTopController;
+    private TabNavigator tabNavigator;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof TabNavigator) {
+            tabNavigator = (TabNavigator) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        tabNavigator = null;
+        super.onDetach();
+    }
 
     @Override
     protected LastProjectViewModel createViewModel() {
@@ -70,6 +91,7 @@ public class LastProjectFragment extends BaseFragment<LastProjectViewModel, Frag
         feedAdapter = new FeedAdapter(getDialogController(), feeds);
 
         binding.recyclerView.setAdapter(feedAdapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, com.rapid.android.R.dimen.app_spacing_md);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 
@@ -81,6 +103,7 @@ public class LastProjectFragment extends BaseFragment<LastProjectViewModel, Frag
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                handleBottomBarVisibility(recyclerView, dy);
                 if (dy <= 0) {
                     return;
                 }
@@ -96,12 +119,58 @@ public class LastProjectFragment extends BaseFragment<LastProjectViewModel, Frag
                     viewModel.loadMore();
                 }
             }
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    handleBottomBarVisibilityOnIdle(recyclerView);
+                }
+            }
         });
 
     }
 
+    private void handleBottomBarVisibility(@NonNull RecyclerView recyclerView, int dy) {
+        if (tabNavigator == null) {
+            return;
+        }
+        if (!AppPreferences.isAutoHideBottomBarEnabled()) {
+            if (!tabNavigator.isBottomBarVisible()) {
+                tabNavigator.showBottomBar(false);
+            }
+            return;
+        }
+        if (dy > BOTTOM_BAR_SCROLL_THRESHOLD) {
+            tabNavigator.hideBottomBar(true);
+        } else if (dy < -BOTTOM_BAR_SCROLL_THRESHOLD) {
+            tabNavigator.showBottomBar(true);
+        }
+        if (!recyclerView.canScrollVertically(-1)) {
+            tabNavigator.showBottomBar(true);
+        }
+    }
+
+    private void handleBottomBarVisibilityOnIdle(@NonNull RecyclerView recyclerView) {
+        if (tabNavigator == null) {
+            return;
+        }
+        if (!AppPreferences.isAutoHideBottomBarEnabled()) {
+            if (!tabNavigator.isBottomBarVisible()) {
+                tabNavigator.showBottomBar(false);
+            }
+            return;
+        }
+        if (!recyclerView.canScrollVertically(-1)) {
+            tabNavigator.showBottomBar(true);
+        }
+    }
+
     @Override
     public void onDestroyView() {
+        if (tabNavigator != null) {
+            tabNavigator.showBottomBar(false);
+        }
         if (backToTopController != null) {
             backToTopController.detach();
             backToTopController = null;

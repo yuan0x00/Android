@@ -6,8 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/app_size_banner_height"
     android:layout_marginHorizontal="@dimen/app_spacing_sm"
-    android:layout_marginTop="@dimen/app_spacing_sm"
-    android:layout_marginBottom="0dp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"/>

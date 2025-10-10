@@ -10,6 +10,7 @@ import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentDiscoverTutorialBinding;
 import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.main.discover.tutorial.list.TutorialArticleListActivity;
 
@@ -39,6 +40,7 @@ public class DiscoverTutorialFragment extends BaseFragment<DiscoverTutorialViewM
         adapter.setOnItemClickListener(this::openTutorial);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, com.rapid.android.R.dimen.app_spacing_sm);
     }
 
     @Override

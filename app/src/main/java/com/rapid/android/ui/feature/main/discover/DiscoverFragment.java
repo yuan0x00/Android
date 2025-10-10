@@ -10,7 +10,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.rapid.android.R;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentDiscoverBinding;
-import com.rapid.android.ui.feature.main.home.search.SearchActivity;
+import com.rapid.android.ui.feature.search.SearchActivity;
 
 public class DiscoverFragment extends BaseFragment<DiscoverViewModel, FragmentDiscoverBinding> {
 

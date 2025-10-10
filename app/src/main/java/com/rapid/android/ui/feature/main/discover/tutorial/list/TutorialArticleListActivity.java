@@ -13,6 +13,7 @@ import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivityTutorialArticleListBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 
 public class TutorialArticleListActivity extends BaseActivity<TutorialArticleListViewModel, ActivityTutorialArticleListBinding> {
@@ -54,6 +55,7 @@ public class TutorialArticleListActivity extends BaseActivity<TutorialArticleLis
         adapter = new TutorialArticleListAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, R.dimen.app_spacing_sm);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);

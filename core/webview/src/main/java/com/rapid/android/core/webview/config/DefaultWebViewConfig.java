@@ -168,6 +168,9 @@ public class DefaultWebViewConfig implements WebViewConfiguration, Parcelable {
 
         // 缓存配置
         webSettings.setCacheMode(cacheMode);
+//        webSettings.setAppCacheEnabled(true);
+//        webSettings.setAppCachePath(webSettings.getClass().toString()); // Will be set by context
+
         // Note: setAppCacheMaxSize is deprecated in API 18, but keeping for backward compatibility
         try {
             webSettings.getClass().getMethod("setAppCacheMaxSize", long.class).invoke(webSettings, cacheSize);
@@ -179,6 +182,20 @@ public class DefaultWebViewConfig implements WebViewConfiguration, Parcelable {
         webSettings.setSupportZoom(supportZoom);
         webSettings.setBuiltInZoomControls(builtInZoomControls);
         webSettings.setDisplayZoomControls(displayZoomControls);
+
+        // 性能优化配置
+        webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+
+        // 启用混合内容模式（允许HTTPS页面加载HTTP资源，根据需要调整）
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        }
+
+        // 设置默认字体大小和编码
+        webSettings.setDefaultTextEncodingName("UTF-8");
+        webSettings.setMinimumFontSize(8);
+        webSettings.setMinimumLogicalFontSize(8);
 
         // 安全浏览
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

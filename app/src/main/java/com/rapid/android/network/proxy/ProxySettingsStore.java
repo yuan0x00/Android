@@ -1,12 +1,12 @@
 package com.rapid.android.network.proxy;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.rapid.android.core.common.app.BaseApplication;
+import com.rapid.android.core.storage.PreferenceManager;
 
 final class ProxySettingsStore {
 
@@ -18,11 +18,11 @@ final class ProxySettingsStore {
     private static final String KEY_LAST_FAILURE_AT = "last_failure_at";
     private static final String KEY_LAST_FAILURE_REASON = "last_failure_reason";
 
-    private final SharedPreferences preferences;
+    private final PreferenceManager preferences;
 
     ProxySettingsStore() {
         Context context = BaseApplication.getAppContext();
-        this.preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        this.preferences = new PreferenceManager(context, PREF_NAME);
     }
 
     @NonNull
@@ -44,14 +44,14 @@ final class ProxySettingsStore {
 
     @NonNull
     synchronized ProxySettings save(@NonNull ProxySettings settings) {
-        SharedPreferences.Editor editor = preferences.edit()
+        preferences.edit()
                 .putBoolean(KEY_ENABLED, settings.isEnabled())
                 .putString(KEY_HOST, settings.getHost())
                 .putInt(KEY_PORT, settings.getPort())
                 .putBoolean(KEY_AUTO_DISABLE, settings.isAutoDisableOnFailure())
                 .putLong(KEY_LAST_FAILURE_AT, settings.getLastFailureTimestamp())
-                .putString(KEY_LAST_FAILURE_REASON, settings.getLastFailureReason());
-        editor.apply();
+                .putString(KEY_LAST_FAILURE_REASON, settings.getLastFailureReason())
+                .apply();
         return settings;
     }
 

@@ -6,4 +6,10 @@ public interface TabNavigator {
     void disableTab(int position);
 
     void enableTab(int position);
+
+    void hideBottomBar(boolean animated);
+
+    void showBottomBar(boolean animated);
+
+    boolean isBottomBarVisible();
 }

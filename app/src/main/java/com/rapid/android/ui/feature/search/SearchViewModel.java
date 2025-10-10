@@ -1,4 +1,4 @@
-package com.rapid.android.ui.feature.main.home.search;
+package com.rapid.android.ui.feature.search;
 
 import android.text.TextUtils;
 

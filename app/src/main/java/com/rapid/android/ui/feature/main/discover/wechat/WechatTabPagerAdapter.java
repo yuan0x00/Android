@@ -16,6 +16,7 @@ import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.databinding.ItemWechatTabPageBinding;
 import com.rapid.android.ui.common.BackToTopController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.paging.PagingPayload;
 import com.rapid.android.ui.feature.main.home.FeedAdapter;
 
@@ -258,6 +259,7 @@ final class WechatTabPagerAdapter extends RecyclerView.Adapter<WechatTabPagerAda
                 state.adapter = new FeedAdapter(dialogController, new ArticleListBean());
             }
             binding.recyclerView.setAdapter(state.adapter);
+            RecyclerViewDecorations.addTopSpacing(binding.recyclerView, com.rapid.android.R.dimen.app_spacing_sm);
 
             if (state.scrollListener == null) {
                 state.scrollListener = new RecyclerView.OnScrollListener() {

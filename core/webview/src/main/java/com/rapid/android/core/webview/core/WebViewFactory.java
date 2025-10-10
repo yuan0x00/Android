@@ -133,12 +133,31 @@ public class WebViewFactory {
         @Override
         public void recycleWebView(@NonNull WebView webView) {
             // 清理WebView状态以供复用
-            webView.stopLoading();
-            webView.clearHistory();
-            webView.clearCache(true);
-            webView.loadUrl("about:blank");
-            webView.setWebViewClient(null);
-            webView.setWebChromeClient(null);
+            try {
+                webView.stopLoading();
+                webView.clearHistory();
+                webView.clearCache(true);
+                webView.clearFormData();
+                webView.clearMatches();
+                webView.clearSslPreferences();
+
+                // 移除所有回调
+                webView.setWebViewClient(null);
+                webView.setWebChromeClient(null);
+                webView.setDownloadListener(null);
+
+                // 加载空白页以释放资源
+                webView.loadUrl("about:blank");
+
+                // 移除所有 View (如果有嵌入的 View)
+                webView.removeAllViews();
+
+                // 暂停WebView的渲染以节省资源
+                webView.onPause();
+                webView.pauseTimers();
+            } catch (Exception e) {
+                // 忽略回收过程中的异常
+            }
         }
     }
 }

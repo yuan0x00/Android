@@ -52,7 +52,8 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         setTabLayout(savedInstanceState);
 
         // 主页空闲时预热WebView池，提升后续Web页面首开速度
-        WebViewPrewarmer.prewarmInIdle(this, 1);
+        // 预热2个WebView实例以支持并发场景
+        WebViewPrewarmer.prewarmInIdle(this, 2);
     }
 
     private void setBackToTask() {
@@ -143,6 +144,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 return;
             }
             if (!Boolean.TRUE.equals(loggedIn) && navigator.getCurrentPosition() >= 2) {
+                ToastUtils.showShortToast(getDialogController(), getString(R.string.mine_toast_require_login));
                 navigator.selectTab(0);
             }
         });
@@ -171,6 +173,25 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     @Override
     public void enableTab(int position) {
         navigator.enableTab(position);
+    }
+
+    @Override
+    public void hideBottomBar(boolean animated) {
+        if (navigator != null) {
+            navigator.hideBottomBar(animated);
+        }
+    }
+
+    @Override
+    public void showBottomBar(boolean animated) {
+        if (navigator != null) {
+            navigator.showBottomBar(animated);
+        }
+    }
+
+    @Override
+    public boolean isBottomBarVisible() {
+        return navigator != null && navigator.isBottomBarVisible();
     }
 
     private boolean shouldAllowTabSelection(int position) {

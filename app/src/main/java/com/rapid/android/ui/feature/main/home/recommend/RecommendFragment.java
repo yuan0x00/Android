@@ -1,5 +1,6 @@
 package com.rapid.android.ui.feature.main.home.recommend;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentRecommandBinding;
-import com.rapid.android.ui.common.BackToTopController;
-import com.rapid.android.ui.common.ContentStateController;
-import com.rapid.android.ui.common.UiFeedback;
+import com.rapid.android.ui.common.*;
+import com.rapid.android.ui.feature.main.TabNavigator;
 import com.rapid.android.ui.feature.main.home.BannerAdapter;
 import com.rapid.android.ui.feature.main.home.FeedAdapter;
+import com.rapid.android.utils.AppPreferences;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -27,6 +28,8 @@ import java.util.Set;
 
 public class RecommendFragment extends BaseFragment<RecommendViewModel, FragmentRecommandBinding> {
 
+    private static final int BOTTOM_BAR_SCROLL_THRESHOLD = 8;
+
     private BannerAdapter bannerAdapter;
     private FeedAdapter feedAdapter;
     private HomePopularSectionRowAdapter popularSectionAdapter;
@@ -35,6 +38,21 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
     private BackToTopController backToTopController;
     private final List<ArticleListBean.Data> topArticleItems = new ArrayList<>();
     private List<ArticleListBean.Data> articleItems = new ArrayList<>();
+    private TabNavigator tabNavigator;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof TabNavigator) {
+            tabNavigator = (TabNavigator) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        tabNavigator = null;
+        super.onDetach();
+    }
 
     @Override
     protected RecommendViewModel createViewModel() {
@@ -81,6 +99,9 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
         layoutManager = new LinearLayoutManager(requireContext());
         binding.recyclerView.setLayoutManager(layoutManager);
 
+        // RecyclerView 性能优化
+        RecyclerViewOptimizer.applyOptimizations(binding.recyclerView);
+
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 
         ArticleListBean feeds = new ArticleListBean();
@@ -91,6 +112,7 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
 
         ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, popularSectionAdapter, feedAdapter);
         binding.recyclerView.setAdapter(concatAdapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, com.rapid.android.R.dimen.app_spacing_sm);
 
         refreshArticleDisplay();
 
@@ -102,6 +124,7 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                handleBottomBarVisibility(recyclerView, dy);
                 if (dy <= 0) {
                     return;
                 }
@@ -117,7 +140,50 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
                     viewModel.loadMoreArticles();
                 }
             }
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    handleBottomBarVisibilityOnIdle(recyclerView);
+                }
+            }
         });
+    }
+
+    private void handleBottomBarVisibility(@NonNull RecyclerView recyclerView, int dy) {
+        if (tabNavigator == null) {
+            return;
+        }
+        if (!AppPreferences.isAutoHideBottomBarEnabled()) {
+            if (!tabNavigator.isBottomBarVisible()) {
+                tabNavigator.showBottomBar(false);
+            }
+            return;
+        }
+        if (dy > BOTTOM_BAR_SCROLL_THRESHOLD) {
+            tabNavigator.hideBottomBar(true);
+        } else if (dy < -BOTTOM_BAR_SCROLL_THRESHOLD) {
+            tabNavigator.showBottomBar(true);
+        }
+        if (!recyclerView.canScrollVertically(-1)) {
+            tabNavigator.showBottomBar(true);
+        }
+    }
+
+    private void handleBottomBarVisibilityOnIdle(@NonNull RecyclerView recyclerView) {
+        if (tabNavigator == null) {
+            return;
+        }
+        if (!AppPreferences.isAutoHideBottomBarEnabled()) {
+            if (!tabNavigator.isBottomBarVisible()) {
+                tabNavigator.showBottomBar(false);
+            }
+            return;
+        }
+        if (!recyclerView.canScrollVertically(-1)) {
+            tabNavigator.showBottomBar(true);
+        }
     }
 
     private void updateArticleItems(List<ArticleListBean.Data> items) {
@@ -176,6 +242,9 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
 
     @Override
     public void onDestroyView() {
+        if (tabNavigator != null) {
+            tabNavigator.showBottomBar(false);
+        }
         if (backToTopController != null) {
             backToTopController.detach();
             backToTopController = null;

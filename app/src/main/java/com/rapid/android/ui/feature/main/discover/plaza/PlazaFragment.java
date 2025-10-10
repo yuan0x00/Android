@@ -18,6 +18,7 @@ import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.FragmentPlazaBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.discover.share.ShareArticleActivity;
@@ -47,6 +48,7 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
 
         feedAdapter = new FeedAdapter(getDialogController(), new ArticleListBean());
         binding.recyclerView.setAdapter(feedAdapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, R.dimen.app_spacing_sm);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 

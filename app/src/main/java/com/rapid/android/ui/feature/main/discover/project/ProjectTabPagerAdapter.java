@@ -15,6 +15,7 @@ import com.rapid.android.core.domain.model.ProjectPageBean;
 import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.databinding.ItemProjectTabPageBinding;
 import com.rapid.android.ui.common.BackToTopController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.paging.PagingPayload;
 import com.rapid.android.ui.feature.main.discover.project.list.ProjectListAdapter;
 
@@ -303,6 +304,7 @@ final class ProjectTabPagerAdapter extends RecyclerView.Adapter<ProjectTabPagerA
                 state.adapter = new ProjectListAdapter();
             }
             binding.recyclerView.setAdapter(state.adapter);
+            RecyclerViewDecorations.addTopSpacing(binding.recyclerView, com.rapid.android.R.dimen.app_spacing_md);
 
             if (state.scrollListener == null) {
                 state.scrollListener = new RecyclerView.OnScrollListener() {

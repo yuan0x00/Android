@@ -8,11 +8,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.rapid.android.R;
+import com.rapid.android.BuildConfig;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.FragmentMineBinding;
+import com.rapid.android.ui.common.LoginHelper;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.mine.coin.CoinActivity;
 import com.rapid.android.ui.feature.main.mine.favorite.FavoriteActivity;
@@ -44,6 +45,10 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
     @Override
     protected void initializeViews() {
         setupClickListeners();
+        // 开发者工具仅在 Debug 构建中显示
+        if (!BuildConfig.DEBUG) {
+            binding.itemDeveloper.setVisibility(View.GONE);
+        }
     }
 
     private void setupClickListeners() {
@@ -59,33 +64,28 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         });
 
         // 签到按钮
-        binding.btnDailyAction.setOnClickListener(v -> {
-            // 检查登录状态，只有登录用户才能签到
-            SessionManager.SessionState state =
-                    SessionManager.getInstance().getCurrentState();
-            if (state != null && state.isLoggedIn()) {
-                viewModel.signIn();
-            } else {
-                showShortToast(getString(R.string.mine_toast_require_login));
-                navigateToLogin();
-            }
-        });
+        binding.btnDailyAction.setOnClickListener(v ->
+            LoginHelper.requireLogin(requireContext(), getDialogController(), viewModel::signIn)
+        );
 
         binding.itemDeveloper.setOnClickListener(v -> openDeveloperTools());
-        binding.itemTools.setOnClickListener(v -> openTools());
+        binding.itemTools.setOnClickListener(v ->
+            LoginHelper.requireLogin(requireContext(), getDialogController(),
+                () -> UserToolsActivity.start(requireContext()))
+        );
         binding.itemSettings.setOnClickListener(v -> openSettings());
-        binding.layoutCoin.setOnClickListener(v -> {
-            SessionManager.SessionState state =
-                    SessionManager.getInstance().getCurrentState();
-            if (state != null && state.isLoggedIn()) {
-                CoinActivity.start(requireContext());
-            } else {
-                showShortToast(getString(R.string.mine_toast_require_login));
-                navigateToLogin();
-            }
-        });
-        binding.layoutFavorite.setOnClickListener(v -> openFavorites());
-        binding.layoutShare.setOnClickListener(v -> openShare());
+        binding.layoutCoin.setOnClickListener(v ->
+            LoginHelper.requireLogin(requireContext(), getDialogController(),
+                () -> CoinActivity.start(requireContext()))
+        );
+        binding.layoutFavorite.setOnClickListener(v ->
+            LoginHelper.requireLogin(requireContext(), getDialogController(),
+                () -> FavoriteActivity.start(requireContext()))
+        );
+        binding.layoutShare.setOnClickListener(v ->
+            LoginHelper.requireLogin(requireContext(), getDialogController(),
+                () -> ShareActivity.start(requireContext()))
+        );
     }
 
     @Override
@@ -101,18 +101,6 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
             boolean isLoading = Boolean.TRUE.equals(loading);
             binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         });
-
-        // 使用统一的会话管理器
-        SessionManager.getInstance().state.observe(
-                getViewLifecycleOwner(),
-                sessionState -> {
-                    if (sessionState != null) {
-                        viewModel.applySessionState(sessionState);
-                    } else {
-                        viewModel.resetToGuest();
-                    }
-                }
-        );
     }
 
 
@@ -162,39 +150,6 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
 
     private void openDeveloperTools() {
         startActivity(new Intent(getContext(), ProxyConfigActivity.class));
-    }
-
-    private void openTools() {
-        SessionManager.SessionState state =
-                SessionManager.getInstance().getCurrentState();
-        if (state != null && state.isLoggedIn()) {
-            UserToolsActivity.start(requireContext());
-        } else {
-            showShortToast(getString(R.string.mine_toast_require_login));
-            navigateToLogin();
-        }
-    }
-
-    private void openFavorites() {
-        SessionManager.SessionState state =
-                SessionManager.getInstance().getCurrentState();
-        if (state != null && state.isLoggedIn()) {
-            FavoriteActivity.start(requireContext());
-        } else {
-            showShortToast(getString(R.string.mine_toast_require_login));
-            navigateToLogin();
-        }
-    }
-
-    private void openShare() {
-        SessionManager.SessionState state =
-                SessionManager.getInstance().getCurrentState();
-        if (state != null && state.isLoggedIn()) {
-            ShareActivity.start(requireContext());
-        } else {
-            showShortToast(getString(R.string.mine_toast_require_login));
-            navigateToLogin();
-        }
     }
 
     private void navigateToLogin() {

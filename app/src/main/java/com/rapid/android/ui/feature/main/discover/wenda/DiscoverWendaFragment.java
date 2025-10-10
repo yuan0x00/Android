@@ -10,6 +10,7 @@ import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentDiscoverWendaBinding;
 import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class DiscoverWendaFragment extends BaseFragment<DiscoverWendaViewModel, 
         adapter = new WendaAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, com.rapid.android.R.dimen.app_spacing_md);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);

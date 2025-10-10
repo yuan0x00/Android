@@ -16,6 +16,7 @@ import com.rapid.android.core.domain.model.CoinRecordBean;
 import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivityCoinBinding;
 import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.List;
@@ -60,6 +61,7 @@ public class CoinActivity extends BaseActivity<CoinViewModel, ActivityCoinBindin
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(recordAdapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, R.dimen.app_spacing_md);
         binding.recyclerView.setClipToPadding(false);
         binding.recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 

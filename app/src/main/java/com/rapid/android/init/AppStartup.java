@@ -4,6 +4,7 @@ import android.os.StrictMode;
 
 import com.google.android.material.color.DynamicColors;
 import com.rapid.android.BuildConfig;
+import com.rapid.android.analytics.AnalyticsInitializer;
 import com.rapid.android.core.common.app.BaseApplication;
 import com.rapid.android.core.common.crash.GlobalCrashHandler;
 import com.rapid.android.core.data.DataInitializer;
@@ -16,6 +17,8 @@ import com.rapid.android.core.network.NetManager;
 import com.rapid.android.core.network.client.NetworkClient;
 import com.rapid.android.core.network.client.NetworkConfig;
 import com.rapid.android.core.network.interceptor.AuthInterceptor;
+import com.rapid.android.core.webview.utils.WebViewInitOptimizer;
+import com.rapid.android.navigation.AppRouter;
 import com.rapid.android.network.proxy.DeveloperProxyManager;
 import com.rapid.android.utils.ThemeManager;
 
@@ -46,6 +49,9 @@ final class AppStartup {
     void initialize() {
         applyTheme();
         enableStrictMode();
+        initWebView();
+        initRouter();
+        initAnalytics();
         GlobalCrashHandler.setCrashReporter(new AppCrashReporter());
         DataInitializer.init();
         initNetwork();
@@ -78,6 +84,26 @@ final class AppStartup {
                 .detectActivityLeaks()
                 .penaltyLog()
                 .build());
+    }
+
+    private void initWebView() {
+        // WebView 全局初始化优化
+        WebViewInitOptimizer.init(application);
+
+        // Debug 模式下启用 WebView 调试
+        if (BuildConfig.DEBUG) {
+            WebViewInitOptimizer.enableDebugMode();
+        }
+    }
+
+    private void initRouter() {
+        // 初始化路由表
+        AppRouter.init();
+    }
+
+    private void initAnalytics() {
+        // 初始化统计分析模块
+        AnalyticsInitializer.init(application);
     }
 
     private void initNetwork() {

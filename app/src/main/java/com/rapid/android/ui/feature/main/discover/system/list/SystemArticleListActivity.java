@@ -13,6 +13,7 @@ import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivitySystemArticleListBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 
 public class SystemArticleListActivity extends BaseActivity<SystemArticleListViewModel, ActivitySystemArticleListBinding> {
@@ -54,6 +55,7 @@ public class SystemArticleListActivity extends BaseActivity<SystemArticleListVie
         adapter = new SystemArticleListAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, R.dimen.app_spacing_md);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);

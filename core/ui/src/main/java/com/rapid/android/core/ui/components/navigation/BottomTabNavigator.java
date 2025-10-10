@@ -1,10 +1,15 @@
 package com.rapid.android.core.ui.components.navigation;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 
 import androidx.annotation.DrawableRes;
@@ -26,6 +31,9 @@ import java.util.List;
  */
 public class BottomTabNavigator {
 
+    private static final long BOTTOM_BAR_ANIM_DURATION = 180L;
+    private static final Interpolator BOTTOM_BAR_INTERPOLATOR = new AccelerateDecelerateInterpolator();
+
     private final NavigationBarView navigationBarView;
     private final FrameLayout container;
     private final FragmentActivity activity;
@@ -34,6 +42,7 @@ public class BottomTabNavigator {
     private int currentPosition = -1;
     private OnTabSelectInterceptor onTabSelectInterceptor;
     private boolean isUpdatingSelection = false;
+    private boolean bottomBarVisible = true;
 
     public BottomTabNavigator(FragmentActivity activity, NavigationBarView navigationBarView, FrameLayout container) {
         this.activity = activity;
@@ -86,6 +95,14 @@ public class BottomTabNavigator {
         });
 
         return this;
+    }
+
+    private void runWhenLaidOut(@NonNull Runnable action) {
+        if (navigationBarView.getHeight() == 0) {
+            navigationBarView.post(action);
+        } else {
+            action.run();
+        }
     }
 
     private Drawable createStateListDrawable(@NonNull Context context,
@@ -181,6 +198,101 @@ public class BottomTabNavigator {
             navigationBarView.getMenu().getItem(currentPosition).setChecked(true);
             isUpdatingSelection = false;
         }
+    }
+
+    public void hideBottomBar(boolean animated) {
+        if (!bottomBarVisible) {
+            return;
+        }
+        bottomBarVisible = false;
+        runWhenLaidOut(() -> {
+            if (bottomBarVisible) {
+                return;
+            }
+            navigationBarView.animate().setListener(null);
+            navigationBarView.animate().cancel();
+            if (!animated) {
+                navigationBarView.setVisibility(View.GONE);
+                navigationBarView.setAlpha(1f);
+                navigationBarView.setTranslationY(0f);
+                return;
+            }
+            navigationBarView.setVisibility(View.VISIBLE);
+            final int distance = navigationBarView.getHeight();
+            AnimatorListenerAdapter adapter = new AnimatorListenerAdapter() {
+                private boolean canceled;
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    canceled = true;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    navigationBarView.animate().setListener(null);
+                    if (!canceled && !bottomBarVisible) {
+                        navigationBarView.setVisibility(View.GONE);
+                        navigationBarView.setAlpha(1f);
+                        navigationBarView.setTranslationY(0f);
+                    }
+                }
+            };
+            navigationBarView.animate()
+                    .translationY(distance)
+                    .alpha(0f)
+                    .setDuration(BOTTOM_BAR_ANIM_DURATION)
+                    .setInterpolator(BOTTOM_BAR_INTERPOLATOR)
+                    .setListener(adapter)
+                    .start();
+        });
+    }
+
+    public void showBottomBar(boolean animated) {
+        if (bottomBarVisible && navigationBarView.getVisibility() == View.VISIBLE) {
+            return;
+        }
+        bottomBarVisible = true;
+        runWhenLaidOut(() -> {
+            navigationBarView.animate().setListener(null);
+            navigationBarView.animate().cancel();
+            navigationBarView.setVisibility(View.VISIBLE);
+            if (!animated) {
+                navigationBarView.setAlpha(1f);
+                navigationBarView.setTranslationY(0f);
+                return;
+            }
+            final int distance = navigationBarView.getHeight();
+            navigationBarView.setTranslationY(distance);
+            navigationBarView.setAlpha(0f);
+            AnimatorListenerAdapter adapter = new AnimatorListenerAdapter() {
+                private boolean canceled;
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    canceled = true;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    navigationBarView.animate().setListener(null);
+                    if (!canceled) {
+                        navigationBarView.setTranslationY(0f);
+                        navigationBarView.setAlpha(1f);
+                    }
+                }
+            };
+            navigationBarView.animate()
+                    .translationY(0f)
+                    .alpha(1f)
+                    .setDuration(BOTTOM_BAR_ANIM_DURATION)
+                    .setInterpolator(BOTTOM_BAR_INTERPOLATOR)
+                    .setListener(adapter)
+                    .start();
+        });
+    }
+
+    public boolean isBottomBarVisible() {
+        return bottomBarVisible;
     }
 
     public interface OnTabSelectInterceptor {

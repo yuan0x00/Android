@@ -2,41 +2,52 @@ package com.rapid.android.utils;
 
 import android.text.TextUtils;
 
-import com.rapid.android.core.datastore.DefaultDataStore;
-import com.rapid.android.core.datastore.IDataStore;
-
-import org.json.JSONArray;
+import com.rapid.android.core.common.app.BaseApplication;
+import com.rapid.android.core.storage.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 搜索历史存储
+ * 使用 core:storage.PreferenceManager 实现
+ */
 public final class SearchHistoryStore {
 
     private static final String PREF_NAME = "search_history";
-    private static final String KEY_HISTORY = "key_history";
+    private static final String KEY_HISTORY = "history_list";
     private static final int MAX_SIZE = 10;
-    private static final IDataStore dataStore = new DefaultDataStore();
+    private static volatile PreferenceManager prefs;
 
     private SearchHistoryStore() {
     }
 
-    public static List<String> getHistories() {
-        String json = dataStore.getString(historyKey(), "");
-        List<String> result = new ArrayList<>();
-        if (TextUtils.isEmpty(json)) {
-            return result;
-        }
-        try {
-            JSONArray array = new JSONArray(json);
-            for (int i = 0; i < array.length(); i++) {
-                String value = array.optString(i, "");
-                if (!TextUtils.isEmpty(value)) {
-                    result.add(value);
+    private static PreferenceManager getPrefs() {
+        if (prefs == null) {
+            synchronized (SearchHistoryStore.class) {
+                if (prefs == null) {
+                    prefs = new PreferenceManager(BaseApplication.getAppContext(), PREF_NAME);
                 }
             }
-        } catch (Exception ignored) {
+        }
+        return prefs;
+    }
+
+    public static List<String> getHistories() {
+        String stored = getPrefs().getString(KEY_HISTORY, "");
+        if (TextUtils.isEmpty(stored)) {
+            return new ArrayList<>();
+        }
+
+        // 使用简单的分隔符存储，避免 JSON 序列化开销
+        String[] items = stored.split("\\|\\|");
+        List<String> result = new ArrayList<>();
+        for (String item : items) {
+            if (!TextUtils.isEmpty(item)) {
+                result.add(item);
+            }
         }
         return result;
     }
@@ -45,9 +56,14 @@ public final class SearchHistoryStore {
         if (TextUtils.isEmpty(keyword)) {
             return;
         }
+
         List<String> histories = getHistories();
         Set<String> ordered = new LinkedHashSet<>();
+
+        // 新搜索放在最前面
         ordered.add(keyword);
+
+        // 添加已有历史（去重）
         for (String item : histories) {
             if (!TextUtils.isEmpty(item) && !item.equalsIgnoreCase(keyword)) {
                 ordered.add(item);
@@ -56,22 +72,26 @@ public final class SearchHistoryStore {
                 break;
             }
         }
+
         save(new ArrayList<>(ordered));
     }
 
     public static void clearHistory() {
-        dataStore.remove(historyKey());
+        getPrefs().remove(KEY_HISTORY);
     }
 
     private static void save(List<String> histories) {
-        JSONArray array = new JSONArray();
-        for (int i = 0; i < histories.size() && i < MAX_SIZE; i++) {
-            array.put(histories.get(i));
+        if (histories == null || histories.isEmpty()) {
+            getPrefs().remove(KEY_HISTORY);
+            return;
         }
-        dataStore.putString(historyKey(), array.toString());
-    }
 
-    private static String historyKey() {
-        return PREF_NAME + ":" + KEY_HISTORY;
+        // 限制最大数量
+        int size = Math.min(histories.size(), MAX_SIZE);
+        List<String> limited = histories.subList(0, size);
+
+        // 使用 || 分隔符连接（确保不与搜索关键词冲突）
+        String joined = TextUtils.join("||", limited);
+        getPrefs().putString(KEY_HISTORY, joined);
     }
 }

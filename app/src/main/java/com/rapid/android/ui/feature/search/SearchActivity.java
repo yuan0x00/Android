@@ -1,4 +1,4 @@
-package com.rapid.android.ui.feature.main.home.search;
+package com.rapid.android.ui.feature.search;
 
 import android.content.Context;
 import android.text.Editable;
@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
+import com.rapid.android.R;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.model.HotKeyBean;
 import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivitySearchBinding;
 import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.main.home.FeedAdapter;
 
@@ -79,6 +81,7 @@ public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearch
         ArticleListBean listBean = new ArticleListBean();
         resultAdapter = new FeedAdapter(getDialogController(), listBean);
         binding.resultRecyclerView.setAdapter(resultAdapter);
+        RecyclerViewDecorations.addTopSpacing(binding.resultRecyclerView, R.dimen.app_spacing_sm);
 
         binding.resultRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

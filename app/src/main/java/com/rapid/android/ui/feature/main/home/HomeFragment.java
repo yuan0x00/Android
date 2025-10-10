@@ -8,12 +8,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.rapid.android.R;
-import com.rapid.android.core.ui.components.dialog.DialogEffect;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentHomeBinding;
-import com.rapid.android.ui.feature.main.home.search.SearchActivity;
-
-import java.util.Random;
+import com.rapid.android.ui.feature.search.SearchActivity;
 
 public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBinding> {
 
@@ -42,9 +39,6 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
                 return true;
             }
             return false;
-        });
-        binding.toolbar.setOnClickListener(v -> {
-            getDialogController().show(new DialogEffect.Toast("提示" + new Random(10)));
         });
     }
 

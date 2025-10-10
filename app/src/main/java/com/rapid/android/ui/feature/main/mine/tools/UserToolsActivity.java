@@ -7,6 +7,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.rapid.android.R;
@@ -15,6 +16,7 @@ import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ActivityUserToolsBinding;
 import com.rapid.android.databinding.DialogUserToolBinding;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 public class UserToolsActivity extends BaseActivity<UserToolsViewModel, ActivityUserToolsBinding>
@@ -45,7 +47,9 @@ public class UserToolsActivity extends BaseActivity<UserToolsViewModel, Activity
         binding.toolbar.setNavigationOnClickListener(v -> finish());
 
         adapter = new UserToolsAdapter(this);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, R.dimen.app_spacing_md);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
         binding.fabAdd.setOnClickListener(v -> showEditDialog(null));
     }

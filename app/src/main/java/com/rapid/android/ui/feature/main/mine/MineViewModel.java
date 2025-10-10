@@ -38,38 +38,15 @@ public class MineViewModel extends BaseViewModel {
     public MineViewModel() {
         dataStore = new DefaultDataStore();
         signedInToday = hasSignedInToday();
+        // 在 ViewModel 中订阅 SessionManager 状态变化
+        observeSessionState();
     }
 
-    public LiveData<MineUiState> getUiState() {
-        return uiState;
+    private void observeSessionState() {
+        sessionManager.state.observeForever(this::handleSessionStateChange);
     }
 
-    public LiveData<Boolean> getLoading() {
-        return loading;
-    }
-
-    public LiveData<String> getToastMessage() {
-        return toastMessage;
-    }
-
-    public void refresh() {
-        if (profileLoading) {
-            return;
-        }
-        startLoading();
-        sessionManager.refreshUserInfo();
-    }
-
-    public void resetToGuest() {
-        stopLoading();
-        loading.setValue(false);
-        signedInToday = hasSignedInToday();
-        shareCountLoaded = false;
-        shareCountLoading = false;
-        uiState.setValue(MineUiState.guest());
-    }
-
-    public void applySessionState(SessionManager.SessionState sessionState) {
+    private void handleSessionStateChange(SessionManager.SessionState sessionState) {
         signedInToday = hasSignedInToday();
         if (sessionState == null || !sessionState.isLoggedIn()) {
             resetToGuest();
@@ -90,6 +67,42 @@ public class MineViewModel extends BaseViewModel {
                 loading.setValue(true);
             }
         }
+    }
+
+    public LiveData<MineUiState> getUiState() {
+        return uiState;
+    }
+
+    public LiveData<Boolean> getLoading() {
+        return loading;
+    }
+
+    public LiveData<String> getToastMessage() {
+        return toastMessage;
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        // 移除 SessionManager 观察者，避免内存泄漏
+        sessionManager.state.removeObserver(this::handleSessionStateChange);
+    }
+
+    public void refresh() {
+        if (profileLoading) {
+            return;
+        }
+        startLoading();
+        sessionManager.refreshUserInfo();
+    }
+
+    public void resetToGuest() {
+        stopLoading();
+        loading.setValue(false);
+        signedInToday = hasSignedInToday();
+        shareCountLoaded = false;
+        shareCountLoading = false;
+        uiState.setValue(MineUiState.guest());
     }
 
     private void fetchProfile() {

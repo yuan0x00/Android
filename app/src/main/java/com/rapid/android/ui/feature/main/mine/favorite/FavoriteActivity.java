@@ -12,6 +12,7 @@ import com.rapid.android.R;
 import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivityFavoriteBinding;
 import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 
 public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFavoriteBinding> {
@@ -45,6 +46,7 @@ public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFa
         adapter = new FavoriteAdapter(provideDialogController(), data -> viewModel.refresh());
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, R.dimen.app_spacing_sm);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);

@@ -15,6 +15,7 @@ import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.FragmentMineBinding;
 import com.rapid.android.ui.common.LoginHelper;
 import com.rapid.android.ui.feature.login.LoginActivity;
+import com.rapid.android.ui.feature.main.RequiresLoginTab;
 import com.rapid.android.ui.feature.main.mine.coin.CoinActivity;
 import com.rapid.android.ui.feature.main.mine.favorite.FavoriteActivity;
 import com.rapid.android.ui.feature.main.mine.share.ShareActivity;
@@ -22,7 +23,7 @@ import com.rapid.android.ui.feature.main.mine.tools.UserToolsActivity;
 import com.rapid.android.ui.feature.setting.SettingActivity;
 import com.rapid.android.ui.feature.setting.developer.ProxyConfigActivity;
 
-public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBinding> {
+public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBinding> implements RequiresLoginTab {
 
     private MineViewModel.MineUiState currentState = MineViewModel.MineUiState.guest();
 

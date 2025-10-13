@@ -71,6 +71,10 @@ public class SearchViewModel extends BaseViewModel {
         return pagingController.getErrorLiveData();
     }
 
+    public MutableLiveData<Boolean> getEmptyState() {
+        return pagingController.getEmptyStateLiveData();
+    }
+
     public void initialize() {
         loadHistories();
         loadHotKeys();
@@ -94,11 +98,13 @@ public class SearchViewModel extends BaseViewModel {
             pagingController.refresh();
             return;
         }
-        if (!target.equals(currentKeyword)) {
-            currentKeyword = target;
-            SearchHistoryStore.addHistory(target);
-            loadHistories();
+        if (target.equals(currentKeyword)) {
+            showSuggestions.setValue(false);
+            return;
         }
+        currentKeyword = target;
+        SearchHistoryStore.addHistory(target);
+        loadHistories();
         showSuggestions.setValue(false);
         pagingController.refresh();
     }

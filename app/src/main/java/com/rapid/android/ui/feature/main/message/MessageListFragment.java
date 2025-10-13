@@ -110,6 +110,7 @@ public class MessageListFragment extends BaseFragment<MessageListViewModel, Frag
         viewModel.getMessages().observe(this, this::renderMessages);
         viewModel.getLoading().observe(this, loading -> stateController.setLoading(Boolean.TRUE.equals(loading)));
         viewModel.getErrorMessage().observe(this, msg -> stateController.stopRefreshing());
+        viewModel.getEmptyState().observe(this, empty -> stateController.setEmpty(Boolean.TRUE.equals(empty)));
         UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
 
         if (category == MessageCategory.UNREAD) {
@@ -128,8 +129,6 @@ public class MessageListFragment extends BaseFragment<MessageListViewModel, Frag
 
     private void renderMessages(List<MessageBean> messages) {
         adapter.submitList(messages);
-        boolean empty = messages == null || messages.isEmpty();
-        stateController.setEmpty(empty);
     }
 
     void refreshList() {

@@ -31,10 +31,6 @@ public class DiscoverFragment extends BaseFragment<DiscoverViewModel, FragmentDi
         DiscoverPagerAdapter adapter = new DiscoverPagerAdapter(this, requireContext());
         binding.viewPager.setAdapter(adapter);
 
-        tabMediator = new TabLayoutMediator(binding.tabLayout, binding.viewPager,
-                (tab, position) -> tab.setText(adapter.getPageTitle(position)));
-        tabMediator.attach();
-
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_search) {
                 startActivity(new Intent(requireContext(), SearchActivity.class));

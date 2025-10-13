@@ -195,7 +195,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     private boolean shouldAllowTabSelection(int position) {
-        if (position < 2) {
+        BottomTabNavigator.TabItem tabItem = navigator != null ? navigator.getTabItem(position) : null;
+        if (tabItem == null) {
+            return true;
+        }
+        if (!RequiresLoginTab.class.isAssignableFrom(tabItem.fragmentClass)) {
             return true;
         }
         return ensureLoggedIn();

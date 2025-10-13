@@ -116,10 +116,7 @@ public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearch
         viewModel.getShowSuggestions().observe(this, this::toggleSuggestions);
         viewModel.getSearchResults().observe(this, results -> {
             resultAdapter.submitList(results);
-            boolean empty = results == null || results.isEmpty();
-            if (!Boolean.TRUE.equals(viewModel.getShowSuggestions().getValue())) {
-                stateController.setEmpty(empty);
-            }
+            updateEmptyState();
         });
         viewModel.getLoading().observe(this, loading -> stateController.setLoading(Boolean.TRUE.equals(loading)));
         viewModel.getLoadingMore().observe(this, loadingMore -> {
@@ -129,6 +126,7 @@ public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearch
         });
         viewModel.getErrorMessage().observe(this, msg -> stateController.stopRefreshing());
         viewModel.getPagingError().observe(this, msg -> stateController.stopRefreshing());
+        viewModel.getEmptyState().observe(this, empty -> updateEmptyState());
 
         UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
         UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
@@ -204,6 +202,8 @@ public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearch
         if (visible) {
             stateController.setEmpty(false);
             stateController.stopRefreshing();
+        } else {
+            updateEmptyState();
         }
     }
 
@@ -212,5 +212,15 @@ public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearch
         if (imm != null) {
             imm.hideSoftInputFromWindow(binding.searchInput.getWindowToken(), 0);
         }
+    }
+
+    private void updateEmptyState() {
+        boolean showSuggestions = Boolean.TRUE.equals(viewModel.getShowSuggestions().getValue());
+        if (showSuggestions) {
+            stateController.setEmpty(false);
+            return;
+        }
+        Boolean empty = viewModel.getEmptyState().getValue();
+        stateController.setEmpty(Boolean.TRUE.equals(empty));
     }
 }

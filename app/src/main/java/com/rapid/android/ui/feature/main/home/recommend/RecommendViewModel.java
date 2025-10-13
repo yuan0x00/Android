@@ -75,6 +75,10 @@ public class RecommendViewModel extends BaseViewModel {
         return pagingController.getErrorLiveData();
     }
 
+    public MutableLiveData<Boolean> getArticleEmptyState() {
+        return pagingController.getEmptyStateLiveData();
+    }
+
     public void refreshAll() {
         loadBanner();
         loadHighlights();

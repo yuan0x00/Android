@@ -31,14 +31,14 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
     private static final int BOTTOM_BAR_SCROLL_THRESHOLD = 8;
 
     private BannerAdapter bannerAdapter;
+    private final Set<Integer> topArticleIds = new LinkedHashSet<>();
     private ArticleAdapter articleAdapter;
     private HomePopularSectionRowAdapter popularSectionAdapter;
     private LinearLayoutManager layoutManager;
     private ContentStateController stateController;
     private BackToTopController backToTopController;
-    private final List<ArticleListBean.Data> topArticleItems = new ArrayList<>();
-    private List<ArticleListBean.Data> articleItems = new ArrayList<>();
     private TabNavigator tabNavigator;
+    private ArticleAdapter topArticleAdapter;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -84,8 +84,9 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
                 popularSectionAdapter.submitList(sections);
             }
         });
-        viewModel.getArticleItems().observe(this, this::updateArticleItems);
-        viewModel.getTopArticles().observe(this, this::updateTopArticles);
+        viewModel.getArticleItems().observe(this, this::renderArticleItems);
+        viewModel.getTopArticles().observe(this, this::renderTopArticles);
+        viewModel.getArticleEmptyState().observe(this, isEmpty -> updateEmptyState());
         viewModel.getLoading().observe(this, isLoading -> {
             stateController.setLoading(Boolean.TRUE.equals(isLoading));
         });
@@ -108,13 +109,12 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
 
         bannerAdapter = new BannerAdapter(new ArrayList<>());
         popularSectionAdapter = new HomePopularSectionRowAdapter();
+        topArticleAdapter = new ArticleAdapter(getDialogController(), articleListBean, true);
         articleAdapter = new ArticleAdapter(getDialogController(), articleListBean);
 
-        ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, popularSectionAdapter, articleAdapter);
+        ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, popularSectionAdapter, topArticleAdapter, articleAdapter);
         binding.recyclerView.setAdapter(concatAdapter);
         RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
-
-        refreshArticleDisplay();
 
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.refreshAll());
 
@@ -161,12 +161,17 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
             }
             return;
         }
-        if (dy > BOTTOM_BAR_SCROLL_THRESHOLD) {
+
+        boolean canScrollUp = recyclerView.canScrollVertically(-1);
+        boolean canScrollDown = recyclerView.canScrollVertically(1);
+
+        if (dy > BOTTOM_BAR_SCROLL_THRESHOLD && canScrollDown) {
             tabNavigator.hideBottomBar(true);
-        } else if (dy < -BOTTOM_BAR_SCROLL_THRESHOLD) {
+        } else if (dy < -BOTTOM_BAR_SCROLL_THRESHOLD || !canScrollUp) {
             tabNavigator.showBottomBar(true);
         }
-        if (!recyclerView.canScrollVertically(-1)) {
+
+        if (!canScrollUp || !canScrollDown) {
             tabNavigator.showBottomBar(true);
         }
     }
@@ -181,63 +186,67 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
             }
             return;
         }
-        if (!recyclerView.canScrollVertically(-1)) {
+
+        boolean canScrollUp = recyclerView.canScrollVertically(-1);
+        boolean canScrollDown = recyclerView.canScrollVertically(1);
+
+        if (!canScrollUp || !canScrollDown) {
+            tabNavigator.showBottomBar(true);
+            return;
+        }
+
+        if (!tabNavigator.isBottomBarVisible()) {
             tabNavigator.showBottomBar(true);
         }
     }
 
-    private void updateArticleItems(List<ArticleListBean.Data> items) {
-        articleItems = items != null ? new ArrayList<>(items) : new ArrayList<>();
-        refreshArticleDisplay();
-    }
-
-    private void updateTopArticles(List<ArticleListBean.Data> articles) {
-        topArticleItems.clear();
-        if (articles != null) {
-            topArticleItems.addAll(articles);
+    private void renderTopArticles(List<ArticleListBean.Data> articles) {
+        if (topArticleAdapter == null) {
+            return;
         }
-        refreshArticleDisplay();
+        topArticleIds.clear();
+        List<ArticleListBean.Data> tops = new ArrayList<>();
+        if (articles != null) {
+            for (ArticleListBean.Data item : articles) {
+                if (item == null) {
+                    continue;
+                }
+                topArticleIds.add(item.getId());
+                tops.add(item);
+            }
+        }
+        topArticleAdapter.submitList(tops);
+        renderArticleItems(viewModel.getArticleItems().getValue());
+        updateEmptyState();
     }
 
-    private void refreshArticleDisplay() {
+    private void renderArticleItems(List<ArticleListBean.Data> items) {
         if (articleAdapter == null) {
             return;
         }
-        List<ArticleListBean.Data> combined = buildCombinedArticleList();
-        Set<Integer> topIds = new LinkedHashSet<>();
-        for (ArticleListBean.Data item : topArticleItems) {
-            if (item == null) {
-                continue;
+        List<ArticleListBean.Data> filtered = new ArrayList<>();
+        if (items != null) {
+            for (ArticleListBean.Data item : items) {
+                if (item == null) {
+                    continue;
+                }
+                if (!topArticleIds.contains(item.getId())) {
+                    filtered.add(item);
+                }
             }
-            topIds.add(item.getId());
         }
-        articleAdapter.submitList(combined);
-        articleAdapter.setTopArticleIds(topIds);
-        if (stateController != null) {
-            stateController.setEmpty(combined.isEmpty());
-        }
+        articleAdapter.submitList(filtered);
+        updateEmptyState();
     }
 
-    private List<ArticleListBean.Data> buildCombinedArticleList() {
-        List<ArticleListBean.Data> combined = new ArrayList<>();
-        Set<Integer> seenIds = new LinkedHashSet<>();
-        for (ArticleListBean.Data item : topArticleItems) {
-            if (item == null) {
-                continue;
-            }
-            if (seenIds.add(item.getId())) {
-                combined.add(item);
-            }
+    private void updateEmptyState() {
+        if (stateController == null) {
+            return;
         }
-        for (ArticleListBean.Data item : articleItems) {
-            if (item == null) {
-                continue;
-            }
-            if (seenIds.add(item.getId())) {
-                combined.add(item);
-            }
-        }
-        return combined;
+        boolean noTop = topArticleAdapter == null || topArticleAdapter.getItemCount() == 0;
+        Boolean pagingEmpty = viewModel.getArticleEmptyState().getValue();
+        boolean empty = Boolean.TRUE.equals(pagingEmpty) && noTop;
+        stateController.setEmpty(empty);
     }
 
     @Override

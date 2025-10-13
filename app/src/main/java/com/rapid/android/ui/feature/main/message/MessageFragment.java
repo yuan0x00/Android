@@ -11,14 +11,18 @@ import com.rapid.android.R;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentMessageBinding;
 import com.rapid.android.ui.common.UiFeedback;
+import com.rapid.android.ui.feature.main.RequiresLoginTab;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 public class MessageFragment extends BaseFragment<MessageViewModel, FragmentMessageBinding>
-        implements MessageListFragment.Host {
+        implements MessageListFragment.Host, RequiresLoginTab {
 
-    private final Map<MessageCategory, MessageListFragment> fragmentCache = new EnumMap<>(MessageCategory.class);
+    private final Map<MessageCategory, WeakReference<MessageListFragment>> fragmentCache = new EnumMap<>(MessageCategory.class);
     private TabLayoutMediator tabMediator;
 
     @Override
@@ -73,7 +77,7 @@ public class MessageFragment extends BaseFragment<MessageViewModel, FragmentMess
 
     @Override
     public void onListFragmentAttached(@NonNull MessageCategory category, @NonNull MessageListFragment fragment) {
-        fragmentCache.put(category, fragment);
+        fragmentCache.put(category, new WeakReference<>(fragment));
     }
 
     @Override
@@ -93,8 +97,18 @@ public class MessageFragment extends BaseFragment<MessageViewModel, FragmentMess
 
     private void refreshAll() {
         viewModel.refreshUnreadCount();
-        for (MessageListFragment fragment : fragmentCache.values()) {
-            fragment.refreshList();
+        List<MessageCategory> staleEntries = new ArrayList<>();
+        for (Map.Entry<MessageCategory, WeakReference<MessageListFragment>> entry : fragmentCache.entrySet()) {
+            WeakReference<MessageListFragment> reference = entry.getValue();
+            MessageListFragment fragment = reference != null ? reference.get() : null;
+            if (fragment != null && fragment.isAdded()) {
+                fragment.refreshList();
+            } else if (reference != null) {
+                staleEntries.add(entry.getKey());
+            }
+        }
+        for (MessageCategory category : staleEntries) {
+            fragmentCache.remove(category);
         }
     }
 

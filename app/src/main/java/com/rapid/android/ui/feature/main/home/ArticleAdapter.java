@@ -1,7 +1,9 @@
 package com.rapid.android.ui.feature.main.home;
 
 import android.content.Intent;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,16 +18,13 @@ import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.repository.UserRepository;
 import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.core.ui.components.dialog.DialogController;
-import com.rapid.android.core.ui.components.popup.BasePopupWindow;
 import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ItemArticleBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -38,11 +37,16 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
     private final CompositeDisposable disposables = new CompositeDisposable();
     @Nullable
     private final DialogController dialogController;
-    private final Set<Integer> topArticleIds = new HashSet<>();
+    private final boolean forceTopFlag;
 
 
     public ArticleAdapter(@Nullable DialogController dialogController, ArticleListBean bean) {
+        this(dialogController, bean, false);
+    }
+
+    public ArticleAdapter(@Nullable DialogController dialogController, ArticleListBean bean, boolean forceTopFlag) {
         this.dialogController = dialogController;
+        this.forceTopFlag = forceTopFlag;
         setData(bean);
     }
 
@@ -95,16 +99,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         disposables.clear();
     }
 
-    public void setTopArticleIds(Set<Integer> ids) {
-        topArticleIds.clear();
-        if (ids != null) {
-            topArticleIds.addAll(ids);
-        }
-        notifyDataSetChanged();
-    }
-
     private boolean isTopArticle(@NonNull ArticleListBean.Data item) {
-        return topArticleIds.contains(item.getId()) || item.getType() == 1;
+        return forceTopFlag || item.getType() == 1;
     }
 
     public static class ArticleViewHolder extends RecyclerView.ViewHolder {
@@ -141,29 +137,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
             binding.ivFavorite.setEnabled(true);
             collectRequestRunning = false;
             renderFavorite(data.isCollect());
-
-            GestureDetector gestureDetector = new GestureDetector(itemView.getContext(), new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public void onLongPress(MotionEvent e) {
-                    // Get touch coordinates from MotionEvent
-                    float touchX = e.getRawX();
-                    float touchY = e.getRawY();
-
-                    // Create and configure BasePopupWindow
-                    BasePopupWindow popup = new BasePopupWindow.Builder(itemView.getContext())
-                            .setFocusable(true)
-                            .build();
-
-                    // Show popup at touch position
-                    popup.showAtTouchPosition(binding.getRoot(), touchX, touchY);
-                }
-            });
-
-            // Set OnTouchListener to pass events to GestureDetector
-            binding.getRoot().setOnTouchListener((v, event) -> {
-                gestureDetector.onTouchEvent(event);
-                return false;
-            });
 
             binding.getRoot().setOnClickListener(v -> ArticleWebViewActivity.start(binding.getRoot().getContext(), data));
 

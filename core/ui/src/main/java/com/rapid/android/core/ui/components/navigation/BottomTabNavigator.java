@@ -61,6 +61,13 @@ public class BottomTabNavigator {
         return this;
     }
 
+    public TabItem getTabItem(int position) {
+        if (position < 0 || position >= tabs.size()) {
+            return null;
+        }
+        return tabs.get(position);
+    }
+
     public BottomTabNavigator build() {
         if (tabs.isEmpty()) throw new IllegalStateException("至少一个 Tab");
 

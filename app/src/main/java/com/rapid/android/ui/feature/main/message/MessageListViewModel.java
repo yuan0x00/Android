@@ -63,6 +63,10 @@ class MessageListViewModel extends BaseViewModel {
         return unreadSyncSignal;
     }
 
+    MutableLiveData<Boolean> getEmptyState() {
+        return pagingController.getEmptyStateLiveData();
+    }
+
     void initialize() {
         if (!pagingController.isInitialized()) {
             pagingController.refresh();

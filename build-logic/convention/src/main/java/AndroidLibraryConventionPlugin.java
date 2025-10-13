@@ -4,7 +4,10 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.jspecify.annotations.NonNull;
 
-import local.AndroidJava;
+import java.util.Properties;
+
+import local.JavaAndroid;
+import local.PropertiesLoader;
 
 public class AndroidLibraryConventionPlugin implements Plugin<@NonNull Project> {
 
@@ -12,10 +15,19 @@ public class AndroidLibraryConventionPlugin implements Plugin<@NonNull Project> 
     public void apply(Project target) {
         target.getPluginManager().apply("com.android.library");
 
+        Properties config = PropertiesLoader.loadPropertiesFile(target, "config.properties");
+
+        int javaVersion = PropertiesLoader.getPropertyInt(config, "javaVersion");
+        int compileSdk = PropertiesLoader.getPropertyInt(config, "compileSdk");
+        int minSdk = PropertiesLoader.getPropertyInt(config, "minSdk");
+
+        boolean enableViewBinding = PropertiesLoader.getPropertyBoolean(config, "enableViewBinding", true);
+
         LibraryExtension extension = target.getExtensions().getByType(LibraryExtension.class);
-        AndroidJava.configureAndroidProject(target, extension);
+        JavaAndroid.configureJavaAndroid(target, javaVersion, extension, compileSdk, minSdk, enableViewBinding);
 
         extension.getDefaultConfig().consumerProguardFile("consumer-rules.pro");
+
         extension.getBuildTypes().configureEach(buildType -> {
             if ("release".equals(buildType.getName())) {
                 buildType.setMinifyEnabled(false);

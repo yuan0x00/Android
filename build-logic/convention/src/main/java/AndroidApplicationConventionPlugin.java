@@ -4,7 +4,10 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.jspecify.annotations.NonNull;
 
-import local.AndroidJava;
+import java.util.Properties;
+
+import local.JavaAndroid;
+import local.PropertiesLoader;
 
 public class AndroidApplicationConventionPlugin implements Plugin<@NonNull Project> {
 
@@ -12,10 +15,18 @@ public class AndroidApplicationConventionPlugin implements Plugin<@NonNull Proje
     public void apply(Project target) {
         target.getPluginManager().apply("com.android.application");
 
-        ApplicationExtension extension = target.getExtensions().getByType(ApplicationExtension.class);
-        AndroidJava.configureAndroidProject(target, extension);
+        Properties config = PropertiesLoader.loadPropertiesFile(target, "config.properties");
 
-        int targetSdk = Integer.parseInt(target.getProviders().gradleProperty("targetSdk").get());
+        int javaVersion = PropertiesLoader.getPropertyInt(config, "javaVersion");
+        int compileSdk = PropertiesLoader.getPropertyInt(config, "compileSdk");
+        int minSdk = PropertiesLoader.getPropertyInt(config, "minSdk");
+        int targetSdk = PropertiesLoader.getPropertyInt(config, "targetSdk");
+
+        boolean enableViewBinding = PropertiesLoader.getPropertyBoolean(config, "enableViewBinding", true);
+
+        ApplicationExtension extension = target.getExtensions().getByType(ApplicationExtension.class);
+        JavaAndroid.configureJavaAndroid(target, javaVersion, extension, compileSdk, minSdk, enableViewBinding);
+
         extension.getDefaultConfig().setTargetSdk(targetSdk);
 
         extension.getBuildTypes().configureEach(buildType -> {

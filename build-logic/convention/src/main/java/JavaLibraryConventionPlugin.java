@@ -3,7 +3,10 @@ import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaLibraryPlugin;
 import org.jspecify.annotations.NonNull;
 
-import local.JavaConfiguration;
+import java.util.Properties;
+
+import local.JavaLibrary;
+import local.PropertiesLoader;
 
 public class JavaLibraryConventionPlugin implements Plugin<@NonNull Project> {
 
@@ -11,6 +14,10 @@ public class JavaLibraryConventionPlugin implements Plugin<@NonNull Project> {
     public void apply(Project target) {
         target.getPluginManager().apply(JavaLibraryPlugin.class);
 
-        JavaConfiguration.configureJavaProject(target);
+        Properties config = PropertiesLoader.loadPropertiesFile(target, "config.properties");
+
+        int javaVersion = PropertiesLoader.getPropertyInt(config, "javaVersion");
+
+        JavaLibrary.configureJavaLibrary(target, javaVersion);
     }
 }

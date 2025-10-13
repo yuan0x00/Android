@@ -2,12 +2,16 @@ plugins {
     alias(libs.plugins.local.android.application)
 }
 
+def properties = new Properties()
+rootProject.file('config.properties').withInputStream { properties.load(it) }
+
 android {
-    namespace = project.namespace
+    namespace = properties.getProperty("namespace")
+
     defaultConfig{
-        applicationId project.namespace
-        versionCode Integer.parseInt(project.versionCode)
-        versionName project.versionName
+        applicationId namespace
+        versionCode Integer.parseInt(properties.getProperty("versionCode"))
+        versionName = properties.getProperty("versionName")
     }
 
     signingConfigs {

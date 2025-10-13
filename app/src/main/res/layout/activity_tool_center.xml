@@ -43,8 +43,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingHorizontal="@dimen/app_spacing_lg"
-                android:paddingVertical="@dimen/app_spacing_md"
                 tools:listitem="@layout/item_tool" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

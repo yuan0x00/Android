@@ -6,11 +6,8 @@
     <!-- 间距体系（Spacing Scale） -->
     <dimen name="app_spacing_xxs">2dp</dimen>
     <dimen name="app_spacing_xs">4dp</dimen>
-    <dimen name="app_spacing_sm_plus">6dp</dimen>
     <dimen name="app_spacing_sm">8dp</dimen>
-    <dimen name="app_spacing_md_plus">10dp</dimen>
     <dimen name="app_spacing_md">12dp</dimen>
-    <dimen name="app_spacing_lg_plus">15dp</dimen>
     <dimen name="app_spacing_lg">16dp</dimen>
     <dimen name="app_spacing_xl">24dp</dimen>
     <dimen name="app_spacing_2xl">32dp</dimen>
@@ -37,9 +34,7 @@
     <dimen name="app_size_icon_lg">40dp</dimen>
     <dimen name="app_size_avatar_md">72dp</dimen>
     <dimen name="app_size_thumbnail_lg">96dp</dimen>
-    <dimen name="app_size_feed_min_height">100dp</dimen>
     <dimen name="app_size_project_min_height">120dp</dimen>
-    <dimen name="app_size_banner_height">180dp</dimen>
     <dimen name="app_size_home_section_height">200dp</dimen>
     <dimen name="app_dialog_width">300dp</dimen>
 

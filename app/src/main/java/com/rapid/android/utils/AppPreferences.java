@@ -80,7 +80,7 @@ public final class AppPreferences {
     }
 
     public static boolean isHomeTopEnabled() {
-        return getPrefs().getBoolean(KEY_HOME_TOP_ENABLED, true);
+        return getPrefs().getBoolean(KEY_HOME_TOP_ENABLED, false);
     }
 
     public static void setHomeTopEnabled(boolean enabled) {
@@ -96,7 +96,7 @@ public final class AppPreferences {
     }
 
     public static boolean isAutoHideBottomBarEnabled() {
-        return getPrefs().getBoolean(KEY_AUTO_HIDE_BOTTOM_BAR, true);
+        return getPrefs().getBoolean(KEY_AUTO_HIDE_BOTTOM_BAR, false);
     }
 
     public static void setAutoHideBottomBarEnabled(boolean enabled) {

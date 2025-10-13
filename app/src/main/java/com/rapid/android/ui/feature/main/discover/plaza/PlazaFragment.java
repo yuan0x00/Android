@@ -22,11 +22,11 @@ import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.discover.share.ShareArticleActivity;
-import com.rapid.android.ui.feature.main.home.FeedAdapter;
+import com.rapid.android.ui.feature.main.home.ArticleAdapter;
 
 public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBinding> {
 
-    private FeedAdapter feedAdapter;
+    private ArticleAdapter articleAdapter;
     private LinearLayoutManager layoutManager;
     private ContentStateController stateController;
     private BackToTopController backToTopController;
@@ -46,9 +46,9 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
         layoutManager = new LinearLayoutManager(requireContext());
         binding.recyclerView.setLayoutManager(layoutManager);
 
-        feedAdapter = new FeedAdapter(getDialogController(), new ArticleListBean());
-        binding.recyclerView.setAdapter(feedAdapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, R.dimen.app_spacing_sm);
+        articleAdapter = new ArticleAdapter(getDialogController(), new ArticleListBean());
+        binding.recyclerView.setAdapter(articleAdapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 
@@ -98,7 +98,7 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
         UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
 
         viewModel.getPlazaItems().observe(this, items -> {
-            feedAdapter.submitList(items);
+            articleAdapter.submitList(items);
             stateController.setEmpty(items == null || items.isEmpty());
         });
 

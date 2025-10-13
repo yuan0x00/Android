@@ -90,7 +90,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/app_spacing_lg"
-                        android:layout_marginTop="@dimen/app_spacing_md_plus"
+                        android:layout_marginTop="@dimen/app_spacing_md"
                         android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/ivAvatar"

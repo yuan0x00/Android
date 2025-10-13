@@ -16,8 +16,8 @@ import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentRecommandBinding;
 import com.rapid.android.ui.common.*;
 import com.rapid.android.ui.feature.main.TabNavigator;
+import com.rapid.android.ui.feature.main.home.ArticleAdapter;
 import com.rapid.android.ui.feature.main.home.BannerAdapter;
-import com.rapid.android.ui.feature.main.home.FeedAdapter;
 import com.rapid.android.utils.AppPreferences;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
     private static final int BOTTOM_BAR_SCROLL_THRESHOLD = 8;
 
     private BannerAdapter bannerAdapter;
-    private FeedAdapter feedAdapter;
+    private ArticleAdapter articleAdapter;
     private HomePopularSectionRowAdapter popularSectionAdapter;
     private LinearLayoutManager layoutManager;
     private ContentStateController stateController;
@@ -104,15 +104,15 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 
-        ArticleListBean feeds = new ArticleListBean();
+        ArticleListBean articleListBean = new ArticleListBean();
 
         bannerAdapter = new BannerAdapter(new ArrayList<>());
         popularSectionAdapter = new HomePopularSectionRowAdapter();
-        feedAdapter = new FeedAdapter(getDialogController(), feeds);
+        articleAdapter = new ArticleAdapter(getDialogController(), articleListBean);
 
-        ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, popularSectionAdapter, feedAdapter);
+        ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, popularSectionAdapter, articleAdapter);
         binding.recyclerView.setAdapter(concatAdapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, com.rapid.android.R.dimen.app_spacing_sm);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
 
         refreshArticleDisplay();
 
@@ -200,7 +200,7 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
     }
 
     private void refreshArticleDisplay() {
-        if (feedAdapter == null) {
+        if (articleAdapter == null) {
             return;
         }
         List<ArticleListBean.Data> combined = buildCombinedArticleList();
@@ -211,8 +211,8 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
             }
             topIds.add(item.getId());
         }
-        feedAdapter.submitList(combined);
-        feedAdapter.setTopArticleIds(topIds);
+        articleAdapter.submitList(combined);
+        articleAdapter.setTopArticleIds(topIds);
         if (stateController != null) {
             stateController.setEmpty(combined.isEmpty());
         }

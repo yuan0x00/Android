@@ -28,7 +28,7 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/app_spacing_md_plus"
+            android:layout_marginTop="@dimen/app_spacing_md"
             android:hint="账号"
             app:boxStrokeWidth="@dimen/app_stroke_width"
             app:boxStrokeWidthFocused="@dimen/app_stroke_width_focused"
@@ -48,7 +48,7 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/app_spacing_md_plus"
+            android:layout_marginTop="@dimen/app_spacing_md"
             android:hint="密码"
             app:boxStrokeWidth="@dimen/app_stroke_width"
             app:boxStrokeWidthFocused="@dimen/app_stroke_width_focused"
@@ -70,7 +70,7 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/app_spacing_md_plus"
+            android:layout_marginTop="@dimen/app_spacing_md"
             android:hint="确认密码"
             android:visibility="gone"
             app:boxStrokeWidth="@dimen/app_stroke_width"
@@ -93,7 +93,7 @@
             style="@style/Widget.App.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/app_spacing_lg_plus"
+            android:layout_marginTop="@dimen/app_spacing_lg"
             android:text="@string/login_action_login"/>
 
         <com.google.android.material.button.MaterialButton
@@ -110,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="@dimen/app_spacing_md_plus">
+            android:layout_marginTop="@dimen/app_spacing_md">
 
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:layout_width="wrap_content"

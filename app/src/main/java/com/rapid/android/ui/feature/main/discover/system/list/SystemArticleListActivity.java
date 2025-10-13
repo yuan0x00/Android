@@ -55,7 +55,7 @@ public class SystemArticleListActivity extends BaseActivity<SystemArticleListVie
         adapter = new SystemArticleListAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, R.dimen.app_spacing_md);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);

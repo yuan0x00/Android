@@ -131,9 +131,9 @@
     <string name="discover_tab_project">项目</string>
     <string name="discover_tab_wechat">公众号</string>
     <string name="discover_tab_hot">热点</string>
-    <string name="settings_show_top_articles">显示置顶文章</string>
+    <string name="settings_show_top_articles">首页显示置顶文章</string>
     <string name="settings_show_top_articles_description">关闭后首页将不会请求置顶文章数据</string>
-    <string name="settings_auto_hide_bottom_bar">滑动时隐藏底部导航</string>
+    <string name="settings_auto_hide_bottom_bar">首页滑动隐藏底栏</string>
     <string name="settings_auto_hide_bottom_bar_description">开启后在首页向下滑动时自动收起底部导航栏</string>
     <string name="settings_auto_hide_bottom_bar_on">已开启滑动隐藏底部导航</string>
     <string name="settings_auto_hide_bottom_bar_off">已关闭滑动隐藏底部导航</string>
@@ -180,7 +180,7 @@
     <string name="project_empty_navigation">暂无导航数据</string>
     <string name="project_empty_system">暂无体系数据</string>
     <string name="project_empty_latest">暂无最新项目</string>
-    <string name="plaza_empty_feed">暂无广场内容</string>
+    <string name="plaza_empty">暂无广场内容</string>
     <string name="plaza_error_load_failed">加载广场数据失败</string>
     <string name="home_page_plaza">广场</string>
     <string name="common_back_to_top">回到顶部</string>

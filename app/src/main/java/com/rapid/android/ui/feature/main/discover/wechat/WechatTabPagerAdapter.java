@@ -18,7 +18,7 @@ import com.rapid.android.databinding.ItemWechatTabPageBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.paging.PagingPayload;
-import com.rapid.android.ui.feature.main.home.FeedAdapter;
+import com.rapid.android.ui.feature.main.home.ArticleAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -209,7 +209,7 @@ final class WechatTabPagerAdapter extends RecyclerView.Adapter<WechatTabPagerAda
     private static class PageState {
         final int chapterId;
         final List<ArticleListBean.Data> items = new ArrayList<>();
-        FeedAdapter adapter;
+        ArticleAdapter adapter;
         ItemWechatTabPageBinding binding;
         RecyclerView recyclerView;
         LinearLayoutManager layoutManager;
@@ -256,10 +256,10 @@ final class WechatTabPagerAdapter extends RecyclerView.Adapter<WechatTabPagerAda
             binding.recyclerView.setLayoutManager(state.layoutManager);
 
             if (state.adapter == null) {
-                state.adapter = new FeedAdapter(dialogController, new ArticleListBean());
+                state.adapter = new ArticleAdapter(dialogController, new ArticleListBean());
             }
             binding.recyclerView.setAdapter(state.adapter);
-            RecyclerViewDecorations.addTopSpacing(binding.recyclerView, com.rapid.android.R.dimen.app_spacing_sm);
+            RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
 
             if (state.scrollListener == null) {
                 state.scrollListener = new RecyclerView.OnScrollListener() {

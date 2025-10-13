@@ -20,8 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingTop="@dimen/app_spacing_sm"
-            android:paddingBottom="@dimen/app_spacing_lg"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_message" />
 

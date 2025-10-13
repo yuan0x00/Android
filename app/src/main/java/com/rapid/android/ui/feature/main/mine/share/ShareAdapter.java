@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.rapid.android.R;
 import com.rapid.android.core.common.text.StringUtils;
 import com.rapid.android.core.domain.model.ArticleListBean;
-import com.rapid.android.databinding.ItemFeedBinding;
+import com.rapid.android.databinding.ItemArticleBinding;
 import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ final class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.ShareViewHold
     @NonNull
     @Override
     public ShareViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemFeedBinding binding = ItemFeedBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemArticleBinding binding = ItemArticleBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new ShareViewHolder(binding);
     }
 
@@ -48,9 +48,9 @@ final class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.ShareViewHold
     }
 
     static class ShareViewHolder extends RecyclerView.ViewHolder {
-        private final ItemFeedBinding binding;
+        private final ItemArticleBinding binding;
 
-        ShareViewHolder(@NonNull ItemFeedBinding binding) {
+        ShareViewHolder(@NonNull ItemArticleBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

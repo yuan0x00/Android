@@ -6,13 +6,12 @@
     style="@style/Widget.App.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/app_spacing_sm"
     app:cardCornerRadius="@dimen/app_corner_radius_md">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/app_size_feed_min_height"
+        android:minHeight="100dp"
         android:padding="@dimen/app_spacing_sm">
 
         <TextView

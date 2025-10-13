@@ -61,7 +61,7 @@ public class CoinActivity extends BaseActivity<CoinViewModel, ActivityCoinBindin
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(recordAdapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, R.dimen.app_spacing_md);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
         binding.recyclerView.setClipToPadding(false);
         binding.recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 

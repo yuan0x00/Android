@@ -18,7 +18,7 @@ import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.main.TabNavigator;
-import com.rapid.android.ui.feature.main.home.FeedAdapter;
+import com.rapid.android.ui.feature.main.home.ArticleAdapter;
 import com.rapid.android.utils.AppPreferences;
 
 
@@ -26,7 +26,7 @@ public class LastProjectFragment extends BaseFragment<LastProjectViewModel, Frag
 
     private static final int BOTTOM_BAR_SCROLL_THRESHOLD = 8;
 
-    private FeedAdapter feedAdapter;
+    private ArticleAdapter articleAdapter;
     private LinearLayoutManager layoutManager;
     private ContentStateController stateController;
     private BackToTopController backToTopController;
@@ -67,7 +67,7 @@ public class LastProjectFragment extends BaseFragment<LastProjectViewModel, Frag
         UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
         UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
         viewModel.getProjectItems().observe(this, items -> {
-            feedAdapter.submitList(items);
+            articleAdapter.submitList(items);
             boolean empty = items == null || items.isEmpty();
             stateController.setEmpty(empty);
         });
@@ -85,13 +85,13 @@ public class LastProjectFragment extends BaseFragment<LastProjectViewModel, Frag
         layoutManager = new LinearLayoutManager(requireContext());
         binding.recyclerView.setLayoutManager(layoutManager);
 
-        ArticleListBean feeds = new ArticleListBean();
+        ArticleListBean bean = new ArticleListBean();
 
         // 创建各模块 Adapter
-        feedAdapter = new FeedAdapter(getDialogController(), feeds);
+        articleAdapter = new ArticleAdapter(getDialogController(), bean);
 
-        binding.recyclerView.setAdapter(feedAdapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, com.rapid.android.R.dimen.app_spacing_md);
+        binding.recyclerView.setAdapter(articleAdapter);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 

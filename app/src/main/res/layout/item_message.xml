@@ -4,7 +4,6 @@
     style="@style/Widget.App.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/app_spacing_lg"
     app:cardCornerRadius="@dimen/app_corner_radius_md">
 
     <LinearLayout

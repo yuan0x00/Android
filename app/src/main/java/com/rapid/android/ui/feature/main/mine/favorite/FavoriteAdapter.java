@@ -20,7 +20,7 @@ import com.rapid.android.core.domain.repository.UserRepository;
 import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.core.ui.utils.ToastUtils;
-import com.rapid.android.databinding.ItemFeedBinding;
+import com.rapid.android.databinding.ItemArticleBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
@@ -51,7 +51,7 @@ final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favorit
     @NonNull
     @Override
     public FavoriteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemFeedBinding binding = ItemFeedBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemArticleBinding binding = ItemArticleBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new FavoriteViewHolder(binding);
     }
 
@@ -103,10 +103,10 @@ final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favorit
     }
 
     class FavoriteViewHolder extends RecyclerView.ViewHolder {
-        private final ItemFeedBinding binding;
+        private final ItemArticleBinding binding;
         private boolean collectRequestRunning = false;
 
-        FavoriteViewHolder(@NonNull ItemFeedBinding binding) {
+        FavoriteViewHolder(@NonNull ItemArticleBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

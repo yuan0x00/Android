@@ -33,8 +33,7 @@
             android:background="?attr/colorSurface"
             android:paddingHorizontal="@dimen/app_spacing_lg"
             app:tabGravity="center"
-            app:tabIndicatorAnimationMode="elastic"
-            app:tabMode="scrollable" />
+            app:tabIndicatorAnimationMode="elastic"/>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"

@@ -46,7 +46,7 @@ public class ShareActivity extends BaseActivity<ShareViewModel, ActivityShareBin
         adapter = new ShareAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, R.dimen.app_spacing_sm);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);

@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.rapid.android.ui.view.ImageBanner
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/banner"
+    android:id="@+id/cardContainer"
+    style="@style/Widget.App.Card"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/app_size_banner_height"
-    android:layout_marginHorizontal="@dimen/app_spacing_sm"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"/>
+    android:layout_height="@dimen/app_size_home_section_height"
+    app:cardCornerRadius="@dimen/app_corner_radius_md">
+
+    <com.rapid.android.ui.view.ImageBanner
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+</com.google.android.material.card.MaterialCardView>
+

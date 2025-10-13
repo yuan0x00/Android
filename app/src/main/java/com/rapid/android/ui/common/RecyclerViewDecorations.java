@@ -2,7 +2,6 @@ package com.rapid.android.ui.common;
 
 import android.content.res.Resources;
 
-import androidx.annotation.DimenRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,12 +15,12 @@ public final class RecyclerViewDecorations {
     private RecyclerViewDecorations() {
     }
 
-    public static void addTopSpacing(@NonNull RecyclerView recyclerView, @DimenRes int spacingRes) {
+    public static void addTopSpacing(@NonNull RecyclerView recyclerView) {
         if (recyclerView.getContext() == null) {
             return;
         }
         Resources resources = recyclerView.getResources();
-        int spacingPx = resources.getDimensionPixelSize(spacingRes);
+        int spacingPx = resources.getDimensionPixelSize(com.rapid.android.R.dimen.app_spacing_sm);
 
         for (int i = 0, count = recyclerView.getItemDecorationCount(); i < count; i++) {
             RecyclerView.ItemDecoration decoration = recyclerView.getItemDecorationAt(i);

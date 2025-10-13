@@ -87,7 +87,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/clearHistoryButton"
                     style="@style/Widget.App.Button.Text"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/app_spacing_sm"
                     android:text="@string/search_clear_history" />
@@ -136,7 +136,7 @@
                 android:paddingTop="@dimen/app_spacing_sm"
                 android:paddingBottom="@dimen/app_spacing_lg"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_feed" />
+                tools:listitem="@layout/item_article" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

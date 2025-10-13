@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
-import com.rapid.android.R;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.model.HotKeyBean;
 import com.rapid.android.core.ui.presentation.BaseActivity;
@@ -24,14 +23,14 @@ import com.rapid.android.databinding.ActivitySearchBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
-import com.rapid.android.ui.feature.main.home.FeedAdapter;
+import com.rapid.android.ui.feature.main.home.ArticleAdapter;
 
 import java.util.List;
 
 public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearchBinding> {
 
     private ContentStateController stateController;
-    private FeedAdapter resultAdapter;
+    private ArticleAdapter resultAdapter;
     private LinearLayoutManager layoutManager;
 
     @Override
@@ -79,9 +78,9 @@ public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearch
         binding.resultRecyclerView.setLayoutManager(layoutManager);
 
         ArticleListBean listBean = new ArticleListBean();
-        resultAdapter = new FeedAdapter(getDialogController(), listBean);
+        resultAdapter = new ArticleAdapter(getDialogController(), listBean);
         binding.resultRecyclerView.setAdapter(resultAdapter);
-        RecyclerViewDecorations.addTopSpacing(binding.resultRecyclerView, R.dimen.app_spacing_sm);
+        RecyclerViewDecorations.addTopSpacing(binding.resultRecyclerView);
 
         binding.resultRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

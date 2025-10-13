@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -16,10 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingStart="@dimen/app_spacing_md"
-            android:paddingTop="@dimen/app_spacing_md"
-            android:paddingEnd="@dimen/app_spacing_md"
-            android:paddingBottom="@dimen/app_spacing_md"/>
+            tools:listitem="@layout/item_project"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabBackToTop"

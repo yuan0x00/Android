@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/app_spacing_lg">
+    android:layout_height="wrap_content">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/popularRecyclerView"
@@ -10,8 +10,6 @@
         android:layout_height="@dimen/app_size_home_section_height"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:paddingStart="0dp"
-        android:paddingEnd="0dp"
-        android:scrollbars="horizontal" />
+        android:scrollbars="horizontal"/>
 
 </FrameLayout>

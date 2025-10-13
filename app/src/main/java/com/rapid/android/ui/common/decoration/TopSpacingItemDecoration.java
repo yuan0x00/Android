@@ -19,13 +19,16 @@ public class TopSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(@NonNull Rect outRect,
-                                @NonNull View view,
-                                @NonNull RecyclerView parent,
-                                @NonNull RecyclerView.State state) {
+                               @NonNull View view,
+                               @NonNull RecyclerView parent,
+                               @NonNull RecyclerView.State state) {
         int position = parent.getChildAdapterPosition(view);
         if (position == RecyclerView.NO_POSITION) {
             return;
         }
-        outRect.top = position == 0 ? 0 : spacingPx;
+        outRect.top = position == 0 ? spacingPx : 0;
+        outRect.left = spacingPx;
+        outRect.right = spacingPx;
+        outRect.bottom = spacingPx;
     }
 }

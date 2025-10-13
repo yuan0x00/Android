@@ -44,12 +44,10 @@ class HomePopularSectionRowAdapter extends RecyclerView.Adapter<HomePopularSecti
 
     static class RowViewHolder extends RecyclerView.ViewHolder {
 
-        private final ItemHomePopularRowBinding binding;
         private final HomePopularSectionCardAdapter cardAdapter;
 
         RowViewHolder(@NonNull ItemHomePopularRowBinding binding) {
             super(binding.getRoot());
-            this.binding = binding;
             cardAdapter = new HomePopularSectionCardAdapter();
             binding.popularRecyclerView.setLayoutManager(
                     new LinearLayoutManager(binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false));

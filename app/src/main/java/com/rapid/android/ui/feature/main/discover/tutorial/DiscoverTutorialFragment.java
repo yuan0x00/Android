@@ -40,7 +40,7 @@ public class DiscoverTutorialFragment extends BaseFragment<DiscoverTutorialViewM
         adapter.setOnItemClickListener(this::openTutorial);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, com.rapid.android.R.dimen.app_spacing_sm);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
     }
 
     @Override

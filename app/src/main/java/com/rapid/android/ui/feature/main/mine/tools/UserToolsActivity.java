@@ -49,7 +49,7 @@ public class UserToolsActivity extends BaseActivity<UserToolsViewModel, Activity
         adapter = new UserToolsAdapter(this);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView, R.dimen.app_spacing_md);
+        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
         binding.fabAdd.setOnClickListener(v -> showEditDialog(null));
     }

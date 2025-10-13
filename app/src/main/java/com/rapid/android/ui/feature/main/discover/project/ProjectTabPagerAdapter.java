@@ -304,7 +304,7 @@ final class ProjectTabPagerAdapter extends RecyclerView.Adapter<ProjectTabPagerA
                 state.adapter = new ProjectListAdapter();
             }
             binding.recyclerView.setAdapter(state.adapter);
-            RecyclerViewDecorations.addTopSpacing(binding.recyclerView, com.rapid.android.R.dimen.app_spacing_md);
+            RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
 
             if (state.scrollListener == null) {
                 state.scrollListener = new RecyclerView.OnScrollListener() {

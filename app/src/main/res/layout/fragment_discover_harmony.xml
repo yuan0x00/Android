@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,16 +24,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="@dimen/app_spacing_lg"
-                android:paddingTop="@dimen/app_spacing_lg"
-                android:paddingBottom="@dimen/app_spacing_2xl">
+                android:padding="@dimen/app_spacing_sm">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/section_links"
                     style="@style/Widget.App.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/app_spacing_md"
+                    android:layout_marginBottom="@dimen/app_spacing_sm"
                     app:cardCornerRadius="@dimen/app_corner_radius_lg">
 
                     <LinearLayout
@@ -45,7 +44,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/discover_harmony_links"
-                            android:textAppearance="@style/TextAppearance.App.Subtitle" />
+                            android:textAppearance="@style/TextAppearance.App.Subtitle"/>
 
                         <com.google.android.material.chip.ChipGroup
                             android:id="@+id/chipGroupLinks"
@@ -53,7 +52,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/app_spacing_sm"
                             app:singleLine="false"
-                            app:singleSelection="false" />
+                            app:singleSelection="false"/>
 
                     </LinearLayout>
 
@@ -64,7 +63,7 @@
                     style="@style/Widget.App.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/app_spacing_md"
+                    android:layout_marginBottom="@dimen/app_spacing_sm"
                     app:cardCornerRadius="@dimen/app_corner_radius_lg">
 
                     <LinearLayout
@@ -77,7 +76,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/discover_harmony_open_source"
-                            android:textAppearance="@style/TextAppearance.App.Subtitle" />
+                            android:textAppearance="@style/TextAppearance.App.Subtitle"/>
 
                         <com.google.android.material.chip.ChipGroup
                             android:id="@+id/chipGroupOpenSource"
@@ -85,7 +84,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/app_spacing_sm"
                             app:singleLine="false"
-                            app:singleSelection="false" />
+                            app:singleSelection="false"/>
 
                     </LinearLayout>
 
@@ -108,7 +107,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/discover_harmony_tools"
-                            android:textAppearance="@style/TextAppearance.App.Subtitle" />
+                            android:textAppearance="@style/TextAppearance.App.Subtitle"/>
 
                         <com.google.android.material.chip.ChipGroup
                             android:id="@+id/chipGroupTools"
@@ -116,7 +115,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/app_spacing_sm"
                             app:singleLine="false"
-                            app:singleSelection="false" />
+                            app:singleSelection="false"/>
 
                     </LinearLayout>
 
@@ -137,7 +136,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/emptyView"
@@ -150,6 +149,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

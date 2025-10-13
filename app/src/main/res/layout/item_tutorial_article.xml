@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.App.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -17,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.App.Subtitle"
-            android:textColor="?attr/colorOnSurface" />
+            android:textColor="?attr/colorOnSurface"
+            tools:text="如何提升 Android 启动速度？"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvSubtitle"
@@ -25,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/app_spacing_sm"
             android:textAppearance="@style/TextAppearance.App.Caption"
-            android:textColor="?attr/colorOnSurfaceVariant" />
+            android:textColor="?attr/colorOnSurfaceVariant"/>
 
     </LinearLayout>
 

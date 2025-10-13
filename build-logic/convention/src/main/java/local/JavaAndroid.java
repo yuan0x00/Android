@@ -12,7 +12,6 @@ public final class JavaAndroid {
 
     public static void configureJavaAndroid(
             Project project,
-            int javaVersion,
             CommonExtension<?, ?, ?, ?, ?, ?> commonExtension,
             int compileSdk,
             int minSdk,
@@ -24,8 +23,8 @@ public final class JavaAndroid {
         commonExtension.getLint().setAbortOnError(false);
         commonExtension.getLint().setCheckReleaseBuilds(false);
 
-        commonExtension.getCompileOptions().setSourceCompatibility(JavaVersion.toVersion(javaVersion));
-        commonExtension.getCompileOptions().setTargetCompatibility(JavaVersion.toVersion(javaVersion));
+        commonExtension.getCompileOptions().setSourceCompatibility(JavaVersion.VERSION_17);
+        commonExtension.getCompileOptions().setTargetCompatibility(JavaVersion.VERSION_17);
 
         commonExtension.getBuildFeatures().setBuildConfig(true);
         commonExtension.getBuildFeatures().setViewBinding(enableViewBinding);

@@ -17,14 +17,13 @@ public class AndroidLibraryConventionPlugin implements Plugin<@NonNull Project> 
 
         Properties config = PropertiesLoader.loadPropertiesFile(target, "config.properties");
 
-        int javaVersion = PropertiesLoader.getPropertyInt(config, "javaVersion");
         int compileSdk = PropertiesLoader.getPropertyInt(config, "compileSdk");
         int minSdk = PropertiesLoader.getPropertyInt(config, "minSdk");
 
         boolean enableViewBinding = PropertiesLoader.getPropertyBoolean(config, "enableViewBinding", true);
 
         LibraryExtension extension = target.getExtensions().getByType(LibraryExtension.class);
-        JavaAndroid.configureJavaAndroid(target, javaVersion, extension, compileSdk, minSdk, enableViewBinding);
+        JavaAndroid.configureJavaAndroid(target, extension, compileSdk, minSdk, enableViewBinding);
 
         extension.getDefaultConfig().consumerProguardFile("consumer-rules.pro");
 

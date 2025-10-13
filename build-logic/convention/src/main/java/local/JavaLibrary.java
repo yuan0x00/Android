@@ -10,11 +10,11 @@ public final class JavaLibrary {
     private JavaLibrary() {
     }
 
-    public static void configureJavaLibrary(Project project, int javaVersion) {
+    public static void configureJavaLibrary(Project project) {
 
         JavaPluginExtension extension = project.getExtensions().getByType(JavaPluginExtension.class);
-        extension.toolchain(javaToolchainSpec -> javaToolchainSpec.getLanguageVersion().set(JavaLanguageVersion.of(javaVersion)));
+        extension.toolchain(javaToolchainSpec -> javaToolchainSpec.getLanguageVersion().set(JavaLanguageVersion.of(17)));
 
-        project.getTasks().withType(JavaCompile.class).configureEach(javaCompile -> javaCompile.getOptions().getRelease().set(javaVersion));
+        project.getTasks().withType(JavaCompile.class).configureEach(javaCompile -> javaCompile.getOptions().getRelease().set(17));
     }
 }

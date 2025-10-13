@@ -17,7 +17,6 @@ public class AndroidApplicationConventionPlugin implements Plugin<@NonNull Proje
 
         Properties config = PropertiesLoader.loadPropertiesFile(target, "config.properties");
 
-        int javaVersion = PropertiesLoader.getPropertyInt(config, "javaVersion");
         int compileSdk = PropertiesLoader.getPropertyInt(config, "compileSdk");
         int minSdk = PropertiesLoader.getPropertyInt(config, "minSdk");
         int targetSdk = PropertiesLoader.getPropertyInt(config, "targetSdk");
@@ -25,7 +24,7 @@ public class AndroidApplicationConventionPlugin implements Plugin<@NonNull Proje
         boolean enableViewBinding = PropertiesLoader.getPropertyBoolean(config, "enableViewBinding", true);
 
         ApplicationExtension extension = target.getExtensions().getByType(ApplicationExtension.class);
-        JavaAndroid.configureJavaAndroid(target, javaVersion, extension, compileSdk, minSdk, enableViewBinding);
+        JavaAndroid.configureJavaAndroid(target, extension, compileSdk, minSdk, enableViewBinding);
 
         extension.getDefaultConfig().setTargetSdk(targetSdk);
 

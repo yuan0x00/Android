@@ -12,8 +12,8 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.rapid.android.core.log.LogKit;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.ref.WeakReference;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 监听整个 App 的前后台切换（基于 ProcessLifecycleOwner）
@@ -28,7 +28,7 @@ public class AppLifecycleObserver implements DefaultLifecycleObserver {
     private final Application application;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     // 回调列表（弱引用防泄漏）
-    private final List<AppStateCallback> mCallbacks = new ArrayList<>();
+    private final CopyOnWriteArrayList<WeakReference<AppStateCallback>> mCallbacks = new CopyOnWriteArrayList<>();
     private boolean mIsAppForeground = true; // 初始认为在前台
     // 防抖 Runnable
     private Runnable mBackgroundDelayRunnable;
@@ -56,13 +56,27 @@ public class AppLifecycleObserver implements DefaultLifecycleObserver {
     }
 
     public static void addCallback(@NonNull AppStateCallback callback) {
-        getInstance().mCallbacks.add(callback);
+        if (callback == null) {
+            return;
+        }
+        AppLifecycleObserver instance = getInstance();
+        instance.pruneReleasedCallbacks();
+        for (WeakReference<AppStateCallback> reference : instance.mCallbacks) {
+            AppStateCallback stored = reference.get();
+            if (stored == callback) {
+                return;
+            }
+        }
+        instance.mCallbacks.add(new WeakReference<>(callback));
     }
 
     // ———————— 回调管理 ————————
 
     public static void removeCallback(@NonNull AppStateCallback callback) {
-        getInstance().mCallbacks.remove(callback);
+        if (callback == null) {
+            return;
+        }
+        getInstance().removeCallbackInternal(callback);
     }
 
     @Override
@@ -92,15 +106,11 @@ public class AppLifecycleObserver implements DefaultLifecycleObserver {
     // ———————— 单例管理（确保只注册一次） ————————
 
     private void notifyAppForeground() {
-        for (AppStateCallback callback : new ArrayList<>(mCallbacks)) {
-            callback.onAppForeground();
-        }
+        dispatchCallback(AppStateCallback::onAppForeground);
     }
 
     private void notifyAppBackground() {
-        for (AppStateCallback callback : new ArrayList<>(mCallbacks)) {
-            callback.onAppBackground();
-        }
+        dispatchCallback(AppStateCallback::onAppBackground);
     }
 
     // ———————— 可选：注册 Activity 生命周期回调，增强判断准确性 ————————
@@ -135,5 +145,37 @@ public class AppLifecycleObserver implements DefaultLifecycleObserver {
             public void onActivityDestroyed(@NonNull Activity activity) {
             }
         });
+    }
+
+    private void dispatchCallback(CallbackAction action) {
+        pruneReleasedCallbacks();
+        for (WeakReference<AppStateCallback> reference : mCallbacks) {
+            AppStateCallback callback = reference.get();
+            if (callback != null) {
+                try {
+                    action.invoke(callback);
+                } catch (Exception e) {
+                    LogKit.w("AppLifecycle", "Callback invoke failed: %s", e.getMessage());
+                }
+            }
+        }
+    }
+
+    private void removeCallbackInternal(@NonNull AppStateCallback target) {
+        boolean removed = mCallbacks.removeIf(reference -> {
+            AppStateCallback callback = reference.get();
+            return callback == null || callback == target;
+        });
+        if (!removed) {
+            pruneReleasedCallbacks();
+        }
+    }
+
+    private void pruneReleasedCallbacks() {
+        mCallbacks.removeIf(reference -> reference.get() == null);
+    }
+
+    private interface CallbackAction {
+        void invoke(@NonNull AppStateCallback callback);
     }
 }

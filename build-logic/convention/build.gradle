@@ -2,12 +2,9 @@ plugins {
     id 'java-gradle-plugin'
 }
 
-def properties = new Properties()
-rootProject.file('../config.properties').withInputStream { properties.load(it) }
-
 java {
-    sourceCompatibility = properties.getProperty("javaVersion")
-    targetCompatibility = properties.getProperty("javaVersion")
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 dependencies {

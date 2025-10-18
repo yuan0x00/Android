@@ -5,8 +5,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rapid.android.R;
@@ -18,7 +16,6 @@ import com.rapid.android.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBinding> {
 
-    private Toolbar toolbar;
     private boolean isRegisterMode = false;
 
     @Override
@@ -96,22 +93,11 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
 
     @Override
     protected void initializeViews() {
-        setupToolbar();
-        WindowInsetsUtils.addImeVisibilityListener(binding.getRoot(), isVisible ->
+        binding.toolbar.setNavigationOnClickListener(v -> finish());
+
+        WindowInsetsUtils.addImeVisibilityListener(binding.contentContainer, isVisible ->
                 binding.layoutPrivacy.setVisibility(isVisible ? android.view.View.GONE : android.view.View.VISIBLE));
         updateMode();
-    }
-
-    private void setupToolbar() {
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setTitle(R.string.login_title);
-        }
     }
 
     @Override
@@ -137,9 +123,7 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
         binding.inputPasswordConfirmLayout.setVisibility(isRegisterMode ? android.view.View.VISIBLE : android.view.View.GONE);
         binding.btnLogin.setText(isRegisterMode ? R.string.login_action_register : R.string.login_action_login);
         binding.btnToggleMode.setText(isRegisterMode ? R.string.login_toggle_login : R.string.login_toggle_register);
-        if (toolbar != null) {
-            toolbar.setTitle(isRegisterMode ? R.string.login_action_register : R.string.login_title);
-        }
+        binding.toolbar.setTitle(isRegisterMode ? R.string.login_action_register : R.string.login_title);
     }
 
 }

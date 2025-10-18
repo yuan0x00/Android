@@ -207,6 +207,10 @@ public class DefaultWebViewController implements WebViewController {
 
         setupWebViewClients();
         startMonitoringIfRequired();
+
+        // 确保复用的 WebView 处于活动状态
+        webView.onResume();
+        webView.resumeTimers();
     }
 
     private void setupWebViewClients() {

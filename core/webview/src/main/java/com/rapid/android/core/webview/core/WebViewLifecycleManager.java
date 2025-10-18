@@ -4,9 +4,9 @@ import android.util.Log;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.LifecycleOwner;
 
 import java.lang.ref.WeakReference;
 
@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference;
  * WebView生命周期管理器
  * 负责管理WebView的生命周期，确保在适当的时机调用WebView的生命周期方法
  */
-public class WebViewLifecycleManager implements LifecycleObserver {
+public class WebViewLifecycleManager implements DefaultLifecycleObserver {
     private static final String TAG = "WebViewLifecycle";
 
     private final WeakReference<WebView> webViewRef;
@@ -29,33 +29,36 @@ public class WebViewLifecycleManager implements LifecycleObserver {
         this.lifecycleRef = new WeakReference<>(lifecycle);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    public void onResume() {
+    @Override
+    public void onResume(@NonNull LifecycleOwner owner) {
         WebView webView = webViewRef.get();
         if (webView != null) {
             webView.onResume();
+            webView.resumeTimers();
             Log.d(TAG, "WebView resumed");
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    public void onPause() {
+    @Override
+    public void onPause(@NonNull LifecycleOwner owner) {
         WebView webView = webViewRef.get();
         if (webView != null) {
             webView.onPause();
+            webView.pauseTimers();
             Log.d(TAG, "WebView paused");
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    public void onDestroy() {
+    @Override
+    public void onDestroy(@NonNull LifecycleOwner owner) {
         WebView webView = webViewRef.get();
         if (webView != null) {
             // 清理WebView
             webView.stopLoading();
             webView.clearHistory();
-            webView.clearCache(true);
+            webView.clearCache(false);
             webView.loadUrl("about:blank");
+            webView.pauseTimers();
 
             // 归还到池中而不是直接销毁
             webViewPool.releaseWebView(webView);

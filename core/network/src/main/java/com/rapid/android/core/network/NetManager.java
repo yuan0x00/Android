@@ -6,6 +6,7 @@ import com.rapid.android.core.log.LogKit;
 import com.rapid.android.core.network.client.NetworkClient;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import retrofit2.Retrofit;
 
@@ -18,6 +19,7 @@ public class NetManager {
 
     private static final Object lock = new Object();
     private static final ConcurrentHashMap<Class<?>, Object> apiCache = new ConcurrentHashMap<>();
+    private static final CopyOnWriteArraySet<NetManagerListener> listeners = new CopyOnWriteArraySet<>();
     private static final String TAG = "NetManager";
     private static volatile Retrofit retrofit;
     private static volatile boolean initialized = false;
@@ -32,6 +34,7 @@ public class NetManager {
                 if (retrofit == null) {
                     retrofit = NetworkClient.getInstance().getRetrofit();
                     initialized = true;
+                    notifyRetrofitUpdated(retrofit);
                 }
             }
         }
@@ -66,6 +69,8 @@ public class NetManager {
 
             retrofit = customRetrofit;
             initialized = true;
+            NetworkClient.reset();
+            notifyRetrofitUpdated(retrofit);
         }
     }
 
@@ -119,6 +124,20 @@ public class NetManager {
             initialized = false;
             LogKit.i(TAG, "Retrofit cache reset");
         }
+        NetworkClient.reset();
+        notifyRetrofitReset();
+    }
+
+    public static void addListener(@NonNull NetManagerListener listener) {
+        if (listener != null) {
+            listeners.add(listener);
+        }
+    }
+
+    public static void removeListener(@NonNull NetManagerListener listener) {
+        if (listener != null) {
+            listeners.remove(listener);
+        }
     }
 
     /**
@@ -126,6 +145,38 @@ public class NetManager {
      */
     public static boolean isInitialized() {
         return initialized;
+    }
+
+    private static void notifyRetrofitUpdated(@NonNull Retrofit retrofitInstance) {
+        if (listeners.isEmpty()) {
+            return;
+        }
+        for (NetManagerListener listener : listeners) {
+            try {
+                listener.onRetrofitRecreated(retrofitInstance);
+            } catch (Exception e) {
+                LogKit.e(TAG, e, "Notify retrofit update failed");
+            }
+        }
+    }
+
+    private static void notifyRetrofitReset() {
+        if (listeners.isEmpty()) {
+            return;
+        }
+        for (NetManagerListener listener : listeners) {
+            try {
+                listener.onReset();
+            } catch (Exception e) {
+                LogKit.e(TAG, e, "Notify retrofit reset failed");
+            }
+        }
+    }
+
+    public interface NetManagerListener {
+        void onRetrofitRecreated(@NonNull Retrofit retrofit);
+
+        void onReset();
     }
 
 }

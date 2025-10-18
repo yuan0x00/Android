@@ -14,11 +14,6 @@ dependencies {
     implementation project(':core:log')
 
     implementation libs.androidx.lifecycle.livedata
-    implementation libs.gson
-    implementation libs.retrofit
-    implementation libs.retrofit.rxjava3
-    implementation libs.retrofit.converter.gson
-    implementation libs.rxjava3
     implementation libs.rxandroid3
 
     // Room runtime for entity annotations (Java APIs)

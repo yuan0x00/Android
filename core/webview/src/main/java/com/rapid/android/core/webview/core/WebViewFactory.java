@@ -136,7 +136,7 @@ public class WebViewFactory {
             try {
                 webView.stopLoading();
                 webView.clearHistory();
-                webView.clearCache(true);
+                webView.clearCache(false);
                 webView.clearFormData();
                 webView.clearMatches();
                 webView.clearSslPreferences();

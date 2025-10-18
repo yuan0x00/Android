@@ -212,8 +212,6 @@
                                 android:text="@string/mine_stat_share"/>
                         </LinearLayout>
                     </LinearLayout>
-
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -234,7 +232,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/itemDeveloper"
+                        android:id="@+id/itemNotifications"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
@@ -248,7 +246,7 @@
                             android:layout_width="@dimen/app_size_icon_md"
                             android:layout_height="@dimen/app_size_icon_md"
                             app:iconTint="?attr/colorPrimary"
-                            app:srcCompat="@drawable/logo_dev_24px"/>
+                            app:srcCompat="@drawable/notifications_24px"/>
 
                         <TextView
                             style="@style/TextAppearance.App.BodyStrong"
@@ -256,7 +254,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/app_spacing_lg"
                             android:layout_weight="1"
-                            android:text="@string/mine_section_developer"
+                            android:text="@string/mine_section_notifications"
                             android:textColor="?attr/colorOnSurface"/>
 
                         <ImageView
@@ -264,6 +262,7 @@
                             android:layout_height="@dimen/app_size_icon_md"
                             app:srcCompat="@drawable/arrow_forward_ios_24px"
                             app:tint="?attr/colorOnSurfaceVariant"/>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -331,10 +330,42 @@
                             app:srcCompat="@drawable/arrow_forward_ios_24px"
                             app:tint="?attr/colorOnSurfaceVariant"/>
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/itemDeveloper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/app_spacing_lg"
+                        android:paddingVertical="@dimen/app_spacing_md">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="@dimen/app_size_icon_md"
+                            android:layout_height="@dimen/app_size_icon_md"
+                            app:iconTint="?attr/colorPrimary"
+                            app:srcCompat="@drawable/logo_dev_24px"/>
+
+                        <TextView
+                            style="@style/TextAppearance.App.BodyStrong"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/app_spacing_lg"
+                            android:layout_weight="1"
+                            android:text="@string/mine_section_developer"
+                            android:textColor="?attr/colorOnSurface"/>
+
+                        <ImageView
+                            android:layout_width="@dimen/app_size_icon_md"
+                            android:layout_height="@dimen/app_size_icon_md"
+                            app:srcCompat="@drawable/arrow_forward_ios_24px"
+                            app:tint="?attr/colorOnSurfaceVariant"/>
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -343,8 +374,8 @@
         style="@style/Widget.Material3.CircularProgressIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:indeterminate="true"
+        android:visibility="gone"
         app:indicatorSize="@dimen/app_size_indicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

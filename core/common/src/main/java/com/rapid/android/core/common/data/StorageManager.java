@@ -7,6 +7,8 @@ import com.tencent.mmkv.MMKV;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 存储管理门面类（静态代理 IStorageManager）
@@ -16,7 +18,10 @@ import java.util.Set;
 public class StorageManager {
 
     private static final Object lock = new Object();
-    private static volatile IStorageManager implementation;
+    private static final AtomicReference<IStorageManager> implementation = new AtomicReference<>();
+    private static final ExecutorService INIT_EXECUTOR = Executors.newSingleThreadExecutor(new StorageThreadFactory());
+    private static final CompletableFuture<Void> initializationFuture = new CompletableFuture<>();
+    private static volatile boolean initStarted = false;
 
     /**
      * 初始化（在 Application.onCreate 中调用）
@@ -30,12 +35,26 @@ public class StorageManager {
      * 初始化（可传入自定义 MMKV 实例）
      */
     public static void init(@Nullable MMKV customMMKV) {
-        if (implementation == null) {
-            synchronized (lock) {
-                if (implementation == null) {
-                    implementation = new MMKVStorageManager(customMMKV);
-                }
+        if (implementation.get() != null || initializationFuture.isDone()) {
+            return;
+        }
+
+        synchronized (lock) {
+            if (implementation.get() != null || initStarted) {
+                return;
             }
+            initStarted = true;
+            INIT_EXECUTOR.execute(() -> {
+                try {
+                    IStorageManager storage = new MMKVStorageManager(customMMKV);
+                    implementation.set(storage);
+                    initializationFuture.complete(null);
+                } catch (Throwable t) {
+                    initializationFuture.completeExceptionally(t);
+                } finally {
+                    initStarted = false;
+                }
+            });
         }
     }
 
@@ -48,18 +67,37 @@ public class StorageManager {
             throw new IllegalArgumentException("Storage implementation cannot be null");
         }
         synchronized (lock) {
-            implementation = storageManager;
+            implementation.set(storageManager);
+            if (!initializationFuture.isDone()) {
+                initializationFuture.complete(null);
+            }
+            initStarted = false;
         }
     }
 
     @NonNull
     private static IStorageManager getStorage() {
-        if (implementation == null) {
-            throw new IllegalStateException(
-                    "StorageManager not initialized. Call StorageManager.init() in Application.onCreate()"
-            );
+        IStorageManager storage = implementation.get();
+        if (storage != null) {
+            return storage;
         }
-        return implementation;
+
+        init();
+
+        try {
+            initializationFuture.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("StorageManager initialization interrupted", e);
+        } catch (ExecutionException e) {
+            throw new IllegalStateException("StorageManager initialization failed", e.getCause());
+        }
+
+        storage = implementation.get();
+        if (storage == null) {
+            throw new IllegalStateException("StorageManager not initialized after completion");
+        }
+        return storage;
     }
 
     // —————— 基础操作 ——————
@@ -161,6 +199,19 @@ public class StorageManager {
      * 检查是否已初始化
      */
     public static boolean isInitialized() {
-        return implementation != null;
+        return initializationFuture.isDone() && !initializationFuture.isCompletedExceptionally();
+    }
+
+    public static CompletableFuture<Void> whenInitialized() {
+        return initializationFuture;
+    }
+
+    private static final class StorageThreadFactory implements ThreadFactory {
+        @Override
+        public Thread newThread(@NonNull Runnable r) {
+            Thread thread = new Thread(r, "storage-init");
+            thread.setDaemon(true);
+            return thread;
+        }
     }
 }

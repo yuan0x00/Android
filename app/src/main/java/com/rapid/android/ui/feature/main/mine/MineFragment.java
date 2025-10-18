@@ -16,6 +16,7 @@ import com.rapid.android.databinding.FragmentMineBinding;
 import com.rapid.android.ui.common.LoginHelper;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.RequiresLoginTab;
+import com.rapid.android.ui.feature.main.message.MessageCenterActivity;
 import com.rapid.android.ui.feature.main.mine.coin.CoinActivity;
 import com.rapid.android.ui.feature.main.mine.favorite.FavoriteActivity;
 import com.rapid.android.ui.feature.main.mine.share.ShareActivity;
@@ -69,6 +70,10 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
             LoginHelper.requireLogin(requireContext(), getDialogController(), viewModel::signIn)
         );
 
+        binding.itemNotifications.setOnClickListener(v ->
+            LoginHelper.requireLogin(requireContext(), getDialogController(),
+                () -> MessageCenterActivity.start(requireContext()))
+        );
         binding.itemDeveloper.setOnClickListener(v -> openDeveloperTools());
         binding.itemTools.setOnClickListener(v ->
             LoginHelper.requireLogin(requireContext(), getDialogController(),

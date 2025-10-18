@@ -9,7 +9,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.rapid.android.R;
 import com.rapid.android.ui.feature.main.discover.harmony.DiscoverHarmonyFragment;
 import com.rapid.android.ui.feature.main.discover.navigation.NavigationFragment;
-import com.rapid.android.ui.feature.main.discover.plaza.PlazaFragment;
 import com.rapid.android.ui.feature.main.discover.project.ProjectFragment;
 import com.rapid.android.ui.feature.main.discover.routes.DiscoverRoutesFragment;
 import com.rapid.android.ui.feature.main.discover.system.SystemFragment;
@@ -28,7 +27,6 @@ class DiscoverPagerAdapter extends FragmentStateAdapter {
         tabTitles = new String[]{
                 context.getString(R.string.discover_tab_harmony),
                 context.getString(R.string.discover_tab_routes),
-                context.getString(R.string.discover_tab_square),
                 context.getString(R.string.discover_tab_navigation),
                 context.getString(R.string.discover_tab_tutorial),
                 context.getString(R.string.discover_tab_wenda),
@@ -48,20 +46,18 @@ class DiscoverPagerAdapter extends FragmentStateAdapter {
             case 1:
                 return new DiscoverRoutesFragment();
             case 2:
-                return new PlazaFragment();
-            case 3:
                 return new NavigationFragment();
-            case 4:
+            case 3:
                 return new DiscoverTutorialFragment();
-            case 5:
+            case 4:
                 return new DiscoverWendaFragment();
-            case 6:
+            case 5:
                 return new ProjectFragment();
-            case 7:
+            case 6:
                 return new WechatFragment();
-            case 8:
+            case 7:
                 return new DiscoverToolsFragment();
-            case 9:
+            case 8:
                 return new SystemFragment();
             default:
                 return new DiscoverHarmonyFragment();

@@ -15,9 +15,11 @@ import com.rapid.android.core.log.LogKit;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.*;
 
 /**
  * 全局崩溃处理器。调用 {@link #install(Context)} 后自动接管应用未捕获异常，
@@ -26,6 +28,8 @@ import java.util.Locale;
 public final class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
 
     private static final String CRASH_DIR_NAME = "crash_logs";
+    private static final int MAX_CRASH_LOGS = 20;
+    private static final ExecutorService CRASH_IO_EXECUTOR = Executors.newSingleThreadExecutor(new CrashThreadFactory());
 
     private static volatile GlobalCrashHandler sInstance;
     private static volatile CrashReporter crashReporter;
@@ -53,6 +57,21 @@ public final class GlobalCrashHandler implements Thread.UncaughtExceptionHandler
         }
     }
 
+    private @Nullable File awaitCrashFile(@Nullable Future<File> future) {
+        if (future == null) {
+            return null;
+        }
+        try {
+            return future.get(1500, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            safeLog("write crash log timeout: " + e.getMessage());
+            return null;
+        } catch (Exception e) {
+            safeLog("write crash log failed: " + e.getMessage());
+            return null;
+        }
+    }
+
     public static boolean isInstalled() {
         return sInstance != null;
     }
@@ -68,8 +87,9 @@ public final class GlobalCrashHandler implements Thread.UncaughtExceptionHandler
 
     @Override
     public void uncaughtException(@NonNull Thread thread, @NonNull Throwable ex) {
+        Future<File> crashFileFuture = CRASH_IO_EXECUTOR.submit(new CrashWriter(ex));
+        File crashFile = awaitCrashFile(crashFileFuture);
         try {
-            File crashFile = saveCrashInfoToFile(ex);
             if (crashFile != null) {
                 safeLog("App crashed, log saved to: " + crashFile.getAbsolutePath());
             } else {
@@ -124,6 +144,7 @@ public final class GlobalCrashHandler implements Thread.UncaughtExceptionHandler
             bufferedWriter = new BufferedWriter(writer);
             bufferedWriter.write(sb.toString());
             bufferedWriter.flush();
+            trimCrashDir(dir);
             return file;
         } catch (IOException e) {
             safeLog("write crash log failed: " + e.getMessage());
@@ -235,6 +256,19 @@ public final class GlobalCrashHandler implements Thread.UncaughtExceptionHandler
         }
     }
 
+    private void trimCrashDir(@NonNull File dir) {
+        File[] files = dir.listFiles((d, name) -> name != null && name.startsWith("crash-") && name.endsWith(".log"));
+        if (files == null || files.length <= MAX_CRASH_LOGS) {
+            return;
+        }
+        Arrays.sort(files, (o1, o2) -> Long.compare(o2.lastModified(), o1.lastModified()));
+        for (int i = MAX_CRASH_LOGS; i < files.length; i++) {
+            if (!files[i].delete()) {
+                safeLog("delete crash log failed: " + files[i].getAbsolutePath());
+            }
+        }
+    }
+
     private boolean isMainProcess() {
         try {
             String processName = getProcessName(appContext);
@@ -282,6 +316,28 @@ public final class GlobalCrashHandler implements Thread.UncaughtExceptionHandler
             return obj.toString();
         } catch (Throwable t) {
             return "toString_failed";
+        }
+    }
+
+    private static final class CrashThreadFactory implements ThreadFactory {
+        @Override
+        public Thread newThread(@NonNull Runnable r) {
+            Thread thread = new Thread(r, "crash-io");
+            thread.setDaemon(true);
+            return thread;
+        }
+    }
+
+    private final class CrashWriter implements Callable<File> {
+        private final Throwable throwable;
+
+        private CrashWriter(@NonNull Throwable throwable) {
+            this.throwable = throwable;
+        }
+
+        @Override
+        public File call() {
+            return saveCrashInfoToFile(throwable);
         }
     }
 

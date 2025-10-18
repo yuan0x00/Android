@@ -52,6 +52,11 @@ public class MessageFragment extends BaseFragment<MessageViewModel, FragmentMess
             return false;
         });
 
+        if (requireActivity() instanceof MessageCenterActivity) {
+            binding.toolbar.setNavigationIcon(com.google.android.material.R.drawable.ic_arrow_back_black_24);
+            binding.toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
+        }
+
         binding.unreadSummary.setText(getString(R.string.message_unread_count_value, 0));
     }
 

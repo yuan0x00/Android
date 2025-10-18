@@ -88,6 +88,10 @@ public class NetworkClient {
         instance = null; // 配置更新后重新构建 Retrofit
     }
 
+    public static synchronized void reset() {
+        instance = null;
+    }
+
     @NonNull
     public static NetworkConfig getActiveConfig() {
         return config;

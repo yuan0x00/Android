@@ -21,8 +21,8 @@ import com.rapid.android.databinding.ActivityMainBinding;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.discover.DiscoverFragment;
 import com.rapid.android.ui.feature.main.home.HomeFragment;
-import com.rapid.android.ui.feature.main.message.MessageFragment;
 import com.rapid.android.ui.feature.main.mine.MineFragment;
+import com.rapid.android.ui.feature.main.plaza.PlazaFragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -100,15 +100,15 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         R.drawable.home_fill_24px,
                         HomeFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
+                        getString(R.string.discover_tab_square),
+                        R.drawable.newsmode_24px,
+                        R.drawable.newsmode_fill_24px,
+                        PlazaFragment.class))
+                .addTab(new BottomTabNavigator.TabItem(
                         getString(R.string.main_tab_discover),
                         R.drawable.explore_24px,
                         R.drawable.explore_fill_24px,
                         DiscoverFragment.class))
-                .addTab(new BottomTabNavigator.TabItem(
-                        getString(R.string.main_tab_message),
-                        R.drawable.mail_24px,
-                        R.drawable.mail_fill_24px,
-                        MessageFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
                         getString(R.string.main_tab_profile),
                         R.drawable.person_24px,

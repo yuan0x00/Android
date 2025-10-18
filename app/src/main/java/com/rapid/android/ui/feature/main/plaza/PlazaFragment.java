@@ -1,4 +1,4 @@
-package com.rapid.android.ui.feature.main.discover.plaza;
+package com.rapid.android.ui.feature.main.plaza;
 
 import android.content.Intent;
 import android.view.LayoutInflater;

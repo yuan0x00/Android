@@ -11,14 +11,14 @@ android {
 
             if (keystorePropertiesFile.exists()) {
                 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-                storeFile file(keystoreProperties['storeFile'])
+                storeFile rootProject.file(keystoreProperties['storeFile'])
                 storePassword keystoreProperties['storePassword']
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
             } else {
                 // 如果 keystore.properties 不存在，使用默认值（仅用于初始化，不应提交到版本控制）
                 logger.warn("Warning: keystore.properties not found. Using default signing config.")
-                storeFile file('release.jks')
+                storeFile rootProject.file('app/release.jks')
                 storePassword 'android'
                 keyAlias 'key0'
                 keyPassword 'android'

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="top_app_bar_small_height">64dp</dimen>
     <dimen name="navigation_bar_elevation">3dp</dimen>
 
     <!-- 间距体系（Spacing Scale） -->
@@ -11,12 +10,8 @@
     <dimen name="app_spacing_lg">16dp</dimen>
     <dimen name="app_spacing_xl">24dp</dimen>
     <dimen name="app_spacing_2xl">32dp</dimen>
-    <dimen name="app_spacing_3xl">40dp</dimen>
-    <dimen name="app_spacing_4xl">48dp</dimen>
-    <dimen name="app_spacing_5xl">80dp</dimen>
 
     <!-- 圆角与阴影 -->
-    <dimen name="app_corner_radius_sm">8dp</dimen>
     <dimen name="app_corner_radius_md">12dp</dimen>
     <dimen name="app_corner_radius_lg">16dp</dimen>
 
@@ -37,9 +32,6 @@
     <dimen name="app_size_project_min_height">120dp</dimen>
     <dimen name="app_size_home_section_height">200dp</dimen>
     <dimen name="app_dialog_width">300dp</dimen>
-
-    <!-- 列表安全区 -->
-    <dimen name="app_list_bottom_inset">72dp</dimen>
 
     <!-- 文本尺寸 -->
     <dimen name="app_text_size_title">18sp</dimen>

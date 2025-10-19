@@ -4,7 +4,7 @@
     <!-- 形状体系 -->
     <style name="ShapeAppearance.App.Card" parent="ShapeAppearance.Material3.MediumComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">@dimen/app_corner_radius_md</item>
+        <item name="cornerSize">@dimen/app_corner_radius_lg</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.App.FAB" parent="ShapeAppearanceOverlay.Material3.FloatingActionButton">
@@ -58,7 +58,7 @@
         <item name="cardBackgroundColor">@color/app_color_surface</item>
         <item name="strokeColor">@color/app_color_outline</item>
         <item name="strokeWidth">0.5dp</item>
-        <item name="cardElevation">@dimen/app_elevation_card</item>
+        <item name="cardElevation">0dp</item>
     </style>
 
     <style name="Widget.App.TabLayout.Primary" parent="Widget.MaterialComponents.TabLayout">

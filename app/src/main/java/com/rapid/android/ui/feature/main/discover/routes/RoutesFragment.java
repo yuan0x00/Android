@@ -1,4 +1,4 @@
-package com.rapid.android.ui.feature.main.discover.wenda;
+package com.rapid.android.ui.feature.main.discover.routes;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -6,33 +6,33 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.rapid.android.core.domain.model.ArticleListBean;
+import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
-import com.rapid.android.databinding.FragmentDiscoverWendaBinding;
+import com.rapid.android.databinding.FragmentDiscoverRoutesBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.List;
 
-public class DiscoverWendaFragment extends BaseFragment<DiscoverWendaViewModel, FragmentDiscoverWendaBinding> {
+public class RoutesFragment extends BaseFragment<RoutesViewModel, FragmentDiscoverRoutesBinding> {
 
     private ContentStateController stateController;
-    private WendaAdapter adapter;
+    private RouteAdapter adapter;
 
     @Override
-    protected DiscoverWendaViewModel createViewModel() {
-        return new ViewModelProvider(this).get(DiscoverWendaViewModel.class);
+    protected RoutesViewModel createViewModel() {
+        return new ViewModelProvider(this).get(RoutesViewModel.class);
     }
 
     @Override
-    protected FragmentDiscoverWendaBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
-        return FragmentDiscoverWendaBinding.inflate(inflater, container, false);
+    protected FragmentDiscoverRoutesBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
+        return FragmentDiscoverRoutesBinding.inflate(inflater, container, false);
     }
 
     @Override
     protected void initializeViews() {
-        adapter = new WendaAdapter();
+        adapter = new RouteAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
         RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
@@ -45,7 +45,7 @@ public class DiscoverWendaFragment extends BaseFragment<DiscoverWendaViewModel, 
     protected void setupObservers() {
         viewModel.getLoading().observe(getViewLifecycleOwner(), loading ->
                 stateController.setLoading(Boolean.TRUE.equals(loading)));
-        viewModel.getItems().observe(getViewLifecycleOwner(), this::renderItems);
+        viewModel.getRoutes().observe(getViewLifecycleOwner(), this::renderRoutes);
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), message -> {
             if (message != null && !message.isEmpty()) {
                 stateController.stopRefreshing();
@@ -59,7 +59,7 @@ public class DiscoverWendaFragment extends BaseFragment<DiscoverWendaViewModel, 
         viewModel.refresh();
     }
 
-    private void renderItems(List<ArticleListBean.Data> list) {
+    private void renderRoutes(List<CategoryNodeBean> list) {
         adapter.submitList(list);
         boolean empty = list == null || list.isEmpty();
         stateController.setEmpty(empty);

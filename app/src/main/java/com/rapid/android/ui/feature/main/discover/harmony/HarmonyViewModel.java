@@ -1,33 +1,30 @@
-package com.rapid.android.ui.feature.main.discover.routes;
+package com.rapid.android.ui.feature.main.discover.harmony;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.rapid.android.core.data.repository.RepositoryProvider;
-import com.rapid.android.core.domain.model.CategoryNodeBean;
-import com.rapid.android.core.domain.repository.ContentRepository;
+import com.rapid.android.core.domain.model.HarmonyIndexBean;
+import com.rapid.android.core.domain.repository.HomeRepository;
 import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.core.ui.presentation.BaseViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class DiscoverRoutesViewModel extends BaseViewModel {
+public class HarmonyViewModel extends BaseViewModel {
 
-    private final ContentRepository repository = RepositoryProvider.getContentRepository();
+    private final HomeRepository repository = RepositoryProvider.getHomeRepository();
 
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
-    private final MutableLiveData<List<CategoryNodeBean>> routes = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<HarmonyIndexBean> harmonyIndex = new MutableLiveData<>(new HarmonyIndexBean());
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     MutableLiveData<Boolean> getLoading() {
         return loading;
     }
 
-    MutableLiveData<List<CategoryNodeBean>> getRoutes() {
-        return routes;
+    MutableLiveData<HarmonyIndexBean> getHarmonyIndex() {
+        return harmonyIndex;
     }
 
     MutableLiveData<String> getErrorMessage() {
@@ -36,16 +33,16 @@ public class DiscoverRoutesViewModel extends BaseViewModel {
 
     void refresh() {
         loading.setValue(true);
-        autoDispose(repository.popularRoutes()
+        autoDispose(repository.harmonyIndex()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::handleResult, this::handleError));
     }
 
-    private void handleResult(DomainResult<List<CategoryNodeBean>> result) {
+    private void handleResult(DomainResult<HarmonyIndexBean> result) {
         loading.setValue(false);
         if (result.isSuccess() && result.getData() != null) {
-            routes.setValue(result.getData());
+            harmonyIndex.setValue(result.getData());
             errorMessage.setValue(null);
         } else if (result.getError() != null && result.getError().getMessage() != null) {
             errorMessage.setValue(result.getError().getMessage());

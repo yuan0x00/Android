@@ -14,7 +14,7 @@ import java.util.List;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class DiscoverWendaViewModel extends BaseViewModel {
+public class WendaViewModel extends BaseViewModel {
 
     private final ContentRepository repository = RepositoryProvider.getContentRepository();
 

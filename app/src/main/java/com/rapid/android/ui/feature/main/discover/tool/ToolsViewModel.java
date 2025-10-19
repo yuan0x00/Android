@@ -17,7 +17,7 @@ import java.util.List;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class ToolCenterViewModel extends BaseViewModel {
+public class ToolsViewModel extends BaseViewModel {
 
     private final HomeRepository repository = RepositoryProvider.getHomeRepository();
     private final MutableLiveData<List<ToolItemBean>> tools = new MutableLiveData<>(new ArrayList<>());

@@ -18,13 +18,13 @@ import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.List;
 
-public class DiscoverHarmonyFragment extends BaseFragment<DiscoverHarmonyViewModel, FragmentDiscoverHarmonyBinding> {
+public class HarmonyFragment extends BaseFragment<HarmonyViewModel, FragmentDiscoverHarmonyBinding> {
 
     private ContentStateController stateController;
 
     @Override
-    protected DiscoverHarmonyViewModel createViewModel() {
-        return new ViewModelProvider(this).get(DiscoverHarmonyViewModel.class);
+    protected HarmonyViewModel createViewModel() {
+        return new ViewModelProvider(this).get(HarmonyViewModel.class);
     }
 
     @Override

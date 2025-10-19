@@ -1,4 +1,4 @@
-package com.rapid.android.ui.feature.main.discover.tutorial;
+package com.rapid.android.ui.feature.main.discover.routes;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -14,20 +14,20 @@ import java.util.List;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class DiscoverTutorialViewModel extends BaseViewModel {
+public class RoutesViewModel extends BaseViewModel {
 
     private final ContentRepository repository = RepositoryProvider.getContentRepository();
 
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
-    private final MutableLiveData<List<CategoryNodeBean>> columns = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<CategoryNodeBean>> routes = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     MutableLiveData<Boolean> getLoading() {
         return loading;
     }
 
-    MutableLiveData<List<CategoryNodeBean>> getColumns() {
-        return columns;
+    MutableLiveData<List<CategoryNodeBean>> getRoutes() {
+        return routes;
     }
 
     MutableLiveData<String> getErrorMessage() {
@@ -36,7 +36,7 @@ public class DiscoverTutorialViewModel extends BaseViewModel {
 
     void refresh() {
         loading.setValue(true);
-        autoDispose(repository.tutorialChapters()
+        autoDispose(repository.popularRoutes()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::handleResult, this::handleError));
@@ -45,7 +45,7 @@ public class DiscoverTutorialViewModel extends BaseViewModel {
     private void handleResult(DomainResult<List<CategoryNodeBean>> result) {
         loading.setValue(false);
         if (result.isSuccess() && result.getData() != null) {
-            columns.setValue(result.getData());
+            routes.setValue(result.getData());
             errorMessage.setValue(null);
         } else if (result.getError() != null && result.getError().getMessage() != null) {
             errorMessage.setValue(result.getError().getMessage());

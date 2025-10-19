@@ -16,14 +16,14 @@ import com.rapid.android.ui.feature.main.discover.tutorial.list.TutorialArticleL
 
 import java.util.List;
 
-public class DiscoverTutorialFragment extends BaseFragment<DiscoverTutorialViewModel, FragmentDiscoverTutorialBinding> {
+public class TutorialFragment extends BaseFragment<TutorialViewModel, FragmentDiscoverTutorialBinding> {
 
     private ContentStateController stateController;
     private TutorialChapterAdapter adapter;
 
     @Override
-    protected DiscoverTutorialViewModel createViewModel() {
-        return new ViewModelProvider(this).get(DiscoverTutorialViewModel.class);
+    protected TutorialViewModel createViewModel() {
+        return new ViewModelProvider(this).get(TutorialViewModel.class);
     }
 
     @Override

@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/home_share_article"
-                app:srcCompat="@drawable/share_24px" />
+                app:srcCompat="@drawable/add_24px" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabBackToTop"

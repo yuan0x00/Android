@@ -1,9 +1,23 @@
-name: Build and Release on Tag
+name: Release
 
 on:
   push:
     tags:
       - 'v[0-9]*.[0-9]*.[0-9]*' # 匹配如 v1.0.0 的版本标签
+  workflow_dispatch: # 添加手动触发
+    inputs:
+      tag_name:
+        description: '要发布的版本标签 (例如: v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+      is_prerelease:
+        description: '是否为预发布版本'
+        type: boolean
+        default: false
+      skip_apk_build:
+        description: '跳过APK构建（仅创建Release）'
+        type: boolean
+        default: false
 
 permissions:
   contents: write      # 明确授权创建 Release 和上传产物
@@ -17,8 +31,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # 获取完整历史，便于生成 changelog
+          ref: ${{ github.event.inputs.tag_name || github.ref }}
+
+      - name: Validate Inputs (Manual Trigger)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          TAG_NAME="${{ github.event.inputs.tag_name }}"
+          if [[ ! "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+            echo "❌ 错误的标签格式: $TAG_NAME"
+            echo "📋 请使用格式: v1.0.0, v2.1.5 等"
+            exit 1
+          fi
+          echo "✅ 标签格式正确: $TAG_NAME"
 
       - name: Verify Signing Assets
+        if: ${{ !github.event.inputs.skip_apk_build || github.event_name != 'workflow_dispatch' }}
         run: |
           if [ ! -f app/release.jks ]; then
             echo "签名文件 app/release.jks 缺失" >&2
@@ -31,6 +58,7 @@ jobs:
           echo "检测到签名文件 $(stat -c%s app/release.jks) 字节"
 
       - name: Set up JDK 17
+        if: ${{ !github.event.inputs.skip_apk_build || github.event_name != 'workflow_dispatch' }}
         uses: actions/setup-java@v4
         with:
           java-version: '17'
@@ -38,18 +66,23 @@ jobs:
           cache: gradle
 
       - name: Validate Gradle Wrapper
+        if: ${{ !github.event.inputs.skip_apk_build || github.event_name != 'workflow_dispatch' }}
         uses: gradle/wrapper-validation-action@v2
 
       - name: Grant execute permission to gradlew
+        if: ${{ !github.event.inputs.skip_apk_build || github.event_name != 'workflow_dispatch' }}
         run: chmod +x ./gradlew
 
       - name: Setup Gradle
+        if: ${{ !github.event.inputs.skip_apk_build || github.event_name != 'workflow_dispatch' }}
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build Release APK
+        if: ${{ !github.event.inputs.skip_apk_build || github.event_name != 'workflow_dispatch' }}
         run: ./gradlew assembleRelease
 
       - name: Find APK File
+        if: ${{ !github.event.inputs.skip_apk_build || github.event_name != 'workflow_dispatch' }}
         id: find-apk
         run: |
           APK_PATH=$(find app/build/outputs/apk -name "*.apk" -type f | grep release | head -1)
@@ -62,6 +95,7 @@ jobs:
           echo "Found APK: $APK_PATH"
 
       - name: Upload APK Artifact
+        if: ${{ !github.event.inputs.skip_apk_build || github.event_name != 'workflow_dispatch' }}
         uses: actions/upload-artifact@v4
         with:
           name: app-release
@@ -69,35 +103,49 @@ jobs:
           retention-days: 30
 
       - name: Generate Release Notes
-        if: startsWith(github.ref, 'refs/tags/v')
         id: release-notes
         run: |
-          TAG_NAME="${{ github.ref_name }}"
+          # 确定标签名称
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG_NAME="${{ github.event.inputs.tag_name }}"
+          else
+            TAG_NAME="${{ github.ref_name }}"
+          fi
+          
+          echo "Generating release notes for tag: $TAG_NAME"
+          
+          # 获取上一个标签
           PREV_TAG=$(git describe --tags --abbrev=0 "$TAG_NAME"^ 2>/dev/null || echo "")
           
           if [ -z "$PREV_TAG" ]; then
             echo "RELEASE_BODY=Initial release $TAG_NAME" >> $GITHUB_OUTPUT
             echo "## Initial Release $TAG_NAME" > release_notes.md
+            echo "这是 $TAG_NAME 的初始版本发布。" >> release_notes.md
           else
             echo "RELEASE_BODY=Release $TAG_NAME" >> $GITHUB_OUTPUT
             echo "## Changes since $PREV_TAG" > release_notes.md
             echo "" >> release_notes.md
             git log --pretty=format:"- %s (%h)" "$PREV_TAG".."$TAG_NAME" >> release_notes.md 2>/dev/null || echo "- No changelog available" >> release_notes.md
           fi
+          
+          # 添加手动触发的说明
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "" >> release_notes.md
+            echo "*手动触发发布*" >> release_notes.md
+          fi
 
       - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
+          name: Release ${{ github.event.inputs.tag_name || github.ref_name }}
           body_path: release_notes.md
           generate_release_notes: true
           draft: false
           prerelease: |
-            ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'rc') }}
+            ${{ contains(github.event.inputs.tag_name, 'beta') || contains(github.event.inputs.tag_name, 'alpha') || contains(github.event.inputs.tag_name, 'rc') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'rc') || github.event.inputs.is_prerelease }}
           files: |
             ${{ steps.find-apk.outputs.APK_PATH }}
 
@@ -105,11 +153,13 @@ jobs:
         if: success()
         run: |
           echo "🎉 Build and Release completed successfully!"
-          echo "Tag: ${{ github.ref_name }}"
+          echo "Trigger: ${{ github.event_name }}"
+          echo "Tag: ${{ github.event.inputs.tag_name || github.ref_name }}"
           echo "APK: ${{ steps.find-apk.outputs.APK_PATH }}"
 
       - name: Notify Failure
         if: failure()
         run: |
           echo "❌ Build or Release failed!"
+          echo "Trigger: ${{ github.event_name }}"
           echo "Please check the workflow logs for details."

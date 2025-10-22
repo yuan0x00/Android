@@ -105,7 +105,7 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
         ArticleListBean articleListBean = new ArticleListBean();
 
         bannerAdapter = new BannerAdapter(new ArrayList<>());
-        popularSectionAdapter = new HomePopularSectionRowAdapter();
+        popularSectionAdapter = new HomePopularSectionRowAdapter(this);
         topArticleAdapter = new ArticleAdapter(getDialogController(), articleListBean, true);
         articleAdapter = new ArticleAdapter(getDialogController(), articleListBean);
 

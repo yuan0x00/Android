@@ -1,13 +1,15 @@
 package com.rapid.android.ui.feature.main.home.recommend;
 
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.rapid.android.databinding.ItemHomePopularRowBinding;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.rapid.android.databinding.ItemHomePopularTablayoutBinding;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +17,11 @@ import java.util.List;
 class HomePopularSectionRowAdapter extends RecyclerView.Adapter<HomePopularSectionRowAdapter.RowViewHolder> {
 
     private List<HomePopularSection> sections = Collections.emptyList();
+    private final Fragment parentFragment;
+
+    HomePopularSectionRowAdapter(Fragment parentFragment) {
+        this.parentFragment = parentFragment;
+    }
 
     void submitList(List<HomePopularSection> data) {
         sections = data != null ? data : Collections.emptyList();
@@ -24,12 +31,12 @@ class HomePopularSectionRowAdapter extends RecyclerView.Adapter<HomePopularSecti
     @NonNull
     @Override
     public RowViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemHomePopularRowBinding binding = ItemHomePopularRowBinding.inflate(
+        ItemHomePopularTablayoutBinding binding = ItemHomePopularTablayoutBinding.inflate(
                 LayoutInflater.from(parent.getContext()),
                 parent,
                 false
         );
-        return new RowViewHolder(binding);
+        return new RowViewHolder(binding, parentFragment);
     }
 
     @Override
@@ -44,54 +51,36 @@ class HomePopularSectionRowAdapter extends RecyclerView.Adapter<HomePopularSecti
 
     static class RowViewHolder extends RecyclerView.ViewHolder {
 
-        private final HomePopularSectionCardAdapter cardAdapter;
+        private final ItemHomePopularTablayoutBinding binding;
+        private final PopularSectionPagerAdapter pagerAdapter;
+        private TabLayoutMediator tabLayoutMediator;
 
-        RowViewHolder(@NonNull ItemHomePopularRowBinding binding) {
+        RowViewHolder(@NonNull ItemHomePopularTablayoutBinding binding, Fragment parentFragment) {
             super(binding.getRoot());
-            cardAdapter = new HomePopularSectionCardAdapter();
-            binding.popularRecyclerView.setLayoutManager(
-                    new LinearLayoutManager(binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false));
-            binding.popularRecyclerView.setAdapter(cardAdapter);
-            binding.popularRecyclerView.setClipToPadding(false);
-            binding.popularRecyclerView.setClipChildren(false);
-            binding.popularRecyclerView.setNestedScrollingEnabled(false);
-            binding.popularRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-            setupTouchConflictHandler(binding.popularRecyclerView);
-            PagerSnapHelper snapHelper = new PagerSnapHelper();
-            snapHelper.attachToRecyclerView(binding.popularRecyclerView);
+            this.binding = binding;
+            pagerAdapter = new PopularSectionPagerAdapter(parentFragment);
+            binding.viewPager.setAdapter(pagerAdapter);
+            binding.viewPager.setUserInputEnabled(true);
         }
 
         void bind(List<HomePopularSection> data) {
-            cardAdapter.submitList(data);
-        }
+            pagerAdapter.submitList(data);
 
-        private void setupTouchConflictHandler(RecyclerView recyclerView) {
-            final int touchSlop = ViewConfiguration.get(recyclerView.getContext()).getScaledTouchSlop();
-            recyclerView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    switch (event.getActionMasked()) {
-                        case MotionEvent.ACTION_DOWN:
-                            requestParentsDisallowIntercept(recyclerView, true);
-                            break;
-                        case MotionEvent.ACTION_UP:
-                        case MotionEvent.ACTION_CANCEL:
-                            requestParentsDisallowIntercept(recyclerView, false);
-                            break;
-                        default:
-                            break;
-                    }
-                    return false;
-                }
-            });
-        }
-
-        private void requestParentsDisallowIntercept(View child, boolean disallow) {
-            ViewParent parent = child.getParent();
-            while (parent != null) {
-                parent.requestDisallowInterceptTouchEvent(disallow);
-                parent = parent.getParent();
+            // Detach old mediator if exists
+            if (tabLayoutMediator != null) {
+                tabLayoutMediator.detach();
             }
+
+            // Setup new TabLayoutMediator
+            tabLayoutMediator = new TabLayoutMediator(binding.tabLayout, binding.viewPager,
+                    new TabLayoutMediator.TabConfigurationStrategy() {
+                        @Override
+                        public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                            tab.setText(pagerAdapter.getTitle(position));
+                        }
+                    }
+            );
+            tabLayoutMediator.attach();
         }
     }
 }

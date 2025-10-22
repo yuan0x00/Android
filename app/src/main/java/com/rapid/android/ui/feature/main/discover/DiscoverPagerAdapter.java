@@ -26,13 +26,13 @@ class DiscoverPagerAdapter extends FragmentStateAdapter {
         tabTitles = new String[]{
                 context.getString(R.string.discover_tab_harmony),
                 context.getString(R.string.discover_tab_routes),
-                context.getString(R.string.discover_tab_navigation),
                 context.getString(R.string.discover_tab_tutorial),
                 context.getString(R.string.discover_tab_wenda),
                 context.getString(R.string.discover_tab_project),
                 context.getString(R.string.discover_tab_wechat),
                 context.getString(R.string.discover_tab_tools),
-                context.getString(R.string.discover_tab_system)
+                context.getString(R.string.discover_tab_system),
+                context.getString(R.string.discover_tab_navigation),
         };
     }
 
@@ -41,13 +41,13 @@ class DiscoverPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         return switch (position) {
             case 1 -> new RoutesFragment();
-            case 2 -> new NavigationFragment();
-            case 3 -> new TutorialFragment();
-            case 4 -> new WendaFragment();
-            case 5 -> new ProjectFragment();
-            case 6 -> new WechatFragment();
-            case 7 -> new ToolsFragment();
-            case 8 -> new SystemFragment();
+            case 2 -> new TutorialFragment();
+            case 3 -> new WendaFragment();
+            case 4 -> new ProjectFragment();
+            case 5 -> new WechatFragment();
+            case 6 -> new ToolsFragment();
+            case 7 -> new SystemFragment();
+            case 8 -> new NavigationFragment();
             default -> new HarmonyFragment();
         };
     }

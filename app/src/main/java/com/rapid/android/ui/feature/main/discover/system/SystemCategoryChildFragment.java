@@ -1,64 +1,65 @@
-package com.rapid.android.ui.feature.main.discover.tutorial.list;
+package com.rapid.android.ui.feature.main.discover.system;
 
-import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.rapid.android.R;
-import com.rapid.android.core.ui.presentation.BaseActivity;
-import com.rapid.android.databinding.ActivityTutorialArticleListBinding;
+import com.rapid.android.core.ui.presentation.BaseFragment;
+import com.rapid.android.databinding.FragmentSystemCategoryChildBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
+import com.rapid.android.ui.feature.main.discover.system.list.SystemArticleListAdapter;
+import com.rapid.android.ui.feature.main.discover.system.list.SystemArticleListViewModel;
 
-public class TutorialArticleListActivity extends BaseActivity<TutorialArticleListViewModel, ActivityTutorialArticleListBinding> {
+public class SystemCategoryChildFragment extends BaseFragment<SystemArticleListViewModel, FragmentSystemCategoryChildBinding> {
 
-    private static final String EXTRA_TUTORIAL_ID = "extra_tutorial_id";
-    private static final String EXTRA_TUTORIAL_NAME = "extra_tutorial_name";
+    private static final String ARG_CATEGORY_ID = "arg_category_id";
+    private static final String ARG_CATEGORY_NAME = "arg_category_name";
 
-    private TutorialArticleListAdapter adapter;
+    private SystemArticleListAdapter adapter;
     private ContentStateController stateController;
     private BackToTopController backToTopController;
+    private int categoryId;
 
-    public static void start(@NonNull Context context, int tutorialId, @NonNull String tutorialName) {
-        Intent intent = new Intent(context, TutorialArticleListActivity.class);
-        intent.putExtra(EXTRA_TUTORIAL_ID, tutorialId);
-        intent.putExtra(EXTRA_TUTORIAL_NAME, tutorialName);
-        context.startActivity(intent);
+    public static SystemCategoryChildFragment newInstance(int categoryId, @Nullable String name) {
+        SystemCategoryChildFragment fragment = new SystemCategoryChildFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_CATEGORY_ID, categoryId);
+        args.putString(ARG_CATEGORY_NAME, name);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
-    protected TutorialArticleListViewModel createViewModel() {
-        return new ViewModelProvider(this).get(TutorialArticleListViewModel.class);
+    protected SystemArticleListViewModel createViewModel() {
+        return new ViewModelProvider(this).get(SystemArticleListViewModel.class);
     }
 
     @Override
-    protected ActivityTutorialArticleListBinding createViewBinding() {
-        return ActivityTutorialArticleListBinding.inflate(getLayoutInflater());
+    protected FragmentSystemCategoryChildBinding createViewBinding(@NonNull LayoutInflater inflater, ViewGroup container) {
+        return FragmentSystemCategoryChildBinding.inflate(inflater, container, false);
     }
 
     @Override
     protected void initializeViews() {
-        setSupportActionBar(binding.toolbar);
-        binding.toolbar.setNavigationOnClickListener(v -> finish());
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        String title = getIntent().getStringExtra(EXTRA_TUTORIAL_NAME);
-        binding.toolbar.setTitle(title != null ? title : getString(R.string.tutorial_title_default));
-
-        adapter = new TutorialArticleListAdapter();
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new SystemArticleListAdapter();
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
         RecyclerViewDecorations.addSpacing(binding.recyclerView);
-        binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
+
+        binding.swipeRefresh.setOnRefreshListener(() -> viewModel.refresh());
+
         backToTopController = BackToTopController.attach(binding.fabBackToTop, binding.recyclerView);
 
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -85,39 +86,42 @@ public class TutorialArticleListActivity extends BaseActivity<TutorialArticleLis
     }
 
     @Override
+    protected void loadData() {
+        Bundle args = requireArguments();
+        categoryId = args.getInt(ARG_CATEGORY_ID, -1);
+        viewModel.initialize(categoryId);
+    }
+
+    @Override
     protected void setupObservers() {
-        viewModel.getArticleItems().observe(this, items -> {
+        viewModel.getArticleItems().observe(getViewLifecycleOwner(), items -> {
             adapter.submitNewList(items);
             stateController.setEmpty(items == null || items.isEmpty());
         });
 
-        viewModel.getLoading().observe(this, loading ->
+        viewModel.getLoading().observe(getViewLifecycleOwner(), loading ->
                 stateController.setLoading(Boolean.TRUE.equals(loading)));
 
-        viewModel.getLoadingMore().observe(this, loading ->
+        viewModel.getLoadingMore().observe(getViewLifecycleOwner(), loading ->
                 binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loading)
-                        ? android.view.View.VISIBLE : android.view.View.GONE));
+                        ? View.VISIBLE : View.GONE));
 
         UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
         UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
     }
 
-    @Override
-    protected void loadData() {
-        int tutorialId = getIntent().getIntExtra(EXTRA_TUTORIAL_ID, -1);
-        viewModel.initialize(tutorialId);
+    boolean canScrollUp() {
+        return binding.recyclerView.canScrollVertically(-1);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (binding != null) {
-            binding.swipeRefresh.setOnRefreshListener(null);
-            binding.recyclerView.setAdapter(null);
-        }
+    public void onDestroyView() {
         if (backToTopController != null) {
             backToTopController.detach();
             backToTopController = null;
         }
+        binding.recyclerView.setAdapter(null);
+        adapter = null;
+        super.onDestroyView();
     }
 }

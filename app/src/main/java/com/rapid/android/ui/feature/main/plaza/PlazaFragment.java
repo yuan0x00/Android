@@ -1,5 +1,6 @@
 package com.rapid.android.ui.feature.main.plaza;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.login.LoginActivity;
+import com.rapid.android.ui.feature.main.TabNavigator;
 import com.rapid.android.ui.feature.main.discover.share.ShareArticleActivity;
 import com.rapid.android.ui.feature.main.home.ArticleAdapter;
 
@@ -30,6 +32,21 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
     private LinearLayoutManager layoutManager;
     private ContentStateController stateController;
     private BackToTopController backToTopController;
+    private TabNavigator tabNavigator;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof TabNavigator) {
+            tabNavigator = (TabNavigator) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        tabNavigator = null;
+        super.onDetach();
+    }
 
     @Override
     protected PlazaViewModel createViewModel() {
@@ -48,13 +65,13 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
 
         articleAdapter = new ArticleAdapter(getDialogController(), new ArticleListBean());
         binding.recyclerView.setAdapter(articleAdapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
+        RecyclerViewDecorations.addSpacing(binding.recyclerView);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.refresh());
 
-        backToTopController = BackToTopController.attach(binding.fabBackToTop, binding.recyclerView);
+        backToTopController = BackToTopController.attach(binding.fabBackToTop, binding.recyclerView, tabNavigator);
 
         binding.fabShareArticle.setOnClickListener(v -> {
             if (!SessionManager.getInstance().isLoggedIn()) {

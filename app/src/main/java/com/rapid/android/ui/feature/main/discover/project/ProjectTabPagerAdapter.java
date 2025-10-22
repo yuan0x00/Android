@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,7 @@ import com.rapid.android.databinding.ItemProjectTabPageBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.paging.PagingPayload;
+import com.rapid.android.ui.feature.main.TabNavigator;
 import com.rapid.android.ui.feature.main.discover.project.list.ProjectListAdapter;
 
 import java.util.*;
@@ -29,9 +31,16 @@ final class ProjectTabPagerAdapter extends RecyclerView.Adapter<ProjectTabPagerA
     private final HostCallbacks hostCallbacks;
     private final List<CategoryNodeBean> parents = new ArrayList<>();
     private final Map<Integer, PageState> states = new HashMap<>();
+    @Nullable
+    private TabNavigator tabNavigator;
+
     ProjectTabPagerAdapter(ProjectViewModel viewModel, HostCallbacks hostCallbacks) {
         this.viewModel = viewModel;
         this.hostCallbacks = hostCallbacks;
+    }
+
+    void setTabNavigator(@Nullable TabNavigator tabNavigator) {
+        this.tabNavigator = tabNavigator;
     }
 
     void submitCategories(List<CategoryNodeBean> data) {
@@ -304,7 +313,7 @@ final class ProjectTabPagerAdapter extends RecyclerView.Adapter<ProjectTabPagerA
                 state.adapter = new ProjectListAdapter();
             }
             binding.recyclerView.setAdapter(state.adapter);
-            RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
+            RecyclerViewDecorations.addSpacing(binding.recyclerView);
 
             if (state.scrollListener == null) {
                 state.scrollListener = new RecyclerView.OnScrollListener() {
@@ -341,7 +350,7 @@ final class ProjectTabPagerAdapter extends RecyclerView.Adapter<ProjectTabPagerA
             if (state.backToTopController != null) {
                 state.backToTopController.detach();
             }
-            state.backToTopController = BackToTopController.attach(binding.fabBackToTop, binding.recyclerView);
+            state.backToTopController = BackToTopController.attach(binding.fabBackToTop, binding.recyclerView, tabNavigator);
 
             selectChild(state, state.children.get(0), true);
 

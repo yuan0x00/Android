@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
-import com.rapid.android.databinding.FragmentDiscoverTutorialBinding;
+import com.rapid.android.databinding.FragmentTutorialBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
@@ -16,7 +16,7 @@ import com.rapid.android.ui.feature.main.discover.tutorial.list.TutorialArticleL
 
 import java.util.List;
 
-public class TutorialFragment extends BaseFragment<TutorialViewModel, FragmentDiscoverTutorialBinding> {
+public class TutorialFragment extends BaseFragment<TutorialViewModel, FragmentTutorialBinding> {
 
     private ContentStateController stateController;
     private TutorialChapterAdapter adapter;
@@ -27,8 +27,8 @@ public class TutorialFragment extends BaseFragment<TutorialViewModel, FragmentDi
     }
 
     @Override
-    protected FragmentDiscoverTutorialBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
-        return FragmentDiscoverTutorialBinding.inflate(inflater, container, false);
+    protected FragmentTutorialBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
+        return FragmentTutorialBinding.inflate(inflater, container, false);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class TutorialFragment extends BaseFragment<TutorialViewModel, FragmentDi
         adapter.setOnItemClickListener(this::openTutorial);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
+        RecyclerViewDecorations.addSpacing(binding.recyclerView);
     }
 
     @Override

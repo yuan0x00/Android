@@ -18,7 +18,6 @@ import com.rapid.android.ui.common.*;
 import com.rapid.android.ui.feature.main.TabNavigator;
 import com.rapid.android.ui.feature.main.home.ArticleAdapter;
 import com.rapid.android.ui.feature.main.home.BannerAdapter;
-import com.rapid.android.utils.AppPreferences;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -27,8 +26,6 @@ import java.util.Set;
 
 
 public class RecommendFragment extends BaseFragment<RecommendViewModel, FragmentRecommandBinding> {
-
-    private static final int BOTTOM_BAR_SCROLL_THRESHOLD = 8;
 
     private BannerAdapter bannerAdapter;
     private final Set<Integer> topArticleIds = new LinkedHashSet<>();
@@ -114,17 +111,16 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
 
         ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, popularSectionAdapter, topArticleAdapter, articleAdapter);
         binding.recyclerView.setAdapter(concatAdapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
+        RecyclerViewDecorations.addSpacing(binding.recyclerView);
 
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.refreshAll());
 
-        backToTopController = BackToTopController.attach(binding.fabBackToTop, binding.recyclerView);
+        backToTopController = BackToTopController.attach(binding.fabBackToTop, binding.recyclerView, tabNavigator);
 
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                handleBottomBarVisibility(recyclerView, dy);
                 if (dy <= 0) {
                     return;
                 }
@@ -141,63 +137,7 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
                 }
             }
 
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    handleBottomBarVisibilityOnIdle(recyclerView);
-                }
-            }
         });
-    }
-
-    private void handleBottomBarVisibility(@NonNull RecyclerView recyclerView, int dy) {
-        if (tabNavigator == null) {
-            return;
-        }
-        if (!AppPreferences.isAutoHideBottomBarEnabled()) {
-            if (!tabNavigator.isBottomBarVisible()) {
-                tabNavigator.showBottomBar(false);
-            }
-            return;
-        }
-
-        boolean canScrollUp = recyclerView.canScrollVertically(-1);
-        boolean canScrollDown = recyclerView.canScrollVertically(1);
-
-        if (dy > BOTTOM_BAR_SCROLL_THRESHOLD && canScrollDown) {
-            tabNavigator.hideBottomBar(true);
-        } else if (dy < -BOTTOM_BAR_SCROLL_THRESHOLD || !canScrollUp) {
-            tabNavigator.showBottomBar(true);
-        }
-
-        if (!canScrollUp || !canScrollDown) {
-            tabNavigator.showBottomBar(true);
-        }
-    }
-
-    private void handleBottomBarVisibilityOnIdle(@NonNull RecyclerView recyclerView) {
-        if (tabNavigator == null) {
-            return;
-        }
-        if (!AppPreferences.isAutoHideBottomBarEnabled()) {
-            if (!tabNavigator.isBottomBarVisible()) {
-                tabNavigator.showBottomBar(false);
-            }
-            return;
-        }
-
-        boolean canScrollUp = recyclerView.canScrollVertically(-1);
-        boolean canScrollDown = recyclerView.canScrollVertically(1);
-
-        if (!canScrollUp || !canScrollDown) {
-            tabNavigator.showBottomBar(true);
-            return;
-        }
-
-        if (!tabNavigator.isBottomBarVisible()) {
-            tabNavigator.showBottomBar(true);
-        }
     }
 
     private void renderTopArticles(List<ArticleListBean.Data> articles) {

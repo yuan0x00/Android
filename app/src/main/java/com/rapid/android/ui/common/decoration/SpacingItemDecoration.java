@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 /**
  * 仅通过顶部间距实现列表项间距，首项不添加额外间隔。
  */
-public class TopSpacingItemDecoration extends RecyclerView.ItemDecoration {
+public class SpacingItemDecoration extends RecyclerView.ItemDecoration {
 
     private final int spacingPx;
 
-    public TopSpacingItemDecoration(int spacingPx) {
+    public SpacingItemDecoration(int spacingPx) {
         this.spacingPx = Math.max(spacingPx, 0);
     }
 

@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
-import com.rapid.android.databinding.FragmentDiscoverWendaBinding;
+import com.rapid.android.databinding.FragmentWendaBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.List;
 
-public class WendaFragment extends BaseFragment<WendaViewModel, FragmentDiscoverWendaBinding> {
+public class WendaFragment extends BaseFragment<WendaViewModel, FragmentWendaBinding> {
 
     private ContentStateController stateController;
     private WendaAdapter adapter;
@@ -26,8 +26,8 @@ public class WendaFragment extends BaseFragment<WendaViewModel, FragmentDiscover
     }
 
     @Override
-    protected FragmentDiscoverWendaBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
-        return FragmentDiscoverWendaBinding.inflate(inflater, container, false);
+    protected FragmentWendaBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
+        return FragmentWendaBinding.inflate(inflater, container, false);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class WendaFragment extends BaseFragment<WendaViewModel, FragmentDiscover
         adapter = new WendaAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
+        RecyclerViewDecorations.addSpacing(binding.recyclerView);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);

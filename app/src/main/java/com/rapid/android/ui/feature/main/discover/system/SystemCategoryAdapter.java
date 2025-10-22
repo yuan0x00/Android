@@ -9,57 +9,42 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.model.CategoryNodeBean;
-import com.rapid.android.databinding.ItemSystemTabPageBinding;
-import com.rapid.android.ui.feature.main.discover.system.list.SystemArticleListActivity;
+import com.rapid.android.databinding.ItemSystemCategoryBinding;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-final class SystemTabPagerAdapter extends RecyclerView.Adapter<SystemTabPagerAdapter.TabPageViewHolder> {
+final class SystemCategoryAdapter extends RecyclerView.Adapter<SystemCategoryAdapter.SystemCategoryViewHolder> {
 
     private final List<CategoryNodeBean> items = new ArrayList<>();
-    private final Map<Integer, PageState> states = new HashMap<>();
+    private final OnCategoryClickListener listener;
+    SystemCategoryAdapter(@NonNull OnCategoryClickListener listener) {
+        this.listener = listener;
+    }
 
     void submitList(List<CategoryNodeBean> data) {
         items.clear();
-        states.clear();
         if (data != null) {
             items.addAll(data);
         }
         notifyDataSetChanged();
     }
 
-    CategoryNodeBean getItem(int position) {
-        if (position < 0 || position >= items.size()) {
-            return null;
-        }
-        return items.get(position);
-    }
-
-    boolean canScrollUp(int position) {
-        CategoryNodeBean item = getItem(position);
-        if (item == null) {
-            return false;
-        }
-        PageState state = states.get(item.getId());
-        if (state == null || state.scrollView == null) {
-            return false;
-        }
-        return state.scrollView.canScrollVertically(-1);
-    }
-
     @NonNull
     @Override
-    public TabPageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemSystemTabPageBinding binding = ItemSystemTabPageBinding.inflate(
+    public SystemCategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ItemSystemCategoryBinding binding = ItemSystemCategoryBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false);
-        return new TabPageViewHolder(binding);
+        return new SystemCategoryViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TabPageViewHolder holder, int position) {
-        holder.bind(items.get(position));
+    public void onBindViewHolder(@NonNull SystemCategoryViewHolder holder, int position) {
+        holder.bind(items.get(position), position);
     }
 
     @Override
@@ -67,50 +52,53 @@ final class SystemTabPagerAdapter extends RecyclerView.Adapter<SystemTabPagerAda
         return items.size();
     }
 
-    private PageState obtainState(CategoryNodeBean category) {
-        PageState state = states.get(category.getId());
-        if (state == null) {
-            state = new PageState();
-            states.put(category.getId(), state);
-        }
-        return state;
+    interface OnCategoryClickListener {
+        void onCategoryClick(@NonNull CategoryNodeBean category, int position);
+
+        void onChildClick(@NonNull CategoryNodeBean parent,
+                          @NonNull CategoryNodeBean child,
+                          int parentPosition,
+                          int childPosition);
     }
 
-    private static class PageState {
-        androidx.core.widget.NestedScrollView scrollView;
-    }
+    class SystemCategoryViewHolder extends RecyclerView.ViewHolder {
 
-    class TabPageViewHolder extends RecyclerView.ViewHolder {
+        private final ItemSystemCategoryBinding binding;
 
-        private final ItemSystemTabPageBinding binding;
-
-        TabPageViewHolder(@NonNull ItemSystemTabPageBinding binding) {
+        SystemCategoryViewHolder(@NonNull ItemSystemCategoryBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        void bind(CategoryNodeBean category) {
-            PageState state = obtainState(category);
-            state.scrollView = binding.getRoot();
-            binding.chipGroup.removeAllViews();
-            if (category == null) {
-                binding.chipGroup.setVisibility(View.GONE);
-                return;
+        void bind(CategoryNodeBean category, int position) {
+            binding.textTitle.setText(category.getName());
+            if (TextUtils.isEmpty(category.getDesc())) {
+                binding.textDesc.setVisibility(View.GONE);
+            } else {
+                binding.textDesc.setVisibility(View.VISIBLE);
+                binding.textDesc.setText(category.getDesc());
             }
+
+            binding.getRoot().setOnClickListener(v -> listener.onCategoryClick(category, position));
 
             List<CategoryNodeBean> children = resolveChildren(category);
+            ChipGroup chipGroup = binding.chipGroup;
+            chipGroup.removeAllViews();
             if (children.isEmpty()) {
-                binding.chipGroup.setVisibility(View.GONE);
+                chipGroup.setVisibility(View.GONE);
                 return;
             }
-
-            binding.chipGroup.setVisibility(View.VISIBLE);
-            for (CategoryNodeBean child : children) {
+            chipGroup.setVisibility(View.VISIBLE);
+            for (int index = 0; index < children.size(); index++) {
+                CategoryNodeBean child = children.get(index);
                 if (child == null || TextUtils.isEmpty(child.getName())) {
                     continue;
                 }
                 Chip chip = createChip(child);
-                binding.chipGroup.addView(chip);
+                final int childPosition = index;
+                chip.setOnClickListener(v ->
+                        listener.onChildClick(category, child, position, childPosition));
+                chipGroup.addView(chip);
             }
         }
 
@@ -122,8 +110,6 @@ final class SystemTabPagerAdapter extends RecyclerView.Adapter<SystemTabPagerAda
             chip.setEnsureMinTouchTargetSize(false);
             chip.setMaxLines(1);
             chip.setEllipsize(TextUtils.TruncateAt.END);
-            chip.setOnClickListener(v -> SystemArticleListActivity.start(
-                    v.getContext(), child.getId(), child.getName()));
             return chip;
         }
 
@@ -141,6 +127,10 @@ final class SystemTabPagerAdapter extends RecyclerView.Adapter<SystemTabPagerAda
             single.setLisenseLink(parent.getLisenseLink());
             single.setAuthor(parent.getAuthor());
             single.setCover(parent.getCover());
+            single.setOrder(parent.getOrder());
+            single.setParentChapterId(parent.getParentChapterId());
+            single.setCourseId(parent.getCourseId());
+            single.setType(parent.getType());
             List<ArticleListBean.Data> articleList = parent.getArticleList();
             if (articleList != null) {
                 single.setArticleList(new ArrayList<>(articleList));

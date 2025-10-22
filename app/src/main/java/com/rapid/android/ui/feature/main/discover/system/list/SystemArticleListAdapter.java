@@ -16,11 +16,11 @@ import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-final class SystemArticleListAdapter extends RecyclerView.Adapter<SystemArticleListAdapter.SystemArticleViewHolder> {
+public final class SystemArticleListAdapter extends RecyclerView.Adapter<SystemArticleListAdapter.SystemArticleViewHolder> {
 
     private final List<ArticleListBean.Data> items = new ArrayList<>();
 
-    void submitNewList(List<ArticleListBean.Data> data) {
+    public void submitNewList(List<ArticleListBean.Data> data) {
         items.clear();
         if (data != null) {
             items.addAll(data);

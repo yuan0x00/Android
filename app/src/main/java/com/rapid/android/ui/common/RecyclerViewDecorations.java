@@ -5,7 +5,7 @@ import android.content.res.Resources;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.rapid.android.ui.common.decoration.TopSpacingItemDecoration;
+import com.rapid.android.ui.common.decoration.SpacingItemDecoration;
 
 /**
  * RecyclerView 装饰器工具类。
@@ -15,7 +15,7 @@ public final class RecyclerViewDecorations {
     private RecyclerViewDecorations() {
     }
 
-    public static void addTopSpacing(@NonNull RecyclerView recyclerView) {
+    public static void addSpacing(@NonNull RecyclerView recyclerView) {
         if (recyclerView.getContext() == null) {
             return;
         }
@@ -24,11 +24,11 @@ public final class RecyclerViewDecorations {
 
         for (int i = 0, count = recyclerView.getItemDecorationCount(); i < count; i++) {
             RecyclerView.ItemDecoration decoration = recyclerView.getItemDecorationAt(i);
-            if (decoration instanceof TopSpacingItemDecoration) {
+            if (decoration instanceof SpacingItemDecoration) {
                 return;
             }
         }
 
-        recyclerView.addItemDecoration(new TopSpacingItemDecoration(spacingPx));
+        recyclerView.addItemDecoration(new SpacingItemDecoration(spacingPx));
     }
 }

@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.rapid.android.core.ui.presentation.BaseFragment;
-import com.rapid.android.databinding.FragmentDiscoverToolsBinding;
+import com.rapid.android.databinding.FragmentToolsBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 
-public class ToolsFragment extends BaseFragment<ToolsViewModel, FragmentDiscoverToolsBinding> {
+public class ToolsFragment extends BaseFragment<ToolsViewModel, FragmentToolsBinding> {
 
     private ContentStateController stateController;
     private ToolAdapter adapter;
@@ -23,8 +23,8 @@ public class ToolsFragment extends BaseFragment<ToolsViewModel, FragmentDiscover
     }
 
     @Override
-    protected FragmentDiscoverToolsBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
-        return FragmentDiscoverToolsBinding.inflate(inflater, container, false);
+    protected FragmentToolsBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
+        return FragmentToolsBinding.inflate(inflater, container, false);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ToolsFragment extends BaseFragment<ToolsViewModel, FragmentDiscover
         adapter = new ToolAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
+        RecyclerViewDecorations.addSpacing(binding.recyclerView);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);

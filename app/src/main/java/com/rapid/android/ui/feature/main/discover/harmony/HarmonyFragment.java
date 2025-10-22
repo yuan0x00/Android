@@ -11,14 +11,14 @@ import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.core.domain.model.HarmonyIndexBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
-import com.rapid.android.databinding.FragmentDiscoverHarmonyBinding;
+import com.rapid.android.databinding.FragmentHarmonyBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
 import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
 
 import java.util.List;
 
-public class HarmonyFragment extends BaseFragment<HarmonyViewModel, FragmentDiscoverHarmonyBinding> {
+public class HarmonyFragment extends BaseFragment<HarmonyViewModel, FragmentHarmonyBinding> {
 
     private ContentStateController stateController;
 
@@ -28,8 +28,8 @@ public class HarmonyFragment extends BaseFragment<HarmonyViewModel, FragmentDisc
     }
 
     @Override
-    protected FragmentDiscoverHarmonyBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
-        return FragmentDiscoverHarmonyBinding.inflate(inflater, container, false);
+    protected FragmentHarmonyBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
+        return FragmentHarmonyBinding.inflate(inflater, container, false);
     }
 
     @Override

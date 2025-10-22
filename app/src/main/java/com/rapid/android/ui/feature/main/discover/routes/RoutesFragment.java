@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
-import com.rapid.android.databinding.FragmentDiscoverRoutesBinding;
+import com.rapid.android.databinding.FragmentRoutesBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.List;
 
-public class RoutesFragment extends BaseFragment<RoutesViewModel, FragmentDiscoverRoutesBinding> {
+public class RoutesFragment extends BaseFragment<RoutesViewModel, FragmentRoutesBinding> {
 
     private ContentStateController stateController;
     private RouteAdapter adapter;
@@ -26,8 +26,8 @@ public class RoutesFragment extends BaseFragment<RoutesViewModel, FragmentDiscov
     }
 
     @Override
-    protected FragmentDiscoverRoutesBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
-        return FragmentDiscoverRoutesBinding.inflate(inflater, container, false);
+    protected FragmentRoutesBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
+        return FragmentRoutesBinding.inflate(inflater, container, false);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class RoutesFragment extends BaseFragment<RoutesViewModel, FragmentDiscov
         adapter = new RouteAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
-        RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
+        RecyclerViewDecorations.addSpacing(binding.recyclerView);
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);

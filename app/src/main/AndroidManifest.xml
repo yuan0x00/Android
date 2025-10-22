@@ -51,6 +51,9 @@
             android:name=".ui.feature.main.discover.system.list.SystemArticleListActivity"
             android:exported="false"/>
         <activity
+            android:name=".ui.feature.main.discover.system.SystemCategoryDetailActivity"
+            android:exported="false"/>
+        <activity
             android:name=".ui.feature.web.ArticleWebViewActivity"
             android:exported="false"/>
         <activity

@@ -80,7 +80,7 @@ public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearch
         ArticleListBean listBean = new ArticleListBean();
         resultAdapter = new ArticleAdapter(getDialogController(), listBean);
         binding.resultRecyclerView.setAdapter(resultAdapter);
-        RecyclerViewDecorations.addTopSpacing(binding.resultRecyclerView);
+        RecyclerViewDecorations.addSpacing(binding.resultRecyclerView);
 
         binding.resultRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

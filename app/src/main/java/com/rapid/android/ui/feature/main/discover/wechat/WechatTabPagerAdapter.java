@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +19,7 @@ import com.rapid.android.databinding.ItemWechatTabPageBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.paging.PagingPayload;
+import com.rapid.android.ui.feature.main.TabNavigator;
 import com.rapid.android.ui.feature.main.home.ArticleAdapter;
 
 import java.util.ArrayList;
@@ -34,11 +36,17 @@ final class WechatTabPagerAdapter extends RecyclerView.Adapter<WechatTabPagerAda
     private final List<WxChapterBean> chapters = new ArrayList<>();
     private final Map<Integer, PageState> states = new HashMap<>();
     private final DialogController dialogController;
+    @Nullable
+    private TabNavigator tabNavigator;
 
     WechatTabPagerAdapter(WechatViewModel viewModel, HostCallbacks hostCallbacks, DialogController dialogController) {
         this.viewModel = viewModel;
         this.hostCallbacks = hostCallbacks;
         this.dialogController = dialogController;
+    }
+
+    void setTabNavigator(@Nullable TabNavigator tabNavigator) {
+        this.tabNavigator = tabNavigator;
     }
 
     void submitChapters(List<WxChapterBean> data) {
@@ -259,7 +267,7 @@ final class WechatTabPagerAdapter extends RecyclerView.Adapter<WechatTabPagerAda
                 state.adapter = new ArticleAdapter(dialogController, new ArticleListBean());
             }
             binding.recyclerView.setAdapter(state.adapter);
-            RecyclerViewDecorations.addTopSpacing(binding.recyclerView);
+            RecyclerViewDecorations.addSpacing(binding.recyclerView);
 
             if (state.scrollListener == null) {
                 state.scrollListener = new RecyclerView.OnScrollListener() {
@@ -296,7 +304,7 @@ final class WechatTabPagerAdapter extends RecyclerView.Adapter<WechatTabPagerAda
             if (state.backToTopController != null) {
                 state.backToTopController.detach();
             }
-            state.backToTopController = BackToTopController.attach(binding.fabBackToTop, binding.recyclerView);
+            state.backToTopController = BackToTopController.attach(binding.fabBackToTop, binding.recyclerView, tabNavigator);
 
             if (!state.initialized) {
                 loadPage(state, chapterId, true);

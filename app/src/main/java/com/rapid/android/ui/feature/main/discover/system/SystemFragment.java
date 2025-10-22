@@ -1,36 +1,28 @@
 package com.rapid.android.ui.feature.main.discover.system;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.tabs.TabLayoutMediator;
+import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentSystemBinding;
 import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SystemFragment extends BaseFragment<SystemViewModel, FragmentSystemBinding> {
 
     private final List<CategoryNodeBean> categories = new ArrayList<>();
     private ContentStateController stateController;
-    private int selectedIndex;
-    private final ViewPager2.OnPageChangeCallback pageChangeCallback = new ViewPager2.OnPageChangeCallback() {
-        @Override
-        public void onPageSelected(int position) {
-            selectedIndex = position;
-        }
-    };
-    private SystemTabPagerAdapter pagerAdapter;
-    private TabLayoutMediator tabMediator;
+    private SystemCategoryAdapter adapter;
 
     @Override
     protected SystemViewModel createViewModel() {
@@ -48,19 +40,71 @@ public class SystemFragment extends BaseFragment<SystemViewModel, FragmentSystem
 
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 
-        pagerAdapter = new SystemTabPagerAdapter();
-        binding.viewPager.setAdapter(pagerAdapter);
-        binding.viewPager.registerOnPageChangeCallback(pageChangeCallback);
+        adapter = new SystemCategoryAdapter(new SystemCategoryAdapter.OnCategoryClickListener() {
+            @Override
+            public void onCategoryClick(@NonNull CategoryNodeBean category, int position) {
+                // 点击卡片时跳转到第一个子项
+                launchCategoryDetail(category, 0);
+            }
 
-        binding.swipeRefresh.setOnChildScrollUpCallback((parent, child) ->
-                pagerAdapter.canScrollUp(binding.viewPager.getCurrentItem()));
+            @Override
+            public void onChildClick(@NonNull CategoryNodeBean parent, @NonNull CategoryNodeBean child,
+                                     int parentPosition, int childPosition) {
+                launchCategoryDetail(parent, childPosition);
+            }
+        });
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.recyclerView.setAdapter(adapter);
+        RecyclerViewDecorations.addSpacing(binding.recyclerView);
 
-        tabMediator = new TabLayoutMediator(binding.tabLayout, binding.viewPager,
-                (tab, position) -> {
-                    CategoryNodeBean item = pagerAdapter.getItem(position);
-                    tab.setText(item != null ? item.getName() : "");
-                });
-        tabMediator.attach();
+    }
+
+    private void launchCategoryDetail(@NonNull CategoryNodeBean category, int childPosition) {
+        ArrayList<CategoryNodeBean> children = new ArrayList<>(resolveChildren(category));
+        ArrayList<Integer> childIds = new ArrayList<>();
+        ArrayList<String> childNames = new ArrayList<>();
+        for (CategoryNodeBean child : children) {
+            if (child == null) {
+                continue;
+            }
+            childIds.add(child.getId());
+            childNames.add(child.getName());
+        }
+        SystemCategoryDetailActivity.start(
+                requireContext(),
+                category.getId(),
+                category.getName(),
+                childPosition,
+                childIds,
+                childNames
+        );
+    }
+
+    private List<CategoryNodeBean> resolveChildren(@NonNull CategoryNodeBean parent) {
+        List<CategoryNodeBean> children = parent.getChildren();
+        if (children != null && !children.isEmpty()) {
+            return children;
+        }
+
+        CategoryNodeBean single = new CategoryNodeBean();
+        single.setId(parent.getId());
+        single.setName(parent.getName());
+        single.setDesc(parent.getDesc());
+        single.setLink(parent.getLink());
+        single.setLisenseLink(parent.getLisenseLink());
+        single.setAuthor(parent.getAuthor());
+        single.setCover(parent.getCover());
+        single.setOrder(parent.getOrder());
+        single.setParentChapterId(parent.getParentChapterId());
+        single.setCourseId(parent.getCourseId());
+        single.setType(parent.getType());
+        List<ArticleListBean.Data> articleList = parent.getArticleList();
+        if (articleList != null) {
+            single.setArticleList(new ArrayList<>(articleList));
+        }
+        ArrayList<CategoryNodeBean> fallback = new ArrayList<>();
+        fallback.add(single);
+        return fallback;
     }
 
     @Override
@@ -77,7 +121,7 @@ public class SystemFragment extends BaseFragment<SystemViewModel, FragmentSystem
             }
 
             stateController.setEmpty(categories.isEmpty());
-            updateTabs();
+            adapter.submitList(new ArrayList<>(categories));
         });
 
         viewModel.getLoading().observe(this, loading ->
@@ -86,36 +130,10 @@ public class SystemFragment extends BaseFragment<SystemViewModel, FragmentSystem
         UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
     }
 
-    private void updateTabs() {
-        List<CategoryNodeBean> snapshot = categories.isEmpty()
-                ? Collections.emptyList()
-                : new ArrayList<>(categories);
-
-        pagerAdapter.submitList(snapshot);
-
-        binding.viewPager.setVisibility(snapshot.isEmpty() ? View.GONE : View.VISIBLE);
-        if (snapshot.isEmpty()) {
-            selectedIndex = 0;
-            return;
-        }
-
-        int targetIndex = Math.min(selectedIndex, snapshot.size() - 1);
-        if (targetIndex < 0) {
-            targetIndex = 0;
-        }
-        if (binding.viewPager.getCurrentItem() != targetIndex) {
-            final int finalTargetIndex = targetIndex;
-            binding.viewPager.post(() -> binding.viewPager.setCurrentItem(finalTargetIndex, false));
-        }
-    }
-
     @Override
     public void onDestroyView() {
-        if (tabMediator != null) {
-            tabMediator.detach();
-            tabMediator = null;
-        }
-        binding.viewPager.unregisterOnPageChangeCallback(pageChangeCallback);
+        binding.recyclerView.setAdapter(null);
+        adapter = null;
         super.onDestroyView();
     }
 }

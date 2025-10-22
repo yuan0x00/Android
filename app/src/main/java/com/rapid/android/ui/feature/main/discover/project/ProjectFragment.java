@@ -1,9 +1,11 @@
 package com.rapid.android.ui.feature.main.discover.project;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -13,6 +15,7 @@ import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentProjectBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
+import com.rapid.android.ui.feature.main.TabNavigator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,12 +28,33 @@ public class ProjectFragment extends BaseFragment<ProjectViewModel, FragmentProj
     private ProjectTabPagerAdapter pagerAdapter;
     private TabLayoutMediator tabMediator;
     private int selectedIndex;
+    private TabNavigator tabNavigator;
     private final ViewPager2.OnPageChangeCallback pageChangeCallback = new ViewPager2.OnPageChangeCallback() {
         @Override
         public void onPageSelected(int position) {
             selectedIndex = position;
         }
     };
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof TabNavigator) {
+            tabNavigator = (TabNavigator) context;
+            if (pagerAdapter != null) {
+                pagerAdapter.setTabNavigator(tabNavigator);
+            }
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        if (pagerAdapter != null) {
+            pagerAdapter.setTabNavigator(null);
+        }
+        tabNavigator = null;
+        super.onDetach();
+    }
 
     @Override
     protected ProjectViewModel createViewModel() {
@@ -48,6 +72,7 @@ public class ProjectFragment extends BaseFragment<ProjectViewModel, FragmentProj
 
         pagerAdapter = new ProjectTabPagerAdapter(viewModel, refreshing ->
                 binding.swipeRefresh.post(() -> binding.swipeRefresh.setRefreshing(refreshing)));
+        pagerAdapter.setTabNavigator(tabNavigator);
         binding.viewPager.setAdapter(pagerAdapter);
         binding.viewPager.registerOnPageChangeCallback(pageChangeCallback);
 

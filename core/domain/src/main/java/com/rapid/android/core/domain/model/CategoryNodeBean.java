@@ -1,9 +1,10 @@
 package com.rapid.android.core.domain.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryNodeBean {
+public class CategoryNodeBean implements Serializable {
 
     private int courseId;
     private int id;

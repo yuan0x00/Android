@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 public class UserEntity {
     @NonNull
     @PrimaryKey
-    private String id;
+    private String id = "";
     
     private String username;
     private String email;

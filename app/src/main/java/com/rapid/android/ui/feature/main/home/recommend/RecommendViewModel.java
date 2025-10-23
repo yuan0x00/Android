@@ -21,6 +21,7 @@ import com.rapid.android.utils.AppPreferences;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -284,11 +285,8 @@ public class RecommendViewModel extends BaseViewModel {
                         return DomainResult.success(new PagingPayload<>(bean.getDatas(), next, more));
                     }
                     DomainError error = result.getError();
-                    if (error != null) {
-                        return DomainResult.failure(error);
-                    }
-                    return DomainResult.failure(DomainError.of(DomainError.UNKNOWN_CODE,
-                            BaseApplication.getAppContext().getString(R.string.home_article_load_failed)));
+                    return DomainResult.failure(Objects.requireNonNullElseGet(error, () -> DomainError.of(DomainError.UNKNOWN_CODE,
+                            BaseApplication.getAppContext().getString(R.string.home_article_load_failed))));
                 });
     }
 }

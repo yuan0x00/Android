@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class HomePopularSection {
+public class HomePopularSection {
 
     private final String title;
     private final List<CategoryNodeBean> chapters;

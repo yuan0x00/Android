@@ -1,13 +1,8 @@
-package com.rapid.android.init;
+package com.rapid.android.init.tasks;
 
-import android.os.StrictMode;
-
-import com.google.android.material.color.DynamicColors;
 import com.rapid.android.BuildConfig;
-import com.rapid.android.analytics.AnalyticsInitializer;
 import com.rapid.android.core.common.app.BaseApplication;
-import com.rapid.android.core.common.crash.GlobalCrashHandler;
-import com.rapid.android.core.data.DataInitializer;
+import com.rapid.android.core.common.app.init.AsyncTask;
 import com.rapid.android.core.data.network.AuthHeaderProvider;
 import com.rapid.android.core.data.network.PersistentCookieStore;
 import com.rapid.android.core.data.network.TokenRefreshHandlerImpl;
@@ -17,21 +12,17 @@ import com.rapid.android.core.network.NetManager;
 import com.rapid.android.core.network.client.NetworkClient;
 import com.rapid.android.core.network.client.NetworkConfig;
 import com.rapid.android.core.network.interceptor.AuthInterceptor;
-import com.rapid.android.core.webview.core.WebViewFactory;
-import com.rapid.android.core.webview.utils.WebViewInitOptimizer;
-import com.rapid.android.navigation.AppRouter;
 import com.rapid.android.network.proxy.DeveloperProxyManager;
-import com.rapid.android.utils.ThemeManager;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-final class AppStartup {
+public class NetworkTask extends AsyncTask {
 
-    private static final String TAG = "AppStartup";
+    private static final String TAG = "NetworkTask";
 
-    private final BaseApplication application;
     private final ExecutorService networkExecutor = Executors.newSingleThreadExecutor(r -> {
         Thread thread = new Thread(r, "network-config-worker");
         thread.setPriority(Thread.NORM_PRIORITY);
@@ -43,75 +34,19 @@ final class AppStartup {
     private AuthInterceptor.TokenRefreshHandler tokenRefreshHandler;
     private DeveloperProxyManager.ProxySettingsListener proxyListener;
 
-    AppStartup(BaseApplication application) {
-        this.application = application;
+    @Override
+    public String getName() {
+        return "Network";
     }
 
-    void initialize() {
-        applyTheme();
-        enableStrictMode();
-        initWebView();
-        initRouter();
-        initAnalytics();
-        GlobalCrashHandler.setCrashReporter(new AppCrashReporter());
-        DataInitializer.init();
+    @Override
+    public List<String> getDependencies() {
+        return List.of("AuthStorage");
+    }
+
+    @Override
+    public void execute() throws Exception {
         initNetwork();
-    }
-
-    void onTerminate() {
-        DeveloperProxyManager.getInstance().removeListener(proxyListener);
-        networkExecutor.shutdownNow();
-    }
-
-    private void applyTheme() {
-        ThemeManager.applySavedTheme();
-        DynamicColors.applyToActivitiesIfAvailable(application);
-    }
-
-    private void enableStrictMode() {
-        if (!BuildConfig.DEBUG) {
-            return;
-        }
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectCustomSlowCalls()
-                .penaltyLog()
-                .build());
-
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .detectActivityLeaks()
-                .penaltyLog()
-                .build());
-    }
-
-    private void initWebView() {
-        // WebView 全局初始化优化
-        WebViewInitOptimizer.init(application);
-
-        try {
-            WebViewFactory.getInstance(application).prewarm(1);
-            LogKit.d(TAG, "WebView prewarmed");
-        } catch (Exception e) {
-            LogKit.w(TAG, e, "WebView prewarm skipped");
-        }
-
-        // Debug 模式下启用 WebView 调试
-        if (BuildConfig.DEBUG) {
-            WebViewInitOptimizer.enableDebugMode();
-        }
-    }
-
-    private void initRouter() {
-        // 初始化路由表
-        AppRouter.init();
-    }
-
-    private void initAnalytics() {
-        // 初始化统计分析模块
-        AnalyticsInitializer.init(application);
     }
 
     private void initNetwork() {
@@ -168,6 +103,6 @@ final class AppStartup {
         if (existing != null) {
             return existing;
         }
-        return new PersistentCookieStore(application.getApplicationContext());
+        return new PersistentCookieStore(BaseApplication.getAppContext());
     }
 }

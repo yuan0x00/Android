@@ -2,33 +2,23 @@ package com.rapid.android.core.common.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.ProcessLifecycleOwner;
 
-import com.rapid.android.core.common.BuildConfig;
-import com.rapid.android.core.common.crash.GlobalCrashHandler;
-import com.rapid.android.core.common.data.StorageManager;
-import com.rapid.android.core.common.lifecycle.AppLifecycleObserver;
+import com.rapid.android.core.common.app.init.InitTask;
+import com.rapid.android.core.common.app.init.TaskManager;
+import com.rapid.android.core.common.app.init.tasks.ConfigTask;
+import com.rapid.android.core.common.app.init.tasks.LogKitTask;
+import com.rapid.android.core.common.app.init.tasks.StorageTask;
 import com.rapid.android.core.log.LogKit;
-import com.tencent.mmkv.MMKV;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
+import java.util.List;
 
-/**
- * 可复用的基础 Application，实现组件初始化、全局上下文获取等通用能力。
- * 业务层可直接继承此类并在 {@link #onCreate()} 中调用父类逻辑。
- */
-public class BaseApplication extends Application {
+
+public abstract class BaseApplication extends Application {
 
     private static BaseApplication sInstance;
-    private volatile boolean isInitialized = false;
-    private static final ExecutorService BACKGROUND_INIT_EXECUTOR = Executors.newSingleThreadExecutor(new InitThreadFactory());
-    private final CompletableFuture<Void> initializationFuture = new CompletableFuture<>();
 
     @NonNull
     public static Context getAppContext() {
@@ -46,19 +36,6 @@ public class BaseApplication extends Application {
         return sInstance;
     }
 
-    @Nullable
-    public static BaseApplication getInstanceOrNull() {
-        return sInstance;
-    }
-
-    public static boolean isAppInitialized() {
-        return sInstance != null;
-    }
-
-    public boolean isInitialized() {
-        return isInitialized;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -67,68 +44,52 @@ public class BaseApplication extends Application {
     }
 
     private void performInitialization() {
+        TaskManager initManager = new TaskManager();
+
         try {
-            LogKit.init(BuildConfig.DEBUG);
-            LogKit.d("BaseApplication", "LogKit initialized");
-
-            GlobalCrashHandler.install(this);
-            LogKit.d("BaseApplication", "GlobalCrashHandler installed");
-
-            AppLifecycleObserver.initialize(this);
-            ProcessLifecycleOwner.get().getLifecycle().addObserver(AppLifecycleObserver.getInstance());
-            LogKit.d("BaseApplication", "AppLifecycleObserver added");
-
-            CompletableFuture
-                    .runAsync(this::runBackgroundInitializationTasks, BACKGROUND_INIT_EXECUTOR)
-                    .whenComplete((unused, throwable) -> {
-                        if (throwable != null) {
-                            isInitialized = false;
-                            LogKit.e("BaseApplication", throwable, "Background initialization failed");
-                            initializationFuture.completeExceptionally(throwable);
-                        } else {
-                            isInitialized = true;
-                            LogKit.i("BaseApplication", "Initialization completed successfully");
-                            initializationFuture.complete(null);
-                        }
-                    });
-
+//            GlobalCrashHandler.install(this);
+//            LogKit.d("BaseApplication", "GlobalCrashHandler installed");
+//
+//            AppLifecycleObserver.initialize(this);
+//            ProcessLifecycleOwner.get().getLifecycle().addObserver(AppLifecycleObserver.getInstance());
+//            LogKit.d("BaseApplication", "AppLifecycleObserver added");
 
         } catch (Exception e) {
             LogKit.e("BaseApplication", e, "Initialization error");
             throw new RuntimeException("Failed to initialize BaseApplication", e);
         }
+
+        // 添加初始化任务
+        initManager.addTasks(
+                List.of(new LogKitTask(),
+                        new StorageTask(),
+                        new ConfigTask())
+        );
+        initManager.addTasks(addInitTasks());
+
+        // 启动异步初始化
+        initManager.start(new TaskManager.InitCallback() {
+            @Override
+            public void onProgress(float progress) {
+                Log.d("InitProgress", "Progress: " + (progress * 100) + "%");
+            }
+
+            @Override
+            public void onSuccess() {
+                Log.i("AppInit", "All initialization tasks completed successfully");
+                onAppInitialized();
+            }
+
+            @Override
+            public void onFailure(Throwable error) {
+                Log.e("AppInit", "Initialization failed", error);
+                // 处理初始化失败
+            }
+        });
     }
 
-    private void runBackgroundInitializationTasks() {
-        String rootDir = MMKV.initialize(this);
-        LogKit.d("BaseApplication", "MMKV initialized at: %s", rootDir);
+    public abstract List<InitTask> addInitTasks();
 
-        StorageManager.init();
-        StorageManager.whenInitialized().join();
-        LogKit.d("BaseApplication", "StorageManager initialized");
-    }
+    public abstract void onAppInitialized();
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-        isInitialized = false;
-        if (!initializationFuture.isDone()) {
-            initializationFuture.completeExceptionally(new IllegalStateException("Application terminated"));
-        }
-        BACKGROUND_INIT_EXECUTOR.shutdownNow();
-        LogKit.d("BaseApplication", "Application terminated");
-    }
-
-    public CompletableFuture<Void> getInitializationFuture() {
-        return initializationFuture;
-    }
-
-    private static final class InitThreadFactory implements ThreadFactory {
-        @Override
-        public Thread newThread(@NonNull Runnable r) {
-            Thread thread = new Thread(r, "base-init");
-            thread.setDaemon(true);
-            return thread;
-        }
-    }
 }

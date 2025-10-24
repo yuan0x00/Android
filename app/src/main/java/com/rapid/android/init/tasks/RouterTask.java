@@ -1,9 +1,9 @@
 package com.rapid.android.init.tasks;
 
-import com.rapid.android.core.common.app.init.AsyncTask;
+import com.rapid.android.core.common.app.init.InitTask;
 import com.rapid.android.navigation.AppRouter;
 
-public class RouterTask extends AsyncTask {
+public class RouterTask extends InitTask {
     @Override
     public String getName() {
         return "Router";

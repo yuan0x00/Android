@@ -1,12 +1,31 @@
 package com.rapid.android.core.common.app.init;
 
+import java.util.Collections;
 import java.util.List;
 
-public interface InitTask {
-    String getName();
-    void execute() throws Exception;
-    List<String> getDependencies(); // 依赖的任务名称
-    int getPriority(); // 优先级 数值越大越先执行
-    TaskType getTaskType(); // 任务类型 TaskType
-    boolean isMainThread(); // 是否在主线程执行
+public abstract class InitTask implements Task {
+    @Override
+    public List<String> getDependencies() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public int getPriority() {
+        return 0;
+    }
+
+    @Override
+    public TaskType getTaskType() {
+        return TaskType.NORMAL;
+    }
+
+    @Override
+    public boolean isMainThread() {
+        return false;
+    }
+
+    @Override
+    public boolean isSyncMethod() {
+        return false;
+    }
 }

@@ -1,7 +1,7 @@
 package com.rapid.android.init;
 
 import com.rapid.android.core.common.app.BaseApplication;
-import com.rapid.android.core.common.app.init.InitTask;
+import com.rapid.android.core.common.app.init.Task;
 import com.rapid.android.init.tasks.*;
 
 import java.util.List;
@@ -9,15 +9,18 @@ import java.util.List;
 public class MainApplication extends BaseApplication {
 
     @Override
-    public List<InitTask> addInitTasks() {
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    @Override
+    public List<Task> addInitTasks() {
         return List.of(
-                new ThemeTask(),
-                new WebviewTask(),
-                new RouterTask(),
-                new AnalyticsTask(),
-                new StrictModeTask(),
                 new NetworkTask(),
-                new AuthStorageTask()
+                new StrictModeTask(),
+                new ThemeTask(),
+                new RouterTask(),
+                new AnalyticsTask()
         );
     }
 

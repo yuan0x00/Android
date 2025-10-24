@@ -6,9 +6,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.rapid.android.core.common.app.init.InitTask;
+import com.rapid.android.core.common.app.init.Task;
 import com.rapid.android.core.common.app.init.TaskManager;
-import com.rapid.android.core.common.app.init.tasks.ConfigTask;
 import com.rapid.android.core.common.app.init.tasks.LogKitTask;
 import com.rapid.android.core.common.app.init.tasks.StorageTask;
 
@@ -59,9 +58,10 @@ public abstract class BaseApplication extends Application {
 
         // 添加初始化任务
         initManager.addTasks(
-                List.of(new LogKitTask(),
-                        new StorageTask(),
-                        new ConfigTask())
+                List.of(
+                        new LogKitTask(),
+                        new StorageTask()
+                )
         );
         initManager.addTasks(addInitTasks());
 
@@ -86,7 +86,7 @@ public abstract class BaseApplication extends Application {
         });
     }
 
-    public abstract List<InitTask> addInitTasks();
+    public abstract List<Task> addInitTasks();
 
     public abstract void onAppInitialized();
 

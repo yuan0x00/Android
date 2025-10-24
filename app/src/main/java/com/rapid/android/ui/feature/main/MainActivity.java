@@ -16,8 +16,8 @@ import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.ui.components.navigation.BottomTabNavigator;
 import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.core.ui.utils.ToastUtils;
-import com.rapid.android.core.webview.core.WebViewPrewarmer;
 import com.rapid.android.databinding.ActivityMainBinding;
+import com.rapid.android.init.tasks.WebviewTask;
 import com.rapid.android.ui.feature.login.LoginActivity;
 import com.rapid.android.ui.feature.main.discover.DiscoverFragment;
 import com.rapid.android.ui.feature.main.home.HomeFragment;
@@ -33,6 +33,15 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     private long exitTime = 0L;
 
     private boolean isOnCreate = true;
+
+    private static void initWebview() {
+        // 初始化webview
+        try {
+            new WebviewTask().execute();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     protected MainViewModel createViewModel() {
@@ -51,9 +60,6 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         setBackToTask();
         setTabLayout(savedInstanceState);
 
-        // 主页空闲时预热WebView池，提升后续Web页面首开速度
-        // 预热2个WebView实例以支持并发场景
-        WebViewPrewarmer.prewarmInIdle(this, 2);
     }
 
     private void setBackToTask() {
@@ -225,4 +231,10 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         binding.bottomNavigation.setElevation(elevation);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (hasFocus) {
+            initWebview();
+        }
+    }
 }

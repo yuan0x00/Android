@@ -1,11 +1,11 @@
 package com.rapid.android.core.common.app.init.tasks;
 
 import com.rapid.android.core.common.BuildConfig;
-import com.rapid.android.core.common.app.init.AsyncTask;
+import com.rapid.android.core.common.app.init.InitTask;
 import com.rapid.android.core.common.app.init.TaskType;
 import com.rapid.android.core.log.LogKit;
 
-public class LogKitTask extends AsyncTask {
+public class LogKitTask extends InitTask {
     @Override
     public String getName() {
         return "LogKit";

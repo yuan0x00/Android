@@ -1,6 +1,4 @@
-package com.rapid.android.core.data.local;
-
-import com.rapid.android.core.datastore.IDataStore;
+package com.rapid.android.core.datastore;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;

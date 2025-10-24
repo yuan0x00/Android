@@ -1,9 +1,9 @@
 package com.rapid.android.core.data.repository.user;
 
-import com.rapid.android.core.data.local.AuthStorage;
 import com.rapid.android.core.data.mapper.DomainResultMapper;
 import com.rapid.android.core.data.network.NetApis;
 import com.rapid.android.core.data.network.PersistentCookieStore;
+import com.rapid.android.core.datastore.AuthStorage;
 import com.rapid.android.core.domain.model.*;
 import com.rapid.android.core.domain.repository.UserRepository;
 import com.rapid.android.core.domain.result.DomainError;

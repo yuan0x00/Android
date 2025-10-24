@@ -2,7 +2,7 @@ package com.rapid.android.init.tasks;
 
 import com.rapid.android.BuildConfig;
 import com.rapid.android.core.common.app.BaseApplication;
-import com.rapid.android.core.common.app.init.AsyncTask;
+import com.rapid.android.core.common.app.init.InitTask;
 import com.rapid.android.core.data.network.AuthHeaderProvider;
 import com.rapid.android.core.data.network.PersistentCookieStore;
 import com.rapid.android.core.data.network.TokenRefreshHandlerImpl;
@@ -14,12 +14,11 @@ import com.rapid.android.core.network.client.NetworkConfig;
 import com.rapid.android.core.network.interceptor.AuthInterceptor;
 import com.rapid.android.network.proxy.DeveloperProxyManager;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class NetworkTask extends AsyncTask {
+public class NetworkTask extends InitTask {
 
     private static final String TAG = "NetworkTask";
 
@@ -40,8 +39,8 @@ public class NetworkTask extends AsyncTask {
     }
 
     @Override
-    public List<String> getDependencies() {
-        return List.of("AuthStorage");
+    public int getPriority() {
+        return 4;
     }
 
     @Override

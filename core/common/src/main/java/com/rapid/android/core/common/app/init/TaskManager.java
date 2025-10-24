@@ -15,7 +15,7 @@ public class TaskManager {
     private final ThreadPoolExecutor ioExecutor;
     private final Handler mainHandler;
     private final ScheduledExecutorService scheduler;
-    private final Map<String, InitTask> tasks = new ConcurrentHashMap<>();
+    private final Map<String, Task> tasks = new ConcurrentHashMap<>();
     private final Map<String, TaskState> taskStates = new ConcurrentHashMap<>();
     private final Map<String, TaskResult> taskResults = new ConcurrentHashMap<>();
     private final CountDownLatch completionLatch = new CountDownLatch(1);
@@ -57,7 +57,7 @@ public class TaskManager {
     }
 
     // 添加单个任务
-    public void addTask(InitTask task) {
+    public void addTask(Task task) {
         if (isRunning) {
             throw new IllegalStateException("Cannot add task after initialization has started");
         }
@@ -66,15 +66,15 @@ public class TaskManager {
     }
 
     // 批量添加任务 - 可变参数
-    public void addTasks(InitTask... tasks) {
-        for (InitTask task : tasks) {
+    public void addTasks(Task... tasks) {
+        for (Task task : tasks) {
             addTask(task);
         }
     }
 
     // 批量添加任务 - 列表
-    public void addTasks(List<InitTask> tasks) {
-        for (InitTask task : tasks) {
+    public void addTasks(List<Task> tasks) {
+        for (Task task : tasks) {
             addTask(task);
         }
     }
@@ -118,13 +118,13 @@ public class TaskManager {
         }
 
         // 获取所有任务并按优先级排序
-        List<InitTask> sortedTasks = tasks.values().stream()
+        List<Task> sortedTasks = tasks.values().stream()
                 .sorted((t1, t2) -> Integer.compare(t2.getPriority(), t1.getPriority()))
                 .collect(Collectors.toList());
 
         // 按任务类型分组
-        Map<TaskType, List<InitTask>> tasksByType = sortedTasks.stream()
-                .collect(Collectors.groupingBy(InitTask::getTaskType));
+        Map<TaskType, List<Task>> tasksByType = sortedTasks.stream()
+                .collect(Collectors.groupingBy(Task::getTaskType));
 
         Log.i(TAG, "📋 ========== Sorted Task List ==========");
         Log.i(TAG, "Total tasks: " + tasks.size());
@@ -147,18 +147,18 @@ public class TaskManager {
         Log.i(TAG, "📋 ======================================");
     }
 
-    private void printTaskGroup(String groupName, List<InitTask> tasks) {
+    private void printTaskGroup(String groupName, List<Task> tasks) {
         if (tasks.isEmpty()) return;
 
         Log.i(TAG, "  ┌─ " + groupName + " Tasks (" + tasks.size() + ")");
         for (int i = 0; i < tasks.size(); i++) {
-            InitTask task = tasks.get(i);
+            Task task = tasks.get(i);
             String prefix = (i == tasks.size() - 1) ? "  └── " : "  ├── ";
             Log.i(TAG, prefix + formatTaskInfo(task));
         }
     }
 
-    private String formatTaskInfo(InitTask task) {
+    private String formatTaskInfo(Task task) {
         StringBuilder sb = new StringBuilder();
         sb.append(task.getName())
                 .append(" [P:")
@@ -174,6 +174,10 @@ public class TaskManager {
             sb.append(", MainThread");
         }
 
+        if (task.isSyncMethod()) {
+            sb.append(", SyncMethod");
+        }
+
         sb.append("]");
         return sb.toString();
     }
@@ -184,7 +188,7 @@ public class TaskManager {
 
         if (hasDependencies) {
             Log.i(TAG, "  ┌─ Dependency Graph");
-            for (InitTask task : tasks.values()) {
+            for (Task task : tasks.values()) {
                 if (!task.getDependencies().isEmpty()) {
                     Log.i(TAG, "  ├── " + task.getName() + " → " +
                             String.join(", ", task.getDependencies()));
@@ -210,26 +214,26 @@ public class TaskManager {
     }
 
     private void executeTasks() {
-        List<InitTask> readyTasks = findReadyTasks();
+        List<Task> readyTasks = findReadyTasks();
 
-        if (readyTasks.isEmpty() && !isAllTasksCompleted()) {
-            // 死锁检测
-            List<String> pendingTasks = getPendingTasks();
-            Log.e(TAG, "Initialization deadlock detected. Pending tasks: " + pendingTasks);
+//        if (readyTasks.isEmpty() && !isAllTasksCompleted()) {
+//            // 死锁检测
+//            List<String> pendingTasks = getPendingTasks();
+//            Log.e(TAG, "Initialization deadlock detected. Pending tasks: " + pendingTasks);
+//
+//            if (callback != null) {
+//                callback.onFailure(new IllegalStateException(
+//                        "Initialization deadlock detected. Pending tasks: " + pendingTasks));
+//            }
+//            return;
+//        }
 
-            if (callback != null) {
-                callback.onFailure(new IllegalStateException(
-                        "Initialization deadlock detected. Pending tasks: " + pendingTasks));
-            }
-            return;
-        }
-
-        for (InitTask task : readyTasks) {
+        for (Task task : readyTasks) {
             executeTaskWithStrategy(task);
         }
     }
 
-    private void executeTaskWithStrategy(InitTask task) {
+    private void executeTaskWithStrategy(Task task) {
         switch (task.getTaskType()) {
             case CRITICAL:
             case NORMAL:
@@ -255,7 +259,7 @@ public class TaskManager {
         }
     }
 
-    private void executeTaskImmediately(InitTask task) {
+    private void executeTaskImmediately(Task task) {
         taskStates.put(task.getName(), TaskState.RUNNING);
 
         Log.d(TAG, "Executing task: " + task.getName() + " | Type: " + task.getTaskType());
@@ -273,14 +277,16 @@ public class TaskManager {
             }
         };
 
-        if (task.isMainThread()) {
+        if (task.isSyncMethod()) {
+            taskRunnable.run();
+        } else if (task.isMainThread()) {
             mainHandler.post(taskRunnable);
         } else {
             ioExecutor.execute(taskRunnable);
         }
     }
 
-    private void scheduleDelayedTask(InitTask task, long delayMillis) {
+    private void scheduleDelayedTask(Task task, long delayMillis) {
         Log.d(TAG, "Scheduling delayed task: " + task.getName() + " after " + delayMillis + "ms");
 
         scheduler.schedule(() -> {
@@ -290,7 +296,7 @@ public class TaskManager {
         }, delayMillis, TimeUnit.MILLISECONDS);
     }
 
-    private void onTaskSuccess(InitTask task, long duration) {
+    private void onTaskSuccess(Task task, long duration) {
         Log.i(TAG, "✅ Task completed: " + task.getName() + " in " + duration + "ms" + " | " + task.getTaskType());
 
         mainHandler.post(() -> {
@@ -331,7 +337,7 @@ public class TaskManager {
         }
     }
 
-    private void onTaskFailed(InitTask task, Throwable error, long duration) {
+    private void onTaskFailed(Task task, Throwable error, long duration) {
         Log.e(TAG, "❌ Task failed: " + task.getName() + " in " + duration + "ms", error);
 
         mainHandler.post(() -> {
@@ -388,10 +394,10 @@ public class TaskManager {
     }
 
     // 查找可执行的任务（依赖已满足）
-    private List<InitTask> findReadyTasks() {
-        List<InitTask> readyTasks = new ArrayList<>();
+    private List<Task> findReadyTasks() {
+        List<Task> readyTasks = new ArrayList<>();
 
-        for (InitTask task : tasks.values()) {
+        for (Task task : tasks.values()) {
             TaskState currentState = taskStates.get(task.getName());
 
             if (currentState == TaskState.PENDING &&
@@ -406,7 +412,7 @@ public class TaskManager {
         return readyTasks;
     }
 
-    private boolean isTaskReadyToExecute(InitTask task) {
+    private boolean isTaskReadyToExecute(Task task) {
         // 根据任务类型判断是否可执行
         switch (task.getTaskType()) {
             case CRITICAL:
@@ -424,7 +430,7 @@ public class TaskManager {
         }
     }
 
-    private boolean areDependenciesSatisfied(InitTask task) {
+    private boolean areDependenciesSatisfied(Task task) {
         for (String dependency : task.getDependencies()) {
             TaskState state = taskStates.get(dependency);
             if (state != TaskState.SUCCESS) {
@@ -451,7 +457,7 @@ public class TaskManager {
     }
 
     private boolean hasCircularDependency() {
-        for (InitTask task : tasks.values()) {
+        for (Task task : tasks.values()) {
             if (hasCircularDependency(task.getName(), new HashSet<>())) {
                 return true;
             }
@@ -465,7 +471,7 @@ public class TaskManager {
         }
 
         visited.add(taskName);
-        InitTask task = tasks.get(taskName);
+        Task task = tasks.get(taskName);
         if (task != null) {
             for (String dependency : task.getDependencies()) {
                 if (hasCircularDependency(dependency, new HashSet<>(visited))) {
@@ -515,7 +521,7 @@ public class TaskManager {
     public Map<TaskType, Long> getTaskTypeStatistics() {
         return tasks.values().stream()
                 .collect(Collectors.groupingBy(
-                        InitTask::getTaskType,
+                        Task::getTaskType,
                         Collectors.counting()
                 ));
     }

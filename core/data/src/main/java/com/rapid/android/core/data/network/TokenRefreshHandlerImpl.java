@@ -4,9 +4,9 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.rapid.android.core.data.local.AuthStorage;
 import com.rapid.android.core.data.repository.RepositoryProvider;
 import com.rapid.android.core.data.session.SessionManager;
+import com.rapid.android.core.datastore.AuthStorage;
 import com.rapid.android.core.domain.model.LoginBean;
 import com.rapid.android.core.domain.repository.UserRepository;
 import com.rapid.android.core.domain.result.DomainError;

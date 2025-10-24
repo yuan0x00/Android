@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.rapid.android.core.data.local.AuthStorage;
 import com.rapid.android.core.data.repository.RepositoryProvider;
+import com.rapid.android.core.datastore.AuthStorage;
 import com.rapid.android.core.domain.model.LoginBean;
 import com.rapid.android.core.domain.model.UserInfoBean;
 import com.rapid.android.core.domain.repository.UserRepository;

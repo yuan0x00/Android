@@ -14,7 +14,7 @@ import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.AspectRatioFrameLayout;
 
 import com.rapid.android.R;
-import com.rapid.android.core.common.data.StorageManager;
+import com.rapid.android.core.datastore.DefaultDataStore;
 import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivitySplashBinding;
 import com.rapid.android.ui.feature.main.MainActivity;
@@ -30,6 +30,9 @@ public class SplashActivity extends BaseActivity<SplashViewModel, ActivitySplash
     private boolean isInitializationFinished = false;
     private boolean needPlayVideo = true;
 
+    DefaultDataStore dataStore = new DefaultDataStore();
+
+
     @Override
     protected SplashViewModel createViewModel() {
         return new ViewModelProvider(this).get(SplashViewModel.class);
@@ -42,7 +45,7 @@ public class SplashActivity extends BaseActivity<SplashViewModel, ActivitySplash
 
     @Override
     protected void initializeViews() {
-        needPlayVideo = StorageManager.getBoolean(NEED_PLAY_VIDEO, true);
+        needPlayVideo = dataStore.getBoolean(NEED_PLAY_VIDEO, true);
 
         if (needPlayVideo) {
             initVideoPlayer();
@@ -125,7 +128,7 @@ public class SplashActivity extends BaseActivity<SplashViewModel, ActivitySplash
     }
 
     private void performSkip() {
-        StorageManager.putBoolean(NEED_PLAY_VIDEO, false);
+        dataStore.putBoolean(NEED_PLAY_VIDEO, false);
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

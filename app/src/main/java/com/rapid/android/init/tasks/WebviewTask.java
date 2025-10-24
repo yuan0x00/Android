@@ -3,12 +3,12 @@ package com.rapid.android.init.tasks;
 import android.app.Application;
 
 import com.rapid.android.core.common.app.BaseApplication;
-import com.rapid.android.core.common.app.init.AsyncTask;
+import com.rapid.android.core.common.app.init.InitTask;
 import com.rapid.android.core.log.LogKit;
 import com.rapid.android.core.webview.core.WebViewFactory;
 import com.rapid.android.core.webview.utils.WebViewInitOptimizer;
 
-public class WebviewTask extends AsyncTask {
+public class WebviewTask extends InitTask {
 
     private static final String TAG = "WebviewTask";
 
@@ -24,7 +24,7 @@ public class WebviewTask extends AsyncTask {
         WebViewInitOptimizer.init(application);
 
         try {
-            WebViewFactory.getInstance(application).prewarm(1);
+            WebViewFactory.getInstance(application).prewarm(2);
             LogKit.d(TAG, "WebView prewarmed");
         } catch (Exception e) {
             LogKit.w(TAG, e, "WebView prewarm skipped");

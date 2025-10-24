@@ -15,12 +15,12 @@ public abstract class AsyncTask implements InitTask {
     }
 
     @Override
-    public boolean isMainThread() {
-        return false;
+    public TaskType getTaskType() {
+        return TaskType.NORMAL;
     }
 
     @Override
-    public boolean isCritical() {
+    public boolean isMainThread() {
         return false;
     }
 }

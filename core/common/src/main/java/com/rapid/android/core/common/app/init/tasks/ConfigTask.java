@@ -3,6 +3,7 @@ package com.rapid.android.core.common.app.init.tasks;
 import android.util.Log;
 
 import com.rapid.android.core.common.app.init.AsyncTask;
+import com.rapid.android.core.common.app.init.TaskType;
 
 public class ConfigTask extends AsyncTask {
 
@@ -13,7 +14,12 @@ public class ConfigTask extends AsyncTask {
 
     @Override
     public int getPriority() {
-        return 15; // 最高优先级
+        return 10;
+    }
+
+    @Override
+    public TaskType getTaskType() {
+        return TaskType.CRITICAL;
     }
 
     @Override

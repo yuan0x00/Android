@@ -2,7 +2,6 @@ package com.rapid.android.init;
 
 import com.rapid.android.core.common.app.BaseApplication;
 import com.rapid.android.core.common.app.init.InitTask;
-import com.rapid.android.core.common.crash.GlobalCrashHandler;
 import com.rapid.android.init.tasks.*;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public class MainApplication extends BaseApplication {
 
     @Override
     public void onAppInitialized() {
-        GlobalCrashHandler.setCrashReporter(new AppCrashReporter());
+//        GlobalCrashHandler.setCrashReporter(new AppCrashReporter());
     }
 
 }

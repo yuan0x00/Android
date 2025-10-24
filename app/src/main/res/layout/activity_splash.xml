@@ -5,14 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.loadingindicator.LoadingIndicator
-        android:id="@+id/loadingIndicator"
-        style="@style/Widget.Material3.LoadingIndicator.Contained"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"/>
-
     <!-- 视频播放区域 -->
     <androidx.media3.ui.PlayerView
         android:id="@+id/player_view"

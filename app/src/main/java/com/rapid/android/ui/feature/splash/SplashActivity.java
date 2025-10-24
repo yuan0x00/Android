@@ -45,11 +45,8 @@ public class SplashActivity extends BaseActivity<SplashViewModel, ActivitySplash
         needPlayVideo = StorageManager.getBoolean(NEED_PLAY_VIDEO, true);
 
         if (needPlayVideo) {
-            binding.loadingIndicator.setVisibility(View.GONE);
             initVideoPlayer();
             playVideo();
-        } else {
-            binding.loadingIndicator.setVisibility(View.VISIBLE);
         }
 
         // 模拟初始化，完成后显示跳过按钮

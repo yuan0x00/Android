@@ -11,7 +11,6 @@ import com.rapid.android.core.common.app.init.TaskManager;
 import com.rapid.android.core.common.app.init.tasks.ConfigTask;
 import com.rapid.android.core.common.app.init.tasks.LogKitTask;
 import com.rapid.android.core.common.app.init.tasks.StorageTask;
-import com.rapid.android.core.log.LogKit;
 
 import java.util.List;
 
@@ -19,6 +18,7 @@ import java.util.List;
 public abstract class BaseApplication extends Application {
 
     private static BaseApplication sInstance;
+    private final TaskManager initManager = new TaskManager();
 
     @NonNull
     public static Context getAppContext() {
@@ -44,20 +44,18 @@ public abstract class BaseApplication extends Application {
     }
 
     private void performInitialization() {
-        TaskManager initManager = new TaskManager();
-
-        try {
+//        try {
 //            GlobalCrashHandler.install(this);
 //            LogKit.d("BaseApplication", "GlobalCrashHandler installed");
 //
 //            AppLifecycleObserver.initialize(this);
 //            ProcessLifecycleOwner.get().getLifecycle().addObserver(AppLifecycleObserver.getInstance());
 //            LogKit.d("BaseApplication", "AppLifecycleObserver added");
-
-        } catch (Exception e) {
-            LogKit.e("BaseApplication", e, "Initialization error");
-            throw new RuntimeException("Failed to initialize BaseApplication", e);
-        }
+//
+//        } catch (Exception e) {
+//            LogKit.e("BaseApplication", e, "Initialization error");
+//            throw new RuntimeException("Failed to initialize BaseApplication", e);
+//        }
 
         // 添加初始化任务
         initManager.addTasks(

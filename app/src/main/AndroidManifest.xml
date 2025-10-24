@@ -18,50 +18,50 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App">
         <activity
-            android:name=".ui.feature.setting.SettingActivity"
+            android:name=".feature.setting.SettingActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.setting.developer.ProxyConfigActivity"
+            android:name=".feature.setting.developer.ProxyConfigActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.main.mine.coin.CoinActivity"
+            android:name=".feature.main.mine.coin.CoinActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.main.mine.favorite.FavoriteActivity"
+            android:name=".feature.main.mine.favorite.FavoriteActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.main.mine.share.ShareActivity"
+            android:name=".feature.main.mine.share.ShareActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.main.message.MessageCenterActivity"
+            android:name=".feature.main.message.MessageCenterActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.search.SearchActivity"
+            android:name=".feature.search.SearchActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.main.discover.share.ShareArticleActivity"
+            android:name=".feature.main.discover.share.ShareArticleActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.main.discover.tutorial.list.TutorialArticleListActivity"
+            android:name=".feature.main.discover.tutorial.list.TutorialArticleListActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.main.mine.tools.UserToolsActivity"
+            android:name=".feature.main.mine.tools.UserToolsActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.main.discover.system.list.SystemArticleListActivity"
+            android:name=".feature.main.discover.system.list.SystemArticleListActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.main.discover.system.SystemCategoryDetailActivity"
+            android:name=".feature.main.discover.system.SystemCategoryDetailActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.web.ArticleWebViewActivity"
+            android:name=".feature.web.ArticleWebViewActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.feature.login.LoginActivity"
+            android:name=".feature.login.LoginActivity"
             android:exported="false"
             android:launchMode="singleInstance"/>
         <activity
-            android:name=".ui.feature.main.MainActivity"
+            android:name=".feature.main.MainActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
@@ -70,7 +70,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.feature.splash.SplashActivity"
+            android:name=".feature.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Splash">
         </activity>

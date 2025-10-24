@@ -10,7 +10,7 @@ import com.rapid.android.R;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.core.ui.utils.ToastUtils;
-import com.rapid.android.ui.feature.login.LoginActivity;
+import com.rapid.android.feature.login.LoginActivity;
 
 /**
  * 登录状态检查工具类，提供统一的登录检查和跳转逻辑

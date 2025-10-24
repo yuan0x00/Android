@@ -16,7 +16,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.model.CategoryNodeBean;
-import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;

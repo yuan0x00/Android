@@ -1,9 +1,9 @@
 package com.rapid.android.navigation;
 
 import com.rapid.android.core.navigation.Router;
-import com.rapid.android.ui.feature.search.SearchActivity;
-import com.rapid.android.ui.feature.setting.SettingActivity;
-import com.rapid.android.ui.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.search.SearchActivity;
+import com.rapid.android.feature.setting.SettingActivity;
+import com.rapid.android.feature.web.ArticleWebViewActivity;
 
 /**
  * 应用路由配置

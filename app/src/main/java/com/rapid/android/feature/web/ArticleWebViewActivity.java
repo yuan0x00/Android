@@ -25,7 +25,6 @@ import com.rapid.android.core.webview.WebViewFragment;
 import com.rapid.android.core.webview.config.DefaultWebViewConfig;
 import com.rapid.android.core.webview.config.WebViewConfiguration;
 import com.rapid.android.core.webview.event.WebViewEventListener;
-import com.rapid.android.core.webview.utils.StatusBarUtils;
 import com.rapid.android.feature.login.LoginActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -77,7 +76,6 @@ public class ArticleWebViewActivity extends AppCompatActivity implements DialogH
 
         viewModel = new ViewModelProvider(this).get(ArticleWebViewViewModel.class);
 
-        StatusBarUtils.setStatusBarIconDark(this, true);
         setupToolbar();
         setupWebViewFragment();
         articleId = getIntent().getIntExtra(EXTRA_ARTICLE_ID, -1);

@@ -21,6 +21,7 @@ import com.rapid.android.feature.login.LoginActivity;
 import com.rapid.android.feature.main.TabNavigator;
 import com.rapid.android.feature.main.discover.share.ShareArticleActivity;
 import com.rapid.android.feature.main.home.ArticleAdapter;
+import com.rapid.android.feature.search.SearchActivity;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
@@ -101,6 +102,14 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
                     viewModel.loadMore();
                 }
             }
+        });
+
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_search) {
+                startActivity(new Intent(requireContext(), SearchActivity.class));
+                return true;
+            }
+            return false;
         });
     }
 

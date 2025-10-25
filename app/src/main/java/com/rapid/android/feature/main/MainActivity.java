@@ -1,15 +1,12 @@
 package com.rapid.android.feature.main;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.elevation.SurfaceColors;
-import com.google.android.material.shape.MaterialShapeDrawable;
 import com.rapid.android.R;
 import com.rapid.android.core.common.utils.WindowInsetsUtils;
 import com.rapid.android.core.data.session.SessionManager;
@@ -97,7 +94,6 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         WindowInsetsUtils.removeOnApplyWindowInsetsListener(binding.getRoot());
         WindowInsetsUtils.applyTopSystemWindowInsets(binding.getRoot());
         WindowInsetsUtils.applyBottomSystemWindowInsets(binding.bottomNavigation);
-        applyNavigationBarSurface();
         // 底部导航与 Fragment 管理关联
         navigator = new BottomTabNavigator(this, binding.bottomNavigation, binding.fragmentContainer)
                 .addTab(new BottomTabNavigator.TabItem(
@@ -218,17 +214,6 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         ToastUtils.showShortToast(getDialogController(), getString(R.string.mine_toast_require_login));
         startActivity(new Intent(this, LoginActivity.class));
         return false;
-    }
-
-    private void applyNavigationBarSurface() {
-        float elevation = getResources().getDimension(R.dimen.navigation_bar_elevation);
-        MaterialShapeDrawable drawable = new MaterialShapeDrawable();
-        drawable.initializeElevationOverlay(this);
-        int surfaceColor = SurfaceColors.getColorForElevation(this, elevation);
-        drawable.setFillColor(ColorStateList.valueOf(surfaceColor));
-        drawable.setElevation(elevation);
-        binding.bottomNavigation.setBackground(drawable);
-        binding.bottomNavigation.setElevation(elevation);
     }
 
     @Override

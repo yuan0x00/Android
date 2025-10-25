@@ -17,9 +17,8 @@
             android:id="@+id/toolbar"
             style="@style/Widget.Material3.Toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorSurface"
-            android:paddingHorizontal="@dimen/app_spacing_lg"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
             app:title="@string/search_title"
             app:titleCentered="false" />

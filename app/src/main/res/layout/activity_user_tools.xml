@@ -14,9 +14,8 @@
             android:id="@+id/toolbar"
             style="@style/Widget.Material3.Toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorSurface"
-            android:paddingHorizontal="@dimen/app_spacing_lg"
             app:title="@string/user_tools_title"
             app:titleCentered="false" />
 

@@ -15,7 +15,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.rapid.android.core.webview.config.DefaultWebViewConfig;
 import com.rapid.android.core.webview.config.WebViewConfiguration;
 import com.rapid.android.core.webview.event.WebViewEventListener;
-import com.rapid.android.core.webview.utils.StatusBarUtils;
 
 /**
  * 现代化WebView Activity
@@ -91,7 +90,6 @@ public class WebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
 
-        StatusBarUtils.setStatusBarIconDark(this, true);
         setupToolbar();
         setupWebViewFragment();
     }

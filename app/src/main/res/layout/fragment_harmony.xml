@@ -32,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/app_spacing_sm"
-                    app:cardCornerRadius="@dimen/app_corner_radius_lg">
+                    >
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -64,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/app_spacing_sm"
-                    app:cardCornerRadius="@dimen/app_corner_radius_lg">
+                    >
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -95,7 +95,7 @@
                     style="@style/Widget.App.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="@dimen/app_corner_radius_lg">
+                    >
 
                     <LinearLayout
                         android:layout_width="match_parent"

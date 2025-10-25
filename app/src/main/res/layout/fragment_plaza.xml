@@ -15,9 +15,9 @@
             android:id="@+id/toolbar"
             style="@style/Widget.Material3.Toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorSurface"
-            android:paddingHorizontal="@dimen/app_spacing_lg"
+            app:menu="@menu/menu_plaza_toolbar"
             app:title="@string/home_page_plaza"
             app:titleCentered="false" />
 

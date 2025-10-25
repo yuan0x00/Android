@@ -16,8 +16,7 @@
             android:id="@+id/toolbar"
             style="@style/Widget.Material3.Toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/app_spacing_lg"
+            android:layout_height="?attr/actionBarSize"
             app:titleCentered="false"/>
 
     </com.google.android.material.appbar.AppBarLayout>

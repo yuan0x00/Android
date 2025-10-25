@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
-    app:cardCornerRadius="@dimen/app_corner_radius_lg">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"

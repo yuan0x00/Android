@@ -9,6 +9,7 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/Widget.Material3.Toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorSurface"
@@ -40,7 +41,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/app_spacing_lg"
-                app:cardCornerRadius="@dimen/app_corner_radius_lg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -105,9 +105,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/mine_membership_newbie"
-                            android:textColor="?attr/colorPrimary"
-                            android:visibility="gone"
-                            app:chipBackgroundColor="?attr/colorPrimaryContainer"/>
+                            android:visibility="gone"/>
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/btnDailyAction"
@@ -115,9 +113,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/mine_action_check_in"
-                            android:textColor="?attr/colorPrimary"
-                            android:visibility="gone"
-                            app:chipBackgroundColor="?attr/colorSecondaryContainer"/>
+                            android:visibility="gone"/>
                     </com.google.android.material.chip.ChipGroup>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -128,7 +124,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/app_spacing_md"
-                app:cardCornerRadius="@dimen/app_corner_radius_lg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cardProfile">
@@ -221,7 +216,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/app_spacing_md"
-                app:cardCornerRadius="@dimen/app_corner_radius_lg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cardSummary">
@@ -245,7 +239,6 @@
                         <com.google.android.material.imageview.ShapeableImageView
                             android:layout_width="@dimen/app_size_icon_md"
                             android:layout_height="@dimen/app_size_icon_md"
-                            app:iconTint="?attr/colorPrimary"
                             app:srcCompat="@drawable/notifications_24px"/>
 
                         <TextView
@@ -278,7 +271,6 @@
                         <com.google.android.material.imageview.ShapeableImageView
                             android:layout_width="@dimen/app_size_icon_md"
                             android:layout_height="@dimen/app_size_icon_md"
-                            app:iconTint="?attr/colorPrimary"
                             app:srcCompat="@drawable/service_toolbox_24px"/>
 
                         <TextView
@@ -311,7 +303,6 @@
                         <com.google.android.material.imageview.ShapeableImageView
                             android:layout_width="@dimen/app_size_icon_md"
                             android:layout_height="@dimen/app_size_icon_md"
-                            app:iconTint="?attr/colorPrimary"
                             app:srcCompat="@drawable/settings_24px"/>
 
                         <TextView
@@ -344,7 +335,6 @@
                         <com.google.android.material.imageview.ShapeableImageView
                             android:layout_width="@dimen/app_size_icon_md"
                             android:layout_height="@dimen/app_size_icon_md"
-                            app:iconTint="?attr/colorPrimary"
                             app:srcCompat="@drawable/logo_dev_24px"/>
 
                         <TextView

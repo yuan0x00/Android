@@ -14,9 +14,8 @@
             android:id="@+id/toolbar"
             style="@style/Widget.Material3.Toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorSurface"
-            android:paddingHorizontal="@dimen/app_spacing_lg"
             app:menu="@menu/menu_message_toolbar"
             app:title="@string/message_title"
             app:titleCentered="false" />
@@ -28,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/app_spacing_lg"
             android:layout_marginVertical="@dimen/app_spacing_md"
-            app:cardCornerRadius="@dimen/app_corner_radius_lg">
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"

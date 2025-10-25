@@ -12,8 +12,5 @@
     <style name="TextAppearance.App.Label" parent="TextAppearance.Material3.LabelMedium"/>
     <style name="TextAppearance.App.LabelLarge" parent="TextAppearance.Material3.LabelLarge"/>
     <style name="TextAppearance.App.LabelSmall" parent="TextAppearance.Material3.LabelSmall"/>
-    <style name="TextAppearance.App.Tab" parent="TextAppearance.Material3.LabelLarge">
-        <item name="fontFamily">?attr/fontFamily</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
+    <style name="TextAppearance.App.Tab" parent="TextAppearance.Material3.LabelLarge"/>
 </resources>

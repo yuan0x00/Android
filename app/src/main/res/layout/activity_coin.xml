@@ -9,6 +9,7 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/Widget.Material3.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorSurface"
@@ -29,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/app_spacing_md"
             android:layout_marginTop="@dimen/app_spacing_md"
-            app:cardCornerRadius="@dimen/app_corner_radius_lg">
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"

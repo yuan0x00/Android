@@ -53,6 +53,9 @@
             android:name=".feature.main.discover.system.SystemCategoryDetailActivity"
             android:exported="false"/>
         <activity
+            android:name=".feature.container.FragmentContainerActivity"
+            android:exported="false"/>
+        <activity
             android:name=".feature.web.ArticleWebViewActivity"
             android:exported="false"/>
         <activity

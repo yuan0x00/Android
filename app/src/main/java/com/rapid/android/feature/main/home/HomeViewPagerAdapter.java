@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.rapid.android.feature.main.home.lastproject.LastProjectFragment;
 import com.rapid.android.feature.main.home.recommend.RecommendFragment;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class HomeViewPagerAdapter extends FragmentStateAdapter {
 
     public void addFragments() {
         addFragment(new RecommendFragment(), host.getString(com.rapid.android.R.string.home_page_recommend));
-        addFragment(new LastProjectFragment(), host.getString(com.rapid.android.R.string.home_page_latest));
+//        addFragment(new LastProjectFragment(), host.getString(com.rapid.android.R.string.home_page_latest));
     }
 
     @NonNull

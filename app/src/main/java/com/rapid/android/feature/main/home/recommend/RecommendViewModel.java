@@ -33,7 +33,7 @@ public class RecommendViewModel extends BaseViewModel {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<BannerItemBean>> bannerList = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<ArticleListBean.Data>> topArticles = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<List<HomePopularSection>> popularSections = new MutableLiveData<>(Collections.emptyList());
+    private final MutableLiveData<List<PopularSection>> popularSections = new MutableLiveData<>(Collections.emptyList());
     private final HomeRepository repository = RepositoryProvider.getHomeRepository();
     private final ContentRepository contentRepository = RepositoryProvider.getContentRepository();
 
@@ -56,7 +56,7 @@ public class RecommendViewModel extends BaseViewModel {
         return pagingController.getItemsLiveData();
     }
 
-    public MutableLiveData<List<HomePopularSection>> getPopularSections() {
+    public MutableLiveData<List<PopularSection>> getPopularSections() {
         return popularSections;
     }
 
@@ -140,29 +140,29 @@ public class RecommendViewModel extends BaseViewModel {
                 .subscribe(popularSections::setValue, throwable -> popularSections.setValue(Collections.emptyList())));
     }
 
-    private List<HomePopularSection> buildPopularSections(DomainResult<List<ArticleListBean.Data>> wendaResult,
-                                                         DomainResult<List<PopularColumnBean>> columnResult,
-                                                         DomainResult<List<CategoryNodeBean>> routeResult) {
-        List<HomePopularSection> sections = new ArrayList<>();
+    private List<PopularSection> buildPopularSections(DomainResult<List<ArticleListBean.Data>> wendaResult,
+                                                      DomainResult<List<PopularColumnBean>> columnResult,
+                                                      DomainResult<List<CategoryNodeBean>> routeResult) {
+        List<PopularSection> sections = new ArrayList<>();
 
         if (wendaResult != null && wendaResult.isSuccess() && wendaResult.getData() != null) {
             List<CategoryNodeBean> items = mapWendaToChapters(wendaResult.getData());
             if (!items.isEmpty()) {
-                sections.add(new HomePopularSection(BaseApplication.getAppContext().getString(R.string.discover_tab_wenda), items));
+                sections.add(new PopularSection(BaseApplication.getAppContext().getString(R.string.discover_tab_wenda), items));
             }
         }
 
         if (columnResult != null && columnResult.isSuccess() && columnResult.getData() != null) {
             List<CategoryNodeBean> items = mapColumnsToChapters(columnResult.getData());
             if (!items.isEmpty()) {
-                sections.add(new HomePopularSection(BaseApplication.getAppContext().getString(R.string.discover_hot_columns), items));
+                sections.add(new PopularSection(BaseApplication.getAppContext().getString(R.string.discover_hot_columns), items));
             }
         }
 
         if (routeResult != null && routeResult.isSuccess() && routeResult.getData() != null) {
             List<CategoryNodeBean> items = mapRoutesToChapters(routeResult.getData());
             if (!items.isEmpty()) {
-                sections.add(new HomePopularSection(BaseApplication.getAppContext().getString(R.string.discover_tab_routes), items));
+                sections.add(new PopularSection(BaseApplication.getAppContext().getString(R.string.discover_tab_routes), items));
             }
         }
 

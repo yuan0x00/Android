@@ -29,6 +29,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverViewModel, FragmentDi
     @Override
     protected void initializeViews() {
         DiscoverPagerAdapter adapter = new DiscoverPagerAdapter(this, requireContext());
+        adapter.addFragments();
         binding.viewPager.setAdapter(adapter);
 
         binding.toolbar.setOnMenuItemClickListener(item -> {

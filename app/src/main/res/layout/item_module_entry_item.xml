@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="@dimen/app_spacing_sm">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:contentDescription="@null"
+        android:src="@android:drawable/sym_def_app_icon"
+        android:layout_width="@dimen/app_size_icon_lg"
+        android:layout_height="@dimen/app_size_icon_lg"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="模块名称"/>
+
+</LinearLayout>

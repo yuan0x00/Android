@@ -9,13 +9,13 @@ import java.util.List;
 
 class PopularSectionPagerAdapter extends FragmentStateAdapter {
 
-    private final List<HomePopularSection> sections = new ArrayList<>();
+    private final List<PopularSection> sections = new ArrayList<>();
 
     PopularSectionPagerAdapter(@NonNull Fragment fragment) {
         super(fragment);
     }
 
-    void submitList(List<HomePopularSection> data) {
+    void submitList(List<PopularSection> data) {
         sections.clear();
         if (data != null) {
             sections.addAll(data);
@@ -36,7 +36,7 @@ class PopularSectionPagerAdapter extends FragmentStateAdapter {
 
     String getTitle(int position) {
         if (position >= 0 && position < sections.size()) {
-            HomePopularSection section = sections.get(position);
+            PopularSection section = sections.get(position);
             return section != null ? section.getTitle() : "";
         }
         return "";

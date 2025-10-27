@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class HomePopularSection {
+public class PopularSection {
 
     private final String title;
     private final List<CategoryNodeBean> chapters;
 
-    HomePopularSection(String title, List<CategoryNodeBean> chapters) {
+    PopularSection(String title, List<CategoryNodeBean> chapters) {
         this.title = title != null ? title : "";
         if (chapters != null) {
             this.chapters = new ArrayList<>(chapters);

@@ -26,13 +26,10 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/topTab"
-            style="@style/Widget.App.TabLayout.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorSurface"
-            android:paddingHorizontal="@dimen/app_spacing_lg"
-            app:tabGravity="center"
-            app:tabIndicatorAnimationMode="elastic"/>
+            android:visibility="gone"
+            android:background="?attr/colorSurface"/>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"

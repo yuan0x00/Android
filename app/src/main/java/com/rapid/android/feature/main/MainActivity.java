@@ -15,7 +15,6 @@ import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ActivityMainBinding;
 import com.rapid.android.feature.login.LoginActivity;
-import com.rapid.android.feature.main.discover.DiscoverFragment;
 import com.rapid.android.feature.main.home.HomeFragment;
 import com.rapid.android.feature.main.mine.MineFragment;
 import com.rapid.android.feature.main.plaza.PlazaFragment;
@@ -106,11 +105,16 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                         R.drawable.newsmode_24px,
                         R.drawable.newsmode_fill_24px,
                         PlazaFragment.class))
-                .addTab(new BottomTabNavigator.TabItem(
-                        getString(R.string.main_tab_discover),
-                        R.drawable.explore_24px,
-                        R.drawable.explore_fill_24px,
-                        DiscoverFragment.class))
+//                .addTab(new BottomTabNavigator.TabItem(
+//                        getString(R.string.main_tab_discover),
+//                        R.drawable.explore_24px,
+//                        R.drawable.explore_fill_24px,
+//                        DiscoverFragment.class))
+//                .addTab(new BottomTabNavigator.TabItem(
+//                        getString(R.string.main_tab_message),
+//                        R.drawable.notifications_24px,
+//                        R.drawable.notifications_fill_24px,
+//                        MessageFragment.class))
                 .addTab(new BottomTabNavigator.TabItem(
                         getString(R.string.main_tab_profile),
                         R.drawable.person_24px,

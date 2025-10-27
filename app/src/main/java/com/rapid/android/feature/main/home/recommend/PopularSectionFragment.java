@@ -24,9 +24,9 @@ public class PopularSectionFragment extends Fragment {
     private static final int MAX_CHIPS = 20;
 
     private FragmentPopularSectionBinding binding;
-    private HomePopularSection section;
+    private PopularSection section;
 
-    public static PopularSectionFragment newInstance(HomePopularSection section) {
+    public static PopularSectionFragment newInstance(PopularSection section) {
         PopularSectionFragment fragment = new PopularSectionFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_SECTION, new SerializableSection(section));
@@ -60,7 +60,7 @@ public class PopularSectionFragment extends Fragment {
         }
     }
 
-    private void bindSection(HomePopularSection section) {
+    private void bindSection(PopularSection section) {
         binding.chipGroup.removeAllViews();
 
         List<CategoryNodeBean> chapters = section.getChapters();
@@ -116,13 +116,13 @@ public class PopularSectionFragment extends Fragment {
         private final String title;
         private final List<CategoryNodeBean> chapters;
 
-        SerializableSection(HomePopularSection section) {
+        SerializableSection(PopularSection section) {
             this.title = section.getTitle();
             this.chapters = section.getChapters();
         }
 
-        HomePopularSection toSection() {
-            return new HomePopularSection(title, chapters);
+        PopularSection toSection() {
+            return new PopularSection(title, chapters);
         }
     }
 }

@@ -14,16 +14,16 @@ import com.rapid.android.databinding.ItemHomePopularTablayoutBinding;
 import java.util.Collections;
 import java.util.List;
 
-class HomePopularSectionRowAdapter extends RecyclerView.Adapter<HomePopularSectionRowAdapter.RowViewHolder> {
+class PopularSectionRowAdapter extends RecyclerView.Adapter<PopularSectionRowAdapter.RowViewHolder> {
 
-    private List<HomePopularSection> sections = Collections.emptyList();
+    private List<PopularSection> sections = Collections.emptyList();
     private final Fragment parentFragment;
 
-    HomePopularSectionRowAdapter(Fragment parentFragment) {
+    PopularSectionRowAdapter(Fragment parentFragment) {
         this.parentFragment = parentFragment;
     }
 
-    void submitList(List<HomePopularSection> data) {
+    void submitList(List<PopularSection> data) {
         sections = data != null ? data : Collections.emptyList();
         notifyDataSetChanged();
     }
@@ -63,7 +63,7 @@ class HomePopularSectionRowAdapter extends RecyclerView.Adapter<HomePopularSecti
             binding.viewPager.setUserInputEnabled(true);
         }
 
-        void bind(List<HomePopularSection> data) {
+        void bind(List<PopularSection> data) {
             pagerAdapter.submitList(data);
 
             // Detach old mediator if exists

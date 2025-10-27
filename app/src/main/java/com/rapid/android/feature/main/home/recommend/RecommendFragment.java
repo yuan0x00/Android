@@ -27,15 +27,17 @@ import java.util.Set;
 
 public class RecommendFragment extends BaseFragment<RecommendViewModel, FragmentRecommandBinding> {
 
-    private BannerAdapter bannerAdapter;
     private final Set<Integer> topArticleIds = new LinkedHashSet<>();
+    private BannerAdapter bannerAdapter;
     private ArticleAdapter articleAdapter;
-    private HomePopularSectionRowAdapter popularSectionAdapter;
+    private PopularSectionRowAdapter popularSectionAdapter;
     private LinearLayoutManager layoutManager;
     private ContentStateController stateController;
     private BackToTopController backToTopController;
     private TabNavigator tabNavigator;
     private ArticleAdapter topArticleAdapter;
+
+    private ModuleEntryAdapter moduleEntryAdapter;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -105,11 +107,13 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
         ArticleListBean articleListBean = new ArticleListBean();
 
         bannerAdapter = new BannerAdapter(new ArrayList<>());
-        popularSectionAdapter = new HomePopularSectionRowAdapter(this);
+        popularSectionAdapter = new PopularSectionRowAdapter(this);
         topArticleAdapter = new ArticleAdapter(getDialogController(), articleListBean, true);
         articleAdapter = new ArticleAdapter(getDialogController(), articleListBean);
+        moduleEntryAdapter = new ModuleEntryAdapter(requireContext());
+        moduleEntryAdapter.addFragments();
 
-        ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, popularSectionAdapter, topArticleAdapter, articleAdapter);
+        ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, moduleEntryAdapter, popularSectionAdapter, topArticleAdapter, articleAdapter);
         binding.recyclerView.setAdapter(concatAdapter);
         RecyclerViewDecorations.addSpacing(binding.recyclerView);
 

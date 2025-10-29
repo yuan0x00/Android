@@ -2,6 +2,7 @@ package com.rapid.android.feature.main.message;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,8 +27,13 @@ public class MessageCenterActivity extends BaseActivity<MessageCenterViewModel, 
     }
 
     @Override
-    protected ActivityMessageCenterBinding createViewBinding() {
-        return ActivityMessageCenterBinding.inflate(getLayoutInflater());
+    protected ActivityMessageCenterBinding createViewBinding(View rootView) {
+        return ActivityMessageCenterBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_message_center;
     }
 
     @Override

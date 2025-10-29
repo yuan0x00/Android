@@ -25,7 +25,7 @@ public final class RecyclerViewOptimizer {
     /**
      * 应用性能优化配置
      *
-     * @param recyclerView 需要优化的 RecyclerView
+     * @param recyclerView            需要优化的 RecyclerView
      * @param disableChangeAnimations 是否禁用 item change 动画
      */
     public static void applyOptimizations(RecyclerView recyclerView, boolean disableChangeAnimations) {

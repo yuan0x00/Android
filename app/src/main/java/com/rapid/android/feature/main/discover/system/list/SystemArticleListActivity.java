@@ -2,6 +2,7 @@ package com.rapid.android.feature.main.discover.system.list;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -38,8 +39,13 @@ public class SystemArticleListActivity extends BaseActivity<SystemArticleListVie
     }
 
     @Override
-    protected ActivitySystemArticleListBinding createViewBinding() {
-        return ActivitySystemArticleListBinding.inflate(getLayoutInflater());
+    protected ActivitySystemArticleListBinding createViewBinding(View rootView) {
+        return ActivitySystemArticleListBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_system_article_list;
     }
 
     @Override

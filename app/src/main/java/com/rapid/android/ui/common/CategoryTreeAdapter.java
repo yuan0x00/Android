@@ -16,7 +16,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.model.CategoryNodeBean;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,7 @@ public class CategoryTreeAdapter extends RecyclerView.Adapter<CategoryTreeAdapte
     private final OnChildClickListener childClickListener;
 
     private final List<CategoryNodeBean> items = new ArrayList<>();
+
     public CategoryTreeAdapter() {
         this(null);
     }
@@ -173,7 +174,7 @@ public class CategoryTreeAdapter extends RecyclerView.Adapter<CategoryTreeAdapte
         } else {
             String targetUrl = resolveTargetUrl(child);
             if (!TextUtils.isEmpty(targetUrl)) {
-                chip.setOnClickListener(v -> ArticleWebViewActivity.start(v.getContext(), targetUrl, child.getName()));
+                chip.setOnClickListener(v -> ArticleWebViewUtil.start(v.getContext(), targetUrl, child.getName()));
             } else {
                 chip.setOnClickListener(null);
                 chip.setEnabled(false);

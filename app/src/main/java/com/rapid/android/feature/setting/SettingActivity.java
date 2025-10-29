@@ -3,6 +3,7 @@ package com.rapid.android.feature.setting;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,8 +33,13 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
     }
 
     @Override
-    protected ActivitySettingBinding createViewBinding() {
-        return ActivitySettingBinding.inflate(getLayoutInflater());
+    protected ActivitySettingBinding createViewBinding(View rootView) {
+        return ActivitySettingBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_setting;
     }
 
     private void setupToolbar() {

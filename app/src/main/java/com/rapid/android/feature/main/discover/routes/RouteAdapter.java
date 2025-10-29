@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.databinding.ItemRouteBinding;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +87,7 @@ class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHolder> {
                 binding.getRoot().setClickable(true);
                 binding.getRoot().setFocusable(true);
                 binding.getRoot().setOnClickListener(v ->
-                        ArticleWebViewActivity.start(v.getContext(), link, bean.getName()));
+                        ArticleWebViewUtil.start(v.getContext(), link, bean.getName()));
             }
         }
 

@@ -19,4 +19,5 @@ dependencies {
     implementation libs.androidx.lifecycle.runtime
     implementation libs.material
     implementation libs.rxandroid3
+    implementation libs.androidx.asynclayoutinflater
 }

@@ -14,7 +14,7 @@ import com.google.android.material.chip.Chip;
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.databinding.FragmentPopularSectionBinding;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 
 import java.util.List;
 
@@ -79,7 +79,7 @@ public class PopularSectionFragment extends Fragment {
             chip.setText(item.getName());
             String link = resolveLink(item);
             if (!TextUtils.isEmpty(link)) {
-                chip.setOnClickListener(v -> ArticleWebViewActivity.start(v.getContext(), link, item.getName()));
+                chip.setOnClickListener(v -> ArticleWebViewUtil.start(v.getContext(), link, item.getName()));
             } else {
                 chip.setOnClickListener(null);
             }

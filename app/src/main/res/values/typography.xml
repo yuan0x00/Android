@@ -2,15 +2,26 @@
 <resources>
     <!-- 文本语义别名，便于全局替换 -->
     <style name="TextAppearance.App.Display" parent="TextAppearance.Material3.DisplaySmall"/>
+
     <style name="TextAppearance.App.Title" parent="TextAppearance.Material3.TitleLarge"/>
+
     <style name="TextAppearance.App.Section" parent="TextAppearance.Material3.TitleSmall"/>
+
     <style name="TextAppearance.App.Subtitle" parent="TextAppearance.Material3.TitleMedium"/>
+
     <style name="TextAppearance.App.Headline" parent="TextAppearance.Material3.HeadlineSmall"/>
+
     <style name="TextAppearance.App.Body" parent="TextAppearance.Material3.BodyMedium"/>
+
     <style name="TextAppearance.App.BodyStrong" parent="TextAppearance.Material3.BodyLarge"/>
+
     <style name="TextAppearance.App.Caption" parent="TextAppearance.Material3.BodySmall"/>
+
     <style name="TextAppearance.App.Label" parent="TextAppearance.Material3.LabelMedium"/>
+
     <style name="TextAppearance.App.LabelLarge" parent="TextAppearance.Material3.LabelLarge"/>
+
     <style name="TextAppearance.App.LabelSmall" parent="TextAppearance.Material3.LabelSmall"/>
+
     <style name="TextAppearance.App.Tab" parent="TextAppearance.Material3.LabelLarge"/>
 </resources>

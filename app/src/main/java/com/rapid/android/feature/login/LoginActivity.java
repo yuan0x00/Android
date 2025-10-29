@@ -3,6 +3,7 @@ package com.rapid.android.feature.login;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,8 +25,13 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
     }
 
     @Override
-    protected ActivityLoginBinding createViewBinding() {
-        return ActivityLoginBinding.inflate(getLayoutInflater());
+    protected int getLayoutResId() {
+        return R.layout.activity_login;
+    }
+
+    @Override
+    protected ActivityLoginBinding createViewBinding(View rootView) {
+        return ActivityLoginBinding.bind(rootView);
     }
 
     @Override

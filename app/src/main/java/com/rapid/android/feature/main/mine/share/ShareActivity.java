@@ -2,6 +2,7 @@ package com.rapid.android.feature.main.mine.share;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,8 +31,13 @@ public class ShareActivity extends BaseActivity<ShareViewModel, ActivityShareBin
     }
 
     @Override
-    protected ActivityShareBinding createViewBinding() {
-        return ActivityShareBinding.inflate(getLayoutInflater());
+    protected ActivityShareBinding createViewBinding(View rootView) {
+        return ActivityShareBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_share;
     }
 
     @Override

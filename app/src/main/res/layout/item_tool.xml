@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Widget.App.Card"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/app_corner_radius_md">
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   style="@style/Widget.App.Card"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   app:cardCornerRadius="@dimen/app_corner_radius_md">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.App.Section"
             android:textColor="?attr/colorOnSurface"
-            tools:text="转换工具" />
+            tools:text="转换工具"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/toolLink"
@@ -28,7 +28,7 @@
             android:layout_marginTop="@dimen/app_spacing_sm"
             android:textAppearance="@style/TextAppearance.App.Caption"
             android:textColor="?attr/colorOnSurfaceVariant"
-            tools:text="https://tools.example.com" />
+            tools:text="https://tools.example.com"/>
 
     </LinearLayout>
 

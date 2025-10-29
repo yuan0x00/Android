@@ -2,7 +2,6 @@ package com.rapid.android.core.common.app;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -17,7 +16,7 @@ import java.util.List;
 public abstract class BaseApplication extends Application {
 
     private static BaseApplication sInstance;
-    private final TaskManager initManager = new TaskManager();
+    private TaskManager initManager;
 
     @NonNull
     public static Context getAppContext() {
@@ -56,6 +55,7 @@ public abstract class BaseApplication extends Application {
 //            throw new RuntimeException("Failed to initialize BaseApplication", e);
 //        }
 
+        initManager = new TaskManager(this);
         // 添加初始化任务
         initManager.addTasks(
                 List.of(
@@ -64,26 +64,8 @@ public abstract class BaseApplication extends Application {
                 )
         );
         initManager.addTasks(addInitTasks());
-
         // 启动异步初始化
-        initManager.start(new TaskManager.InitCallback() {
-            @Override
-            public void onProgress(float progress) {
-                Log.d("InitProgress", "Progress: " + (progress * 100) + "%");
-            }
-
-            @Override
-            public void onSuccess() {
-                Log.i("AppInit", "All initialization tasks completed successfully");
-                onAppInitialized();
-            }
-
-            @Override
-            public void onFailure(Throwable error) {
-                Log.e("AppInit", "Initialization failed", error);
-                // 处理初始化失败
-            }
-        });
+        initManager.start();
     }
 
     public abstract List<Task> addInitTasks();

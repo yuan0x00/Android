@@ -35,7 +35,7 @@ public final class NavigationHelper {
      * 跳转到 WebView 页
      */
     public static void navigateToWebView(@NonNull Context context,
-                                          @NonNull String url) {
+                                         @NonNull String url) {
         navigateToWebView(context, url, null);
     }
 
@@ -43,8 +43,8 @@ public final class NavigationHelper {
      * 跳转到 WebView 页（带标题）
      */
     public static void navigateToWebView(@NonNull Context context,
-                                          @NonNull String url,
-                                          @Nullable String title) {
+                                         @NonNull String url,
+                                         @Nullable String title) {
         Bundle extras = new Bundle();
         extras.putString(AppRouter.PARAM_URL, url);
         if (title != null) {

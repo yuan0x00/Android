@@ -22,7 +22,7 @@ import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ItemArticleBinding;
 import com.rapid.android.feature.login.LoginActivity;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,7 +117,7 @@ final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favorit
             binding.tvAuthor.setText(resolveAuthor(data));
             binding.tvTime.setText(buildTimeText(data));
             binding.tvClass.setText(resolveCategory(data));
-            binding.getRoot().setOnClickListener(v -> ArticleWebViewActivity.start(v.getContext(), data));
+            binding.getRoot().setOnClickListener(v -> ArticleWebViewUtil.start(v.getContext(), data));
             binding.ivFavorite.setEnabled(true);
             collectRequestRunning = false;
             renderFavorite(data.isCollect());

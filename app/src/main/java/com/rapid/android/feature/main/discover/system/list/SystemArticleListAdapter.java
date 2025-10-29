@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.ArticleListBean;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +96,7 @@ public final class SystemArticleListAdapter extends RecyclerView.Adapter<SystemA
 
             itemView.setOnClickListener(v -> {
                 if (!TextUtils.isEmpty(data.getLink())) {
-                    ArticleWebViewActivity.start(v.getContext(), data);
+                    ArticleWebViewUtil.start(v.getContext(), data);
                 }
             });
         }

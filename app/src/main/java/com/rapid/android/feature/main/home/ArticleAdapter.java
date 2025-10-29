@@ -21,7 +21,7 @@ import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ItemArticleBinding;
 import com.rapid.android.feature.login.LoginActivity;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +138,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
             collectRequestRunning = false;
             renderFavorite(data.isCollect());
 
-            binding.getRoot().setOnClickListener(v -> ArticleWebViewActivity.start(binding.getRoot().getContext(), data));
+            binding.getRoot().setOnClickListener(v -> ArticleWebViewUtil.start(binding.getRoot().getContext(), data));
 
             binding.ivFavorite.setOnClickListener(v -> {
                 handleFavoriteToggle(data);

@@ -16,6 +16,7 @@ class UserToolsAdapter extends RecyclerView.Adapter<UserToolsAdapter.ToolViewHol
 
     private final List<UserToolBean> items = new ArrayList<>();
     private final Callback callback;
+
     UserToolsAdapter(Callback callback) {
         this.callback = callback;
     }

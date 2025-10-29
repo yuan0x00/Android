@@ -2,6 +2,7 @@ package com.rapid.android.feature.main.mine.favorite;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,8 +31,13 @@ public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFa
     }
 
     @Override
-    protected ActivityFavoriteBinding createViewBinding() {
-        return ActivityFavoriteBinding.inflate(getLayoutInflater());
+    protected ActivityFavoriteBinding createViewBinding(View rootView) {
+        return ActivityFavoriteBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_favorite;
     }
 
     @Override

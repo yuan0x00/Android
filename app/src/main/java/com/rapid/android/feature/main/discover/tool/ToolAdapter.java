@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.core.domain.model.ToolItemBean;
 import com.rapid.android.databinding.ItemToolBinding;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +62,7 @@ public class ToolAdapter extends RecyclerView.Adapter<ToolAdapter.ToolViewHolder
             binding.toolLink.setText(bean.getLink());
             binding.getRoot().setOnClickListener(v -> {
                 if (!TextUtils.isEmpty(bean.getLink())) {
-                    ArticleWebViewActivity.start(v.getContext(), bean.getLink(), bean.getName());
+                    ArticleWebViewUtil.start(v.getContext(), bean.getLink(), bean.getName());
                 }
             });
         }

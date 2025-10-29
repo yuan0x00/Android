@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.App.Subtitle"
-            android:textColor="?attr/colorOnSurface" />
+            android:textColor="?attr/colorOnSurface"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvDescription"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/app_spacing_md"
             android:textAppearance="@style/TextAppearance.App.Body"
-            android:textColor="?attr/colorOnSurfaceVariant" />
+            android:textColor="?attr/colorOnSurfaceVariant"/>
 
     </LinearLayout>
 

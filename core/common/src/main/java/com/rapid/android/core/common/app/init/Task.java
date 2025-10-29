@@ -2,12 +2,27 @@ package com.rapid.android.core.common.app.init;
 
 import java.util.List;
 
-public interface Task {
-    String getName();
-    void execute() throws Exception;
-    List<String> getDependencies(); // 依赖的任务名称
-    int getPriority(); // 优先级 数值越大越先执行
-    TaskType getTaskType(); // 任务类型 TaskType
-    boolean isMainThread(); // 是否在主线程执行
-    boolean isSyncMethod(); // 是同步方法
+public abstract class Task implements Runnable {
+
+    // 任务类型
+    public TaskType getTaskType(){
+        return TaskType.ASYNC;
+    };
+
+    // 依赖的任务列表
+    public List<Class<? extends Task>> getDependencies() {
+        return List.of();
+    }
+
+    // 默认名称
+    public String getName() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
+    public abstract void run();
+
+    public Integer getEstimatedDuration(){
+        return 0;
+    }
 }

@@ -2,6 +2,7 @@
 annotation = "1.9.1"
 #核心库
 agp = "8.12.3"
+asynclayoutinflater = "1.1.0"
 core = "1.17.0"
 appcompat = "1.7.1"
 activity = "1.11.0"
@@ -37,6 +38,7 @@ webkit = "1.14.0"
 
 [libraries]
 #核心库
+androidx-asynclayoutinflater = { module = "androidx.asynclayoutinflater:asynclayoutinflater", version.ref = "asynclayoutinflater" }
 androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }

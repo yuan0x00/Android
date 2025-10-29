@@ -30,8 +30,13 @@ public class ShareArticleActivity extends BaseActivity<ShareArticleViewModel, Ac
     }
 
     @Override
-    protected ActivityShareArticleBinding createViewBinding() {
-        return ActivityShareArticleBinding.inflate(getLayoutInflater());
+    protected ActivityShareArticleBinding createViewBinding(View rootView) {
+        return ActivityShareArticleBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_share;
     }
 
     @Override

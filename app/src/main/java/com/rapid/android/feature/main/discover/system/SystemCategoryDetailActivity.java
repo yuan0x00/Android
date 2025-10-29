@@ -51,11 +51,11 @@ public class SystemCategoryDetailActivity extends BaseActivity<SystemViewModel, 
     private ArrayList<String> preloadChildNames = new ArrayList<>();
 
     public static void start(@NonNull Context context,
-                              int categoryId,
-                              @NonNull String categoryTitle,
-                              int childPosition,
-                              @NonNull ArrayList<Integer> childIds,
-                              @NonNull ArrayList<String> childNames) {
+                             int categoryId,
+                             @NonNull String categoryTitle,
+                             int childPosition,
+                             @NonNull ArrayList<Integer> childIds,
+                             @NonNull ArrayList<String> childNames) {
         Intent intent = new Intent(context, SystemCategoryDetailActivity.class);
         intent.putExtra(EXTRA_CATEGORY_ID, categoryId);
         intent.putExtra(EXTRA_CATEGORY_TITLE, categoryTitle);
@@ -71,8 +71,13 @@ public class SystemCategoryDetailActivity extends BaseActivity<SystemViewModel, 
     }
 
     @Override
-    protected ActivitySystemCategoryDetailBinding createViewBinding() {
-        return ActivitySystemCategoryDetailBinding.inflate(getLayoutInflater());
+    protected ActivitySystemCategoryDetailBinding createViewBinding(View rootView) {
+        return ActivitySystemCategoryDetailBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_system_category_detail;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.rapid.android.feature.setting.developer;
 
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,8 +28,13 @@ public class ProxyConfigActivity extends BaseActivity<ProxyConfigViewModel, Acti
     }
 
     @Override
-    protected ActivityProxyConfigBinding createViewBinding() {
-        return ActivityProxyConfigBinding.inflate(getLayoutInflater());
+    protected ActivityProxyConfigBinding createViewBinding(View rootView) {
+        return ActivityProxyConfigBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_proxy_config;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.rapid.android.feature.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
@@ -18,7 +19,6 @@ import com.rapid.android.feature.login.LoginActivity;
 import com.rapid.android.feature.main.home.HomeFragment;
 import com.rapid.android.feature.main.mine.MineFragment;
 import com.rapid.android.feature.main.plaza.PlazaFragment;
-import com.rapid.android.init.tasks.WebviewTask;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,32 +30,32 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
     private boolean isOnCreate = true;
 
-    private static void initWebview() {
-        // 初始化webview
-        try {
-            new WebviewTask().execute();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
     protected MainViewModel createViewModel() {
         return new ViewModelProvider(this).get(MainViewModel.class);
     }
 
     @Override
-    protected ActivityMainBinding createViewBinding() {
-        return ActivityMainBinding.inflate(getLayoutInflater());
+    protected ActivityMainBinding createViewBinding(View rootView) {
+        return ActivityMainBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_main;
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setBackToTask();
-        setTabLayout(savedInstanceState);
+    }
 
+    @Override
+    protected void initializeViews() {
+        super.initializeViews();
+        setBackToTask();
+        setTabLayout(null);
     }
 
     private void setBackToTask() {
@@ -220,10 +220,4 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         return false;
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        if (hasFocus) {
-            initWebview();
-        }
-    }
 }

@@ -22,6 +22,7 @@ final class NavigationCategoryAdapter extends RecyclerView.Adapter<NavigationCat
 
     private final List<NavigationBean> items = new ArrayList<>();
     private final Callbacks callbacks;
+
     NavigationCategoryAdapter(@NonNull Callbacks callbacks) {
         this.callbacks = callbacks;
     }

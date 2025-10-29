@@ -114,7 +114,7 @@ public class SettingViewModel extends BaseViewModel {
         noImageMode.setValue(AppPreferences.isNoImageModeEnabled());
         autoHideBottomBar.setValue(AppPreferences.isAutoHideBottomBarEnabled());
     }
-    
+
     public void logoutWithCallback(LogoutCallback callback) {
         isLoading.setValue(true);
         operationMessageRes.setValue(null);

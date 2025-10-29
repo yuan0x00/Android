@@ -121,7 +121,8 @@ public class RecommendViewModel extends BaseViewModel {
                         if (result.isSuccess() && result.getData() != null) {
                             topArticles.setValue(result.getData());
                         }
-                    }, throwable -> {}));
+                    }, throwable -> {
+                    }));
         } else {
             topArticles.setValue(new ArrayList<>());
         }

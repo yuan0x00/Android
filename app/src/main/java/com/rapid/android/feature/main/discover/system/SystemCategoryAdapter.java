@@ -22,6 +22,7 @@ final class SystemCategoryAdapter extends RecyclerView.Adapter<SystemCategoryAda
 
     private final List<CategoryNodeBean> items = new ArrayList<>();
     private final OnCategoryClickListener listener;
+
     SystemCategoryAdapter(@NonNull OnCategoryClickListener listener) {
         this.listener = listener;
     }

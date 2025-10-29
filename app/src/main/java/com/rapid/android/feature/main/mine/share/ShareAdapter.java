@@ -13,7 +13,7 @@ import com.rapid.android.R;
 import com.rapid.android.core.common.text.StringUtils;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.databinding.ItemArticleBinding;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,7 @@ final class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.ShareViewHold
 
             binding.getRoot().setOnClickListener(v -> {
                 if (!TextUtils.isEmpty(data.getLink())) {
-                    ArticleWebViewActivity.start(v.getContext(), data);
+                    ArticleWebViewUtil.start(v.getContext(), data);
                 }
             });
         }

@@ -3,21 +3,12 @@ package com.rapid.android.init.tasks;
 import android.os.StrictMode;
 
 import com.rapid.android.BuildConfig;
-import com.rapid.android.core.common.app.init.InitTask;
+import com.rapid.android.core.common.app.init.Task;
 
-public class StrictModeTask extends InitTask {
-    @Override
-    public String getName() {
-        return "StrictMode";
-    }
+public class StrictModeTask extends Task {
 
     @Override
-    public int getPriority() {
-        return 5;
-    }
-
-    @Override
-    public void execute() throws Exception {
+    public void run() {
         if (!BuildConfig.DEBUG) {
             return;
         }

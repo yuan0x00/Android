@@ -43,8 +43,13 @@ public class CoinActivity extends BaseActivity<CoinViewModel, ActivityCoinBindin
     }
 
     @Override
-    protected ActivityCoinBinding createViewBinding() {
-        return ActivityCoinBinding.inflate(getLayoutInflater());
+    protected ActivityCoinBinding createViewBinding(View rootView) {
+        return ActivityCoinBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_coin;
     }
 
     @Override

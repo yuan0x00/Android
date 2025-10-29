@@ -19,12 +19,12 @@
             android:background="?attr/colorSurface"
             app:menu="@menu/menu_plaza_toolbar"
             app:title="@string/home_page_plaza"
-            app:titleCentered="false" />
+            app:titleCentered="false"/>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="@dimen/app_stroke_width"
-            android:background="?attr/colorOutlineVariant" />
+            android:background="?attr/colorOutlineVariant"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/home_share_article"
-                app:srcCompat="@drawable/add_24px" />
+                app:srcCompat="@drawable/add_24px"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabBackToTop"
@@ -92,7 +92,7 @@
                 android:layout_marginTop="@dimen/app_spacing_md"
                 android:contentDescription="@string/common_back_to_top"
                 android:visibility="gone"
-                app:srcCompat="@drawable/vertical_align_top_24px" />
+                app:srcCompat="@drawable/vertical_align_top_24px"/>
 
         </LinearLayout>
 

@@ -56,9 +56,6 @@
             android:name=".feature.container.FragmentContainerActivity"
             android:exported="false"/>
         <activity
-            android:name=".feature.web.ArticleWebViewActivity"
-            android:exported="false"/>
-        <activity
             android:name=".feature.login.LoginActivity"
             android:exported="false"
             android:launchMode="singleInstance"/>
@@ -74,9 +71,7 @@
         <activity
             android:name=".feature.splash.SplashActivity"
             android:exported="true">
-
         </activity>
-
     </application>
 
 </manifest>

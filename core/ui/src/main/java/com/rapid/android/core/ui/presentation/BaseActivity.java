@@ -1,14 +1,19 @@
 package com.rapid.android.core.ui.presentation;
 
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.viewbinding.ViewBinding;
 
 import com.rapid.android.core.common.utils.WindowInsetsUtils;
 import com.rapid.android.core.network.state.NetworkStateManager;
+import com.rapid.android.core.ui.R;
 import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.core.ui.components.dialog.DialogHost;
 import com.rapid.android.core.ui.components.dialog.ScopedDialogHost;
@@ -26,10 +31,23 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.core_ui_activity_container);
+        setContentViewAsync(getLayoutResId());
         viewModel = createViewModel();
-        binding = createViewBinding();
-        setContentView(binding.getRoot());
+    }
 
+    private void setContentViewAsync(@LayoutRes int resid) {
+        ViewGroup container = findViewById(R.id.container);
+        new AsyncLayoutInflater(this)
+                .inflate(resid, container, (view, resId, parent) -> {
+                    container.addView(view);
+                    binding = createViewBinding(view);
+                    initView();
+                }
+        );
+    }
+
+    private void initView() {
         dialogController = DialogController.from(this, binding.getRoot());
 
         if (shouldObserveNetworkState()) {
@@ -64,7 +82,9 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
 
     protected abstract VM createViewModel();
 
-    protected abstract VB createViewBinding();
+    protected abstract VB createViewBinding(View rootView);
+
+    protected abstract int getLayoutResId();
 
     protected void initializeViews() {
     }

@@ -2,6 +2,7 @@ package com.rapid.android.feature.main.discover.tutorial.list;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -38,8 +39,13 @@ public class TutorialArticleListActivity extends BaseActivity<TutorialArticleLis
     }
 
     @Override
-    protected ActivityTutorialArticleListBinding createViewBinding() {
-        return ActivityTutorialArticleListBinding.inflate(getLayoutInflater());
+    protected ActivityTutorialArticleListBinding createViewBinding(View rootView) {
+        return ActivityTutorialArticleListBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_tutorial_article_list;
     }
 
     @Override

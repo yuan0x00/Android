@@ -2,7 +2,9 @@ package com.rapid.android.init.tasks;
 
 import com.rapid.android.BuildConfig;
 import com.rapid.android.core.common.app.BaseApplication;
-import com.rapid.android.core.common.app.init.InitTask;
+import com.rapid.android.core.common.app.init.Task;
+import com.rapid.android.core.common.app.init.TaskType;
+import com.rapid.android.core.common.app.init.tasks.StorageTask;
 import com.rapid.android.core.data.network.AuthHeaderProvider;
 import com.rapid.android.core.data.network.PersistentCookieStore;
 import com.rapid.android.core.data.network.TokenRefreshHandlerImpl;
@@ -14,19 +16,12 @@ import com.rapid.android.core.network.client.NetworkConfig;
 import com.rapid.android.core.network.interceptor.AuthInterceptor;
 import com.rapid.android.network.proxy.DeveloperProxyManager;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class NetworkTask extends InitTask {
+public class NetworkTask extends Task {
 
     private static final String TAG = "NetworkTask";
-
-    private final ExecutorService networkExecutor = Executors.newSingleThreadExecutor(r -> {
-        Thread thread = new Thread(r, "network-config-worker");
-        thread.setPriority(Thread.NORM_PRIORITY);
-        return thread;
-    });
     private final NetworkConfig.AuthFailureListener authFailureHandler =
             () -> SessionManager.getInstance().forceLogout();
     private final AtomicBoolean rebuildPending = new AtomicBoolean(false);
@@ -34,17 +29,17 @@ public class NetworkTask extends InitTask {
     private DeveloperProxyManager.ProxySettingsListener proxyListener;
 
     @Override
-    public String getName() {
-        return "Network";
+    public List<Class<? extends Task>> getDependencies() {
+        return List.of(StorageTask.class);
     }
 
     @Override
-    public int getPriority() {
-        return 4;
+    public TaskType getTaskType() {
+        return TaskType.BLOCKING;
     }
 
     @Override
-    public void execute() throws Exception {
+    public void run() {
         initNetwork();
     }
 
@@ -57,10 +52,8 @@ public class NetworkTask extends InitTask {
             }
         };
         proxyManager.addListener(proxyListener);
-        networkExecutor.execute(() -> {
-            rebuildNetworkClient("app start");
-            SessionManager.getInstance().initialize();
-        });
+        rebuildNetworkClient("app start");
+        SessionManager.getInstance().initialize();
     }
 
     private void scheduleNetworkRebuild(String reason) {
@@ -68,7 +61,7 @@ public class NetworkTask extends InitTask {
             LogKit.d(TAG, "Skip network rebuild (%s): already pending", reason);
             return;
         }
-        networkExecutor.execute(() -> rebuildNetworkClient(reason));
+        rebuildNetworkClient(reason);
     }
 
     private void rebuildNetworkClient(String reason) {

@@ -1,16 +1,12 @@
 package com.rapid.android.init.tasks;
 
-import com.rapid.android.core.common.app.init.InitTask;
+import com.rapid.android.core.common.app.init.Task;
 import com.rapid.android.navigation.AppRouter;
 
-public class RouterTask extends InitTask {
-    @Override
-    public String getName() {
-        return "Router";
-    }
+public class RouterTask extends Task {
 
     @Override
-    public void execute() throws Exception {
+    public void run() {
         AppRouter.init();
     }
 }

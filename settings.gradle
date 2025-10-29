@@ -12,6 +12,10 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+    plugins {
+        // 声明插件版本（所有子模块共享）
+        id("org.jetbrains.kotlin.android") version "2.2.20"
+    }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)

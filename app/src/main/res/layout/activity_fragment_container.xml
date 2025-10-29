@@ -18,7 +18,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorSurface"
             app:title="@string/user_tools_title"
-            app:titleCentered="false" />
+            app:titleCentered="false"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

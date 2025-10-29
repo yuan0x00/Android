@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
+import com.rapid.android.R;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.model.HotKeyBean;
 import com.rapid.android.core.ui.presentation.BaseActivity;
@@ -39,8 +40,13 @@ public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearch
     }
 
     @Override
-    protected ActivitySearchBinding createViewBinding() {
-        return ActivitySearchBinding.inflate(getLayoutInflater());
+    protected ActivitySearchBinding createViewBinding(View rootView) {
+        return ActivitySearchBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_search;
     }
 
     @Override

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.databinding.ItemWendaBinding;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ class WendaAdapter extends RecyclerView.Adapter<WendaAdapter.WendaViewHolder> {
                 binding.wendaAuthor.setText(author);
             }
 
-            binding.getRoot().setOnClickListener(v -> ArticleWebViewActivity.start(v.getContext(), bean));
+            binding.getRoot().setOnClickListener(v -> ArticleWebViewUtil.start(v.getContext(), bean));
         }
 
         private String getDisplayAuthor(ArticleListBean.Data bean) {

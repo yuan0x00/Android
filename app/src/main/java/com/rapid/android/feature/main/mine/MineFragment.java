@@ -67,30 +67,30 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
 
         // 签到按钮
         binding.btnDailyAction.setOnClickListener(v ->
-            LoginHelper.requireLogin(requireContext(), getDialogController(), viewModel::signIn)
+                LoginHelper.requireLogin(requireContext(), getDialogController(), viewModel::signIn)
         );
 
         binding.itemNotifications.setOnClickListener(v ->
-            LoginHelper.requireLogin(requireContext(), getDialogController(),
-                () -> MessageCenterActivity.start(requireContext()))
+                LoginHelper.requireLogin(requireContext(), getDialogController(),
+                        () -> MessageCenterActivity.start(requireContext()))
         );
         binding.itemDeveloper.setOnClickListener(v -> openDeveloperTools());
         binding.itemTools.setOnClickListener(v ->
-            LoginHelper.requireLogin(requireContext(), getDialogController(),
-                () -> UserToolsActivity.start(requireContext()))
+                LoginHelper.requireLogin(requireContext(), getDialogController(),
+                        () -> UserToolsActivity.start(requireContext()))
         );
         binding.itemSettings.setOnClickListener(v -> openSettings());
         binding.layoutCoin.setOnClickListener(v ->
-            LoginHelper.requireLogin(requireContext(), getDialogController(),
-                () -> CoinActivity.start(requireContext()))
+                LoginHelper.requireLogin(requireContext(), getDialogController(),
+                        () -> CoinActivity.start(requireContext()))
         );
         binding.layoutFavorite.setOnClickListener(v ->
-            LoginHelper.requireLogin(requireContext(), getDialogController(),
-                () -> FavoriteActivity.start(requireContext()))
+                LoginHelper.requireLogin(requireContext(), getDialogController(),
+                        () -> FavoriteActivity.start(requireContext()))
         );
         binding.layoutShare.setOnClickListener(v ->
-            LoginHelper.requireLogin(requireContext(), getDialogController(),
-                () -> ShareActivity.start(requireContext()))
+                LoginHelper.requireLogin(requireContext(), getDialogController(),
+                        () -> ShareActivity.start(requireContext()))
         );
     }
 

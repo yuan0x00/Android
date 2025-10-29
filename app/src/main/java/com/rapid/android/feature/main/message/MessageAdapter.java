@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.MessageBean;
 import com.rapid.android.databinding.ItemMessageBinding;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
             View root = binding.getRoot();
             String link = bean.getEffectiveLink();
             if (!TextUtils.isEmpty(link)) {
-                root.setOnClickListener(v -> ArticleWebViewActivity.start(v.getContext(), link, bean.getTitle()));
+                root.setOnClickListener(v -> ArticleWebViewUtil.start(v.getContext(), link, bean.getTitle()));
             } else {
                 root.setOnClickListener(null);
             }

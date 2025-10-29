@@ -152,50 +152,50 @@ public class MineViewModel extends BaseViewModel {
         }
 
         loading.setValue(true);
-        
+
         autoDispose(
-            userRepository.signIn()
-                .subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.io())
-                .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
-                .subscribe(
-                    result -> {
-                        loading.setValue(false);
-                        if (result != null && result.isSuccess()) {
-                            CoinBean coinInfo = result.getData();
-                            if (coinInfo != null) {
-                                toastMessage.setValue(BaseApplication.getAppContext()
-                                        .getString(R.string.mine_checkin_success_points, coinInfo.getCoinCount()));
-                            } else {
-                                toastMessage.setValue(BaseApplication.getAppContext()
-                                        .getString(R.string.mine_checkin_success_no_points));
-                            }
-                            signedInToday = true;
-                            saveSignInDate();
-                            MineUiState state = uiState.getValue();
-                            if (state != null) {
-                                uiState.setValue(state.withDailyAction(
-                                        BaseApplication.getAppContext().getString(R.string.mine_action_checked_in),
-                                        false));
-                            }
-                            refresh();
-                        } else {
-                            String errorMsg = result != null && result.getError() != null
-                                    ? result.getError().getMessage()
-                                    : null;
-                            toastMessage.setValue(errorMsg != null
-                                    ? BaseApplication.getAppContext().getString(
-                                            R.string.mine_checkin_failed_with_reason, errorMsg)
-                                    : BaseApplication.getAppContext().getString(R.string.mine_checkin_failed));
-                        }
-                    },
-                    throwable -> {
-                        loading.setValue(false);
-                        toastMessage.setValue(throwable != null && throwable.getMessage() != null
-                                ? BaseApplication.getAppContext().getString(
-                                        R.string.mine_checkin_failed_with_reason, throwable.getMessage())
-                                : BaseApplication.getAppContext().getString(R.string.mine_checkin_failed));
-                    }
-                )
+                userRepository.signIn()
+                        .subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.io())
+                        .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+                        .subscribe(
+                                result -> {
+                                    loading.setValue(false);
+                                    if (result != null && result.isSuccess()) {
+                                        CoinBean coinInfo = result.getData();
+                                        if (coinInfo != null) {
+                                            toastMessage.setValue(BaseApplication.getAppContext()
+                                                    .getString(R.string.mine_checkin_success_points, coinInfo.getCoinCount()));
+                                        } else {
+                                            toastMessage.setValue(BaseApplication.getAppContext()
+                                                    .getString(R.string.mine_checkin_success_no_points));
+                                        }
+                                        signedInToday = true;
+                                        saveSignInDate();
+                                        MineUiState state = uiState.getValue();
+                                        if (state != null) {
+                                            uiState.setValue(state.withDailyAction(
+                                                    BaseApplication.getAppContext().getString(R.string.mine_action_checked_in),
+                                                    false));
+                                        }
+                                        refresh();
+                                    } else {
+                                        String errorMsg = result != null && result.getError() != null
+                                                ? result.getError().getMessage()
+                                                : null;
+                                        toastMessage.setValue(errorMsg != null
+                                                ? BaseApplication.getAppContext().getString(
+                                                R.string.mine_checkin_failed_with_reason, errorMsg)
+                                                : BaseApplication.getAppContext().getString(R.string.mine_checkin_failed));
+                                    }
+                                },
+                                throwable -> {
+                                    loading.setValue(false);
+                                    toastMessage.setValue(throwable != null && throwable.getMessage() != null
+                                            ? BaseApplication.getAppContext().getString(
+                                            R.string.mine_checkin_failed_with_reason, throwable.getMessage())
+                                            : BaseApplication.getAppContext().getString(R.string.mine_checkin_failed));
+                                }
+                        )
         );
     }
 

@@ -11,7 +11,7 @@ import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.model.NavigationBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentNavigationBinding;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 import com.rapid.android.ui.common.UiFeedback;
@@ -48,7 +48,7 @@ public class NavigationFragment extends BaseFragment<NavigationViewModel, Fragme
 
             @Override
             public void onArticleClick(@NonNull ArticleListBean.Data article) {
-                ArticleWebViewActivity.start(requireContext(), article);
+                ArticleWebViewUtil.start(requireContext(), article);
             }
         });
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));

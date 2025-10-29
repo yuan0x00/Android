@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
-    tools:context=".feature.search.SearchActivity">
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     xmlns:tools="http://schemas.android.com/tools"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent"
+                                                     android:background="?attr/colorSurface"
+                                                     tools:context=".feature.search.SearchActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:background="?attr/colorSurface"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
             app:title="@string/search_title"
-            app:titleCentered="false" />
+            app:titleCentered="false"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/searchInputLayout"
@@ -39,7 +39,7 @@
                 android:hint="@string/search_input_hint"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,7 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/search_history_title"
-                    android:textAppearance="@style/TextAppearance.App.Subtitle" />
+                    android:textAppearance="@style/TextAppearance.App.Subtitle"/>
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/historyGroup"
@@ -81,7 +81,7 @@
                     android:layout_marginTop="@dimen/app_spacing_sm"
                     app:singleLine="false"
                     app:singleSelection="false"
-                    tools:itemCount="3" />
+                    tools:itemCount="3"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/clearHistoryButton"
@@ -89,19 +89,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/app_spacing_sm"
-                    android:text="@string/search_clear_history" />
+                    android:text="@string/search_clear_history"/>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/app_stroke_width"
                     android:layout_marginVertical="@dimen/app_spacing_lg"
-                    android:background="?attr/colorOutlineVariant" />
+                    android:background="?attr/colorOutlineVariant"/>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/search_hot_title"
-                    android:textAppearance="@style/TextAppearance.App.Subtitle" />
+                    android:textAppearance="@style/TextAppearance.App.Subtitle"/>
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/hotGroup"
@@ -110,7 +110,7 @@
                     android:layout_marginTop="@dimen/app_spacing_sm"
                     app:singleLine="false"
                     app:singleSelection="false"
-                    tools:itemCount="6" />
+                    tools:itemCount="6"/>
 
             </LinearLayout>
 
@@ -132,7 +132,7 @@
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_article" />
+                tools:listitem="@layout/item_article"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -145,7 +145,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/emptyView"
@@ -159,7 +159,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -2,16 +2,12 @@ package com.rapid.android.init.tasks;
 
 import com.rapid.android.analytics.AnalyticsInitializer;
 import com.rapid.android.core.common.app.BaseApplication;
-import com.rapid.android.core.common.app.init.InitTask;
+import com.rapid.android.core.common.app.init.Task;
 
-public class AnalyticsTask extends InitTask {
-    @Override
-    public String getName() {
-        return "Analytics";
-    }
+public class AnalyticsTask extends Task {
 
     @Override
-    public void execute() throws Exception {
+    public void run() {
         AnalyticsInitializer.init(BaseApplication.getAppContext());
     }
 }

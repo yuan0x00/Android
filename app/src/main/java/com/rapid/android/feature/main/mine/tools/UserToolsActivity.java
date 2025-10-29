@@ -16,7 +16,7 @@ import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.core.ui.utils.ToastUtils;
 import com.rapid.android.databinding.ActivityUserToolsBinding;
 import com.rapid.android.databinding.DialogUserToolBinding;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
 
 public class UserToolsActivity extends BaseActivity<UserToolsViewModel, ActivityUserToolsBinding>
@@ -34,8 +34,13 @@ public class UserToolsActivity extends BaseActivity<UserToolsViewModel, Activity
     }
 
     @Override
-    protected ActivityUserToolsBinding createViewBinding() {
-        return ActivityUserToolsBinding.inflate(getLayoutInflater());
+    protected ActivityUserToolsBinding createViewBinding(View rootView) {
+        return ActivityUserToolsBinding.bind(rootView);
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_user_tools;
     }
 
     @Override
@@ -90,7 +95,7 @@ public class UserToolsActivity extends BaseActivity<UserToolsViewModel, Activity
 
     @Override
     public void onOpen(UserToolBean tool) {
-        ArticleWebViewActivity.start(this, tool.getLink(), tool.getName());
+        ArticleWebViewUtil.start(this, tool.getLink(), tool.getName());
     }
 
     private void showEditDialog(UserToolBean tool) {

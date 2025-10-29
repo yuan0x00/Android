@@ -3,7 +3,6 @@ package com.rapid.android.navigation;
 import com.rapid.android.core.navigation.Router;
 import com.rapid.android.feature.search.SearchActivity;
 import com.rapid.android.feature.setting.SettingActivity;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
 
 /**
  * 应用路由配置
@@ -29,7 +28,6 @@ public final class AppRouter {
     public static void init() {
         Router.getInstance()
                 .register(PATH_SEARCH, SearchActivity.class)
-                .register(PATH_SETTINGS, SettingActivity.class)
-                .register(PATH_WEBVIEW, ArticleWebViewActivity.class);
+                .register(PATH_SETTINGS, SettingActivity.class);
     }
 }

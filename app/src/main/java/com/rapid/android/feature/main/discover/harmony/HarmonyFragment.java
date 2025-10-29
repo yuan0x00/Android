@@ -12,7 +12,7 @@ import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.core.domain.model.HarmonyIndexBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentHarmonyBinding;
-import com.rapid.android.feature.web.ArticleWebViewActivity;
+import com.rapid.android.feature.web.ArticleWebViewUtil;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.UiFeedback;
 
@@ -121,7 +121,7 @@ public class HarmonyFragment extends BaseFragment<HarmonyViewModel, FragmentHarm
         chip.setText(text);
         chip.setCheckable(false);
         chip.setEnsureMinTouchTargetSize(false);
-        chip.setOnClickListener(v -> ArticleWebViewActivity.start(v.getContext(), link, text));
+        chip.setOnClickListener(v -> ArticleWebViewUtil.start(v.getContext(), link, text));
         return chip;
     }
 }

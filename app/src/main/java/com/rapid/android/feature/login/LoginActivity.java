@@ -1,6 +1,5 @@
 package com.rapid.android.feature.login;
 
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,39 +31,6 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
     @Override
     protected ActivityLoginBinding createViewBinding(View rootView) {
         return ActivityLoginBinding.bind(rootView);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        binding.btnLogin.setOnClickListener(v -> {
-            String username = binding.inputAccount.getText().toString().trim();
-            String password = binding.inputPassword.getText().toString().trim();
-            if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-                ToastUtils.showLongToast(getDialogController(), getString(R.string.login_prompt_credentials));
-                return;
-            }
-            binding.btnLogin.setEnabled(false);
-            if (isRegisterMode) {
-                String confirm = binding.inputPasswordConfirm.getText() != null
-                        ? binding.inputPasswordConfirm.getText().toString().trim()
-                        : "";
-                if (!TextUtils.equals(password, confirm)) {
-                    ToastUtils.showLongToast(getDialogController(), getString(R.string.login_error_password_mismatch));
-                    binding.btnLogin.setEnabled(true);
-                    return;
-                }
-                viewModel.register(username, password, confirm);
-            } else {
-                viewModel.login(username, password);
-            }
-        });
-
-        binding.btnToggleMode.setOnClickListener(v -> {
-            isRegisterMode = !isRegisterMode;
-            updateMode();
-        });
     }
 
     @Override
@@ -100,6 +66,34 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
     @Override
     protected void initializeViews() {
         binding.toolbar.setNavigationOnClickListener(v -> finish());
+
+        binding.btnLogin.setOnClickListener(v -> {
+            String username = binding.inputAccount.getText().toString().trim();
+            String password = binding.inputPassword.getText().toString().trim();
+            if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
+                ToastUtils.showLongToast(getDialogController(), getString(R.string.login_prompt_credentials));
+                return;
+            }
+            binding.btnLogin.setEnabled(false);
+            if (isRegisterMode) {
+                String confirm = binding.inputPasswordConfirm.getText() != null
+                        ? binding.inputPasswordConfirm.getText().toString().trim()
+                        : "";
+                if (!TextUtils.equals(password, confirm)) {
+                    ToastUtils.showLongToast(getDialogController(), getString(R.string.login_error_password_mismatch));
+                    binding.btnLogin.setEnabled(true);
+                    return;
+                }
+                viewModel.register(username, password, confirm);
+            } else {
+                viewModel.login(username, password);
+            }
+        });
+
+        binding.btnToggleMode.setOnClickListener(v -> {
+            isRegisterMode = !isRegisterMode;
+            updateMode();
+        });
 
         WindowInsetsUtils.addImeVisibilityListener(binding.contentContainer, isVisible ->
                 binding.layoutPrivacy.setVisibility(isVisible ? android.view.View.GONE : android.view.View.VISIBLE));

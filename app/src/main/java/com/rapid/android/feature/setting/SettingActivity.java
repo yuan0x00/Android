@@ -2,7 +2,6 @@ package com.rapid.android.feature.setting;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -20,8 +19,8 @@ import com.rapid.android.utils.ThemeManager;
 public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySettingBinding> {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initializeViews() {
+        super.initializeViews();
         setupToolbar();
         setupClickListeners();
         viewModel.loadSettings();
@@ -241,7 +240,8 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
     protected void onResume() {
         super.onResume();
         // 从设置页返回时，更新通知权限状态
-        updateNotificationSwitchState();
+        //fixme
+//        updateNotificationSwitchState();
     }
 
     private void updateNotificationSwitchState() {

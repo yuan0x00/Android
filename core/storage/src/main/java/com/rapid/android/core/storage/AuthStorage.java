@@ -1,4 +1,4 @@
-package com.rapid.android.core.datastore;
+package com.rapid.android.core.storage;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;

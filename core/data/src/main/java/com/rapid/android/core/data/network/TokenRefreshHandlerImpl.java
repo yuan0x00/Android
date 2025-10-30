@@ -6,12 +6,12 @@ import androidx.annotation.NonNull;
 
 import com.rapid.android.core.data.repository.RepositoryProvider;
 import com.rapid.android.core.data.session.SessionManager;
-import com.rapid.android.core.datastore.AuthStorage;
 import com.rapid.android.core.domain.model.LoginBean;
 import com.rapid.android.core.domain.repository.UserRepository;
 import com.rapid.android.core.domain.result.DomainError;
 import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.core.network.interceptor.AuthInterceptor;
+import com.rapid.android.core.storage.AuthStorage;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

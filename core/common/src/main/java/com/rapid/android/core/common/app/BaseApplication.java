@@ -5,10 +5,10 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.rapid.android.core.common.app.init.Task;
-import com.rapid.android.core.common.app.init.TaskManager;
-import com.rapid.android.core.common.app.init.tasks.LogKitTask;
-import com.rapid.android.core.common.app.init.tasks.StorageTask;
+import com.rapid.android.core.common.app.tasks.LogKitTask;
+import com.rapid.android.core.common.app.tasks.StorageTask;
+import com.rapid.android.core.initializer.Task;
+import com.rapid.android.core.initializer.TaskManager;
 
 import java.util.List;
 

@@ -2,13 +2,13 @@ package com.rapid.android.init.tasks;
 
 import com.rapid.android.BuildConfig;
 import com.rapid.android.core.common.app.BaseApplication;
-import com.rapid.android.core.common.app.init.Task;
-import com.rapid.android.core.common.app.init.TaskType;
-import com.rapid.android.core.common.app.init.tasks.StorageTask;
+import com.rapid.android.core.common.app.tasks.StorageTask;
 import com.rapid.android.core.data.network.AuthHeaderProvider;
 import com.rapid.android.core.data.network.PersistentCookieStore;
 import com.rapid.android.core.data.network.TokenRefreshHandlerImpl;
 import com.rapid.android.core.data.session.SessionManager;
+import com.rapid.android.core.initializer.Task;
+import com.rapid.android.core.initializer.TaskType;
 import com.rapid.android.core.log.LogKit;
 import com.rapid.android.core.network.NetManager;
 import com.rapid.android.core.network.client.NetworkClient;

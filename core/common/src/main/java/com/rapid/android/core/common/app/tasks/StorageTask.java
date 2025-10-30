@@ -1,10 +1,11 @@
-package com.rapid.android.core.common.app.init.tasks;
+package com.rapid.android.core.common.app.tasks;
+
 
 import com.rapid.android.core.common.app.BaseApplication;
-import com.rapid.android.core.common.app.init.Task;
-import com.rapid.android.core.common.app.init.TaskType;
-import com.rapid.android.core.datastore.AuthStorage;
-import com.rapid.android.core.datastore.DefaultDataStore;
+import com.rapid.android.core.initializer.Task;
+import com.rapid.android.core.initializer.TaskType;
+import com.rapid.android.core.storage.AuthStorage;
+import com.rapid.android.core.storage.DefaultDataStore;
 import com.tencent.mmkv.MMKV;
 
 public class StorageTask extends Task {

@@ -14,6 +14,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment)
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
-    implementation("androidx.webkit:webkit:1.14.0")
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.androidx.webkit)
 }

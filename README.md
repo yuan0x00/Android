@@ -15,3 +15,20 @@
   - [x] 池化
   - [ ] 补充WebViewFragment页面
   - [ ] 业务WebViewFragment自定义
+
+**CORE**
+
+- [ ] :core:analytics
+- [ ] :core:common
+- [x] :core:data
+- [x] :core:domain
+- [ ] :core:image
+- [x] :core:initializer
+- [x] :core:log
+- [ ] :core:navigation
+- [ ] :core:network
+- [ ] :core:permission
+- [ ] :core:storage
+- [ ] :core:theme
+- [ ] :core:ui
+- [x] :core:webview

@@ -10,10 +10,10 @@ import com.rapid.android.R;
 import com.rapid.android.core.common.app.BaseApplication;
 import com.rapid.android.core.data.repository.RepositoryProvider;
 import com.rapid.android.core.data.session.SessionManager;
-import com.rapid.android.core.datastore.DefaultDataStore;
-import com.rapid.android.core.datastore.IDataStore;
 import com.rapid.android.core.domain.model.*;
 import com.rapid.android.core.domain.repository.UserRepository;
+import com.rapid.android.core.storage.DefaultDataStore;
+import com.rapid.android.core.storage.IDataStore;
 import com.rapid.android.core.ui.presentation.BaseViewModel;
 
 import java.text.SimpleDateFormat;

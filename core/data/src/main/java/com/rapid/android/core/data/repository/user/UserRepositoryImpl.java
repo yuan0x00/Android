@@ -3,12 +3,12 @@ package com.rapid.android.core.data.repository.user;
 import com.rapid.android.core.data.mapper.DomainResultMapper;
 import com.rapid.android.core.data.network.NetApis;
 import com.rapid.android.core.data.network.PersistentCookieStore;
-import com.rapid.android.core.datastore.AuthStorage;
 import com.rapid.android.core.domain.model.*;
 import com.rapid.android.core.domain.repository.UserRepository;
 import com.rapid.android.core.domain.result.DomainError;
 import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.core.network.base.BaseResponse;
+import com.rapid.android.core.storage.AuthStorage;
 
 import java.util.List;
 

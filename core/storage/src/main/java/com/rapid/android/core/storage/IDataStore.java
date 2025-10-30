@@ -1,4 +1,4 @@
-package com.rapid.android.core.datastore;
+package com.rapid.android.core.storage;
 
 /**
  * 数据存储接口定义

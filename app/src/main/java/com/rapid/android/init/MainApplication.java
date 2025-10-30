@@ -3,7 +3,7 @@ package com.rapid.android.init;
 import android.os.Looper;
 
 import com.rapid.android.core.common.app.BaseApplication;
-import com.rapid.android.core.common.app.init.Task;
+import com.rapid.android.core.initializer.Task;
 import com.rapid.android.init.tasks.*;
 import com.rapid.compose.core.webview.core.WebViewManager;
 

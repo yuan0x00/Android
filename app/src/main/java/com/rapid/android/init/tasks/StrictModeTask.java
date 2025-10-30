@@ -3,7 +3,7 @@ package com.rapid.android.init.tasks;
 import android.os.StrictMode;
 
 import com.rapid.android.BuildConfig;
-import com.rapid.android.core.common.app.init.Task;
+import com.rapid.android.core.initializer.Task;
 
 public class StrictModeTask extends Task {
 

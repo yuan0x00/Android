@@ -2,9 +2,9 @@ package com.rapid.android.core.data.network;
 
 import androidx.annotation.NonNull;
 
-import com.rapid.android.core.datastore.AuthStorage;
 import com.rapid.android.core.log.LogKit;
 import com.rapid.android.core.network.client.NetworkConfig;
+import com.rapid.android.core.storage.AuthStorage;
 
 import java.util.Collections;
 import java.util.HashMap;

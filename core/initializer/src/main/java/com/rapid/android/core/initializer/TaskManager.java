@@ -1,4 +1,4 @@
-package com.rapid.android.core.common.app.init;
+package com.rapid.android.core.initializer;
 
 import android.content.Context;
 import android.content.SharedPreferences;

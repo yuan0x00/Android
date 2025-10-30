@@ -1,8 +1,8 @@
-package com.rapid.android.core.common.app.init.tasks;
+package com.rapid.android.core.common.app.tasks;
 
 import com.rapid.android.core.common.BuildConfig;
-import com.rapid.android.core.common.app.init.Task;
-import com.rapid.android.core.common.app.init.TaskType;
+import com.rapid.android.core.initializer.Task;
+import com.rapid.android.core.initializer.TaskType;
 import com.rapid.android.core.log.LogKit;
 
 public class LogKitTask extends Task {

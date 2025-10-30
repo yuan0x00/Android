@@ -1,4 +1,4 @@
-package com.rapid.android.core.datastore;
+package com.rapid.android.core.storage;
 
 import com.tencent.mmkv.MMKV;
 

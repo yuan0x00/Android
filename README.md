@@ -9,9 +9,9 @@
     - Activity耗时优化
         - [x] 异步加载布局
 - [x] data
-    - Network API
+    - Network Api
 - [x] domain
-    - Network API Result Model
+    - Network Api Result Model
 - [ ] image
 - [x] initializer
     - Application耗时优化

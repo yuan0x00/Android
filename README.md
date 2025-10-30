@@ -1,34 +1,33 @@
-**TODO**
+# TODO
 
-- 冷启动
-  - [x] Application异步启动调度管理
-    - 任务DAG分析依赖循环
-    - 任务历史耗时优化顺序
-  - [x] MainActivity耗时优化
-    - 异步加载布局
-- 网络框架
-  - [ ] 网络框架设计解耦
-- 弹窗管理
-  - [ ] 嵌套Fragment传递Host问题
-- WebView
-  - [x] 预加载
-  - [x] 池化
-  - [ ] 补充WebViewFragment页面
-  - [ ] 业务WebViewFragment自定义
+## app
 
-**CORE**
+- [ ] 首页左侧滑页
 
-- [ ] :core:analytics
-- [ ] :core:common
-- [x] :core:data
-- [x] :core:domain
-- [ ] :core:image
-- [x] :core:initializer
-- [x] :core:log
-- [ ] :core:navigation
-- [ ] :core:network
-- [ ] :core:permission
-- [ ] :core:storage
-- [ ] :core:theme
-- [ ] :core:ui
-- [x] :core:webview
+## library
+
+- [ ] analytics
+- [ ] common
+    - Activity耗时优化
+        - [x] 异步加载布局
+- [x] data
+- [x] domain
+- [ ] image
+- [x] initializer
+    - Application耗时优化
+        - [x] 任务DAG图检测循环依赖
+        - [x] 任务历史耗时调整顺序
+- [x] log
+- [ ] navigation
+- [ ] network
+    - [ ] 网络框架设计
+- [ ] permission
+- [ ] storage
+- [ ] theme
+- [ ] ui
+    - 弹窗管理
+        - [ ] 嵌套Fragment传递Host问题
+- [x] webview
+    - [x] 预加载
+    - [x] 池化
+    - [ ] WebViewFragment页面功能

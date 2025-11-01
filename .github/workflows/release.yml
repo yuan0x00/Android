@@ -71,11 +71,6 @@ jobs:
           echo "- 构建时间: $(date)" >> release_notes.md
           echo "- 触发方式: ${{ github.event_name }}" >> release_notes.md
           echo "- Commit: ${{ github.sha }}" >> release_notes.md
-          
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "" >> release_notes.md
-            echo "*手动触发构建*" >> release_notes.md
-          fi
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1

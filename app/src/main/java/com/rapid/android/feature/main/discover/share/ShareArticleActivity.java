@@ -36,7 +36,7 @@ public class ShareArticleActivity extends BaseActivity<ShareArticleViewModel, Ac
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.activity_share;
+        return R.layout.activity_share_article;
     }
 
     @Override

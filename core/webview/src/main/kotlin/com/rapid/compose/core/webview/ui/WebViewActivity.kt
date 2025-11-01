@@ -3,6 +3,7 @@ package com.rapid.compose.core.webview.ui
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.rapid.android.core.common.utils.WindowInsetsUtils
 import com.rapid.compose.core.webview.R
 import com.rapid.compose.core.webview.callback.WebViewConfig
@@ -33,11 +34,20 @@ class WebViewActivity : AppCompatActivity(),
 
         WindowInsetsUtils.applySystemWindowInsets(findViewById(android.R.id.content))
 
-        val url = intent.getStringExtra(WebViewFragment.ARG_URL)
         val title = intent.getStringExtra(EXTRA_TITLE)
-        val config = intent.getSerializableExtra(WebViewFragment.ARG_CONFIG) as? WebViewConfig
 
-        title?.let { setTitle(it) }
+        val toolbar = findViewById<Toolbar?>(R.id.toolbar)
+        if (toolbar != null) {
+            setSupportActionBar(toolbar)
+            if (supportActionBar != null) {
+                supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                title?.let { supportActionBar?.title = it }
+            }
+            toolbar.setNavigationOnClickListener { finish() }
+        }
+
+        val url = intent.getStringExtra(WebViewFragment.ARG_URL)
+        val config = intent.getSerializableExtra(WebViewFragment.ARG_CONFIG) as? WebViewConfig
 
         // 显示 WebViewFragment
         if (supportFragmentManager.findFragmentById(R.id.container) == null) {

@@ -1,3 +1,17 @@
+<table>
+  <tr>
+    <td>
+      <img src="./readme/screenshot_1.png" width="1080" alt="">
+    </td>
+    <td>
+      <img src="./readme/screenshot_2.png" width="1080" alt="">
+    </td>
+    <td>
+      <img src="./readme/screenshot_3.png" width="1080" alt="">
+    </td>
+  </tr>
+</table>
+
 ## app
 
 - [ ] 首页左侧滑页

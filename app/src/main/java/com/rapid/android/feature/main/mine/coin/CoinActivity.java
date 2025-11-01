@@ -55,10 +55,10 @@ public class CoinActivity extends BaseActivity<CoinViewModel, ActivityCoinBindin
     @Override
     protected void initializeViews() {
         setSupportActionBar(binding.toolbar);
+        binding.toolbar.setTitle(R.string.coin_title);
         binding.toolbar.setNavigationOnClickListener(v -> finish());
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(R.string.coin_title);
         }
 
         recordAdapter = new CoinRecordAdapter();

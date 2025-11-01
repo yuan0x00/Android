@@ -32,6 +32,11 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.core_ui_activity_container);
+
+        if (shouldObserveNetworkState()) {
+            getLifecycle().addObserver(NetworkStateManager.getInstance());
+        }
+
         setContentViewAsync(getLayoutResId());
         viewModel = createViewModel();
     }
@@ -49,15 +54,9 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
 
     private void initView() {
         dialogController = DialogController.from(this, binding.getRoot());
-
-        if (shouldObserveNetworkState()) {
-            getLifecycle().addObserver(NetworkStateManager.getInstance());
-        }
-
         if (shouldApplyWindowInsets()) {
             WindowInsetsUtils.applySystemWindowInsets(binding.getRoot());
         }
-
         initializeViews();
         setupObservers();
         loadData();

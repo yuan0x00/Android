@@ -12,8 +12,7 @@
         style="@style/Widget.Material3.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorSurface"
-        app:titleTextAppearance="@style/TextAppearance.App.Subtitle"/>
+        android:background="?attr/colorSurface"/>
 
     <FrameLayout
         android:layout_width="match_parent"

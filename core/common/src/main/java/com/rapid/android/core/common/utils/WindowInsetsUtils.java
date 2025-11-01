@@ -3,6 +3,7 @@ package com.rapid.android.core.common.utils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -26,6 +27,9 @@ public final class WindowInsetsUtils {
      * 使用后，内容不会被系统栏遮挡
      */
     public static void applySystemWindowInsets(@NonNull View view) {
+        if (view instanceof CoordinatorLayout) {
+            view.setFitsSystemWindows(true);
+        }
         ViewCompat.setOnApplyWindowInsetsListener(view, (v, insets) -> {
             v.setPadding(
                     insets.getInsets(Type.systemBars()).left,

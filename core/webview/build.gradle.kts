@@ -5,6 +5,10 @@ plugins {
 
 android {
     namespace = "com.rapid.compose.core.webview"
+
+    kotlin {
+        jvmToolchain(17)
+    }
 }
 
 dependencies {

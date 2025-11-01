@@ -6,7 +6,6 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Properties;
 
-import local.ConfigResolver;
 import local.JavaAndroid;
 import local.PropertiesLoader;
 
@@ -16,7 +15,7 @@ public class AndroidLibraryConventionPlugin implements Plugin<@NonNull Project> 
     public void apply(Project target) {
         target.getPluginManager().apply("com.android.library");
 
-        Properties config = PropertiesLoader.loadPropertiesFile(target, ConfigResolver.resolveConfigFile(target));
+        Properties config = PropertiesLoader.loadPropertiesFile(target, PropertiesLoader.CONFIG_PROPERTIES);
 
         int compileSdk = PropertiesLoader.getPropertyInt(config, "compileSdk");
         int minSdk = PropertiesLoader.getPropertyInt(config, "minSdk");
@@ -30,6 +29,10 @@ public class AndroidLibraryConventionPlugin implements Plugin<@NonNull Project> 
 
         extension.getBuildTypes().configureEach(buildType -> {
             if ("release".equals(buildType.getName())) {
+                buildType.proguardFile(extension.getDefaultProguardFile("proguard-android-optimize.txt"));
+                buildType.proguardFile(target.getLayout().getProjectDirectory().file("proguard-rules.pro").getAsFile());
+            }
+            if ("debug".equals(buildType.getName())) {
                 buildType.proguardFile(extension.getDefaultProguardFile("proguard-android-optimize.txt"));
                 buildType.proguardFile(target.getLayout().getProjectDirectory().file("proguard-rules.pro").getAsFile());
             }

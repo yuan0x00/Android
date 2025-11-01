@@ -82,16 +82,16 @@
 
 # ==================== Model Classes ====================
 # 保留所有的数据模型类（根据项目实际情况调整）
--keep class com.rapid.android.core.domain.model.** { *; }
--keep class com.rapid.android.core.data.model.** { *; }
+-keep class com.rapid.android.core.domain.** { *; }
+-keep class com.rapid.android.core.data.** { *; }
 
 # ==================== ARouter (if used) ====================
 -keep public class com.alibaba.android.arouter.routes.**{*;}
 -keep public class com.alibaba.android.arouter.facade.**{*;}
--keep cla#ss * implements com.alibaba.android.arouter.facade.template.ISyringe{*;}
+#-keep class * implements com.alibaba.android.arouter.facade.template.ISyringe{*;}
 
 # 如果使用了 byType 的方式获取 Service，需添加下面规则，保护接口
--keep# interface * implements com.alibaba.android.arouter.facade.template.IProvider
+#-keep interface * implements com.alibaba.android.arouter.facade.template.IProvider
 
 # 如果使用了 单类注入，即不定义接口实现 IProvider，需添加下面规则，保护实现
 # -keep class * implements com.alibaba.android.arouter.facade.template.IProvider
@@ -119,3 +119,5 @@
 # ==================== Keep line numbers for crash reports ====================
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
+
+-dontoptimize

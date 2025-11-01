@@ -2,37 +2,6 @@ plugins {
     alias(libs.plugins.local.android.application)
 }
 
-android {
-    signingConfigs {
-        release {
-            // 从 keystore.properties 读取签名配置
-            def keystorePropertiesFile = rootProject.file("keystore.properties")
-            def keystoreProperties = new Properties()
-
-            if (keystorePropertiesFile.exists()) {
-                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-                storeFile rootProject.file(keystoreProperties['storeFile'])
-                storePassword keystoreProperties['storePassword']
-                keyAlias keystoreProperties['keyAlias']
-                keyPassword keystoreProperties['keyPassword']
-            } else {
-                // 如果 keystore.properties 不存在，使用默认值（仅用于初始化，不应提交到版本控制）
-                logger.warn("Warning: keystore.properties not found. Using default signing config.")
-                storeFile rootProject.file('app/release.jks')
-                storePassword 'android'
-                keyAlias 'key0'
-                keyPassword 'android'
-            }
-        }
-    }
-
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
-        }
-    }
-}
-
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
     implementation project(':core:common')

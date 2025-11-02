@@ -86,7 +86,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:background="?attr/colorSurfaceDim"
+            android:background="@drawable/bg_article_class"
             android:maxLines="1"
             android:gravity="center"
             android:paddingHorizontal="@dimen/app_spacing_sm"

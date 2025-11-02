@@ -75,7 +75,7 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
         UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
         viewModel.getBannerList().observe(this, bannerList -> {
             if (bannerList != null) {
-                bannerAdapter.setData(bannerList);
+//                bannerAdapter.setData(bannerList);
             }
         });
         viewModel.getPopularSections().observe(this, sections -> {
@@ -106,14 +106,14 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
 
         ArticleListBean articleListBean = new ArticleListBean();
 
-        bannerAdapter = new BannerAdapter(new ArrayList<>());
+//        bannerAdapter = new BannerAdapter(new ArrayList<>());
         popularSectionAdapter = new PopularSectionRowAdapter(this);
         topArticleAdapter = new ArticleAdapter(getDialogController(), articleListBean, true);
         articleAdapter = new ArticleAdapter(getDialogController(), articleListBean);
         moduleEntryAdapter = new ModuleEntryAdapter(requireContext());
         moduleEntryAdapter.addFragments();
 
-        ConcatAdapter concatAdapter = new ConcatAdapter(bannerAdapter, moduleEntryAdapter, popularSectionAdapter, topArticleAdapter, articleAdapter);
+        ConcatAdapter concatAdapter = new ConcatAdapter(moduleEntryAdapter, popularSectionAdapter, topArticleAdapter, articleAdapter);
         binding.recyclerView.setAdapter(concatAdapter);
         RecyclerViewDecorations.addSpacing(binding.recyclerView);
 

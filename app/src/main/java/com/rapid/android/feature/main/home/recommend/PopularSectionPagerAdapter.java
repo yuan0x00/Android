@@ -5,11 +5,14 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class PopularSectionPagerAdapter extends FragmentStateAdapter {
 
     private final List<PopularSection> sections = new ArrayList<>();
+    private final Map<Integer, PopularSectionFragment> fragmentCache = new HashMap<>();
 
     PopularSectionPagerAdapter(@NonNull Fragment fragment) {
         super(fragment);
@@ -26,7 +29,9 @@ class PopularSectionPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return PopularSectionFragment.newInstance(sections.get(position));
+        PopularSectionFragment fragment = PopularSectionFragment.newInstance(sections.get(position));
+        fragmentCache.put(position, fragment);
+        return fragment;
     }
 
     @Override
@@ -41,4 +46,9 @@ class PopularSectionPagerAdapter extends FragmentStateAdapter {
         }
         return "";
     }
+
+    Fragment getFragmentAt(int position) {
+        return fragmentCache.get(position);
+    }
+
 }

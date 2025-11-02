@@ -106,12 +106,6 @@ public class PopularSectionFragment extends Fragment {
         return "";
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
     private static class SerializableSection implements java.io.Serializable {
         private final String title;
         private final List<CategoryNodeBean> chapters;

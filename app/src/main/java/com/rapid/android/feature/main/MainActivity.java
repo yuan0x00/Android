@@ -19,6 +19,7 @@ import com.rapid.android.feature.login.LoginActivity;
 import com.rapid.android.feature.main.home.HomeFragment;
 import com.rapid.android.feature.main.mine.MineFragment;
 import com.rapid.android.feature.main.plaza.PlazaFragment;
+import com.rapid.android.ui.view.DrawerLayoutHelper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -56,6 +57,15 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         super.initializeViews();
         setBackToTask();
         setTabLayout(null);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.drawerFragmentContainer, new MineFragment())
+                .commit();
+
+
+
+        DrawerLayoutHelper.setDrawerLeftEdgeSizeWithContentPush(this, binding.drawerLayout, 0.3f);
     }
 
     private void setBackToTask() {
@@ -115,11 +125,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 //                        R.drawable.notifications_24px,
 //                        R.drawable.notifications_fill_24px,
 //                        MessageFragment.class))
-                .addTab(new BottomTabNavigator.TabItem(
-                        getString(R.string.main_tab_profile),
-                        R.drawable.person_24px,
-                        R.drawable.person_fill_24px,
-                        MineFragment.class))
+//                .addTab(new BottomTabNavigator.TabItem(
+//                        getString(R.string.main_tab_profile),
+//                        R.drawable.person_24px,
+//                        R.drawable.person_fill_24px,
+//                        MineFragment.class))
                 .setOnTabSelectInterceptor(this::shouldAllowTabSelection)
                 .build();
         // 恢复之前选中的 Tab

@@ -6,6 +6,10 @@ import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rapid.android.R;
@@ -63,6 +67,18 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 .replace(R.id.drawerFragmentContainer, new MineFragment())
                 .commit();
 
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.drawerLayout, (v, insets) -> {
+            Insets statusBars = insets.getInsets(WindowInsetsCompat.Type.statusBars());
+            binding.navigationView.setPadding(
+                    binding.navigationView.getPaddingLeft(),
+                    statusBars.top,
+                    binding.navigationView.getPaddingRight(),
+                    binding.navigationView.getPaddingBottom()
+            );
+            return insets;
+        });
 
 
         DrawerLayoutHelper.setDrawerLeftEdgeSizeWithContentPush(this, binding.drawerLayout, 0.3f);

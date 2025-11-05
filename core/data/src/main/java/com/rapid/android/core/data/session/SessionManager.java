@@ -25,6 +25,7 @@ public class SessionManager {
     private final MutableLiveData<SessionState> sessionState = new MutableLiveData<>(SessionState.GUEST);
     public final LiveData<SessionState> state = sessionState;
     private final AuthStorage authStorage;
+    private final AtomicBoolean initialized = new AtomicBoolean(false);
 
     private SessionManager() {
         authStorage = AuthStorage.getInstance();
@@ -53,8 +54,27 @@ public class SessionManager {
         return state != null && state.isLoggedIn();
     }
 
+    public boolean isGuest() {
+        return !isLoggedIn();
+    }
+
+    private void setState(SessionState newState) {
+        SessionState current = sessionState.getValue();
+        if (current != null) {
+            boolean sameLogin = current.isLoggedIn() == newState.isLoggedIn();
+            boolean sameUserRef = current.getUserInfo() == newState.getUserInfo();
+            if (sameLogin && sameUserRef) {
+                return;
+            }
+        }
+        sessionState.postValue(newState);
+    }
+
     // 初始化 - 应用启动时调用
     public void initialize() {
+        if (!initialized.compareAndSet(false, true)) {
+            return;
+        }
         disposables.add(
                 authStorage.isLoggedIn()
                         .subscribeOn(Schedulers.io())
@@ -63,14 +83,14 @@ public class SessionManager {
                                 isLoggedIn -> {
                                     if (Boolean.TRUE.equals(isLoggedIn)) {
                                         // 已登录，获取用户信息
-                                        sessionState.postValue(createCachedSessionState());
+                                        setState(createCachedSessionState());
                                         refreshUserInfoInternal();
                                     } else {
                                         // 未登录，设置为访客状态
-                                        sessionState.postValue(SessionState.GUEST);
+                                        setState(SessionState.GUEST);
                                     }
                                 },
-                                throwable -> sessionState.postValue(SessionState.GUEST)
+                                throwable -> setState(SessionState.GUEST)
                         )
         );
     }
@@ -84,23 +104,27 @@ public class SessionManager {
         SessionState newState = userInfo != null ?
                 SessionState.loggedIn(userInfo) :
                 SessionState.loggedIn(null);
-        sessionState.postValue(newState);
+        setState(newState);
     }
 
     // 登出
     public void logout() {
+        // 立即切换为访客态，保证 UI 立刻感知到登出
+        clearActiveRequests();
+        setState(SessionState.GUEST);
+
         disposables.add(
                 userRepository.logout()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 result -> {
+                                    // 已经是访客态，无需重复设置
                                     clearActiveRequests();
-                                    sessionState.postValue(SessionState.GUEST);
                                 },
                                 throwable -> {
+                                    // 已经是访客态，无需重复设置
                                     clearActiveRequests();
-                                    sessionState.postValue(SessionState.GUEST);
                                 }
                         )
         );
@@ -109,7 +133,7 @@ public class SessionManager {
     // 强制登出（如token过期）
     public void forceLogout() {
         clearActiveRequests();
-        sessionState.postValue(SessionState.GUEST);
+        setState(SessionState.GUEST);
     }
 
     // 刷新用户信息
@@ -135,7 +159,7 @@ public class SessionManager {
                                     if (result != null && result.isSuccess() && result.getData() != null) {
                                         SessionState currentState = sessionState.getValue();
                                         if (currentState != null && currentState.isLoggedIn()) {
-                                            sessionState.postValue(SessionState.loggedIn(result.getData()));
+                                            setState(SessionState.loggedIn(result.getData()));
                                         }
                                     }
                                     // 如果获取失败，保持当前状态，不改变登录状态
@@ -145,7 +169,7 @@ public class SessionManager {
                                     // 保持当前状态，不改变登录状态，只用户信息为null
                                     SessionState currentState = sessionState.getValue();
                                     if (currentState != null && currentState.isLoggedIn()) {
-                                        sessionState.postValue(SessionState.loggedIn(null));
+                                        setState(SessionState.loggedIn(null));
                                     }
                                 }
                         )
@@ -185,7 +209,7 @@ public class SessionManager {
     public void updateUserInfo(@Nullable UserInfoBean userInfo) {
         SessionState currentState = sessionState.getValue();
         if (currentState != null && currentState.isLoggedIn()) {
-            sessionState.postValue(SessionState.loggedIn(userInfo));
+            setState(SessionState.loggedIn(userInfo));
         }
     }
 

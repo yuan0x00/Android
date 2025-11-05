@@ -146,20 +146,13 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         });
 
         SessionManager.getInstance().state.observe(this, state -> {
-            if (navigator == null) {
-                return;
-            }
-            if (!state.isLoggedIn() && navigator.getCurrentPosition() >= 2) {
-                ToastViewUtils.showShortToast(getDialogController(), getString(R.string.mine_toast_require_login));
-                navigator.selectTab(0);
-            }
-        });
-
-        SessionManager.getInstance().state.observe(this, state -> {
             if (state == null || navigator == null) {
                 return;
             }
             if (!state.isLoggedIn()) {
+                if (navigator.getCurrentPosition() >= 2) {
+                    ToastViewUtils.showShortToast(getDialogController(), getString(R.string.mine_toast_require_login));
+                }
                 navigator.selectTab(0);
             }
         });

@@ -70,7 +70,7 @@ public class MineViewModel extends BaseViewModel {
     private void handleGuestState() {
         signedInToday = false;
         shareCountLoaded = false;
-        uiState.setValue(MineUiState.guest());
+        uiState.setValue(buildGuestUiState());
         loading.setValue(false);
     }
 
@@ -94,11 +94,9 @@ public class MineViewModel extends BaseViewModel {
      */
     private void updateUiWithUserInfo(UserInfoBean userInfo) {
         signedInToday = hasSignedInToday();
-        MineUiState newState = MineUiState.from(userInfo, signedInToday);
-        uiState.setValue(newState);
+        uiState.setValue(buildLoggedInUiState(userInfo, signedInToday));
         loading.setValue(false);
 
-        // 加载分享数量（如果需要）
         if (!shareCountLoaded) {
             loadShareCount();
         }
@@ -231,11 +229,19 @@ public class MineViewModel extends BaseViewModel {
         );
     }
 
-    private void updateShareDisplay(String display) {
+    private void updateShareDisplay(String shareCountDisplay) {
         MineUiState currentState = uiState.getValue();
         if (currentState != null) {
-            uiState.setValue(currentState.withShareCount(display));
+            uiState.setValue(currentState.withShareCount(shareCountDisplay));
         }
+    }
+
+    private MineUiState buildGuestUiState() {
+        return MineUiState.guest();
+    }
+
+    private MineUiState buildLoggedInUiState(UserInfoBean userInfo, boolean hasSignedInToday) {
+        return MineUiState.from(userInfo, hasSignedInToday);
     }
 
     // 工具方法

@@ -19,7 +19,7 @@ public class FragmentContainerActivity extends AppCompatActivity {
 
     public static void start(Context context, Class<? extends Fragment> fragmentClass, String title) {
         Intent intent = new Intent(context, FragmentContainerActivity.class);
-        intent.putExtra(EXTRA_FRAGMENT_CLASS, fragmentClass);
+        intent.putExtra(EXTRA_FRAGMENT_CLASS, fragmentClass.getName());
         intent.putExtra(EXTRA_TITLE, title);
         context.startActivity(intent);
     }
@@ -36,19 +36,23 @@ public class FragmentContainerActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(title);
+            getSupportActionBar().setTitle(title != null ? title : "");
         }
         toolbar.setNavigationOnClickListener(v -> finish());
 
         // 添加 Fragment
         if (savedInstanceState == null) {
-            Class<? extends Fragment> fragmentClass =
-                    //todo ?
-                    (Class<? extends Fragment>) getIntent().getSerializableExtra(EXTRA_FRAGMENT_CLASS);
+            String fragmentClassName = getIntent().getStringExtra(EXTRA_FRAGMENT_CLASS);
+            if (fragmentClassName == null || fragmentClassName.isEmpty()) {
+                Toast.makeText(this, "无法打开页面", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
 
             try {
-                //todo ?
-                Fragment fragment = fragmentClass.newInstance();
+                Fragment fragment = getSupportFragmentManager()
+                        .getFragmentFactory()
+                        .instantiate(getClassLoader(), fragmentClassName);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container, fragment)

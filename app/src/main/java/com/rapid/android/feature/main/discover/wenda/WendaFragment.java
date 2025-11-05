@@ -11,7 +11,6 @@ import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentWendaBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.List;
 
@@ -51,7 +50,6 @@ public class WendaFragment extends BaseFragment<WendaViewModel, FragmentWendaBin
                 stateController.stopRefreshing();
             }
         });
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
     }
 
     @Override

@@ -10,9 +10,11 @@ import com.rapid.android.core.data.repository.RepositoryProvider;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.domain.model.LoginBean;
 import com.rapid.android.core.domain.repository.UserRepository;
+import com.rapid.android.core.storage.AuthStorage;
 import com.rapid.android.core.ui.presentation.BaseViewModel;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class LoginViewModel extends BaseViewModel {
@@ -20,9 +22,11 @@ public class LoginViewModel extends BaseViewModel {
     private final MutableLiveData<Boolean> loginSuccess = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<String> infoMessage = new MutableLiveData<>();
+    private final AuthStorage authStorage;
 
     public LoginViewModel() {
-        this.userRepository = RepositoryProvider.getUserRepository();
+        authStorage = AuthStorage.getInstance();
+        userRepository = RepositoryProvider.getUserRepository();
     }
 
     public void login(String username, String password) {
@@ -40,10 +44,10 @@ public class LoginViewModel extends BaseViewModel {
                                 if (storedUsername.isEmpty()) {
                                     storedUsername = username;
                                 }
-                                return userRepository.saveAuthData(token, userId, storedUsername, password)
-                                        .andThen(io.reactivex.rxjava3.core.Observable.just(response));
+                                return authStorage.saveAuthData(token, userId, storedUsername, password)
+                                        .andThen(Observable.just(response));
                             }
-                            return io.reactivex.rxjava3.core.Observable.just(response);
+                            return Observable.just(response);
                         })
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())

@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.ProjectPageBean;
+import com.rapid.android.core.image.ImageLoader;
 import com.rapid.android.feature.web.ArticleWebViewUtil;
-import com.rapid.android.utils.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;

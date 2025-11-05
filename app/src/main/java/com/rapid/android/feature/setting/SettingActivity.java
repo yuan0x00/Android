@@ -9,12 +9,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.rapid.android.R;
 import com.rapid.android.core.permission.NotificationPermissionManager;
+import com.rapid.android.core.storage.AppPreferencesStorage;
 import com.rapid.android.core.ui.components.dialog.DialogEffect;
 import com.rapid.android.core.ui.presentation.BaseActivity;
-import com.rapid.android.core.ui.utils.ToastUtils;
+import com.rapid.android.core.ui.utils.ToastViewUtils;
 import com.rapid.android.databinding.ActivitySettingBinding;
-import com.rapid.android.utils.AppPreferences;
-import com.rapid.android.utils.ThemeManager;
+import com.rapid.android.store.ThemeStore;
 
 public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySettingBinding> {
 
@@ -23,7 +23,6 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
         super.initializeViews();
         setupToolbar();
         setupClickListeners();
-        viewModel.loadSettings();
     }
 
     @Override
@@ -130,11 +129,11 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
                 return;
             }
             if (checkedId == binding.btnThemeSystem.getId()) {
-                viewModel.setThemeMode(ThemeManager.ThemeMode.SYSTEM);
+                viewModel.setThemeMode(ThemeStore.ThemeMode.SYSTEM);
             } else if (checkedId == binding.btnThemeLight.getId()) {
-                viewModel.setThemeMode(ThemeManager.ThemeMode.LIGHT);
+                viewModel.setThemeMode(ThemeStore.ThemeMode.LIGHT);
             } else if (checkedId == binding.btnThemeDark.getId()) {
-                viewModel.setThemeMode(ThemeManager.ThemeMode.DARK);
+                viewModel.setThemeMode(ThemeStore.ThemeMode.DARK);
             }
         });
 
@@ -194,7 +193,7 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
                         () -> viewModel.logoutWithCallback((success, messageRes) -> {
                             showShortToast(getString(messageRes));
                             if (success) {
-                                binding.getRoot().postDelayed(this::finish, 500L);
+                                finish();
                             }
                         }),
                         null
@@ -222,7 +221,7 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
                         @Override
                         public void onDenied() {
                             // 权限被拒绝
-                            AppPreferences.setNotificationPermissionDeniedTime(System.currentTimeMillis());
+                            AppPreferencesStorage.setNotificationPermissionDeniedTime(System.currentTimeMillis());
 
                             if (NotificationPermissionManager.shouldShowRationale(SettingActivity.this)) {
                                 // 用户拒绝但未选择"不再询问"，可以再次请求
@@ -275,6 +274,6 @@ public class SettingActivity extends BaseActivity<SettingViewModel, ActivitySett
     }
 
     private void showShortToast(String message) {
-        ToastUtils.showShortToast(getDialogController(), message);
+        ToastViewUtils.showShortToast(getDialogController(), message);
     }
 }

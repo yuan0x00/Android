@@ -43,16 +43,17 @@ public class FragmentContainerActivity extends AppCompatActivity {
         // 添加 Fragment
         if (savedInstanceState == null) {
             Class<? extends Fragment> fragmentClass =
+                    //todo ?
                     (Class<? extends Fragment>) getIntent().getSerializableExtra(EXTRA_FRAGMENT_CLASS);
 
             try {
+                //todo ?
                 Fragment fragment = fragmentClass.newInstance();
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .commit();
             } catch (Exception e) {
-                e.printStackTrace();
                 Toast.makeText(this, "无法打开页面", Toast.LENGTH_SHORT).show();
                 finish();
             }

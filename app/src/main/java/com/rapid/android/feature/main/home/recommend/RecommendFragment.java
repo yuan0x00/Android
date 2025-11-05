@@ -17,7 +17,10 @@ import com.rapid.android.databinding.FragmentRecommandBinding;
 import com.rapid.android.feature.main.TabNavigator;
 import com.rapid.android.feature.main.home.ArticleAdapter;
 import com.rapid.android.feature.main.home.BannerAdapter;
-import com.rapid.android.ui.common.*;
+import com.rapid.android.ui.common.BackToTopController;
+import com.rapid.android.ui.common.ContentStateController;
+import com.rapid.android.ui.common.RecyclerViewDecorations;
+import com.rapid.android.ui.common.RecyclerViewOptimizer;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -71,8 +74,6 @@ public class RecommendFragment extends BaseFragment<RecommendViewModel, Fragment
 
     @Override
     protected void setupObservers() {
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
         viewModel.getBannerList().observe(this, bannerList -> {
             if (bannerList != null) {
 //                bannerAdapter.setData(bannerList);

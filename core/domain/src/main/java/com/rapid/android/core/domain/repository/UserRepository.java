@@ -5,9 +5,7 @@ import com.rapid.android.core.domain.result.DomainResult;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Single;
 
 public interface UserRepository {
 
@@ -16,16 +14,6 @@ public interface UserRepository {
     Observable<DomainResult<RegisterBean>> register(String username, String password, String rePassword);
 
     Observable<DomainResult<String>> logout();
-
-    Single<Boolean> isLoggedIn();
-
-    Completable saveAuthData(String token, String userId, String username, String password);
-
-    Completable clearAuthData();
-
-    Single<String> getAuthToken();
-
-    Single<String> getUserId();
 
     Observable<DomainResult<LoginBean>> reLogin();
 

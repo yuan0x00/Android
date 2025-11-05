@@ -12,7 +12,6 @@ import com.rapid.android.databinding.FragmentTutorialBinding;
 import com.rapid.android.feature.main.discover.tutorial.list.TutorialArticleListActivity;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.List;
 
@@ -53,7 +52,6 @@ public class TutorialFragment extends BaseFragment<TutorialViewModel, FragmentTu
                 stateController.stopRefreshing();
             }
         });
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
     }
 
     @Override

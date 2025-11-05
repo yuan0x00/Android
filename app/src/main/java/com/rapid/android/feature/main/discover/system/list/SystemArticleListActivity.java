@@ -15,7 +15,6 @@ import com.rapid.android.databinding.ActivitySystemArticleListBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 public class SystemArticleListActivity extends BaseActivity<SystemArticleListViewModel, ActivitySystemArticleListBinding> {
 
@@ -105,8 +104,6 @@ public class SystemArticleListActivity extends BaseActivity<SystemArticleListVie
                 binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loading)
                         ? android.view.View.VISIBLE : android.view.View.GONE));
 
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
     }
 
     @Override

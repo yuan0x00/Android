@@ -18,7 +18,6 @@ import com.rapid.android.feature.main.discover.system.list.SystemArticleListView
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 public class SystemCategoryChildFragment extends BaseFragment<SystemArticleListViewModel, FragmentSystemCategoryChildBinding> {
 
@@ -106,8 +105,6 @@ public class SystemCategoryChildFragment extends BaseFragment<SystemArticleListV
                 binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loading)
                         ? View.VISIBLE : View.GONE));
 
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
     }
 
     boolean canScrollUp() {

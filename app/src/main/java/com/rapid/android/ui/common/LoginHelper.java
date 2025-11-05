@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import com.rapid.android.R;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.ui.components.dialog.DialogController;
-import com.rapid.android.core.ui.utils.ToastUtils;
+import com.rapid.android.core.ui.utils.ToastViewUtils;
 import com.rapid.android.feature.login.LoginActivity;
 
 /**
@@ -35,7 +35,7 @@ public class LoginHelper {
             return true;
         }
 
-        ToastUtils.showShortToast(dialogController, context.getString(R.string.mine_toast_require_login));
+        ToastViewUtils.showShortToast(dialogController, context.getString(R.string.mine_toast_require_login));
         context.startActivity(new Intent(context, LoginActivity.class));
         return false;
     }

@@ -12,10 +12,10 @@ import com.rapid.android.core.domain.model.HotKeyBean;
 import com.rapid.android.core.domain.repository.ContentRepository;
 import com.rapid.android.core.domain.result.DomainError;
 import com.rapid.android.core.domain.result.DomainResult;
+import com.rapid.android.core.storage.SearchHistoryStorage;
 import com.rapid.android.core.ui.presentation.BaseViewModel;
 import com.rapid.android.ui.common.paging.PagingController;
 import com.rapid.android.ui.common.paging.PagingPayload;
-import com.rapid.android.utils.SearchHistoryStore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +86,7 @@ public class SearchViewModel extends BaseViewModel {
     }
 
     public void clearHistory() {
-        SearchHistoryStore.clearHistory();
+        SearchHistoryStorage.clearHistory();
         loadHistories();
     }
 
@@ -103,7 +103,7 @@ public class SearchViewModel extends BaseViewModel {
             return;
         }
         currentKeyword = target;
-        SearchHistoryStore.addHistory(target);
+        SearchHistoryStorage.addHistory(target);
         loadHistories();
         showSuggestions.setValue(false);
         pagingController.refresh();
@@ -122,7 +122,7 @@ public class SearchViewModel extends BaseViewModel {
     }
 
     private void loadHistories() {
-        histories.setValue(new ArrayList<>(SearchHistoryStore.getHistories()));
+        histories.setValue(new ArrayList<>(SearchHistoryStorage.getHistories()));
     }
 
     private void loadHotKeys() {

@@ -24,7 +24,6 @@ import com.rapid.android.databinding.ActivitySearchBinding;
 import com.rapid.android.feature.main.home.ArticleAdapter;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.List;
 
@@ -134,8 +133,6 @@ public class SearchActivity extends BaseActivity<SearchViewModel, ActivitySearch
         viewModel.getPagingError().observe(this, msg -> stateController.stopRefreshing());
         viewModel.getEmptyState().observe(this, empty -> updateEmptyState());
 
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
     }
 
     @Override

@@ -10,27 +10,28 @@ import com.rapid.android.R;
 import com.rapid.android.core.common.app.BaseApplication;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.permission.NotificationPermissionManager;
+import com.rapid.android.core.storage.AppPreferencesStorage;
 import com.rapid.android.core.ui.presentation.BaseViewModel;
-import com.rapid.android.utils.AppPreferences;
-import com.rapid.android.utils.ThemeManager;
+import com.rapid.android.store.ThemeStore;
 
 public class SettingViewModel extends BaseViewModel {
 
-    private final MutableLiveData<ThemeManager.ThemeMode> themeMode = new MutableLiveData<>(ThemeManager.ThemeMode.SYSTEM);
-    private final MutableLiveData<Boolean> notifications = new MutableLiveData<>(AppPreferences.isNotificationsEnabled());
-    private final MutableLiveData<Boolean> homeTopEnabled = new MutableLiveData<>(AppPreferences.isHomeTopEnabled());
-    private final MutableLiveData<Boolean> noImageMode = new MutableLiveData<>(AppPreferences.isNoImageModeEnabled());
-    private final MutableLiveData<Boolean> autoHideBottomBar = new MutableLiveData<>(AppPreferences.isAutoHideBottomBarEnabled());
+    private final MutableLiveData<ThemeStore.ThemeMode> themeMode = new MutableLiveData<>(ThemeStore.getSavedThemeMode());
+    private final MutableLiveData<Boolean> notifications = new MutableLiveData<>(AppPreferencesStorage.isNotificationsEnabled());
+    private final MutableLiveData<Boolean> homeTopEnabled = new MutableLiveData<>(AppPreferencesStorage.isHomeTopEnabled());
+    private final MutableLiveData<Boolean> noImageMode = new MutableLiveData<>(AppPreferencesStorage.isNoImageModeEnabled());
+    private final MutableLiveData<Boolean> autoHideBottomBar = new MutableLiveData<>(AppPreferencesStorage.isAutoHideBottomBarEnabled());
     private final MutableLiveData<Integer> operationMessageRes = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
-    public LiveData<ThemeManager.ThemeMode> getThemeMode() {
+    public LiveData<ThemeStore.ThemeMode> getThemeMode() {
         return themeMode;
     }
 
-    public void setThemeMode(ThemeManager.ThemeMode mode) {
+    public void setThemeMode(ThemeStore.ThemeMode mode) {
+        ThemeStore.applyThemeMode(mode);
+        AppPreferencesStorage.setThemeModeValue(mode.getValue());
         themeMode.setValue(mode);
-        ThemeManager.applyThemeMode(mode);
     }
 
     public LiveData<Boolean> getNotifications() {
@@ -50,10 +51,10 @@ public class SettingViewModel extends BaseViewModel {
         }
 
         notifications.setValue(enabled);
-        AppPreferences.setNotificationsEnabled(enabled);
+        AppPreferencesStorage.setNotificationsEnabled(enabled);
 
         // 记录用户的通知偏好（即使权限未授予，也记录用户意图）
-        AppPreferences.setNotificationPreferenceRequested(enabled);
+        AppPreferencesStorage.setNotificationPreferenceRequested(enabled);
 
         operationMessageRes.setValue(enabled
                 ? R.string.setting_notifications_on
@@ -66,10 +67,7 @@ public class SettingViewModel extends BaseViewModel {
 
     public void setHomeTopEnabled(boolean enabled) {
         homeTopEnabled.setValue(enabled);
-        AppPreferences.setHomeTopEnabled(enabled);
-//        operationMessageRes.setValue(enabled
-//                ? R.string.setting_top_articles_on
-//                : R.string.setting_top_articles_off);
+        AppPreferencesStorage.setHomeTopEnabled(enabled);
     }
 
     public LiveData<Boolean> getNoImageMode() {
@@ -78,7 +76,7 @@ public class SettingViewModel extends BaseViewModel {
 
     public void setNoImageMode(boolean enabled) {
         noImageMode.setValue(enabled);
-        AppPreferences.setNoImageModeEnabled(enabled);
+        AppPreferencesStorage.setNoImageModeEnabled(enabled);
         operationMessageRes.setValue(enabled
                 ? R.string.settings_no_image_mode_on
                 : R.string.settings_no_image_mode_off);
@@ -90,7 +88,7 @@ public class SettingViewModel extends BaseViewModel {
 
     public void setAutoHideBottomBarEnabled(boolean enabled) {
         autoHideBottomBar.setValue(enabled);
-        AppPreferences.setAutoHideBottomBarEnabled(enabled);
+        AppPreferencesStorage.setAutoHideBottomBarEnabled(enabled);
         operationMessageRes.setValue(enabled
                 ? R.string.settings_auto_hide_bottom_bar_on
                 : R.string.settings_auto_hide_bottom_bar_off);
@@ -102,17 +100,6 @@ public class SettingViewModel extends BaseViewModel {
 
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
-    }
-
-    // 初始化设置
-    public void loadSettings() {
-        ThemeManager.ThemeMode saved = ThemeManager.getSavedThemeMode();
-        themeMode.setValue(saved);
-        ThemeManager.applyThemeMode(saved);
-        notifications.setValue(AppPreferences.isNotificationsEnabled());
-        homeTopEnabled.setValue(AppPreferences.isHomeTopEnabled());
-        noImageMode.setValue(AppPreferences.isNoImageModeEnabled());
-        autoHideBottomBar.setValue(AppPreferences.isAutoHideBottomBarEnabled());
     }
 
     public void logoutWithCallback(LogoutCallback callback) {

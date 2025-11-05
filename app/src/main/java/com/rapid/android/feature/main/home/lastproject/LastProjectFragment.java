@@ -18,7 +18,6 @@ import com.rapid.android.feature.main.home.ArticleAdapter;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 
 public class LastProjectFragment extends BaseFragment<LastProjectViewModel, FragmentLastProjectBinding> {
@@ -61,8 +60,6 @@ public class LastProjectFragment extends BaseFragment<LastProjectViewModel, Frag
 
     @Override
     protected void setupObservers() {
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
         viewModel.getProjectItems().observe(this, items -> {
             articleAdapter.submitList(items);
             boolean empty = items == null || items.isEmpty();

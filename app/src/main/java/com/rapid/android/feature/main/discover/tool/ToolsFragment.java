@@ -10,7 +10,6 @@ import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentToolsBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 public class ToolsFragment extends BaseFragment<ToolsViewModel, FragmentToolsBinding> {
 
@@ -50,7 +49,6 @@ public class ToolsFragment extends BaseFragment<ToolsViewModel, FragmentToolsBin
                 stateController.setLoading(Boolean.TRUE.equals(loading)));
 
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), message -> stateController.stopRefreshing());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
     }
 
     @Override

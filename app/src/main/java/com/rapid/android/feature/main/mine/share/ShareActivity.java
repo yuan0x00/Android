@@ -14,7 +14,6 @@ import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivityShareBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 public class ShareActivity extends BaseActivity<ShareViewModel, ActivityShareBinding> {
 
@@ -94,8 +93,6 @@ public class ShareActivity extends BaseActivity<ShareViewModel, ActivityShareBin
                 binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loadingMore)
                         ? android.view.View.VISIBLE : android.view.View.GONE));
 
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
     }
 
     @Override

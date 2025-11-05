@@ -15,7 +15,6 @@ import com.rapid.android.databinding.ActivityTutorialArticleListBinding;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 public class TutorialArticleListActivity extends BaseActivity<TutorialArticleListViewModel, ActivityTutorialArticleListBinding> {
 
@@ -104,8 +103,6 @@ public class TutorialArticleListActivity extends BaseActivity<TutorialArticleLis
                 binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loading)
                         ? android.view.View.VISIBLE : android.view.View.GONE));
 
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
     }
 
     @Override

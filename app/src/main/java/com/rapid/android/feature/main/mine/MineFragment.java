@@ -11,8 +11,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.rapid.android.BuildConfig;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.ui.presentation.BaseFragment;
-import com.rapid.android.core.ui.utils.ToastUtils;
+import com.rapid.android.core.ui.utils.ToastViewUtils;
 import com.rapid.android.databinding.FragmentMineBinding;
+import com.rapid.android.feature.developer.DeveloperActivity;
 import com.rapid.android.feature.login.LoginActivity;
 import com.rapid.android.feature.main.RequiresLoginTab;
 import com.rapid.android.feature.main.message.MessageCenterActivity;
@@ -21,12 +22,9 @@ import com.rapid.android.feature.main.mine.favorite.FavoriteActivity;
 import com.rapid.android.feature.main.mine.share.ShareActivity;
 import com.rapid.android.feature.main.mine.tools.UserToolsActivity;
 import com.rapid.android.feature.setting.SettingActivity;
-import com.rapid.android.feature.setting.developer.ProxyConfigActivity;
 import com.rapid.android.ui.common.LoginHelper;
 
 public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBinding> implements RequiresLoginTab {
-
-    private MineViewModel.MineUiState currentState = MineViewModel.MineUiState.guest();
 
     @Override
     protected MineViewModel createViewModel() {
@@ -41,31 +39,28 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
     @Override
     public void onResume() {
         super.onResume();
+        // 简化：只需要触发刷新，状态观察由 ViewModel 自动处理
         viewModel.refresh();
     }
 
     @Override
     protected void initializeViews() {
         setupClickListeners();
-        // 开发者工具仅在 Debug 构建中显示
         if (!BuildConfig.DEBUG) {
             binding.itemDeveloper.setVisibility(View.GONE);
         }
     }
 
     private void setupClickListeners() {
-        // 用户信息区域点击事件
+        // 用户信息区域点击事件 - 直接检查当前状态
         binding.cardProfile.setOnClickListener(v -> {
-            // 检查当前登录状态，如果未登录则跳转到登录页面，否则无响应
-            SessionManager.SessionState state =
-                    SessionManager.getInstance().getCurrentState();
-            if (state == null || !state.isLoggedIn()) {
+            if (!SessionManager.getInstance().isLoggedIn()) {
                 navigateToLogin();
             }
-            // 如果已登录，则不执行任何操作
+            // 已登录可以添加打开个人资料等逻辑
         });
 
-        // 签到按钮
+        // 其他点击事件保持不变
         binding.btnDailyAction.setOnClickListener(v ->
                 LoginHelper.requireLogin(requireContext(), getDialogController(), viewModel::signIn)
         );
@@ -74,6 +69,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
                 LoginHelper.requireLogin(requireContext(), getDialogController(),
                         () -> MessageCenterActivity.start(requireContext()))
         );
+
         binding.itemDeveloper.setOnClickListener(v -> openDeveloperTools());
         binding.itemTools.setOnClickListener(v ->
                 LoginHelper.requireLogin(requireContext(), getDialogController(),
@@ -96,23 +92,21 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
 
     @Override
     protected void setupObservers() {
+        // 只观察 ViewModel 提供的 UI 状态
         viewModel.getUiState().observe(getViewLifecycleOwner(), this::renderState);
         viewModel.getToastMessage().observe(getViewLifecycleOwner(), msg -> {
             if (msg != null && !msg.isEmpty()) {
                 showShortToast(msg);
             }
         });
-
         viewModel.getLoading().observe(getViewLifecycleOwner(), loading -> {
             boolean isLoading = Boolean.TRUE.equals(loading);
             binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         });
     }
 
-
     private void renderState(@NonNull MineViewModel.MineUiState state) {
-        currentState = state;
-
+        // 渲染逻辑保持不变
         binding.tvUsername.setText(state.getDisplayName());
         binding.tvTagline.setText(state.getTagline());
 
@@ -131,23 +125,13 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
         binding.btnDailyAction.setEnabled(state.isDailyActionEnabled());
 
         if (state.isLoggedIn()) {
-            binding.btnDailyAction.setVisibility(View.VISIBLE); // 签到按钮显示
+            binding.btnDailyAction.setVisibility(View.VISIBLE);
         } else {
-            binding.btnDailyAction.setVisibility(View.GONE); // 签到按钮隐藏
+            binding.btnDailyAction.setVisibility(View.GONE);
         }
 
-        // 根据登录状态设置用户信息卡片的可点击状态和样式
-        SessionManager.SessionState sessionState =
-                SessionManager.getInstance().getCurrentState();
-        if (sessionState == null || !sessionState.isLoggedIn()) {
-            // 未登录时，用户信息卡片需要有点击反馈
-            binding.cardProfile.setClickable(true);
-            binding.cardProfile.setAlpha(1.0f); // 确保正常显示
-        } else {
-            // 已登录时，用户信息卡片响应点击但不跳转
-            binding.cardProfile.setClickable(true);
-            binding.cardProfile.setAlpha(1.0f); // 确保正常显示
-        }
+        binding.cardProfile.setClickable(true);
+        binding.cardProfile.setAlpha(1.0f);
     }
 
     private void openSettings() {
@@ -155,7 +139,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
     }
 
     private void openDeveloperTools() {
-        startActivity(new Intent(getContext(), ProxyConfigActivity.class));
+        startActivity(new Intent(getContext(), DeveloperActivity.class));
     }
 
     private void navigateToLogin() {
@@ -163,6 +147,6 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
     }
 
     private void showShortToast(String message) {
-        ToastUtils.showShortToast(getDialogController(), message);
+        ToastViewUtils.showShortToast(getDialogController(), message);
     }
 }

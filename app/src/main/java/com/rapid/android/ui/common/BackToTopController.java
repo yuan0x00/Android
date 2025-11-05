@@ -5,8 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.rapid.android.core.storage.AppPreferencesStorage;
 import com.rapid.android.feature.main.TabNavigator;
-import com.rapid.android.utils.AppPreferences;
 
 /**
  * 控制长列表的“回到顶部”浮动按钮。
@@ -89,7 +89,7 @@ public final class BackToTopController {
         if (tabNavigator == null) {
             return;
         }
-        if (!AppPreferences.isAutoHideBottomBarEnabled()) {
+        if (!AppPreferencesStorage.isAutoHideBottomBarEnabled()) {
             if (!tabNavigator.isBottomBarVisible()) {
                 tabNavigator.showBottomBar(false);
             }
@@ -114,7 +114,7 @@ public final class BackToTopController {
         if (tabNavigator == null) {
             return;
         }
-        if (!AppPreferences.isAutoHideBottomBarEnabled()) {
+        if (!AppPreferencesStorage.isAutoHideBottomBarEnabled()) {
             if (!tabNavigator.isBottomBarVisible()) {
                 tabNavigator.showBottomBar(false);
             }

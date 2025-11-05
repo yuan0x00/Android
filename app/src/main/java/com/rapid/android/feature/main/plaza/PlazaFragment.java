@@ -15,7 +15,7 @@ import com.rapid.android.R;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
-import com.rapid.android.core.ui.utils.ToastUtils;
+import com.rapid.android.core.ui.utils.ToastViewUtils;
 import com.rapid.android.databinding.FragmentPlazaBinding;
 import com.rapid.android.feature.login.LoginActivity;
 import com.rapid.android.feature.main.TabNavigator;
@@ -25,7 +25,6 @@ import com.rapid.android.feature.search.SearchActivity;
 import com.rapid.android.ui.common.BackToTopController;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBinding> {
 
@@ -120,8 +119,6 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
 
     @Override
     protected void setupObservers() {
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
 
         viewModel.getPlazaItems().observe(this, items -> {
             articleAdapter.submitList(items);
@@ -146,6 +143,6 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
     }
 
     private void showShortToast(String message) {
-        ToastUtils.showShortToast(getDialogController(), message);
+        ToastViewUtils.showShortToast(getDialogController(), message);
     }
 }

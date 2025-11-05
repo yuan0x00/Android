@@ -1,11 +1,9 @@
 package com.rapid.android.feature.main;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.Nullable;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -17,7 +15,7 @@ import com.rapid.android.core.common.utils.WindowInsetsUtils;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.ui.components.navigation.BottomTabNavigator;
 import com.rapid.android.core.ui.presentation.BaseActivity;
-import com.rapid.android.core.ui.utils.ToastUtils;
+import com.rapid.android.core.ui.utils.ToastViewUtils;
 import com.rapid.android.databinding.ActivityMainBinding;
 import com.rapid.android.feature.login.LoginActivity;
 import com.rapid.android.feature.main.home.HomeFragment;
@@ -32,8 +30,6 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
     private BottomTabNavigator navigator;
     private long exitTime = 0L;
-
-    private boolean isOnCreate = true;
 
     @Override
     protected MainViewModel createViewModel() {
@@ -51,16 +47,9 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     protected void initializeViews() {
-        super.initializeViews();
         setBackToTask();
-        setTabLayout(null);
+        setTabLayout();
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -80,7 +69,6 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
             return insets;
         });
 
-
         DrawerLayoutHelper.setDrawerLeftEdgeSizeWithContentPush(this, binding.drawerLayout, 0.3f);
     }
 
@@ -92,7 +80,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 if (System.currentTimeMillis() - exitTime > 2000) {
                     exitTime = System.currentTimeMillis();
                     String msg = getString(R.string.back_twice_to_launcher);
-                    ToastUtils.showShortToast(getDialogController(), msg);
+                    ToastViewUtils.showShortToast(getDialogController(), msg);
                 } else {
                     moveTaskToBack(true);
                 }
@@ -110,11 +98,10 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
     @Override
     protected void loadData() {
-        viewModel.refreshLoginState();
-        isOnCreate = false;
+
     }
 
-    private void setTabLayout(Bundle savedInstanceState) {
+    private void setTabLayout() {
         // 处理系统栏 Insets
         WindowInsetsUtils.removeOnApplyWindowInsetsListener(binding.getRoot());
         WindowInsetsUtils.applyTopSystemWindowInsets(binding.getRoot());
@@ -148,45 +135,31 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 //                        MineFragment.class))
                 .setOnTabSelectInterceptor(this::shouldAllowTabSelection)
                 .build();
-        // 恢复之前选中的 Tab
-        if (savedInstanceState != null) {
-            int position = savedInstanceState.getInt("CURRENT_TAB", 0);
-            navigator.selectTab(position);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!isOnCreate) {
-            viewModel.refreshLoginState();
-        }
     }
 
     @Override
     protected void setupObservers() {
         viewModel.getErrorMessage().observe(this, msg -> {
             if (msg != null && !msg.isEmpty()) {
-                ToastUtils.showLongToast(getDialogController(), msg);
+                ToastViewUtils.showLongToast(getDialogController(), msg);
             }
         });
 
-        SessionManager.getInstance().loginState().observe(this, loggedIn -> {
+        SessionManager.getInstance().state.observe(this, state -> {
             if (navigator == null) {
                 return;
             }
-            if (!Boolean.TRUE.equals(loggedIn) && navigator.getCurrentPosition() >= 2) {
-                ToastUtils.showShortToast(getDialogController(), getString(R.string.mine_toast_require_login));
+            if (!state.isLoggedIn() && navigator.getCurrentPosition() >= 2) {
+                ToastViewUtils.showShortToast(getDialogController(), getString(R.string.mine_toast_require_login));
                 navigator.selectTab(0);
             }
         });
 
-        SessionManager.getInstance().authEvents().observe(this, event -> {
-            if (event == null || navigator == null) {
+        SessionManager.getInstance().state.observe(this, state -> {
+            if (state == null || navigator == null) {
                 return;
             }
-            SessionManager.EventType type = event.getType();
-            if (type == SessionManager.EventType.LOGOUT || type == SessionManager.EventType.UNAUTHORIZED) {
+            if (!state.isLoggedIn()) {
                 navigator.selectTab(0);
             }
         });
@@ -241,7 +214,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         if (SessionManager.getInstance().isLoggedIn()) {
             return true;
         }
-        ToastUtils.showShortToast(getDialogController(), getString(R.string.mine_toast_require_login));
+        ToastViewUtils.showShortToast(getDialogController(), getString(R.string.mine_toast_require_login));
         startActivity(new Intent(this, LoginActivity.class));
         return false;
     }

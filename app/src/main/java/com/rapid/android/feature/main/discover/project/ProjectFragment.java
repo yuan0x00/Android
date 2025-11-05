@@ -15,7 +15,6 @@ import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentProjectBinding;
 import com.rapid.android.feature.main.TabNavigator;
 import com.rapid.android.ui.common.ContentStateController;
-import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -114,8 +113,6 @@ public class ProjectFragment extends BaseFragment<ProjectViewModel, FragmentProj
         viewModel.getLoading().observe(this, loading ->
                 stateController.setLoading(Boolean.TRUE.equals(loading)));
 
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getArticleErrorMessage());
     }
 
     private void updateTabs() {

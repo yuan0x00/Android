@@ -18,7 +18,7 @@ import com.rapid.android.core.domain.model.ArticleListBean;
 import com.rapid.android.core.domain.repository.UserRepository;
 import com.rapid.android.core.domain.result.DomainResult;
 import com.rapid.android.core.ui.components.dialog.DialogController;
-import com.rapid.android.core.ui.utils.ToastUtils;
+import com.rapid.android.core.ui.utils.ToastViewUtils;
 import com.rapid.android.databinding.ItemArticleBinding;
 import com.rapid.android.feature.login.LoginActivity;
 import com.rapid.android.feature.web.ArticleWebViewUtil;
@@ -214,7 +214,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
             if (dialogController == null || message == null || message.isEmpty()) {
                 return;
             }
-            ToastUtils.showShortToast(dialogController, message);
+            ToastViewUtils.showShortToast(dialogController, message);
         }
     }
 

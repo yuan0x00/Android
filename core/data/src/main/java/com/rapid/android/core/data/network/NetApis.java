@@ -1,27 +1,27 @@
 package com.rapid.android.core.data.network;
 
 import com.rapid.android.core.data.api.*;
-import com.rapid.android.core.network.NetManager;
+import com.rapid.android.core.network.client.NetworkClientManager;
 
 public final class NetApis {
 
     public static LoginApi Login() {
-        return NetManager.createNetApi(LoginApi.class);
+        return NetworkClientManager.getDefaultClient().createService(LoginApi.class);
     }
 
     public static HomeApi Home() {
-        return NetManager.createNetApi(HomeApi.class);
+        return NetworkClientManager.getDefaultClient().createService(HomeApi.class);
     }
 
     public static UserApi User() {
-        return NetManager.createNetApi(UserApi.class);
+        return NetworkClientManager.getDefaultClient().createService(UserApi.class);
     }
 
     public static ContentApi Content() {
-        return NetManager.createNetApi(ContentApi.class);
+        return NetworkClientManager.getDefaultClient().createService(ContentApi.class);
     }
 
     public static MessageApi Message() {
-        return NetManager.createNetApi(MessageApi.class);
+        return NetworkClientManager.getDefaultClient().createService(MessageApi.class);
     }
 }

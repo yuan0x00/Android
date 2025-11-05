@@ -20,6 +20,7 @@ public class MainApplication extends BaseApplication {
     public List<Task> addInitTasks() {
         return List.of(
                 new NetworkTask(),
+                new SessionTask(),
                 new StrictModeTask(),
                 new ThemeTask(),
                 new RouterTask(),

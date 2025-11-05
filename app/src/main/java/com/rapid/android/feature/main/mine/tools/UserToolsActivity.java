@@ -13,7 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.UserToolBean;
 import com.rapid.android.core.ui.presentation.BaseActivity;
-import com.rapid.android.core.ui.utils.ToastUtils;
+import com.rapid.android.core.ui.utils.ToastViewUtils;
 import com.rapid.android.databinding.ActivityUserToolsBinding;
 import com.rapid.android.databinding.DialogUserToolBinding;
 import com.rapid.android.feature.web.ArticleWebViewUtil;
@@ -121,6 +121,6 @@ public class UserToolsActivity extends BaseActivity<UserToolsViewModel, Activity
     }
 
     private void showShortToast(String message) {
-        ToastUtils.showShortToast(getDialogController(), message);
+        ToastViewUtils.showShortToast(getDialogController(), message);
     }
 }

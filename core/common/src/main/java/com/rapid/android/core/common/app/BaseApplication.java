@@ -6,7 +6,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.rapid.android.core.common.app.tasks.LogKitTask;
-import com.rapid.android.core.common.app.tasks.StorageTask;
+import com.rapid.android.core.common.app.tasks.MmkvTask;
 import com.rapid.android.core.initializer.Task;
 import com.rapid.android.core.initializer.TaskManager;
 
@@ -16,7 +16,6 @@ import java.util.List;
 public abstract class BaseApplication extends Application {
 
     private static BaseApplication sInstance;
-    private TaskManager initManager;
 
     @NonNull
     public static Context getAppContext() {
@@ -55,12 +54,12 @@ public abstract class BaseApplication extends Application {
 //            throw new RuntimeException("Failed to initialize BaseApplication", e);
 //        }
 
-        initManager = new TaskManager(this);
+        TaskManager initManager = new TaskManager(this);
         // 添加初始化任务
         initManager.addTasks(
                 List.of(
                         new LogKitTask(),
-                        new StorageTask()
+                        new MmkvTask()
                 )
         );
         initManager.addTasks(addInitTasks());

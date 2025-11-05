@@ -6,7 +6,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 
 import com.rapid.android.core.ui.components.dialog.DialogController;
-import com.rapid.android.core.ui.utils.ToastUtils;
+import com.rapid.android.core.ui.utils.ToastViewUtils;
 
 public final class UiFeedback {
 
@@ -19,7 +19,7 @@ public final class UiFeedback {
         }
         source.observe(owner, msg -> {
             if (!TextUtils.isEmpty(msg)) {
-                ToastUtils.showLongToast(dialogController, msg);
+                ToastViewUtils.showLongToast(dialogController, msg);
             }
         });
     }

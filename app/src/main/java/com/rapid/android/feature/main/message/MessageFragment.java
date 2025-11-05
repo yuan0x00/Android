@@ -11,7 +11,6 @@ import com.rapid.android.R;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentMessageBinding;
 import com.rapid.android.feature.main.RequiresLoginTab;
-import com.rapid.android.ui.common.UiFeedback;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -72,7 +71,6 @@ public class MessageFragment extends BaseFragment<MessageViewModel, FragmentMess
         viewModel.getLoading().observe(this, loading ->
                 binding.unreadCard.setAlpha(Boolean.TRUE.equals(loading) ? 0.7f : 1f));
 
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
     }
 
     @Override

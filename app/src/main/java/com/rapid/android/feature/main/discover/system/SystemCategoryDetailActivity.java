@@ -19,7 +19,6 @@ import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivitySystemCategoryDetailBinding;
 import com.rapid.android.ui.common.ContentStateController;
-import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -169,7 +168,6 @@ public class SystemCategoryDetailActivity extends BaseActivity<SystemViewModel, 
         viewModel.getLoading().observe(this, loading ->
                 stateController.setLoading(Boolean.TRUE.equals(loading)));
 
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
     }
 
     private void handleCategories() {

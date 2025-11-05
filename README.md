@@ -1,48 +1,50 @@
-<table>
-  <tr>
-    <td>
-      <img src="./readme/screenshot_1.png" width="1080" alt="">
-    </td>
-    <td>
-      <img src="./readme/screenshot_2.png" width="1080" alt="">
-    </td>
-    <td>
-      <img src="./readme/screenshot_3.png" width="1080" alt="">
-    </td>
-  </tr>
-</table>
-
 ## app
 
-- [ ] 首页左侧滑页
+- 首页
+    - 左侧滑个人页
 
 ## library
 
-- [ ] analytics
-- [ ] common
-    - Activity耗时优化
-        - [x] 异步加载布局
-- [x] data
+- analytics
+    - [ ] 埋点
+    - [ ] 异常上报
+    - [ ] 性能分析
+    - [ ] 卡顿分析
+- common
+    - BaseApplication
+    - CommonUtils
+- data
     - Network Api
-- [x] domain
+    - SessionManager
+- domain
     - Network Api Result Model
-- [ ] image
-- [x] initializer
-    - Application耗时优化
-        - [x] 任务DAG图检测循环依赖
-        - [x] 任务历史耗时调整顺序
-- [x] log
-    - 封装Timber
-- [ ] navigation
-- [ ] network
-    - [ ] 网络框架设计
-- [ ] permission
-- [ ] storage
-- [ ] theme
-- [ ] ui
-    - 弹窗管理
+- image
+    - Glide封装
+- initializer
+    - 任务DAG图检测循环依赖
+    - 任务历史耗时调整顺序
+- log
+    - Timber封装
+- navigation
+    - [ ] RouterServiceManager
+- network
+    - NetworkClientManager
+    - Interceptor
+- permission
+    - [ ] PermissionManager
+- storage
+    - mmkv封装
+- ui
+    - BaseActivity
+    - BaseViewModel
+    - BaseFragment
+    - BaseDialogView(CustomView)
         - [ ] 嵌套Fragment传递Host问题
-- [ ] webview
-    - [x] 预加载
-    - [x] 池化
-    - [ ] WebViewFragment页面功能
+    - BottomTabNavigator
+    - ToastViewUtils(CustomView)
+
+- webview
+    - Webview预加载
+    - Webview池化
+    - WebViewActivity
+    - WebViewFragment

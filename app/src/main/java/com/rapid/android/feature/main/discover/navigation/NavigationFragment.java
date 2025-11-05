@@ -14,7 +14,6 @@ import com.rapid.android.databinding.FragmentNavigationBinding;
 import com.rapid.android.feature.web.ArticleWebViewUtil;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +74,6 @@ public class NavigationFragment extends BaseFragment<NavigationViewModel, Fragme
         viewModel.getLoading().observe(this, loading ->
                 stateController.setLoading(Boolean.TRUE.equals(loading)));
 
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
     }
 
     @Override

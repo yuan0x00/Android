@@ -1,6 +1,7 @@
 package com.rapid.android.core.ui.presentation;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,15 +17,16 @@ import com.rapid.android.core.network.state.NetworkStateManager;
 import com.rapid.android.core.ui.R;
 import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.core.ui.components.dialog.DialogHost;
-import com.rapid.android.core.ui.components.dialog.ScopedDialogHost;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBinding> extends AppCompatActivity implements DialogHost, ScopedDialogHost {
+public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBinding> extends AppCompatActivity implements DialogHost {
 
+    private static final boolean isAsyncLayoutInflater = false;
     protected VM viewModel;
     protected VB binding;
     private DialogController dialogController;
+    private ViewGroup container;
 
     @Override
     @CallSuper
@@ -32,24 +34,36 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.core_ui_activity_container);
+        container = findViewById(R.id.container);
 
         if (shouldObserveNetworkState()) {
             getLifecycle().addObserver(NetworkStateManager.getInstance());
         }
 
-        setContentViewAsync(getLayoutResId());
         viewModel = createViewModel();
+
+        if (isAsyncLayoutInflater) {
+            setContentViewAsync(getLayoutResId());
+        } else {
+            setContentViewSync(getLayoutResId());
+        }
     }
 
     private void setContentViewAsync(@LayoutRes int resid) {
-        ViewGroup container = findViewById(R.id.container);
         new AsyncLayoutInflater(this)
                 .inflate(resid, container, (view, resId, parent) -> {
-                    container.addView(view);
-                    binding = createViewBinding(view);
-                    initView();
-                }
-        );
+                            container.addView(view);
+                            binding = createViewBinding(view);
+                            initView();
+                        }
+                );
+    }
+
+    private void setContentViewSync(@LayoutRes int resid) {
+        View view = LayoutInflater.from(this).inflate(resid, null);
+        container.addView(view);
+        binding = createViewBinding(view);
+        initView();
     }
 
     private void initView() {
@@ -102,8 +116,4 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
         return dialogController;
     }
 
-    @Override
-    public @NotNull DialogController provideDialogController() {
-        return getDialogController();
-    }
 }

@@ -13,10 +13,10 @@ import com.rapid.android.core.domain.repository.ContentRepository;
 import com.rapid.android.core.domain.repository.HomeRepository;
 import com.rapid.android.core.domain.result.DomainError;
 import com.rapid.android.core.domain.result.DomainResult;
+import com.rapid.android.core.storage.AppPreferencesStorage;
 import com.rapid.android.core.ui.presentation.BaseViewModel;
 import com.rapid.android.ui.common.paging.PagingController;
 import com.rapid.android.ui.common.paging.PagingPayload;
-import com.rapid.android.utils.AppPreferences;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -113,7 +113,7 @@ public class RecommendViewModel extends BaseViewModel {
     }
 
     private void loadHighlights() {
-        if (AppPreferences.isHomeTopEnabled()) {
+        if (AppPreferencesStorage.isHomeTopEnabled()) {
             autoDispose(repository.topArticles()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

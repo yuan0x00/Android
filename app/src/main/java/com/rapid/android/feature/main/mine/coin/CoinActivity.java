@@ -17,7 +17,6 @@ import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivityCoinBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.List;
 
@@ -174,15 +173,11 @@ public class CoinActivity extends BaseActivity<CoinViewModel, ActivityCoinBindin
             }
         });
 
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getRecordError());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getRecordPagingError());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getRankError());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getRankPagingError());
     }
 
     @Override
     protected void loadData() {
-        viewModel.applySessionState(SessionManager.getInstance().getCurrentState());
+        SessionManager.getInstance().state.observe(this, viewModel::applySessionState);
         viewModel.ensureRecords();
     }
 

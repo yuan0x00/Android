@@ -13,7 +13,6 @@ import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentSystemBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +126,6 @@ public class SystemFragment extends BaseFragment<SystemViewModel, FragmentSystem
         viewModel.getLoading().observe(this, loading ->
                 stateController.setLoading(Boolean.TRUE.equals(loading)));
 
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
     }
 
     @Override

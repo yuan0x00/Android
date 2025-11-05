@@ -14,7 +14,6 @@ import com.rapid.android.core.ui.presentation.BaseActivity;
 import com.rapid.android.databinding.ActivityFavoriteBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFavoriteBinding> {
 
@@ -49,7 +48,7 @@ public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFa
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        adapter = new FavoriteAdapter(provideDialogController(), data -> viewModel.refresh());
+        adapter = new FavoriteAdapter(getDialogController(), data -> viewModel.refresh());
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
         RecyclerViewDecorations.addSpacing(binding.recyclerView);
@@ -94,8 +93,6 @@ public class FavoriteActivity extends BaseActivity<FavoriteViewModel, ActivityFa
                 binding.loadMoreProgress.setVisibility(Boolean.TRUE.equals(loadingMore)
                         ? android.view.View.VISIBLE : android.view.View.GONE));
 
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getPagingError());
     }
 
     @Override

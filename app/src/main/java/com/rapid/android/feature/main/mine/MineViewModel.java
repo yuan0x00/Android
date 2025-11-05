@@ -2,8 +2,10 @@ package com.rapid.android.feature.main.mine;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.rapid.android.R;
@@ -12,8 +14,8 @@ import com.rapid.android.core.data.repository.RepositoryProvider;
 import com.rapid.android.core.data.session.SessionManager;
 import com.rapid.android.core.domain.model.*;
 import com.rapid.android.core.domain.repository.UserRepository;
-import com.rapid.android.core.storage.DefaultDataStore;
-import com.rapid.android.core.storage.IDataStore;
+import com.rapid.android.core.domain.result.DomainResult;
+import com.rapid.android.core.storage.PreferenceHelper;
 import com.rapid.android.core.ui.presentation.BaseViewModel;
 
 import java.text.SimpleDateFormat;
@@ -24,117 +26,122 @@ public class MineViewModel extends BaseViewModel {
 
     private static final String KEY_LAST_SIGN_IN_DATE = "mine_last_sign_in_date";
 
-    private final MutableLiveData<MineUiState> uiState = new MutableLiveData<>(MineUiState.guest());
+    // 使用 MediatorLiveData 统一管理 UI 状态
+    private final MediatorLiveData<MineUiState> uiState = new MediatorLiveData<>();
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
     private final MutableLiveData<String> toastMessage = new MutableLiveData<>();
+
     private final UserRepository userRepository = RepositoryProvider.getUserRepository();
     private final SessionManager sessionManager = SessionManager.getInstance();
-    private final IDataStore dataStore;
-    private boolean profileLoading = false;
+    private final PreferenceHelper dataStore;
+
     private boolean signedInToday = false;
-    private boolean shareCountLoading = false;
     private boolean shareCountLoaded = false;
 
     public MineViewModel() {
-        dataStore = new DefaultDataStore();
+        dataStore = PreferenceHelper.getDefault();
         signedInToday = hasSignedInToday();
-        // 在 ViewModel 中订阅 SessionManager 状态变化
-        observeSessionState();
+
+        // 使用 MediatorLiveData 管理会话状态
+        uiState.addSource(sessionManager.state, this::onSessionStateChanged);
+
+        // 初始状态
+        SessionManager.SessionState currentState = sessionManager.getCurrentState();
+        onSessionStateChanged(currentState);
     }
 
-    private void observeSessionState() {
-        sessionManager.state.observeForever(this::handleSessionStateChange);
-    }
+    /**
+     * 统一的会话状态处理
+     */
+    private void onSessionStateChanged(SessionManager.SessionState sessionState) {
+        Log.d("MineViewModel", "会话状态变化: " + (sessionState != null ? sessionState.isLoggedIn() : "null"));
 
-    private void handleSessionStateChange(SessionManager.SessionState sessionState) {
-        signedInToday = hasSignedInToday();
         if (sessionState == null || !sessionState.isLoggedIn()) {
-            resetToGuest();
+            handleGuestState();
             return;
         }
 
-        UserInfoBean userInfo = sessionState.getUserInfo();
-        if (userInfo != null) {
-            stopLoading();
-            loading.setValue(false);
-            uiState.setValue(MineUiState.from(userInfo, signedInToday));
-            loadShareCount();
-        } else {
-            if (!profileLoading) {
-                startLoading();
-                sessionManager.refreshUserInfo();
-            } else {
-                loading.setValue(true);
-            }
-        }
+        handleLoggedInState(sessionState);
     }
 
-    public LiveData<MineUiState> getUiState() {
-        return uiState;
-    }
-
-    public LiveData<Boolean> getLoading() {
-        return loading;
-    }
-
-    public LiveData<String> getToastMessage() {
-        return toastMessage;
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        // 移除 SessionManager 观察者，避免内存泄漏
-        sessionManager.state.removeObserver(this::handleSessionStateChange);
-    }
-
-    public void refresh() {
-        if (profileLoading) {
-            return;
-        }
-        startLoading();
-        sessionManager.refreshUserInfo();
-    }
-
-    public void resetToGuest() {
-        stopLoading();
-        loading.setValue(false);
-        signedInToday = hasSignedInToday();
+    /**
+     * 处理未登录状态
+     */
+    private void handleGuestState() {
+        signedInToday = false;
         shareCountLoaded = false;
-        shareCountLoading = false;
         uiState.setValue(MineUiState.guest());
-    }
-
-    private void fetchProfile() {
-//        autoDispose(
-//                sessionRepository.refreshUserInfo()
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe(this::handleUserInfo, throwable -> {
-//                            loading.setValue(false);
-//                            toastMessage.setValue(throwable.getMessage());
-//                            uiState.setValue(MineUiState.guest());
-//                        })
-//        );
-    }
-
-    private void handleUserInfo(UserInfoBean userInfo) {
-        stopLoading();
         loading.setValue(false);
+    }
+
+    /**
+     * 处理已登录状态
+     */
+    private void handleLoggedInState(SessionManager.SessionState sessionState) {
+        UserInfoBean userInfo = sessionState.getUserInfo();
+
         if (userInfo != null) {
-            uiState.setValue(MineUiState.from(userInfo, signedInToday));
-            SessionManager.getInstance().updateUserInfo(userInfo);
+            // 有用户信息，更新UI
+            updateUiWithUserInfo(userInfo);
         } else {
-            uiState.setValue(MineUiState.guest());
+            // 用户信息为空，需要刷新
+            refreshUserInfoIfNeeded();
         }
     }
 
-    public void applyUserInfo(UserInfoBean userInfo) {
-        if (userInfo != null) {
-            uiState.setValue(MineUiState.from(userInfo, signedInToday));
+    /**
+     * 使用用户信息更新UI
+     */
+    private void updateUiWithUserInfo(UserInfoBean userInfo) {
+        signedInToday = hasSignedInToday();
+        MineUiState newState = MineUiState.from(userInfo, signedInToday);
+        uiState.setValue(newState);
+        loading.setValue(false);
+
+        // 加载分享数量（如果需要）
+        if (!shareCountLoaded) {
             loadShareCount();
-        } else {
-            uiState.setValue(MineUiState.guest());
-            shareCountLoaded = false;
+        }
+    }
+
+    /**
+     * 刷新用户信息（如果需要）
+     */
+    private void refreshUserInfoIfNeeded() {
+        if (Boolean.TRUE.equals(loading.getValue())) {
+            return; // 已经在加载中
+        }
+
+        loading.setValue(true);
+        sessionManager.refreshUserInfo();
+
+        // 设置超时保护（5秒后自动停止加载）
+        autoDispose(
+                io.reactivex.rxjava3.core.Observable.timer(5, java.util.concurrent.TimeUnit.SECONDS)
+                        .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+                        .subscribe(
+                                timeout -> {
+                                    if (Boolean.TRUE.equals(loading.getValue())) {
+                                        loading.setValue(false);
+                                        toastMessage.setValue("加载超时，请重试");
+                                    }
+                                },
+                                throwable -> {} // 忽略错误
+                        )
+        );
+    }
+
+    // LiveData 暴露方法
+    public LiveData<MineUiState> getUiState() { return uiState; }
+    public LiveData<Boolean> getLoading() { return loading; }
+    public LiveData<String> getToastMessage() { return toastMessage; }
+
+    /**
+     * 刷新数据
+     */
+    public void refresh() {
+        if (sessionManager.isLoggedIn()) {
+            sessionManager.refreshUserInfo();
         }
     }
 
@@ -142,12 +149,17 @@ public class MineViewModel extends BaseViewModel {
      * 执行签到操作
      */
     public void signIn() {
-        if (loading.getValue() != null && loading.getValue()) {
+        if (Boolean.TRUE.equals(loading.getValue())) {
             return; // 防止重复点击
         }
+
         if (signedInToday) {
-            toastMessage.setValue(BaseApplication.getAppContext()
-                    .getString(R.string.mine_checkin_already_done));
+            toastMessage.setValue(getString(R.string.mine_checkin_already_done));
+            return;
+        }
+
+        if (!sessionManager.isLoggedIn()) {
+            toastMessage.setValue("请先登录");
             return;
         }
 
@@ -158,92 +170,77 @@ public class MineViewModel extends BaseViewModel {
                         .subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.io())
                         .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
                         .subscribe(
+                                result -> handleSignInResult(result),
+                                throwable -> handleSignInError(throwable)
+                        )
+        );
+    }
+
+    private void handleSignInResult(DomainResult<CoinBean> result) {
+        loading.setValue(false);
+
+        if (result != null && result.isSuccess()) {
+            CoinBean coinInfo = result.getData();
+            if (coinInfo != null) {
+                toastMessage.setValue(BaseApplication.getAppContext().getString(R.string.mine_checkin_success_points, coinInfo.getCoinCount()));
+            } else {
+                toastMessage.setValue(getString(R.string.mine_checkin_success_no_points));
+            }
+            signedInToday = true;
+            saveSignInDate();
+            refresh(); // 刷新用户信息以更新硬币数量
+        } else {
+            String errorMsg = result != null && result.getError() != null ? result.getError().getMessage() : null;
+            toastMessage.setValue(errorMsg != null ?
+                    BaseApplication.getAppContext().getString(R.string.mine_checkin_failed_with_reason, errorMsg) :
+                    getString(R.string.mine_checkin_failed));
+        }
+    }
+
+    private void handleSignInError(Throwable throwable) {
+        loading.setValue(false);
+        String errorMsg = throwable != null ? throwable.getMessage() : null;
+        toastMessage.setValue(errorMsg != null ?
+                BaseApplication.getAppContext().getString(R.string.mine_checkin_failed_with_reason, errorMsg) :
+                getString(R.string.mine_checkin_failed));
+    }
+
+    // 分享数量加载
+    private void loadShareCount() {
+        if (shareCountLoaded || !sessionManager.isLoggedIn()) {
+            return;
+        }
+
+        autoDispose(
+                userRepository.myShareArticles(1, 1)
+                        .subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.io())
+                        .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+                        .subscribe(
                                 result -> {
-                                    loading.setValue(false);
-                                    if (result != null && result.isSuccess()) {
-                                        CoinBean coinInfo = result.getData();
-                                        if (coinInfo != null) {
-                                            toastMessage.setValue(BaseApplication.getAppContext()
-                                                    .getString(R.string.mine_checkin_success_points, coinInfo.getCoinCount()));
-                                        } else {
-                                            toastMessage.setValue(BaseApplication.getAppContext()
-                                                    .getString(R.string.mine_checkin_success_no_points));
-                                        }
-                                        signedInToday = true;
-                                        saveSignInDate();
-                                        MineUiState state = uiState.getValue();
-                                        if (state != null) {
-                                            uiState.setValue(state.withDailyAction(
-                                                    BaseApplication.getAppContext().getString(R.string.mine_action_checked_in),
-                                                    false));
-                                        }
-                                        refresh();
-                                    } else {
-                                        String errorMsg = result != null && result.getError() != null
-                                                ? result.getError().getMessage()
-                                                : null;
-                                        toastMessage.setValue(errorMsg != null
-                                                ? BaseApplication.getAppContext().getString(
-                                                R.string.mine_checkin_failed_with_reason, errorMsg)
-                                                : BaseApplication.getAppContext().getString(R.string.mine_checkin_failed));
+                                    if (result != null && result.isSuccess() && result.getData() != null) {
+                                        ArticleListBean shares = result.getData().getShareArticles();
+                                        int total = shares != null ? shares.getTotal() : 0;
+                                        shareCountLoaded = true;
+                                        updateShareDisplay(String.valueOf(total));
                                     }
                                 },
                                 throwable -> {
-                                    loading.setValue(false);
-                                    toastMessage.setValue(throwable != null && throwable.getMessage() != null
-                                            ? BaseApplication.getAppContext().getString(
-                                            R.string.mine_checkin_failed_with_reason, throwable.getMessage())
-                                            : BaseApplication.getAppContext().getString(R.string.mine_checkin_failed));
+                                    // 静默失败，不影响主流程
                                 }
                         )
         );
     }
 
-    private void startLoading() {
-        profileLoading = true;
-        loading.setValue(true);
-    }
-
-    private void stopLoading() {
-        profileLoading = false;
-    }
-
-    private void loadShareCount() {
-        if (shareCountLoading || shareCountLoaded) {
-            return;
-        }
-        shareCountLoading = true;
-        autoDispose(
-                userRepository.myShareArticles(1, 1)
-                        .subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.io())
-                        .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
-                        .subscribe(result -> {
-                            shareCountLoading = false;
-                            if (result != null && result.isSuccess()) {
-                                int total = 0;
-                                if (result.getData() != null && result.getData().getShareArticles() != null) {
-                                    ArticleListBean shares = result.getData().getShareArticles();
-                                    total = shares != null ? shares.getTotal() : 0;
-                                }
-                                shareCountLoaded = true;
-                                updateShareDisplay(String.valueOf(total));
-                            }
-                        }, throwable -> shareCountLoading = false)
-        );
-    }
-
     private void updateShareDisplay(String display) {
-        MineUiState state = uiState.getValue();
-        if (state != null) {
-            uiState.setValue(state.withShareCount(display));
+        MineUiState currentState = uiState.getValue();
+        if (currentState != null) {
+            uiState.setValue(currentState.withShareCount(display));
         }
     }
 
+    // 工具方法
     private boolean hasSignedInToday() {
         String lastDate = dataStore.getString(KEY_LAST_SIGN_IN_DATE, "");
-        if (TextUtils.isEmpty(lastDate)) {
-            return false;
-        }
         return TextUtils.equals(lastDate, getTodayKey());
     }
 
@@ -254,6 +251,10 @@ public class MineViewModel extends BaseViewModel {
     private String getTodayKey() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return formatter.format(new Date());
+    }
+
+    private String getString(int resId) {
+        return BaseApplication.getAppContext().getString(resId);
     }
 
     public static class MineUiState {

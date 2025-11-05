@@ -15,7 +15,6 @@ import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentMessageListBinding;
 import com.rapid.android.ui.common.ContentStateController;
 import com.rapid.android.ui.common.RecyclerViewDecorations;
-import com.rapid.android.ui.common.UiFeedback;
 
 import java.util.List;
 
@@ -111,7 +110,6 @@ public class MessageListFragment extends BaseFragment<MessageListViewModel, Frag
         viewModel.getLoading().observe(this, loading -> stateController.setLoading(Boolean.TRUE.equals(loading)));
         viewModel.getErrorMessage().observe(this, msg -> stateController.stopRefreshing());
         viewModel.getEmptyState().observe(this, empty -> stateController.setEmpty(Boolean.TRUE.equals(empty)));
-        UiFeedback.observeError(this, provideDialogController(), viewModel.getErrorMessage());
 
         if (category == MessageCategory.UNREAD) {
             viewModel.getUnreadSyncSignal().observe(this, signal -> {

@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import com.rapid.android.R;
 import com.rapid.android.core.domain.model.BannerItemBean;
-import com.rapid.android.utils.ImageLoader;
+import com.rapid.android.core.image.ImageLoader;
 
 public class ImageBanner extends BaseBanner<BannerItemBean> {
 

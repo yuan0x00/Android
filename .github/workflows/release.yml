@@ -28,6 +28,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Validate Version Name
+        run: |
+          VERSION="${{ github.event.inputs.version_name || github.ref_name }}"
+          if [[ ! $VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid version format: $VERSION. Use vX.Y.Z" >&2
+            exit 1
+          fi
+          echo "✅ Version format valid: $VERSION"
+
       - name: Verify Signing Assets
         run: |
           if [ ! -f app/release.jks ]; then
@@ -47,8 +56,8 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
+      - name: Build Release APK with Cache
+        run: ./gradlew assembleRelease --build-cache
 
       - name: Find APK File
         id: find-apk
@@ -65,12 +74,26 @@ jobs:
         id: release-notes
         run: |
           VERSION="${{ github.event.inputs.version_name || github.ref_name }}"
+          
+          # 找上一个 tag
+          LAST_TAG=$(git describe --tags --abbrev=0 "$VERSION^" 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            echo "No previous tag found. Showing all commits."
+            git log --pretty=format:"- %s (%h)" > commits.md
+          else
+            git log "$LAST_TAG..HEAD" --pretty=format:"- %s (%h)" > commits.md
+          fi
+
+          # 生成完整 release notes
           echo "## Release $VERSION" > release_notes.md
           echo "" >> release_notes.md
           echo "### 构建信息" >> release_notes.md
           echo "- 构建时间: $(date)" >> release_notes.md
           echo "- 触发方式: ${{ github.event_name }}" >> release_notes.md
-          echo "- Commit: ${{ github.sha }}" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### 变更日志" >> release_notes.md
+          cat commits.md >> release_notes.md
+          echo "✅ Release notes generated"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1

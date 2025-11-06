@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewbinding.ViewBinding;
 
+import com.rapid.android.core.analytics.tracker.Tracker;
 import com.rapid.android.core.ui.components.dialog.DialogController;
 import com.rapid.android.core.ui.components.dialog.DialogHost;
 
@@ -20,6 +21,8 @@ public abstract class BaseFragment<VM extends BaseViewModel, VB extends ViewBind
     protected VM viewModel;
     protected VB binding;
     private DialogController dialogController;
+    private long pageCreateTime;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +40,11 @@ public abstract class BaseFragment<VM extends BaseViewModel, VB extends ViewBind
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        pageCreateTime = System.currentTimeMillis();
+
+        Tracker.trackPageCreate(this.getClass().getName());
+
         dialogController = DialogController.from(requireActivity(), binding.getRoot());
         initializeViews();
         setupObservers();
@@ -46,6 +54,10 @@ public abstract class BaseFragment<VM extends BaseViewModel, VB extends ViewBind
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        long duration = System.currentTimeMillis() - pageCreateTime;
+        Tracker.trackPageDestroy(this.getClass().getName(), duration);
+
         binding = null;
         dialogController = null;
     }

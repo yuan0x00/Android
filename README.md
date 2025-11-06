@@ -6,10 +6,9 @@
 ## library
 
 - analytics
-    - [ ] 埋点
-    - [ ] 异常上报
-    - [ ] 性能分析
-    - [ ] 卡顿分析
+    - 埋点&上报
+    - 异常捕获
+    - BlockMonitor卡顿分析
 - common
     - BaseApplication
     - CommonUtils
@@ -26,12 +25,12 @@
 - log
     - Timber封装
 - navigation
-    - [ ] RouterServiceManager
+    - RouterServiceManager
 - network
     - NetworkClientManager
     - Interceptor
 - permission
-    - [ ] PermissionManager
+    - PermissionManager
 - storage
     - mmkv封装
 - ui
@@ -39,7 +38,6 @@
     - BaseViewModel
     - BaseFragment
     - BaseDialogView(CustomView)
-        - [ ] 嵌套Fragment传递Host问题
     - BottomTabNavigator
     - ToastViewUtils(CustomView)
 

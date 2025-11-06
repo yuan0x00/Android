@@ -2,7 +2,6 @@ package com.rapid.android.feature.main.mine;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -54,7 +53,6 @@ public class MineViewModel extends BaseViewModel {
      * 统一的会话状态处理
      */
     private void onSessionStateChanged(SessionManager.SessionState sessionState) {
-        Log.d("MineViewModel", "会话状态变化: " + (sessionState != null ? sessionState.isLoggedIn() : "null"));
 
         if (sessionState == null || !sessionState.isLoggedIn()) {
             handleGuestState();
@@ -124,15 +122,24 @@ public class MineViewModel extends BaseViewModel {
                                         toastMessage.setValue("加载超时，请重试");
                                     }
                                 },
-                                throwable -> {} // 忽略错误
+                                throwable -> {
+                                } // 忽略错误
                         )
         );
     }
 
     // LiveData 暴露方法
-    public LiveData<MineUiState> getUiState() { return uiState; }
-    public LiveData<Boolean> getLoading() { return loading; }
-    public LiveData<String> getToastMessage() { return toastMessage; }
+    public LiveData<MineUiState> getUiState() {
+        return uiState;
+    }
+
+    public LiveData<Boolean> getLoading() {
+        return loading;
+    }
+
+    public LiveData<String> getToastMessage() {
+        return toastMessage;
+    }
 
     /**
      * 刷新数据

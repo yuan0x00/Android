@@ -27,7 +27,6 @@ public class TaskManager {
     private final SharedPreferences prefs;
     private final Map<Class<? extends Task>, Integer> lastDurations = new HashMap<>();
     private final ExecutorService durationWriter = Executors.newSingleThreadExecutor();
-    private long buildGraphTime = 0;
     private ExecutorService nonBlockingExecutor;
 
     public TaskManager(Context context) {
@@ -72,7 +71,6 @@ public class TaskManager {
                 .forEach(n -> executeTask(n, true));
         awaitBlockingTasks();
         long blockingTasksTime = System.currentTimeMillis() - blockingStart;
-        Log.i(TAG, "All blocking tasks completed | Time: " + blockingTasksTime + "ms");
 
         // 执行非阻塞任务（按关键路径降序）
         long nonBlockingStart = System.currentTimeMillis();
@@ -82,18 +80,14 @@ public class TaskManager {
                 .forEach(n -> executeTask(n, false));
         shutdownNonBlockingExecutor();
         long nonBlockingTasksTime = System.currentTimeMillis() - nonBlockingStart;
-
         long totalDuration = System.currentTimeMillis() - startTime;
 
-        // 冷启动耗时报告
-        Log.i(TAG, "Cold Start Report:");
-        Log.i(TAG, "buildGraph: " + buildGraphTime + "ms");
-        Log.i(TAG, "blocking tasks: " + blockingTasksTime + "ms");
-        Log.i(TAG, "non-blocking tasks: " + nonBlockingTasksTime + "ms");
-        Log.i(TAG, "total: " + totalDuration + "ms");
+        Log.i(TAG, "->Blocking tasks completed | Time: " + blockingTasksTime + "ms");
+        Log.i(TAG, "->Non-Blocking tasks completed | Time: " + nonBlockingTasksTime + "ms");
+        Log.i(TAG, "->Total cost: " + totalDuration + "ms");
 
         if (!taskExceptions.isEmpty()) {
-            Log.e(TAG, "⚠️ Exceptions occurred during tasks (limited to 10):");
+            Log.e(TAG, "Exceptions occurred during tasks (limited to 10):");
             taskExceptions.stream().limit(10).forEach(t -> Log.e(TAG, t.toString()));
         }
     }
@@ -102,7 +96,6 @@ public class TaskManager {
      * 构建任务 DAG
      */
     private void buildGraph() {
-        long startTime = System.currentTimeMillis();
 
         // 创建节点
         for (Task task : allTasks) {
@@ -125,7 +118,6 @@ public class TaskManager {
             }
         }
 
-        buildGraphTime = System.currentTimeMillis() - startTime;
         printGraph();
     }
 
@@ -133,7 +125,7 @@ public class TaskManager {
      * 打印 DAG 树状结构，显示关键路径长度
      */
     private void printGraph() {
-        Log.i(TAG, "⬇ Task DAG Tree Structure ⬇");
+        Log.i(TAG, "---Task DAG Tree Structure---");
         List<TaskNode> roots = new ArrayList<>();
         for (TaskNode node : nodes.values()) {
             if (node.remainingDeps.get() == 0) roots.add(node);
@@ -142,7 +134,7 @@ public class TaskManager {
         for (TaskNode root : roots) {
             printNode(root, "", visited);
         }
-        Log.i(TAG, "⬆ Task DAG Tree Structure ⬆");
+        Log.i(TAG, "---Task DAG Tree Structure---");
     }
 
     private void printNode(TaskNode node, String prefix, Set<Class<? extends Task>> visited) {
@@ -204,11 +196,11 @@ public class TaskManager {
         Runnable runner = () -> {
             long startTime = System.currentTimeMillis();
             try {
-                Log.i(TAG, "▶ Start " + node.task.getName() + " | " + node.task.getTaskType());
+//                Log.i(TAG, "Start " + node.task.getName() + " | " + node.task.getTaskType());
                 node.task.run();
             } catch (Exception e) {
                 taskExceptions.add(e);
-                Log.e(TAG, "❌ Task failed: " + node.task.getName(), e);
+                Log.e(TAG, "Failed: " + node.task.getName(), e);
             } finally {
                 int duration = (int) (System.currentTimeMillis() - startTime);
                 lastDurations.put(node.task.getClass(), duration);
@@ -228,7 +220,7 @@ public class TaskManager {
                     }
                 }
 
-                Log.i(TAG, "✔ Done " + node.task.getName() + " | " + node.task.getTaskType() + " | Time: " + duration + "ms");
+                Log.i(TAG, "Done " + node.task.getName() + " | " + node.task.getTaskType() + " | Time: " + duration + "ms");
             }
         };
 

@@ -9,9 +9,9 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.viewbinding.ViewBinding;
 
+import com.rapid.android.core.analytics.tracker.Tracker;
 import com.rapid.android.core.common.utils.WindowInsetsUtils;
 import com.rapid.android.core.network.state.NetworkStateManager;
 import com.rapid.android.core.ui.R;
@@ -22,16 +22,21 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBinding> extends AppCompatActivity implements DialogHost {
 
-    private static final boolean isAsyncLayoutInflater = false;
     protected VM viewModel;
     protected VB binding;
     private DialogController dialogController;
     private ViewGroup container;
 
+    private long pageCreateTime;    // 页面创建时间（可用于计算停留时长）
+
     @Override
     @CallSuper
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        pageCreateTime = System.currentTimeMillis();
+
+        Tracker.trackPageCreate(this.getClass().getName());
 
         setContentView(R.layout.core_ui_activity_container);
         container = findViewById(R.id.container);
@@ -42,21 +47,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
 
         viewModel = createViewModel();
 
-        if (isAsyncLayoutInflater) {
-            setContentViewAsync(getLayoutResId());
-        } else {
-            setContentViewSync(getLayoutResId());
-        }
-    }
-
-    private void setContentViewAsync(@LayoutRes int resid) {
-        new AsyncLayoutInflater(this)
-                .inflate(resid, container, (view, resId, parent) -> {
-                            container.addView(view);
-                            binding = createViewBinding(view);
-                            initView();
-                        }
-                );
+        setContentViewSync(getLayoutResId());
     }
 
     private void setContentViewSync(@LayoutRes int resid) {
@@ -80,6 +71,13 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
     @CallSuper
     protected void onDestroy() {
         super.onDestroy();
+
+        // 页面停留时长 = 当前时间 - 页面创建时间
+        long duration = System.currentTimeMillis() - pageCreateTime;
+
+        // 页面销毁埋点
+        Tracker.trackPageDestroy(this.getClass().getName(), duration);
+
         binding = null;
         viewModel = null;
         dialogController = null;

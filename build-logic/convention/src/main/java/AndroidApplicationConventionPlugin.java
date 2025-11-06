@@ -3,6 +3,8 @@ import com.android.build.api.dsl.SigningConfig;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.VersionCatalog;
+import org.gradle.api.artifacts.VersionCatalogsExtension;
 import org.jspecify.annotations.NonNull;
 
 import java.io.File;
@@ -58,6 +60,15 @@ public class AndroidApplicationConventionPlugin implements Plugin<@NonNull Proje
                 boolean debugMinifyEnabled = PropertiesLoader.getPropertyBoolean(config, "debugMinifyEnabled", false);
                 boolean debugShrinkResources = PropertiesLoader.getPropertyBoolean(config, "debugShrinkResources", false);
 
+                if (!debugMinifyEnabled) {
+                    VersionCatalogsExtension catalogs = target.getExtensions().getByType(VersionCatalogsExtension.class);
+                    VersionCatalog libs = catalogs.named("libs");
+                    libs.findLibrary("leakcanary.android").ifPresent(lib ->
+                            target.getDependencies().add("debugImplementation", lib.get().toString())
+                    );
+                }
+
+                buildType.setDebuggable(!debugMinifyEnabled);
                 buildType.setMinifyEnabled(debugMinifyEnabled);
                 buildType.setShrinkResources(debugShrinkResources);
                 buildType.proguardFile(extension.getDefaultProguardFile("proguard-android-optimize.txt"));

@@ -120,4 +120,16 @@
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
 
--dontoptimize
+# 保留 DrawerLayout 私有字段，防止 R8 移除/混淆
+-keep class androidx.drawerlayout.widget.DrawerLayout {
+    <fields>;
+}
+
+-keep class androidx.customview.widget.ViewDragHelper {
+    <fields>;
+}
+
+-keep class androidx.drawerlayout.widget.DrawerLayout$* {
+    <fields>;
+}
+

@@ -1,102 +1,94 @@
 package com.rapid.android.core.initializer;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * TaskManager: 管理应用冷启动初始化任务。
- * 支持阻塞任务（必须完成后主线程才能继续）和非阻塞任务。
- * 基于 DAG 构建依赖关系，并根据关键路径长度优先执行关键任务。
+ * TaskManager
+ * - 关键路径阻塞任务阻塞主线程
+ * - 非关键路径阻塞任务并行执行
+ * - 非阻塞任务按关键路径优先执行
+ * - 支持循环依赖检测
  */
 public class TaskManager {
 
     private static final String TAG = "TaskManager";
-    private static final String PREFS_NAME = "task_times";
 
     private final List<Task> allTasks = new ArrayList<>();
     private final Map<Class<? extends Task>, TaskNode> nodes = new HashMap<>();
     private final List<Throwable> taskExceptions = Collections.synchronizedList(new ArrayList<>());
-    private final AtomicInteger blockingRemaining = new AtomicInteger(0);
-    private final SharedPreferences prefs;
-    private final Map<Class<? extends Task>, Integer> lastDurations = new HashMap<>();
-    private final ExecutorService durationWriter = Executors.newSingleThreadExecutor();
+
+    private final AtomicInteger criticalBlockingRemaining = new AtomicInteger(0);
+
+    private ExecutorService blockingExecutor;
     private ExecutorService nonBlockingExecutor;
 
-    public TaskManager(Context context) {
-        this.prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    public TaskManager() {
     }
 
-    /**
-     * 添加初始化任务
-     */
     public void addTask(Task task) {
+        if (nodes.containsKey(task.getClass())) {
+            Log.i(TAG, "Task already added: " + task.getName());
+            return;
+        }
         allTasks.add(task);
     }
 
     public void addTasks(List<Task> tasks) {
-        for (Task task : tasks) {
-            addTask(task);
-        }
+        for (Task task : tasks) addTask(task);
     }
 
-    /**
-     * 启动所有任务
-     */
     public void start() {
         long startTime = System.currentTimeMillis();
 
         buildGraph();
-        loadLastDurations();
-        calculateCriticalPath();
+        calculateCriticalPathsAndMarkCriticalBlocking();
 
-        // 阻塞任务计数
-        blockingRemaining.set((int) nodes.values().stream()
-                .filter(n -> n.task.getTaskType() == TaskType.BLOCKING).count());
-
+        // 初始化线程池
         int cores = Runtime.getRuntime().availableProcessors();
+        blockingExecutor = Executors.newFixedThreadPool(Math.max(2, cores / 2));
         nonBlockingExecutor = Executors.newFixedThreadPool(cores);
 
-        // 执行阻塞任务（按关键路径降序）
-        long blockingStart = System.currentTimeMillis();
+        // 执行阻塞任务（关键路径和非关键路径一起执行）
         nodes.values().stream()
                 .filter(n -> n.remainingDeps.get() == 0 && n.task.getTaskType() == TaskType.BLOCKING)
                 .sorted((a, b) -> Integer.compare(b.criticalPath, a.criticalPath))
-                .forEach(n -> executeTask(n, true));
-        awaitBlockingTasks();
-        long blockingTasksTime = System.currentTimeMillis() - blockingStart;
+                .forEach(n -> executeTask(n, n.isCriticalBlocking));
 
-        // 执行非阻塞任务（按关键路径降序）
-        long nonBlockingStart = System.currentTimeMillis();
+        // 等待关键路径阻塞任务完成
+        awaitCriticalBlockingTasks();
+
+        // 执行非阻塞任务（优先级队列）
+        PriorityBlockingQueue<TaskNode> queue = new PriorityBlockingQueue<>(nodes.size(),
+                Comparator.comparingInt((TaskNode n) -> -n.criticalPath));
         nodes.values().stream()
                 .filter(n -> n.remainingDeps.get() == 0 && n.task.getTaskType() != TaskType.BLOCKING)
-                .sorted((a, b) -> Integer.compare(b.criticalPath, a.criticalPath))
-                .forEach(n -> executeTask(n, false));
-        shutdownNonBlockingExecutor();
-        long nonBlockingTasksTime = System.currentTimeMillis() - nonBlockingStart;
+                .forEach(queue::offer);
+
+        while (!queue.isEmpty()) {
+            TaskNode node = queue.poll();
+            executeTask(node, false);
+        }
+
+        shutdownExecutors();
+
         long totalDuration = System.currentTimeMillis() - startTime;
-
-        Log.i(TAG, "->Blocking tasks completed | Time: " + blockingTasksTime + "ms");
-        Log.i(TAG, "->Non-Blocking tasks completed | Time: " + nonBlockingTasksTime + "ms");
         Log.i(TAG, "->Total cost: " + totalDuration + "ms");
-
         if (!taskExceptions.isEmpty()) {
             Log.e(TAG, "Exceptions occurred during tasks (limited to 10):");
             taskExceptions.stream().limit(10).forEach(t -> Log.e(TAG, t.toString()));
         }
     }
 
-    /**
-     * 构建任务 DAG
-     */
-    private void buildGraph() {
+    // ------------------- DAG 构建 -------------------
 
+    private void buildGraph() {
         // 创建节点
         for (Task task : allTasks) {
             nodes.put(task.getClass(), new TaskNode(task));
@@ -106,24 +98,162 @@ public class TaskManager {
         for (TaskNode node : nodes.values()) {
             List<Class<? extends Task>> deps = node.task.getDependencies();
             if (deps != null) {
-                for (Class<? extends Task> dep : deps) {
-                    TaskNode depNode = nodes.get(dep);
+                for (Class<? extends Task> depClass : deps) {
+                    TaskNode depNode = nodes.get(depClass);
                     if (depNode != null) {
                         depNode.dependents.add(node);
                         node.remainingDeps.incrementAndGet();
                     } else {
-                        throw new IllegalStateException("Dependency not found: " + dep.getSimpleName());
+                        throw new IllegalStateException("Dependency not found: " + depClass.getSimpleName());
                     }
                 }
             }
         }
 
+        detectCycles();
         printGraph();
     }
 
-    /**
-     * 打印 DAG 树状结构，显示关键路径长度
-     */
+    // 循环依赖检测
+    private void detectCycles() {
+        Set<TaskNode> visited = new HashSet<>();
+        Set<TaskNode> stack = new HashSet<>();
+        for (TaskNode node : nodes.values()) {
+            if (!visited.contains(node)) {
+                if (dfsCycle(node, visited, stack)) {
+                    throw new IllegalStateException("Cycle detected in tasks!");
+                }
+            }
+        }
+    }
+
+    private boolean dfsCycle(TaskNode node, Set<TaskNode> visited, Set<TaskNode> stack) {
+        visited.add(node);
+        stack.add(node);
+        for (TaskNode dep : node.dependents) {
+            if (!visited.contains(dep)) {
+                if (dfsCycle(dep, visited, stack)) return true;
+            } else if (stack.contains(dep)) {
+                return true;
+            }
+        }
+        stack.remove(node);
+        return false;
+    }
+
+    // ------------------- 关键路径计算 & 阻塞任务标记 -------------------
+
+    private void calculateCriticalPathsAndMarkCriticalBlocking() {
+        int maxCP = 0;
+        Map<TaskNode, Integer> memo = new HashMap<>();
+        for (TaskNode node : nodes.values()) {
+            int cp = dfsCriticalPath(node, memo);
+            node.criticalPath = cp;
+            maxCP = Math.max(maxCP, cp);
+        }
+
+        // 标记关键路径阻塞任务
+        for (TaskNode node : nodes.values()) {
+            if (node.task.getTaskType() == TaskType.BLOCKING && node.criticalPath == maxCP) {
+                node.isCriticalBlocking = true;
+            }
+        }
+        // 统计关键阻塞任务数量
+        criticalBlockingRemaining.set((int) nodes.values().stream()
+                .filter(n -> n.isCriticalBlocking).count());
+    }
+
+    private int dfsCriticalPath(TaskNode node, Map<TaskNode, Integer> memo) {
+        if (memo.containsKey(node)) return memo.get(node);
+
+        int maxDep = 0;
+        List<Class<? extends Task>> deps = node.task.getDependencies();
+        if (deps != null) {
+            for (Class<? extends Task> depClass : deps) {
+                TaskNode depNode = nodes.get(depClass);
+                if (depNode != null) {
+                    maxDep = Math.max(maxDep, dfsCriticalPath(depNode, memo));
+                }
+            }
+        }
+        int total = maxDep + node.task.getEstimatedDuration();
+        memo.put(node, total);
+        return total;
+    }
+
+    // ------------------- 任务执行 -------------------
+
+    private void executeTask(TaskNode node, boolean isCriticalBlocking) {
+        Runnable runner = () -> {
+            long startTime = System.currentTimeMillis();
+            try {
+                Log.i(TAG, "Start " + node.task.getName() + " | " + node.task.getTaskType());
+                node.task.run();
+            } catch (Exception e) {
+                taskExceptions.add(e);
+                Log.e(TAG, "Failed: " + node.task.getName(), e);
+            } finally {
+                int duration = (int) (System.currentTimeMillis() - startTime);
+                Log.i(TAG, "Done " + node.task.getName() + " | " + node.task.getTaskType() + " | Time: " + duration + "ms");
+
+                // 下游任务依赖减1，满足条件就执行
+                for (TaskNode dep : node.dependents) {
+                    if (dep.remainingDeps.decrementAndGet() == 0) {
+                        boolean critical = dep.task.getTaskType() == TaskType.BLOCKING && dep.isCriticalBlocking;
+                        executeTask(dep, critical);
+                    }
+                }
+
+                // 关键路径阻塞任务完成
+                if (isCriticalBlocking) {
+                    if (criticalBlockingRemaining.decrementAndGet() == 0) {
+                        synchronized (criticalBlockingRemaining) {
+                            criticalBlockingRemaining.notifyAll();
+                        }
+                    }
+                }
+            }
+        };
+
+        if (node.task.getTaskType() == TaskType.BLOCKING) {
+            blockingExecutor.execute(runner);
+        } else {
+            nonBlockingExecutor.execute(runner);
+        }
+    }
+
+    private void awaitCriticalBlockingTasks() {
+        synchronized (criticalBlockingRemaining) {
+            while (criticalBlockingRemaining.get() > 0) {
+                try {
+                    criticalBlockingRemaining.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+    }
+
+    private void shutdownExecutors() {
+        shutdownExecutor(blockingExecutor);
+        shutdownExecutor(nonBlockingExecutor);
+    }
+
+    private void shutdownExecutor(ExecutorService executor) {
+        if (executor != null) {
+            executor.shutdown();
+            try {
+                if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
+                    Log.w(TAG, "Some tasks may not finish in time");
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    // ------------------- DAG 打印 -------------------
+
     private void printGraph() {
         Log.i(TAG, "---Task DAG Tree Structure---");
         List<TaskNode> roots = new ArrayList<>();
@@ -144,7 +274,8 @@ public class TaskManager {
         }
         Log.i(TAG, prefix + node.task.getName() +
                 " | " + node.task.getTaskType() +
-                " | CP: " + node.criticalPath);
+                " | CP: " + node.criticalPath +
+                (node.isCriticalBlocking ? " | CRITICAL" : ""));
         visited.add(node.task.getClass());
 
         List<TaskNode> children = node.dependents;
@@ -156,133 +287,14 @@ public class TaskManager {
         }
     }
 
-    /**
-     * 加载上次任务耗时，用于关键路径计算
-     */
-    private void loadLastDurations() {
-        lastDurations.clear();
-        for (TaskNode node : nodes.values()) {
-            int duration = prefs.getInt(node.task.getClass().getName(), node.task.getEstimatedDuration());
-            lastDurations.put(node.task.getClass(), duration);
-        }
-    }
+    // ------------------- TaskNode -------------------
 
-    /**
-     * 计算关键路径长度（基于历史耗时）
-     */
-    private void calculateCriticalPath() {
-        Map<TaskNode, Integer> memo = new HashMap<>();
-        for (TaskNode node : nodes.values()) {
-            node.criticalPath = dfsCriticalPath(node, memo);
-        }
-    }
-
-    private int dfsCriticalPath(TaskNode node, Map<TaskNode, Integer> memo) {
-        if (memo.containsKey(node)) return Objects.requireNonNull(memo.get(node));
-        int maxDep = 0;
-        for (TaskNode dep : node.dependents) {
-            maxDep = Math.max(maxDep, dfsCriticalPath(dep, memo));
-        }
-        int duration = lastDurations.getOrDefault(node.task.getClass(), node.task.getEstimatedDuration());
-        int total = maxDep + duration;
-        memo.put(node, total);
-        return total;
-    }
-
-    /**
-     * 执行任务统一逻辑
-     */
-    private void executeTask(TaskNode node, boolean isBlocking) {
-        Runnable runner = () -> {
-            long startTime = System.currentTimeMillis();
-            try {
-//                Log.i(TAG, "Start " + node.task.getName() + " | " + node.task.getTaskType());
-                node.task.run();
-            } catch (Exception e) {
-                taskExceptions.add(e);
-                Log.e(TAG, "Failed: " + node.task.getName(), e);
-            } finally {
-                int duration = (int) (System.currentTimeMillis() - startTime);
-                lastDurations.put(node.task.getClass(), duration);
-                saveDurationAsync(node.task.getClass(), duration);
-
-                if (isBlocking) {
-                    if (blockingRemaining.decrementAndGet() == 0) {
-                        synchronized (blockingRemaining) {
-                            blockingRemaining.notifyAll();
-                        }
-                    }
-                }
-
-                for (TaskNode dep : node.dependents) {
-                    if (dep.remainingDeps.decrementAndGet() == 0) {
-                        executeTask(dep, dep.task.getTaskType() == TaskType.BLOCKING);
-                    }
-                }
-
-                Log.i(TAG, "Done " + node.task.getName() + " | " + node.task.getTaskType() + " | Time: " + duration + "ms");
-            }
-        };
-
-        if (isBlocking) runner.run();
-        else nonBlockingExecutor.execute(runner);
-    }
-
-    /**
-     * 异步保存任务耗时到 SharedPreferences
-     */
-    private void saveDurationAsync(Class<? extends Task> clazz, int duration) {
-        durationWriter.execute(() -> prefs.edit().putInt(clazz.getName(), duration).apply());
-    }
-
-    /**
-     * 阻塞任务等待
-     */
-    private void awaitBlockingTasks() {
-        synchronized (blockingRemaining) {
-            while (blockingRemaining.get() > 0) {
-                try {
-                    blockingRemaining.wait();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }
-    }
-
-    /**
-     * 关闭非阻塞任务线程池，并等待耗时写入完成
-     */
-    private void shutdownNonBlockingExecutor() {
-        if (nonBlockingExecutor != null) {
-            nonBlockingExecutor.shutdown();
-            try {
-                if (!nonBlockingExecutor.awaitTermination(60, TimeUnit.SECONDS)) {
-                    Log.w(TAG, "Some non-blocking tasks may not finish in time");
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        durationWriter.shutdown();
-        try {
-            if (!durationWriter.awaitTermination(5, TimeUnit.SECONDS)) {
-                Log.w(TAG, "Some task durations may not be saved in time");
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    /**
-     * DAG 节点
-     */
     private static class TaskNode {
         final Task task;
         final AtomicInteger remainingDeps = new AtomicInteger(0);
         final List<TaskNode> dependents = new ArrayList<>();
         int criticalPath = 0;
+        boolean isCriticalBlocking = false;
 
         TaskNode(Task task) {
             this.task = task;

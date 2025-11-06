@@ -20,12 +20,18 @@ public class DeveloperViewModel extends BaseViewModel {
 
     private final MutableLiveData<FormError> formErrorLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> messageResLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> proxyEnable = new MutableLiveData<>(PreferenceHelper.getDefault().getBoolean("developer_proxy_enable", false));
-    private final MutableLiveData<String> host = new MutableLiveData<>(PreferenceHelper.getDefault().getString("developer_host", "192.168.1.1"));
-    private final MutableLiveData<Integer> port = new MutableLiveData<>(PreferenceHelper.getDefault().getInt("developer_port", 8080));
+    private final MutableLiveData<Boolean> proxyEnable = new MutableLiveData<>();
+    private final MutableLiveData<String> host = new MutableLiveData<>();
+    private final MutableLiveData<Integer> port = new MutableLiveData<>();
 
     public DeveloperViewModel() {
+        proxyEnable.setValue(getPref().getBoolean("developer_proxy_enable", false));
+        host.setValue(getPref().getString("developer_host", "192.168.1.1"));
+        port.setValue(getPref().getInt("developer_port", 8080));
+    }
 
+    private PreferenceHelper getPref() {
+        return PreferenceHelper.getDefault();
     }
 
     LiveData<FormError> getFormError() {

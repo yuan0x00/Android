@@ -14,12 +14,12 @@ public class MainApplication extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        new NetworkTask().run();
     }
 
     @Override
     public List<Task> addInitTasks() {
         return List.of(
-                new NetworkTask(),
                 new SessionTask(),
                 new StrictModeTask(),
                 new ThemeTask(),
@@ -30,7 +30,6 @@ public class MainApplication extends BaseApplication {
 
     @Override
     public void onAppInitialized() {
-//        GlobalCrashHandler.setCrashReporter(new AppCrashReporter());
         onIdleHandler();
     }
 

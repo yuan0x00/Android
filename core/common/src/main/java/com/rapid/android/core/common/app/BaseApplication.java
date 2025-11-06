@@ -37,29 +37,16 @@ public abstract class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+        new MmkvTask().run();
         performInitialization();
     }
 
     private void performInitialization() {
-//        try {
-//            GlobalCrashHandler.install(this);
-//            LogKit.d("BaseApplication", "GlobalCrashHandler installed");
-//
-//            AppLifecycleObserver.initialize(this);
-//            ProcessLifecycleOwner.get().getLifecycle().addObserver(AppLifecycleObserver.getInstance());
-//            LogKit.d("BaseApplication", "AppLifecycleObserver added");
-//
-//        } catch (Exception e) {
-//            LogKit.e("BaseApplication", e, "Initialization error");
-//            throw new RuntimeException("Failed to initialize BaseApplication", e);
-//        }
-
-        TaskManager initManager = new TaskManager(this);
+        TaskManager initManager = new TaskManager();
         // 添加初始化任务
         initManager.addTasks(
                 List.of(
-                        new LogKitTask(),
-                        new MmkvTask()
+                        new LogKitTask()
                 )
         );
         initManager.addTasks(addInitTasks());

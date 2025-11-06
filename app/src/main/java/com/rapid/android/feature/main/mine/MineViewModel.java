@@ -32,13 +32,10 @@ public class MineViewModel extends BaseViewModel {
 
     private final UserRepository userRepository = RepositoryProvider.getUserRepository();
     private final SessionManager sessionManager = SessionManager.getInstance();
-    private final PreferenceHelper dataStore;
-
     private boolean signedInToday = false;
     private boolean shareCountLoaded = false;
 
     public MineViewModel() {
-        dataStore = PreferenceHelper.getDefault();
         signedInToday = hasSignedInToday();
 
         // 使用 MediatorLiveData 管理会话状态
@@ -47,6 +44,10 @@ public class MineViewModel extends BaseViewModel {
         // 初始状态
         SessionManager.SessionState currentState = sessionManager.getCurrentState();
         onSessionStateChanged(currentState);
+    }
+
+    private PreferenceHelper getPref() {
+        return PreferenceHelper.getDefault();
     }
 
     /**
@@ -253,12 +254,12 @@ public class MineViewModel extends BaseViewModel {
 
     // 工具方法
     private boolean hasSignedInToday() {
-        String lastDate = dataStore.getString(KEY_LAST_SIGN_IN_DATE, "");
+        String lastDate = getPref().getString(KEY_LAST_SIGN_IN_DATE, "");
         return TextUtils.equals(lastDate, getTodayKey());
     }
 
     private void saveSignInDate() {
-        dataStore.putString(KEY_LAST_SIGN_IN_DATE, getTodayKey());
+        getPref().putString(KEY_LAST_SIGN_IN_DATE, getTodayKey());
     }
 
     private String getTodayKey() {

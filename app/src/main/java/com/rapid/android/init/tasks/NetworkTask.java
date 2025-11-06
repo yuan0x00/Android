@@ -1,6 +1,5 @@
 package com.rapid.android.init.tasks;
 
-import com.rapid.android.core.common.app.tasks.MmkvTask;
 import com.rapid.android.core.initializer.Task;
 import com.rapid.android.core.initializer.TaskType;
 import com.rapid.android.core.network.client.NetworkClient;
@@ -11,17 +10,11 @@ import com.rapid.android.network.interceptor.TokenInterceptor;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.util.List;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 
 public class NetworkTask extends Task {
-
-    @Override
-    public List<Class<? extends Task>> getDependencies() {
-        return List.of(MmkvTask.class);
-    }
 
     @Override
     public TaskType getTaskType() {
@@ -33,9 +26,11 @@ public class NetworkTask extends Task {
         OkHttpClient.Builder okHttpBuilder = NetworkClient.getDefaultOkHttpBuilder();
         Retrofit.Builder retrofitBuilder = NetworkClient.getDefaultRetrofitBuilder();
 
-        boolean enabled = PreferenceHelper.getDefault().getBoolean("developer_proxy_enable", false);
-        String host = PreferenceHelper.getDefault().getString("developer_host", "");
-        int port = PreferenceHelper.getDefault().getInt("developer_port", 0);
+        PreferenceHelper preferenceHelper = PreferenceHelper.getDefault();
+
+        boolean enabled = preferenceHelper.getBoolean("developer_proxy_enable", false);
+        String host = preferenceHelper.getString("developer_host", "");
+        int port = preferenceHelper.getInt("developer_port", 0);
 
         if (enabled) {
             // 使用 OkHttp 内置的 Proxy 配置

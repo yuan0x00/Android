@@ -51,7 +51,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VB extends ViewBind
     }
 
     private void setContentViewSync(@LayoutRes int resid) {
-        View view = LayoutInflater.from(this).inflate(resid, null);
+        View view = LayoutInflater.from(this).inflate(resid, container, false);
         container.addView(view);
         binding = createViewBinding(view);
         initView();

@@ -1,4 +1,3 @@
-// PropertiesLoader.java
 package local;
 
 import org.gradle.api.Project;

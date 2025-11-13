@@ -12,4 +12,6 @@ public interface TabNavigator {
     void showBottomBar(boolean animated);
 
     boolean isBottomBarVisible();
+
+    void onHomeNavigationClick();
 }

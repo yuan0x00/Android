@@ -1,18 +1,23 @@
 package com.rapid.android.feature.main.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.rapid.android.R;
 import com.rapid.android.core.ui.presentation.BaseFragment;
 import com.rapid.android.databinding.FragmentHomeBinding;
+import com.rapid.android.feature.main.TabNavigator;
 import com.rapid.android.feature.search.SearchActivity;
 
 public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBinding> {
+
+    private TabNavigator tabNavigator;
 
     @Override
     protected HomeViewModel createViewModel() {
@@ -25,6 +30,14 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof TabNavigator) {
+            tabNavigator = (TabNavigator) context;
+        }
+    }
+
+    @Override
     protected void loadData() {
         super.loadData();
     }
@@ -32,6 +45,8 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
     @Override
     protected void initializeViews() {
         setupViewPager();
+        binding.toolbar.setNavigationIcon(R.drawable.dehaze_24px);
+        binding.toolbar.setNavigationOnClickListener(v -> tabNavigator.onHomeNavigationClick());
         binding.toolbar.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.action_search) {

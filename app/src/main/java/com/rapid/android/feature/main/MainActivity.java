@@ -192,6 +192,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         return navigator != null && navigator.isBottomBarVisible();
     }
 
+    @Override
+    public void onHomeNavigationClick() {
+        binding.drawerLayout.open();
+    }
+
     private boolean shouldAllowTabSelection(int position) {
         BottomTabNavigator.TabItem tabItem = navigator != null ? navigator.getTabItem(position) : null;
         if (tabItem == null) {

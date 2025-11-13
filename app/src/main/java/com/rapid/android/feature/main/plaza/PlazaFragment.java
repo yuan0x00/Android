@@ -103,6 +103,8 @@ public class PlazaFragment extends BaseFragment<PlazaViewModel, FragmentPlazaBin
             }
         });
 
+        binding.toolbar.setNavigationIcon(R.drawable.dehaze_24px);
+        binding.toolbar.setNavigationOnClickListener(v -> tabNavigator.onHomeNavigationClick());
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_search) {
                 startActivity(new Intent(requireContext(), SearchActivity.class));

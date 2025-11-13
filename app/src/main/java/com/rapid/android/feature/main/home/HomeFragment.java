@@ -68,4 +68,10 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
                 (tab, position) -> tab.setText(adapter.getPageTitle(position))).attach();
     }
 
+    @Override
+    public void onDetach() {
+        tabNavigator = null;
+        super.onDetach();
+    }
+
 }

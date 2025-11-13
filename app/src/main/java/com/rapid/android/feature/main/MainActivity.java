@@ -69,7 +69,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
             return insets;
         });
 
-        DrawerLayoutHelper.setDrawerLeftEdgeSizeWithContentPush(this, binding.drawerLayout, 0.3f);
+        DrawerLayoutHelper.setDrawerLeftEdgeSizeWithContentPush(this, binding.drawerLayout, 0.5f);
     }
 
     private void setBackToTask() {

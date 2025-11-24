@@ -85,10 +85,10 @@ jobs:
           fi
 
           # 生成完整 release notes
-          echo "## Release $VERSION" > release_notes.md
-          echo "" >> release_notes.md
-          echo "### 构建信息" >> release_notes.md
-          echo "- 构建时间: $(date)" >> release_notes.md
+#          echo "## Release $VERSION" > release_notes.md
+#          echo "" >> release_notes.md
+#          echo "### 构建信息" >> release_notes.md
+#          echo "- 构建时间: $(date)" >> release_notes.md
 #          echo "- 触发方式: ${{ github.event_name }}" >> release_notes.md
 #          echo "" >> release_notes.md
 #          echo "### 变更日志" >> release_notes.md

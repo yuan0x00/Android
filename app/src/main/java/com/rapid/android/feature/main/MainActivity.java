@@ -104,7 +104,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     private void setTabLayout() {
         // 处理系统栏 Insets
         WindowInsetsUtils.removeOnApplyWindowInsetsListener(binding.getRoot());
-        WindowInsetsUtils.applyTopSystemWindowInsets(binding.getRoot());
+        WindowInsetsUtils.applyTopSystemWindowInsets(binding.contentView);
         WindowInsetsUtils.applyBottomSystemWindowInsets(binding.bottomNavigation);
         // 底部导航与 Fragment 管理关联
         navigator = new BottomTabNavigator(this, binding.bottomNavigation, binding.fragmentContainer)

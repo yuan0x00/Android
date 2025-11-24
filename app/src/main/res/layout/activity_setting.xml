@@ -39,10 +39,10 @@
             android:paddingBottom="@dimen/app_spacing_xl">
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.App.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/app_spacing_lg"
-                style="@style/Widget.App.Card">
+                android:layout_marginBottom="@dimen/app_spacing_lg">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -105,10 +105,10 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.App.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/app_spacing_lg"
-                style="@style/Widget.App.Card">
+                android:layout_marginBottom="@dimen/app_spacing_lg">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -317,10 +317,11 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.App.Card"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/app_spacing_lg"
-                style="@style/Widget.App.Card">
+                android:layout_marginBottom="@dimen/app_spacing_lg">
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Android</string>
+    <string name="app_name">WanAndroid</string>
     <string name="skip">跳过</string>
     <string name="splash_doing">启动中</string>
     <string name="splash_done">启动完成</string>
@@ -107,7 +107,7 @@
     <string name="proxy_config_last_failure_prefix">最近降级：</string>
     <string name="proxy_config_button_save">保存</string>
     <string name="proxy_config_error_host">请输入有效的代理地址</string>
-    <string name="proxy_config_error_port">端口需为 1-65535</string>
+    <string name="proxy_config_error_port">端口需为1到65535</string>
     <string name="proxy_config_saved">代理配置已更新</string>
     <string name="proxy_config_disabled">已关闭代理</string>
     <string name="proxy_config_degraded_notice">代理连接失败，已自动降级为直连</string>
@@ -258,7 +258,7 @@
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
     <string name="ok">好的</string>
-    <string name="loading">加载中...</string>
+    <string name="loading">加载中…</string>
     <string name="error">错误</string>
     <string name="success">成功</string>
     <string name="failed">失败</string>

@@ -1,103 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<com.rapid.android.ui.view.SwipeActionsLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Widget.App.Card"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/app_corner_radius_md">
+    android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.App.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="100dp"
-        android:padding="@dimen/app_spacing_sm">
+        app:cardCornerRadius="@dimen/app_corner_radius_md">
 
-        <TextView
-            android:id="@+id/tvTopTag"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_top_tag"
-            android:paddingStart="@dimen/app_spacing_sm"
-            android:paddingTop="@dimen/app_spacing_xxs"
-            android:paddingEnd="@dimen/app_spacing_sm"
-            android:paddingBottom="@dimen/app_spacing_xxs"
-            android:text="@string/home_top_tag"
-            android:textAppearance="@style/TextAppearance.App.LabelSmall"
-            android:textColor="?attr/colorPrimary"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:minHeight="100dp"
+            android:padding="@dimen/app_spacing_sm">
 
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textAppearance="@style/TextAppearance.App.Subtitle"
-            android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/tvTopTag"
-            app:layout_constraintTop_toBottomOf="@id/tvTopTag"
-            tools:text="内容文字内容文字内容文字内容文字"
-            />
+            <TextView
+                android:id="@+id/tvTopTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_top_tag"
+                android:paddingStart="@dimen/app_spacing_sm"
+                android:paddingTop="@dimen/app_spacing_xxs"
+                android:paddingEnd="@dimen/app_spacing_sm"
+                android:paddingBottom="@dimen/app_spacing_xxs"
+                android:text="@string/home_top_tag"
+                android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                android:textColor="?attr/colorPrimary"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
-            android:id="@+id/tvAuthor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.App.LabelLarge"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintStart_toStartOf="@id/tvTitle"
-            app:layout_constraintTop_toBottomOf="@id/tvTitle"
-            tools:text="用户名称"
-            />
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="@style/TextAppearance.App.Subtitle"
+                android:textColor="?attr/colorOnSurface"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tvTopTag"
+                app:layout_constraintTop_toBottomOf="@id/tvTopTag"
+                tools:text="内容文字内容文字内容文字内容文字"
+                />
 
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.App.Label"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintBaseline_toBaselineOf="@id/tvAuthor"
-            app:layout_constraintStart_toEndOf="@id/tvAuthor"
-            tools:text=" · 2025年1月1日"
-            />
+            <TextView
+                android:id="@+id/tvAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                app:layout_constraintStart_toStartOf="@id/tvTitle"
+                app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                tools:text="用户名称"
+                />
 
-        <ImageView
-            android:id="@+id/ivFavorite"
-            android:layout_width="@dimen/app_text_size_title"
-            android:layout_height="@dimen/app_text_size_title"
-            android:src="@drawable/bookmark_24px"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvAuthor"
-            app:layout_constraintVertical_bias="1.0"/>
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.App.Label"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                app:layout_constraintBaseline_toBaselineOf="@id/tvAuthor"
+                app:layout_constraintStart_toEndOf="@id/tvAuthor"
+                tools:text=" · 2025年1月1日"
+                />
 
-        <TextView
-            android:id="@+id/tvClass"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:background="@drawable/bg_article_class"
-            android:maxLines="1"
-            android:gravity="center"
-            android:paddingHorizontal="@dimen/app_spacing_sm"
-            android:textAppearance="@style/TextAppearance.App.Label"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintBottom_toBottomOf="@id/ivFavorite"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ivFavorite"
-            app:layout_constraintVertical_bias="1.0"
-            tools:text="父分类"/>
+            <ImageView
+                android:id="@+id/ivFavorite"
+                android:layout_width="@dimen/app_text_size_title"
+                android:layout_height="@dimen/app_text_size_title"
+                android:src="@drawable/bookmark_24px"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvAuthor"
+                app:layout_constraintVertical_bias="1.0"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tvClass"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:background="@drawable/bg_article_class"
+                android:maxLines="1"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/app_spacing_sm"
+                android:textAppearance="@style/TextAppearance.App.Label"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                app:layout_constraintBottom_toBottomOf="@id/ivFavorite"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/ivFavorite"
+                app:layout_constraintVertical_bias="1.0"
+                tools:text="父分类"/>
 
-</com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_dark"
+        android:text="左侧菜单"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/tv_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_red_dark"
+        android:textColor="@android:color/white"
+        android:text="右侧菜单"/>
+
+</com.rapid.android.ui.view.SwipeActionsLayout>

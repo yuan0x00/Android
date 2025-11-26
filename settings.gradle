@@ -21,7 +21,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "WanAndroid"
+rootProject.name = "Android"
 include ':app'
 include ':core:analytics'
 include ':core:common'

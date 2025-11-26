@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WanAndroid</string>
+    <string name="app_name">Android</string>
     <string name="skip">跳过</string>
     <string name="splash_doing">启动中</string>
     <string name="splash_done">启动完成</string>

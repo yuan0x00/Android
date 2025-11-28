@@ -48,5 +48,5 @@ captures/
 # Kotlin
 .kotlin
 
-# Perfetto
-*.perfetto
+# Shell
+/shell

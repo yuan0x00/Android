@@ -31,9 +31,9 @@ class MessageListViewModel extends BaseViewModel {
     private final MessageCategory category;
     private final MessageRepository repository = RepositoryProvider.getMessageRepository();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    private final MutableLiveData<Long> unreadSyncSignal = new MutableLiveData<>();
     private final PagingController<MessageBean> pagingController =
             new PagingController<>(this, 1, this::fetchPage);
-    private final MutableLiveData<Long> unreadSyncSignal = new MutableLiveData<>();
 
     MessageListViewModel(MessageCategory category) {
         this.category = category;

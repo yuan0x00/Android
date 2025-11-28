@@ -1,4 +1,4 @@
-package com.rapid.android.feature.main.discover.wechat;
+package com.rapid.android.feature.main.discover.project;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,9 +10,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.rapid.android.core.domain.model.WxChapterBean;
+import com.rapid.android.core.domain.model.CategoryNodeBean;
 import com.rapid.android.core.ui.presentation.BaseFragment;
-import com.rapid.android.databinding.FragmentWechatBinding;
+import com.rapid.android.databinding.FragmentProjectBinding;
 import com.rapid.android.feature.main.TabNavigator;
 import com.rapid.android.ui.common.ContentStateController;
 
@@ -20,20 +20,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class WechatFragment extends BaseFragment<WechatViewModel, FragmentWechatBinding> {
+public class ProjectFragment extends BaseFragment<ProjectViewModel, FragmentProjectBinding> {
 
-    private final List<WxChapterBean> chapters = new ArrayList<>();
+    private final List<CategoryNodeBean> categories = new ArrayList<>();
     private ContentStateController stateController;
-    private WechatTabPagerAdapter pagerAdapter;
+    private ProjectTabPagerAdapter pagerAdapter;
     private TabLayoutMediator tabMediator;
     private int selectedIndex;
-    private TabNavigator tabNavigator;
     private final ViewPager2.OnPageChangeCallback pageChangeCallback = new ViewPager2.OnPageChangeCallback() {
         @Override
         public void onPageSelected(int position) {
             selectedIndex = position;
         }
     };
+    private TabNavigator tabNavigator;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -56,22 +56,21 @@ public class WechatFragment extends BaseFragment<WechatViewModel, FragmentWechat
     }
 
     @Override
-    protected WechatViewModel createViewModel() {
-        return new ViewModelProvider(this).get(WechatViewModel.class);
+    protected ProjectViewModel createViewModel() {
+        return new ViewModelProvider(this).get(ProjectViewModel.class);
     }
 
     @Override
-    protected FragmentWechatBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
-        return FragmentWechatBinding.inflate(inflater, container, false);
+    protected FragmentProjectBinding createViewBinding(LayoutInflater inflater, ViewGroup container) {
+        return FragmentProjectBinding.inflate(inflater, container, false);
     }
 
     @Override
     protected void initializeViews() {
         stateController = new ContentStateController(binding.swipeRefresh, binding.progressBar, binding.emptyView);
 
-        pagerAdapter = new WechatTabPagerAdapter(viewModel,
-                refreshing -> binding.swipeRefresh.post(() -> binding.swipeRefresh.setRefreshing(refreshing)),
-                getDialogController());
+        pagerAdapter = new ProjectTabPagerAdapter(viewModel, refreshing ->
+                binding.swipeRefresh.post(() -> binding.swipeRefresh.setRefreshing(refreshing)));
         pagerAdapter.setTabNavigator(tabNavigator);
         binding.viewPager.setAdapter(pagerAdapter);
         binding.viewPager.registerOnPageChangeCallback(pageChangeCallback);
@@ -80,8 +79,8 @@ public class WechatFragment extends BaseFragment<WechatViewModel, FragmentWechat
                 pagerAdapter.canScrollUp(binding.viewPager.getCurrentItem()));
 
         binding.swipeRefresh.setOnRefreshListener(() -> {
-            if (chapters.isEmpty()) {
-                viewModel.loadWechatChapters(true);
+            if (categories.isEmpty()) {
+                viewModel.loadProjects(true);
             } else {
                 pagerAdapter.refreshPage(binding.viewPager.getCurrentItem());
             }
@@ -89,7 +88,7 @@ public class WechatFragment extends BaseFragment<WechatViewModel, FragmentWechat
 
         tabMediator = new TabLayoutMediator(binding.tabLayout, binding.viewPager,
                 (tab, position) -> {
-                    WxChapterBean item = pagerAdapter.getItem(position);
+                    CategoryNodeBean item = pagerAdapter.getItem(position);
                     tab.setText(item != null ? item.getName() : "");
                 });
         tabMediator.attach();
@@ -97,17 +96,17 @@ public class WechatFragment extends BaseFragment<WechatViewModel, FragmentWechat
 
     @Override
     protected void loadData() {
-        viewModel.loadWechatChapters(false);
+        viewModel.loadProjects(false);
     }
 
     @Override
     protected void setupObservers() {
-        viewModel.getChapters().observe(this, list -> {
-            chapters.clear();
+        viewModel.getProjectCategories().observe(this, list -> {
+            categories.clear();
             if (list != null) {
-                chapters.addAll(list);
+                categories.addAll(list);
             }
-            stateController.setEmpty(chapters.isEmpty());
+            stateController.setEmpty(categories.isEmpty());
             updateTabs();
         });
 
@@ -117,11 +116,11 @@ public class WechatFragment extends BaseFragment<WechatViewModel, FragmentWechat
     }
 
     private void updateTabs() {
-        List<WxChapterBean> snapshot = chapters.isEmpty()
+        List<CategoryNodeBean> snapshot = categories.isEmpty()
                 ? Collections.emptyList()
-                : new ArrayList<>(chapters);
+                : new ArrayList<>(categories);
 
-        pagerAdapter.submitChapters(snapshot);
+        pagerAdapter.submitCategories(snapshot);
 
         binding.viewPager.setVisibility(snapshot.isEmpty() ? View.GONE : View.VISIBLE);
         if (snapshot.isEmpty()) {

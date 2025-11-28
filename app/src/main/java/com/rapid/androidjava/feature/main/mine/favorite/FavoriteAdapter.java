@@ -102,6 +102,46 @@ final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favorit
         void onFavoriteRemoved(@NonNull ArticleListBean.Data data);
     }
 
+    private static class FavoriteDiffCallback extends DiffUtil.Callback {
+        private final List<ArticleListBean.Data> oldList;
+        private final List<ArticleListBean.Data> newList;
+
+        FavoriteDiffCallback(List<ArticleListBean.Data> oldList, List<ArticleListBean.Data> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            ArticleListBean.Data oldItem = oldList.get(oldItemPosition);
+            ArticleListBean.Data newItem = newList.get(newItemPosition);
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            ArticleListBean.Data oldItem = oldList.get(oldItemPosition);
+            ArticleListBean.Data newItem = newList.get(newItemPosition);
+            return TextUtils.equals(oldItem.getTitle(), newItem.getTitle())
+                    && TextUtils.equals(oldItem.getDesc(), newItem.getDesc())
+                    && TextUtils.equals(oldItem.getAuthor(), newItem.getAuthor())
+                    && TextUtils.equals(oldItem.getShareUser(), newItem.getShareUser())
+                    && TextUtils.equals(oldItem.getNiceShareDate(), newItem.getNiceShareDate())
+                    && TextUtils.equals(oldItem.getNiceDate(), newItem.getNiceDate())
+                    && TextUtils.equals(oldItem.getLink(), newItem.getLink());
+        }
+    }
+
     class FavoriteViewHolder extends RecyclerView.ViewHolder {
         private final ItemArticleBinding binding;
         private boolean collectRequestRunning = false;
@@ -232,46 +272,6 @@ final class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favorit
                 return;
             }
             ToastViewUtils.showShortToast(dialogController, message);
-        }
-    }
-
-    private static class FavoriteDiffCallback extends DiffUtil.Callback {
-        private final List<ArticleListBean.Data> oldList;
-        private final List<ArticleListBean.Data> newList;
-
-        FavoriteDiffCallback(List<ArticleListBean.Data> oldList, List<ArticleListBean.Data> newList) {
-            this.oldList = oldList;
-            this.newList = newList;
-        }
-
-        @Override
-        public int getOldListSize() {
-            return oldList.size();
-        }
-
-        @Override
-        public int getNewListSize() {
-            return newList.size();
-        }
-
-        @Override
-        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            ArticleListBean.Data oldItem = oldList.get(oldItemPosition);
-            ArticleListBean.Data newItem = newList.get(newItemPosition);
-            return oldItem.getId() == newItem.getId();
-        }
-
-        @Override
-        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            ArticleListBean.Data oldItem = oldList.get(oldItemPosition);
-            ArticleListBean.Data newItem = newList.get(newItemPosition);
-            return TextUtils.equals(oldItem.getTitle(), newItem.getTitle())
-                    && TextUtils.equals(oldItem.getDesc(), newItem.getDesc())
-                    && TextUtils.equals(oldItem.getAuthor(), newItem.getAuthor())
-                    && TextUtils.equals(oldItem.getShareUser(), newItem.getShareUser())
-                    && TextUtils.equals(oldItem.getNiceShareDate(), newItem.getNiceShareDate())
-                    && TextUtils.equals(oldItem.getNiceDate(), newItem.getNiceDate())
-                    && TextUtils.equals(oldItem.getLink(), newItem.getLink());
         }
     }
 }

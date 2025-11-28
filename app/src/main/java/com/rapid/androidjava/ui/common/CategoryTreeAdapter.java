@@ -38,15 +38,6 @@ public class CategoryTreeAdapter extends RecyclerView.Adapter<CategoryTreeAdapte
         this.childClickListener = listener;
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
-        CategoryNodeBean item = items.get(position);
-        holder.titleText.setText(item.getName());
-
-        List<CategoryNodeBean> children = item.getChildren();
-        bindChildren(holder, item, children);
-    }
-
     private static Chip createChip(@NonNull ChipGroup parent, @NonNull String text) {
         Chip chip = new Chip(parent.getContext());
         chip.setText(text);
@@ -87,6 +78,15 @@ public class CategoryTreeAdapter extends RecyclerView.Adapter<CategoryTreeAdapte
         return !TextUtils.isEmpty(value) && (value.startsWith("http://") || value.startsWith("https://"));
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
+        CategoryNodeBean item = items.get(position);
+        holder.titleText.setText(item.getName());
+
+        List<CategoryNodeBean> children = item.getChildren();
+        bindChildren(holder, item, children);
+    }
+
     public void submitList(List<CategoryNodeBean> data) {
         List<CategoryNodeBean> newItems = data != null ? new ArrayList<>(data) : new ArrayList<>();
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new CategoryDiffCallback(items, newItems));
@@ -102,24 +102,9 @@ public class CategoryTreeAdapter extends RecyclerView.Adapter<CategoryTreeAdapte
         return new CategoryViewHolder(view);
     }
 
-    public interface OnChildClickListener {
-        void onChildClick(CategoryNodeBean child, CategoryNodeBean parent);
-    }
-
     @Override
     public int getItemCount() {
         return items.size();
-    }
-
-    static class CategoryViewHolder extends RecyclerView.ViewHolder {
-        final TextView titleText;
-        final ChipGroup childrenGroup;
-
-        CategoryViewHolder(@NonNull View itemView) {
-            super(itemView);
-            titleText = itemView.findViewById(R.id.titleText);
-            childrenGroup = itemView.findViewById(R.id.childrenGroup);
-        }
     }
 
     private void bindChildren(@NonNull CategoryViewHolder holder,
@@ -181,6 +166,21 @@ public class CategoryTreeAdapter extends RecyclerView.Adapter<CategoryTreeAdapte
                 chip.setClickable(false);
                 chip.setAlpha(0.6f);
             }
+        }
+    }
+
+    public interface OnChildClickListener {
+        void onChildClick(CategoryNodeBean child, CategoryNodeBean parent);
+    }
+
+    static class CategoryViewHolder extends RecyclerView.ViewHolder {
+        final TextView titleText;
+        final ChipGroup childrenGroup;
+
+        CategoryViewHolder(@NonNull View itemView) {
+            super(itemView);
+            titleText = itemView.findViewById(R.id.titleText);
+            childrenGroup = itemView.findViewById(R.id.childrenGroup);
         }
     }
 

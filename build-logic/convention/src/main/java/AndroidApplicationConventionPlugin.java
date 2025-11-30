@@ -5,7 +5,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.VersionCatalog;
 import org.gradle.api.artifacts.VersionCatalogsExtension;
-import org.jspecify.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Properties;
@@ -13,7 +13,7 @@ import java.util.Properties;
 import local.JavaAndroid;
 import local.PropertiesLoader;
 
-public class AndroidApplicationConventionPlugin implements Plugin<@NonNull Project> {
+public class AndroidApplicationConventionPlugin implements Plugin<@NotNull Project> {
 
     @Override
     public void apply(Project target) {

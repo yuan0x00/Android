@@ -1,11 +1,11 @@
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaLibraryPlugin;
-import org.jspecify.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import local.JavaLibrary;
 
-public class JavaLibraryConventionPlugin implements Plugin<@NonNull Project> {
+public class JavaLibraryConventionPlugin implements Plugin<@NotNull Project> {
 
     @Override
     public void apply(Project target) {

@@ -2,14 +2,14 @@ import com.android.build.gradle.LibraryExtension;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.jspecify.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Properties;
 
 import local.JavaAndroid;
 import local.PropertiesLoader;
 
-public class AndroidLibraryConventionPlugin implements Plugin<@NonNull Project> {
+public class AndroidLibraryConventionPlugin implements Plugin<@NotNull Project> {
 
     @Override
     public void apply(Project target) {

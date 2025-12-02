@@ -25,6 +25,8 @@ public class SwipeActionsLayout extends ViewGroup {
     private OnSwipeActionsListener listener;
     // 滑动配置
     private float swipeThreshold = 0.5f; // 滑动阈值
+    private OnClickListener externalClickListener;
+    private OnLongClickListener externalLongClickListener;
 
     public SwipeActionsLayout(Context context) {
         this(context, null);
@@ -44,6 +46,32 @@ public class SwipeActionsLayout extends ViewGroup {
     }
 
     @Override
+    public void setOnClickListener(OnClickListener l) {
+        // 外部调用 setOnClickListener 时，保存并转发给 mainContent
+        this.externalClickListener = l;
+        if (mainContent != null) {
+            mainContent.setOnClickListener(l);
+        }
+    }
+
+    @Override
+    public void setOnLongClickListener(OnLongClickListener l) {
+        this.externalLongClickListener = l;
+        if (mainContent != null) {
+            mainContent.setOnLongClickListener(l);
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        // 支持 android:onClick 属性（模拟 FrameLayout 的行为）
+        if (mainContent != null && getContext() instanceof View.OnClickListener) {
+            mainContent.setOnClickListener((OnClickListener) getContext());
+        }
+    }
+
+    @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         // 获取子View
@@ -56,6 +84,18 @@ public class SwipeActionsLayout extends ViewGroup {
         if (!children.isEmpty()) mainContent = children.get(0);
         if (children.size() > 1) leftMenu = children.get(1);
         if (children.size() > 2) rightMenu = children.get(2);
+
+        if (externalClickListener != null && mainContent != null) {
+            mainContent.setOnClickListener(externalClickListener);
+        }
+        if (externalLongClickListener != null && mainContent != null) {
+            mainContent.setOnLongClickListener(externalLongClickListener);
+        }
+
+        if (mainContent != null) {
+            mainContent.setClickable(true);
+            mainContent.setFocusable(true);
+        }
     }
 
     @Override
